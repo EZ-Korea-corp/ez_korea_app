@@ -1,0 +1,18 @@
+server:
+  port: 8080
+spring:
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/hybrid_test?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ezkorea_dev_team
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: create

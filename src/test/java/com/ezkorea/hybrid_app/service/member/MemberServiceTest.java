@@ -31,7 +31,7 @@ class MemberServiceTest {
     public void saveTest() {
 
         Member member = memberService.saveNewMember(saveDtoInfo());
-
+        System.out.println("member = " + member.getPassword());
         assertThat(member.getName()).isEqualTo("테스트");
 
     }
