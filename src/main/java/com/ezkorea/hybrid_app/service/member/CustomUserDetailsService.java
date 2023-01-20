@@ -28,6 +28,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         if (member.getUsername().contains("master")) {
             authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        } else if (member.getUsername().contains("manage")) {
+            authorities.add(new SimpleGrantedAuthority("MANAGER"));
         }
         authorities.add(new SimpleGrantedAuthority("MEMBER"));
 
