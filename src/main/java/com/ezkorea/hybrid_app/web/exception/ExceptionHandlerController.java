@@ -13,6 +13,6 @@ public class ExceptionHandlerController {
     @ExceptionHandler(value = UsernameNotFoundException.class)
     public @ResponseBody String notExistId(UsernameNotFoundException e) {
         log.error("UsernameNotFoundException={}", e);
-        return Script.href("/", e.getMessage());
+        return Script.href("/login", e.getMessage());
     }
 }

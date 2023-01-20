@@ -9,4 +9,9 @@ public class LoginController {
     public String showLoginPage() {
         return "login/login";
     }
+
+    @GetMapping("/signup")
+    public String showSignUpPage() {
+        return "login/sign-up";
+    }
 }
