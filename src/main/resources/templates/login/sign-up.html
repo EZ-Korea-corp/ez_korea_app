@@ -11,18 +11,18 @@
             <!-- Content-->
             <div>
                 <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
-                    <form class="lg:p-10 p-6 space-y-3 relative bg-white shadow-xl rounded-md" autocomplete="off">
+                    <form th:action method="post" class="lg:p-10 p-6 space-y-3 relative bg-white shadow-xl rounded-md" autocomplete="off">
                         <h1 class="lg:text-2xl text-xl font-semibold mb-6"> Register </h1>
 
                         <div class="grid lg:grid-cols-1 gap-3">
                             <div>
                                 <label class="mb-0"> 이름 </label>
-                                <input type="text" placeholder="이름을 입력해주세요." class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full">
+                                <input type="text" name="name" placeholder="이름을 입력해주세요." class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full">
                             </div>
                         </div>
                         <div>
                             <label class="mb-0"> 핸드폰 번호 </label>
-                            <input type="text" placeholder="핸드폰 번호를 입력해주세요." class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full">
+                            <input type="text" name="username" placeholder="핸드폰 번호를 입력해주세요." class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full">
                             <small class="text-gray-500">핸드폰 번호는 모든 번호를 붙여서 작성해주세요.</small><br>
                             <small class="text-gray-700">예) 01012341234</small>
                         </div>
@@ -32,14 +32,14 @@
                         </div>
                         <div>
                             <label class="mb-0"> 비밀번호 확인 </label>
-                            <input type="password" placeholder="비밀번호를 다시 입력해주세요." class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full">
+                            <input type="password" name="password" placeholder="비밀번호를 다시 입력해주세요." class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full">
                         </div>
                         <div class="grid lg:grid-cols-1 gap-3">
                             <div>
                                 <label class="mb-0"> 성별 </label>
-                                <select class="selectpicker mt-2">
-                                    <option>남자</option>
-                                    <option>여자</option>
+                                <select name="sex" class="selectpicker mt-2">
+                                    <option value="MALE">남자</option>
+                                    <option value="FEMALE">여자</option>
                                 </select>
 
                             </div>
@@ -52,8 +52,8 @@
                         </div>
 
                         <div>
-                            <button type="button" class="bg-blue-600 font-semibold p-2 mt-5 rounded-md text-center text-white w-full">
-                                Get Started</button>
+                            <button type="submit" class="bg-blue-600 font-semibold p-2 mt-5 rounded-md text-center text-white w-full">
+                                가입하기</button>
                         </div>
                     </form>
 
