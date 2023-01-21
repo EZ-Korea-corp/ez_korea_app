@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.service.member;
 
 import com.ezkorea.hybrid_app.domain.member.Member;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,18 @@ class MemberServiceTest {
         return signUpDto;
     }
 
-    @Test
-    public void saveTest() {
+    @BeforeEach
+    void saveTest() {
 
         Member member = memberService.saveNewMember(saveDtoInfo());
         System.out.println("member = " + member.getPassword());
         assertThat(member.getName()).isEqualTo("테스트");
 
+    }
+
+    @Test
+    void findByUsernameTest() {
+        Member member = memberService.findByUsername("01012341234");
+        assertThat(member.getName()).isEqualTo("테스트");
     }
 }
