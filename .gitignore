@@ -86,6 +86,7 @@ fabric.properties
 
 .gradle/
 build/
+.idea/
 
 ### Intellij Patch ###
 # Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
