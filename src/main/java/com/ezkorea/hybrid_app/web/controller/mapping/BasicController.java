@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.web;
+package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.service.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
-public class LoginController {
+public class BasicController {
 
     private final MemberService memberService;
 

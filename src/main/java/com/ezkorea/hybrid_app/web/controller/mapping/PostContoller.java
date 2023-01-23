@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.web.contoller;
+package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.member.SecurityUser;
 import com.ezkorea.hybrid_app.domain.post.Post;
