@@ -13,7 +13,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M3 4h18v2H3V4zm0 7h12v2H3v-2zm0 7h18v2H3v-2z" fill="currentColor"></path></svg>
           </span>
           <div id="logo">
-            <a href="feed.html">
+            <a href="/">
               <img src="/assets/images/logo.png" alt="">
               <img src="/assets/images/logo-mobile.png" class="logo_mobile" alt="">
             </a>
@@ -459,19 +459,12 @@
 
 
             <a href="#">
-              <svg class="is_avatar" th:data-jdenticon-value="${member.getUsername()}"></svg>
+              <img src="/assets/images/avatars/avatar-2.jpg" class="is_avatar" alt="">
             </a>
             <div uk-drop="mode: click;offset:5" class="header_dropdown profile_dropdown">
-              <style>
-                .user_avatar > svg {
-                  display:block !important;
-                  width:100% !important;
-                  height:auto !important;
-                }
-              </style>
               <a href="#" class="user">
                 <div class="user_avatar">
-                  <svg class="svg_size" preserveAspectRatio="none" th:data-jdenticon-value="${member.getUsername()}"></svg>
+                  <img src="/assets/images/avatars/avatar-2.jpg" alt="">
                 </div>
                 <div class="user_name">
                   <div th:text="${member.getName()}">이름</div>

@@ -12,13 +12,15 @@
     <div id="wrapper" class="flex flex-col justify-between h-screen">
 
       <!-- header-->
-      <head th:replace="layout/fragments/login/header :: header"></head>
+      <div class="dark">
+        <head th:replace="layout/fragments/login/header :: header"></head>
+      </div>
 
       <!-- Content-->
       <main layout:fragment="login"></main>
 
       <!-- Footer -->
-      <div th:replace="layout/fragments/login/footer :: footer"></div>
+      <div th:replace="layout/fragments/common/footer :: footer"></div>
 
     </div>
 
