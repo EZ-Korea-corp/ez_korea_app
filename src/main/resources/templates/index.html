@@ -13,8 +13,16 @@
 
         <div class="">
 
-            <div class=" md:mb-4 mb-3">
+            <div class=" md:mb-4 mb-3" th:if="${!member.isAttendance()}">
                 <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 환영합니다 👏</h2>
+                <p class="my-2">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요 💪</p>
+                <form th:action="@{/member}" method="post">
+                    <input type="hidden" name="attendance" value="true"/>
+                    <button type="submit" class="button w-full">출석하기</button>
+                </form>
+            </div>
+            <div class=" md:mb-4 mb-3" th:if="${member.isAttendance()}">
+                <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 오늘도 힘내세요 👏</h2>
             </div>
 
             <h2 class="text-xl font-semibold mb-2"> 🧾 공지사항 </h2>

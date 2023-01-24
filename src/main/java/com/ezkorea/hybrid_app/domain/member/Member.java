@@ -2,6 +2,8 @@ package com.ezkorea.hybrid_app.domain.member;
 
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.post.Post;
+import com.ezkorea.hybrid_app.domain.sale.DailyTask;
+import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +38,16 @@ public class Member extends BaseEntity {
     @Setter
     private String name;
 
+    @Setter
+    private boolean isAttendance;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Post> postList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    private List<SaleProduct> productList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<DailyTask> taskList = new ArrayList<>();
 
 }

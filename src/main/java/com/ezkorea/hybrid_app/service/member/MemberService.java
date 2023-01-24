@@ -2,13 +2,24 @@ package com.ezkorea.hybrid_app.service.member;
 
 import com.ezkorea.hybrid_app.domain.member.Member;
 import com.ezkorea.hybrid_app.domain.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.member.SecurityUser;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +69,41 @@ public class MemberService {
     public Member findMemberById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow( () -> new IdNotFoundException(id + "를 찾을 수 없습니다."));
+    }
+
+    /**
+     * 회원 정보 갱신을 위한 메소드
+     * @param member 현재 로그인된 Member
+     * */
+    public void forceAuthentication(Member member) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (member.getUsername().contains("master")) {
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        } else if (member.getUsername().contains("manage")) {
+            authorities.add(new SimpleGrantedAuthority("MANAGER"));
+        }
+        authorities.add(new SimpleGrantedAuthority("MEMBER"));
+
+        SecurityUser securityUser = new SecurityUser(member, authorities);
+
+        UsernamePasswordAuthenticationToken authentication =
+                UsernamePasswordAuthenticationToken.authenticated(
+                        securityUser,
+                        null,
+                        securityUser.getAuthorities()
+                );
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+    }
+
+    /**
+     * 출근처리를 위한 메소드
+     * @param member 현재 로그인한 유저
+     * */
+    public void setAttendance(Member member) {
+        Member currentMember = findByUsername(member.getUsername());
+        currentMember.setAttendance(true);
+        forceAuthentication(memberRepository.save(currentMember));
     }
 }
