@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.service.member;
 import com.ezkorea.hybrid_app.domain.member.Member;
 import com.ezkorea.hybrid_app.domain.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.member.SecurityUser;
+import com.ezkorea.hybrid_app.service.sales.SalesService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -29,6 +28,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     private final MemberRepository memberRepository;
+    private final SalesService salesService;
 
 
     /**
@@ -104,6 +104,9 @@ public class MemberService {
     public void setAttendance(Member member) {
         Member currentMember = findByUsername(member.getUsername());
         currentMember.setAttendance(true);
+        if (currentMember.isAttendance()) {
+            salesService.saveDailyTask(member);
+        }
         forceAuthentication(memberRepository.save(currentMember));
     }
 }

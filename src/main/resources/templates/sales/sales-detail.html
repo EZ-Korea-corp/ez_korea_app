@@ -33,26 +33,26 @@
                                 <div class="flex items-center space-x-3">
                                     <div class="p-1.5 rounded-full text-xl">🔢</div>
                                     <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold"> 23 </span>개</div>
+                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask.getProductList().size()}"> 23 </span> 개</div>
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">
                                     <div class="p-1.5 rounded-full text-xl">💵</div>
                                     <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold">100,500 </span>원</div>
+                                        <div><span class="text-2xl font-semibold" th:text="${#numbers.formatInteger(#aggregates.sum(dailyTask.getProductList().![wiperPrice]), 3, 'COMMA')}">100,500</span> 원</div>
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">
                                     <div class="p-1.5 rounded-full text-xl">⏰</div>
                                     <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold">10시 10분 </span>출근</div>
+                                        <div><span class="text-2xl font-semibold" th:text="${#temporals.format(dailyTask.getCreateDate(), 'HH시 mm분')}">10시 10분</span> 출근</div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                                <a href="#" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매하기 </a>
-                                <a href="#" id="closeBusiness" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 마감하기 </a>
+                                <a th:href="@{/sales/sell}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매하기 </a>
+                                <a th:href="@{/sales/close}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 마감하기 </a>
                             </div>
                         </div>
                     </div>
@@ -66,28 +66,15 @@
                                         <th>판매 시각</th>
                                         <th>사이즈</th>
                                         <th>종류</th>
+                                        <th>금액</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>14시 20분</td>
-                                        <td>350</td>
-                                        <td>일반</td>
-                                    </tr>
-                                    <tr>
-                                        <td>14시 20분</td>
-                                        <td>350</td>
-                                        <td>일반</td>
-                                    </tr>
-                                    <tr>
-                                        <td>14시 20분</td>
-                                        <td>350</td>
-                                        <td>일반</td>
-                                    </tr>
-                                    <tr>
-                                        <td>14시 20분</td>
-                                        <td>350</td>
-                                        <td>일반</td>
+                                    <tr th:each="product : ${dailyTask.getProductList()}">
+                                        <td th:text="${#temporals.format(product.getCreateDate(), 'HH시 mm분')}">14시 20분</td>
+                                        <td th:text="${product.getWiperSize()}">350</td>
+                                        <td th:text="${product.getWiperSort()}">일반</td>
+                                        <td th:text="|${#numbers.formatInteger(product.getWiperPrice(), 3, 'COMMA')}원|">10000원</td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .icon {
+                display: inline-block;
+                vertical-align: middle;
+            }
+        </style>
+        <div class="lg:space-x-12">
+
+            <div class="lg:w-full card">
+
+                <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                    <div class="md:py-8 py-3">
+                        <h2 class="text-xl font-bold">어떤 상품을 판매하셨나요?</h2>
+                    </div>
+
+                    <div class="md:py-8 py-3">
+                        <form onsubmit="return false" id="dataForm">
+                            <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
+                            <div>
+                                <select id="wiperSort" name="wiperSort"  class="shadow-none with-border px-2">
+                                    <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.sale.WiperSort).values()}"
+                                            th:value="${sort.getName()}" th:text="|${sort.getViewName()} / ${#numbers.formatInteger(sort.getPrice(), 3, 'COMMA')}원|"></option>
+                                </select>
+                            </div>
+                            <h1 class="block text-md font-bold my-2"> 와이퍼 사이즈 </h1>
+                            <div>
+                                <select id="wiperSize" name="wiperSize"  class="shadow-none with-border px-2">
+                                    <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.sale.WiperSize).values()}"
+                                            th:value="${sort.getName()}" th:text="${sort.name}"></option>
+                                </select>
+                            </div>
+                            <h1 class="block text-md font-bold my-2"> 실제 판매 가격 </h1>
+                            <div>
+                                <input type="number" id="wiperPrice" name="wiperPrice"  class="shadow-none with-border px-2" placeholder="실제 판매 가격을 입력해주세요."/>
+                            </div>
+                            <hr class="mt-4">
+                            <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 등록하기 </button>
+                        </form>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+            $("#submit").on("click", function (){
+                if ($("#wiperPrice").val().length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '가격을 입력해주세요!',
+                    });
+                } else {
+                    var sellDto = {
+                        wiperPrice: $('#wiperPrice').val(),
+                        wiperSort: $('#wiperSort').val(),
+                        wiperSize: $('#wiperSize').val()
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/sales/sell",
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(sellDto),
+                        beforeSend: function (jqXHR, settings) {
+                            var header = $("meta[name='_csrf_header']").attr("content");
+                            var token = $("meta[name='_csrf']").attr("content");
+                            jqXHR.setRequestHeader(header, token);
+                        },
+                        success: function () {
+                            Swal.fire({
+                                icon: 'success',
+                                text: '정상적으로 저장되었습니다.',
+                            }).then(() => {
+                                $(location).attr('href', '/sales');
+                            })
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                text: '작성한 내용을 다시 확인해주세요!',
+                            })
+                        }
+                    });
+                }
+            });
+        </script>
+    </main>
+
+</body>
+
+</html>
