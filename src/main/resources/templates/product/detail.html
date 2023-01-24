@@ -22,8 +22,8 @@
                 <div class="p-10 pt-4 divide-y divide-gray-100">
 
                     <div class="md:py-8 py-3">
-                        <h2 class="text-xl font-bold">돈까스님의 일일 영업 현황</h2>
-                        <p class="font-medium mt-1.5 text-base"> 2023년 1월 24일 </p>
+                        <h2 class="text-xl font-bold"> <span th:text="${member.getName()}"></span>님의 일일 영업 현황</h2>
+                        <p class="font-medium mt-1.5 text-base" th:text="${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}"></p>
                     </div>
 
                     <div class="md:py-8 py-3">
@@ -42,12 +42,17 @@
                                         <div><span class="text-2xl font-semibold">100,500 </span>원</div>
                                     </div>
                                 </div>
-
+                                <div class="flex items-center space-x-3">
+                                    <div class="p-1.5 rounded-full text-xl">⏰</div>
+                                    <div class="flex-1">
+                                        <div><span class="text-2xl font-semibold">10시 10분 </span>출근</div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                                <a href="#" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 판매하기 </a>
-                                <a href="#" id="closeBusiness" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 마감하기 </a>
+                                <a href="#" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매하기 </a>
+                                <a href="#" id="closeBusiness" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 마감하기 </a>
                             </div>
                         </div>
                     </div>
@@ -55,12 +60,37 @@
                     <div class="md:py-8 py-3">
                         <h1 class="block text-lg font-bold mb-6"> 판매 상세 테이블 </h1>
                         <div class="space-y-3">
-                            <div><span>14시 20분</span> / <span>350</span> / <span>일반</span></div>
-                            <div><span>14시 20분</span> / <span>350</span> / <span>일반</span></div>
-                            <div><span>14시 20분</span> / <span>350</span> / <span>일반</span></div>
-                            <div><span>14시 20분</span> / <span>350</span> / <span>일반</span></div>
-                            <div><span>14시 20분</span> / <span>350</span> / <span>일반</span></div>
-                            <div><span>14시 20분</span> / <span>350</span> / <span>일반</span></div>
+                            <table class="table-auto overflow-scroll w-full">
+                                <thead>
+                                    <tr>
+                                        <th>판매 시각</th>
+                                        <th>사이즈</th>
+                                        <th>종류</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>14시 20분</td>
+                                        <td>350</td>
+                                        <td>일반</td>
+                                    </tr>
+                                    <tr>
+                                        <td>14시 20분</td>
+                                        <td>350</td>
+                                        <td>일반</td>
+                                    </tr>
+                                    <tr>
+                                        <td>14시 20분</td>
+                                        <td>350</td>
+                                        <td>일반</td>
+                                    </tr>
+                                    <tr>
+                                        <td>14시 20분</td>
+                                        <td>350</td>
+                                        <td>일반</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 

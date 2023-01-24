@@ -11,16 +11,20 @@
     <div id="wrapper">
 
       <!-- Header -->
-      <header th:replace="layout/fragments/main/header :: header"></header>
-
+      <div class="dark">
+        <header th:replace="layout/fragments/main/header :: header"></header>
+      </div>
       <!-- sidebar -->
       <div th:replace="layout/fragments/main/side-bar :: sidebar"></div>
 
       <div class="main_content">
-        <div class="mcontainer">
+        <div class="mcontainer" th:with="member = ${#authentication.getPrincipal().getMember()}">
           <main layout:fragment="main"></main>
         </div>
+        <!-- Footer -->
+        <div th:replace="layout/fragments/main/footer :: footer"></div>
       </div>
+
     </div>
   </body>
 </html>
