@@ -38,7 +38,8 @@ public class SecurityConfig {
                 )
                 .authorizeRequests(
                         request -> request
-                                .antMatchers("/signup", "/login", "/assets/**").anonymous()
+                                .antMatchers("/signup", "/login").anonymous()
+                                .antMatchers("/assets/**").permitAll()
                                 .antMatchers("/manager/**").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated()
                 );
