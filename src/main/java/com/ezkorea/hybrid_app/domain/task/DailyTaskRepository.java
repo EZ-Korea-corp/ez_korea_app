@@ -1,6 +1,6 @@
 package com.ezkorea.hybrid_app.domain.task;
 
-import com.ezkorea.hybrid_app.domain.member.Member;
+import com.ezkorea.hybrid_app.domain.account.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

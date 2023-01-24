@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.domain.member;
+package com.ezkorea.hybrid_app.domain.account.member;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,6 @@ public class SecurityUser extends User {
     private final String username;
     private final String name;
     private final String sex;
-    private final boolean isAttendance;
     private final LocalDateTime createDate;
 
     public SecurityUser(Member member, List<GrantedAuthority> authorities) {
@@ -23,7 +22,6 @@ public class SecurityUser extends User {
         this.id = member.getId();
         this.sex = member.getSex();
         this.name = member.getName();
-        this.isAttendance = member.isAttendance();
         this.username = member.getUsername();
         this.createDate = member.getCreateDate();
     }
@@ -35,7 +33,6 @@ public class SecurityUser extends User {
                 .name(name)
                 .sex(sex)
                 .username(username)
-                .isAttendance(isAttendance)
                 .build();
     }
 }

@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.domain.member;
+package com.ezkorea.hybrid_app.domain.account.member;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

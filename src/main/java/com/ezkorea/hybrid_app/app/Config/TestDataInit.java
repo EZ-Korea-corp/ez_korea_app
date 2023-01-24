@@ -1,6 +1,6 @@
 package com.ezkorea.hybrid_app.app.Config;
 
-import com.ezkorea.hybrid_app.domain.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.account.member.MemberRepository;
 import com.ezkorea.hybrid_app.service.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +22,11 @@ public class TestDataInit {
         if (!memberRepository.existsByUsername("01011112222")) {
             memberService.saveNewMember(makeNewMember("01011112222", "남궁성"));
         }
+    }
+
+    @PostConstruct
+    public void testWiperDataInit() {
+
     }
 
     public SignUpDto makeNewMember(String username, String name) {

@@ -1,8 +1,10 @@
 package com.ezkorea.hybrid_app.service.member;
 
-import com.ezkorea.hybrid_app.domain.member.Member;
-import com.ezkorea.hybrid_app.domain.member.MemberRepository;
-import com.ezkorea.hybrid_app.domain.member.SecurityUser;
+import com.ezkorea.hybrid_app.domain.account.attendance.CommuteTime;
+import com.ezkorea.hybrid_app.domain.account.attendance.CommuteTimeRepository;
+import com.ezkorea.hybrid_app.domain.account.member.Member;
+import com.ezkorea.hybrid_app.domain.account.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.account.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.SalesService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
@@ -17,6 +19,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +33,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     private final MemberRepository memberRepository;
+    private final CommuteTimeRepository ctRepository;
     private final SalesService salesService;
 
 
@@ -97,16 +103,49 @@ public class MemberService {
         SecurityContextHolder.setContext(context);
     }
 
+    public CommuteTime findCommuteTimeByMember(Member member) {
+        return ctRepository.findByDateAndMember(LocalDate.now(), member);
+    }
+
+    /**
+     * 오늘 출근했는지 확인하는 메소드
+     * @param member 현재 로그인한 멤버
+     * @return 출근 여부
+     */
+    public boolean isOnTime(Member member) {
+        return ctRepository.existsByDateAndMember(LocalDate.now(), member);
+    }
+
+    public CommuteTime findCommuteByDateAndMember(Member member) {
+        return ctRepository.findByDateAndMember(LocalDate.now(), member);
+    }
+
     /**
      * 출근처리를 위한 메소드
      * @param member 현재 로그인한 유저
+     * @param isCommute true : 출근, false : 퇴근
      * */
-    public void setAttendance(Member member) {
+    @Transactional
+    public void setCommuteTime(Member member, String isCommute) {
         Member currentMember = findByUsername(member.getUsername());
-        currentMember.setAttendance(true);
-        if (currentMember.isAttendance()) {
+        if (isCommute.equals("onTime")) {
+            CommuteTime ct = CommuteTime.builder()
+                    .date(LocalDate.now())
+                    .onTime(LocalDateTime.now())
+                    .status(isCommute)
+                    .member(member)
+                    .build();
+            currentMember.addCommuteTime(ctRepository.save(ct));
             salesService.saveDailyTask(member);
+        } else if (isCommute.equals("offTime")) {
+            CommuteTime ct = findCommuteTimeByMember(member);
+            ct.setStatus(isCommute);
+            ct.setOffTime(LocalDateTime.now());
+        } else {
+            CommuteTime ct = findCommuteTimeByMember(member);
+            ct.setStatus("away");
         }
+
         forceAuthentication(memberRepository.save(currentMember));
     }
 }

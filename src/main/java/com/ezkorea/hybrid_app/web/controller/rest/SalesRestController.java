@@ -1,6 +1,6 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
-import com.ezkorea.hybrid_app.domain.member.SecurityUser;
+import com.ezkorea.hybrid_app.domain.account.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.SalesService;
 import com.ezkorea.hybrid_app.web.dto.SellDto;
 import lombok.RequiredArgsConstructor;
