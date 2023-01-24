@@ -1,6 +1,8 @@
 package com.ezkorea.hybrid_app.app.Config;
 
 import com.ezkorea.hybrid_app.domain.account.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.gas.GasStation;
+import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.sale.WiperSize;
 import com.ezkorea.hybrid_app.domain.sale.WiperSort;
 import com.ezkorea.hybrid_app.domain.wiper.Wiper;
@@ -17,6 +19,7 @@ import javax.annotation.PostConstruct;
 public class TestDataInit {
     private final MemberRepository memberRepository;
     private final WiperRepository wiperRepository;
+    private final GasStationRepository gasStationRepository;
     private final MemberService memberService;
 
     @PostConstruct
@@ -26,6 +29,23 @@ public class TestDataInit {
         }
         if (!memberRepository.existsByUsername("01011112222")) {
             memberService.saveNewMember(makeNewMember("01011112222", "남궁성"));
+        }
+    }
+
+    @PostConstruct
+    public void testGasStationDataInit() {
+        if (gasStationRepository.findAll().size() == 0) {
+            GasStation gs = GasStation.builder()
+                    .stationName("테스트 주유소1")
+                    .stationLocation("경기도 수원시 장안구")
+                    .build();
+            gasStationRepository.save(gs);
+
+            gs = GasStation.builder()
+                    .stationName("테스트 주유소2")
+                    .stationLocation("경기도 용인시 수지구")
+                    .build();
+            gasStationRepository.save(gs);
         }
     }
 
