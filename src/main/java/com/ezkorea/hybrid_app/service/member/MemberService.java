@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.service.member;
 import com.ezkorea.hybrid_app.domain.member.Member;
 import com.ezkorea.hybrid_app.domain.member.MemberRepository;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
+import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,5 +47,16 @@ public class MemberService {
     public Member findByUsername(String username) {
         return memberRepository.findByUsername(username)
                 .orElseThrow( () -> new UsernameNotFoundException("해당되는 유저가 없습니다."));
+    }
+
+    /**
+     * id를 통해 Member를 찾는 메소드
+     * @param id 검색할 id
+     * @exception IdNotFoundException 유저가 없을 시 발생
+     * @return id에 맞는 Member 객체
+     * */
+    public Member findMemberById(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow( () -> new IdNotFoundException(id + "를 찾을 수 없습니다."));
     }
 }
