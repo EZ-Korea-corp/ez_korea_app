@@ -16,6 +16,11 @@ public class SalesController {
     @GetMapping("/sales")
     public String showSalesPage(@AuthenticationPrincipal SecurityUser securityUser) {
 
-        return "product/detail";
+        return "sales/sales-detail";
+    }
+
+    @GetMapping("/sales/sell")
+    public String showSellPage() {
+        return "sales/sell-detail";
     }
 }
