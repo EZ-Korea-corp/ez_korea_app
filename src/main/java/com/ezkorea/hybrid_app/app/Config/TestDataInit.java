@@ -55,7 +55,7 @@ public class TestDataInit {
             for (WiperSize size : WiperSize.values()) {
                 for (WiperSort sort : WiperSort.values()) {
                     if (!size.getName().equals("700")) {
-                        if (!sort.getName().equals("size700")) {
+                        if (!sort.getName().equals("size_700")) {
                             Wiper w = Wiper.builder()
                                     .wiperSize(size.getName())
                                     .wiperSort(sort.getName())
@@ -65,7 +65,7 @@ public class TestDataInit {
                         }
                     }
                     if (size.getName().equals("700")) {
-                        if (sort.getName().equals("size700")) {
+                        if (sort.getName().equals("size_700")) {
                             Wiper w = Wiper.builder()
                                     .wiperSize(size.getName())
                                     .wiperSort(sort.getName())
