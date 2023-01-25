@@ -1,10 +1,10 @@
 package com.ezkorea.hybrid_app.service.sales;
 
-import com.ezkorea.hybrid_app.domain.user.member.Member;
-import com.ezkorea.hybrid_app.domain.task.DailyTask;
-import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
 import com.ezkorea.hybrid_app.domain.sale.SaleProductRepository;
+import com.ezkorea.hybrid_app.domain.task.DailyTask;
+import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.web.dto.SellDto;
 import com.ezkorea.hybrid_app.web.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;

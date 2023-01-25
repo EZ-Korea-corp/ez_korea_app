@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final CommuteTimeRepository ctRepository;
 
-    private final SaleService saleService;
     private final CommuteService commuteService;
 
 
@@ -114,11 +112,6 @@ public class MemberService {
     public boolean isOnTime(Member member) {
         return ctRepository.existsByDateAndMember(LocalDate.now(), member);
     }
-
-    public CommuteTime findCommuteByDateAndMember(Member member) {
-        return ctRepository.findByDateAndMember(LocalDate.now(), member);
-    }
-
 
     @Transactional
     public void setCommuteTime(Member member, String status) {

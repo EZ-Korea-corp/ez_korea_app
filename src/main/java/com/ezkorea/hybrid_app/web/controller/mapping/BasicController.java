@@ -25,7 +25,7 @@ public class BasicController {
         boolean isOnTime = memberService.isOnTime(securityUser.getMember());
         model.addAttribute("isOnTime", isOnTime);
         if (isOnTime) {
-            model.addAttribute("status", memberService.findCommuteByDateAndMember(securityUser.getMember()).getStatus());
+            model.addAttribute("status", commuteService.findCommuteTimeByMember(securityUser.getMember()).getStatus());
         }
         return "index";
     }

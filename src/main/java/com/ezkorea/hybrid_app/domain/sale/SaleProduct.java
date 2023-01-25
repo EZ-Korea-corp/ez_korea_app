@@ -1,8 +1,8 @@
 package com.ezkorea.hybrid_app.domain.sale;
 
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
-import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

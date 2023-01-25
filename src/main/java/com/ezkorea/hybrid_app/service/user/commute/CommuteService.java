@@ -4,7 +4,6 @@ import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
-import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +45,11 @@ public class CommuteService {
         return member;
     }
 
+    /**
+     * 현재 날짜와 로그인한 유저를 가지고 출근했는지 확인하는 메소드
+     * @param member 현재 로그인한 member
+     * @return 현재 날짜에 출근한 CommuteTime 반환
+     * */
     public CommuteTime findCommuteTimeByMember(Member member) {
         return ctRepository.findByDateAndMember(LocalDate.now(), member);
     }
