@@ -16,7 +16,7 @@ import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
-public class SalesService {
+public class SaleService {
 
     private final ModelMapper modelMapper;
     private final SaleProductRepository spRepository;

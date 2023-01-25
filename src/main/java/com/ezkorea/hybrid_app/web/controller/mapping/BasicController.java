@@ -1,7 +1,8 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
-import com.ezkorea.hybrid_app.service.member.MemberService;
+import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
+import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class BasicController {
 
     private final MemberService memberService;
+    private final CommuteService commuteService;
 
     @GetMapping("/")
     public String showMainPage(Model model,

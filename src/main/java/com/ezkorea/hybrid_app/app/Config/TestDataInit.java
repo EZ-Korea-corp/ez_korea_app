@@ -7,7 +7,7 @@ import com.ezkorea.hybrid_app.domain.sale.WiperSize;
 import com.ezkorea.hybrid_app.domain.sale.WiperSort;
 import com.ezkorea.hybrid_app.domain.wiper.Wiper;
 import com.ezkorea.hybrid_app.domain.wiper.WiperRepository;
-import com.ezkorea.hybrid_app.service.member.MemberService;
+import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

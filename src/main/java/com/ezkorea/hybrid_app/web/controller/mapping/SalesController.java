@@ -1,7 +1,7 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
-import com.ezkorea.hybrid_app.service.sales.SalesService;
+import com.ezkorea.hybrid_app.service.sales.SaleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class SalesController {
 
-    private final SalesService salesService;
+    private final SaleService saleService;
 
     @GetMapping("/sales")
     public String showSalesPage(@AuthenticationPrincipal SecurityUser securityUser,
                                 Model model) {
-        model.addAttribute("dailyTask", salesService.findByMemberAndDate(securityUser.getMember()));
+        model.addAttribute("dailyTask", saleService.findByMemberAndDate(securityUser.getMember()));
         return "sales/sales-detail";
     }
 

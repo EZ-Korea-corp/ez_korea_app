@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.service.member;
+package com.ezkorea.hybrid_app.service.user.member;
 
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
