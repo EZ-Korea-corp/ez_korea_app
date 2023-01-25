@@ -31,6 +31,11 @@ public class SecurityConfig {
                                 .loginPage("/login")
                                 .defaultSuccessUrl("/")
                 )
+                .rememberMe(
+                        rememberMe -> rememberMe
+                                .key("uniqueAndSecret")
+                                .tokenValiditySeconds(86400)
+                )
                 .logout(
                         logout -> logout
                                 .logoutUrl("/logout")
