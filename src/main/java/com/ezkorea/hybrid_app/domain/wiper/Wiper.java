@@ -22,6 +22,4 @@ public class Wiper {
     private int wiperPrice;
     private String wiperViewName;
 
-    @OneToOne
-    private SaleProduct saleProduct;
 }
