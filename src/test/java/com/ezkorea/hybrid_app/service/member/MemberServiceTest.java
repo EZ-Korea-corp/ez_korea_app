@@ -1,6 +1,6 @@
 package com.ezkorea.hybrid_app.service.member;
 
-import com.ezkorea.hybrid_app.domain.account.member.Member;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

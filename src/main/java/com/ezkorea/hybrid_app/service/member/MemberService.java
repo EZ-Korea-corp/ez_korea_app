@@ -1,10 +1,10 @@
 package com.ezkorea.hybrid_app.service.member;
 
-import com.ezkorea.hybrid_app.domain.account.commute.CommuteTime;
-import com.ezkorea.hybrid_app.domain.account.commute.CommuteTimeRepository;
-import com.ezkorea.hybrid_app.domain.account.member.Member;
-import com.ezkorea.hybrid_app.domain.account.member.MemberRepository;
-import com.ezkorea.hybrid_app.domain.account.member.SecurityUser;
+import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
+import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
+import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.SalesService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;

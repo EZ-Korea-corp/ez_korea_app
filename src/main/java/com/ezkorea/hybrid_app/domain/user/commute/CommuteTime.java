@@ -1,6 +1,6 @@
-package com.ezkorea.hybrid_app.domain.account.commute;
+package com.ezkorea.hybrid_app.domain.user.commute;
 
-import com.ezkorea.hybrid_app.domain.account.member.Member;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

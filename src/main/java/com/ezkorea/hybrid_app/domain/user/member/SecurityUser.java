@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.domain.account.member;
+package com.ezkorea.hybrid_app.domain.user.member;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

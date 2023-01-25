@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.domain.account.commute;
+package com.ezkorea.hybrid_app.domain.user.commute;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.ezkorea.hybrid_app.service.sales;
 
-import com.ezkorea.hybrid_app.domain.account.member.Member;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;

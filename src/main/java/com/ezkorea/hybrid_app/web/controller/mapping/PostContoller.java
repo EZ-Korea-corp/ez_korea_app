@@ -1,6 +1,6 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
-import com.ezkorea.hybrid_app.domain.account.member.SecurityUser;
+import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.domain.post.Post;
 import com.ezkorea.hybrid_app.service.post.PostService;
 import com.ezkorea.hybrid_app.web.dto.PostDto;

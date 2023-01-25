@@ -1,8 +1,8 @@
 package com.ezkorea.hybrid_app.service.member;
 
-import com.ezkorea.hybrid_app.domain.account.member.Member;
-import com.ezkorea.hybrid_app.domain.account.member.MemberRepository;
-import com.ezkorea.hybrid_app.domain.account.member.SecurityUser;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
+import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

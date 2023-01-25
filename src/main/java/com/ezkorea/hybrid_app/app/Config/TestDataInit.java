@@ -1,6 +1,6 @@
 package com.ezkorea.hybrid_app.app.Config;
 
-import com.ezkorea.hybrid_app.domain.account.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.sale.WiperSize;
