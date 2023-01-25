@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.domain.account.attendance;
+package com.ezkorea.hybrid_app.domain.account.commute;
 
 import com.ezkorea.hybrid_app.domain.account.member.Member;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;

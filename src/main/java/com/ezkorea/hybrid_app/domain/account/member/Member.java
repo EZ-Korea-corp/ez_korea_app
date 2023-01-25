@@ -1,6 +1,6 @@
 package com.ezkorea.hybrid_app.domain.account.member;
 
-import com.ezkorea.hybrid_app.domain.account.attendance.CommuteTime;
+import com.ezkorea.hybrid_app.domain.account.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.post.Post;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;

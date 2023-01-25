@@ -1,7 +1,7 @@
 package com.ezkorea.hybrid_app.service.member;
 
-import com.ezkorea.hybrid_app.domain.account.attendance.CommuteTime;
-import com.ezkorea.hybrid_app.domain.account.attendance.CommuteTimeRepository;
+import com.ezkorea.hybrid_app.domain.account.commute.CommuteTime;
+import com.ezkorea.hybrid_app.domain.account.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.account.member.Member;
 import com.ezkorea.hybrid_app.domain.account.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.account.member.SecurityUser;
