@@ -43,7 +43,6 @@ public class SaleService {
         SaleProduct newSaleProduct = SaleProduct.builder()
                 .task(findByMemberAndDate(member))
                 .wiper(currentWiper)
-                .seller(member)
                 .build();
         spRepository.save(newSaleProduct);
 //        saveTaskProduct();

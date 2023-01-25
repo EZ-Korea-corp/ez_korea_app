@@ -26,7 +26,4 @@ public class SaleProduct extends BaseEntity {
     @ManyToOne(targetEntity = DailyTask.class, fetch = FetchType.LAZY)
     private DailyTask task;
 
-    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
-    private Member seller;
-
 }

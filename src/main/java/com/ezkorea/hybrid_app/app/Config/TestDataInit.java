@@ -24,12 +24,22 @@ public class TestDataInit {
 
     @PostConstruct
     public void testMemberDataInit() {
-        if (!memberRepository.existsByUsername("01012341234")) {
-            memberService.saveNewMember(makeNewMember("01012341234", "김기만"));
+        if (!memberRepository.existsByUsername("test1")) {
+            memberService.saveNewMember(makeNewMember("test1", "고봉민"));
         }
-        if (!memberRepository.existsByUsername("01011112222")) {
-            memberService.saveNewMember(makeNewMember("01011112222", "남궁성"));
+        if (!memberRepository.existsByUsername("test2")) {
+            memberService.saveNewMember(makeNewMember("test2", "김경자"));
         }
+    }
+
+    public SignUpDto makeNewMember(String username, String name) {
+        SignUpDto newDto = new SignUpDto();
+        newDto.setUsername(username);
+        newDto.setPassword("1234");
+        newDto.setName(name);
+        newDto.setSex("MALE");
+
+        return newDto;
     }
 
     @PostConstruct
@@ -79,15 +89,5 @@ public class TestDataInit {
                 }
             }
         }
-    }
-
-    public SignUpDto makeNewMember(String username, String name) {
-        SignUpDto newDto = new SignUpDto();
-        newDto.setUsername(username);
-        newDto.setPassword("1234");
-        newDto.setName(name);
-        newDto.setSex("MALE");
-
-        return newDto;
     }
 }
