@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.domain.sale;
+package com.ezkorea.hybrid_app.domain.wiper;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

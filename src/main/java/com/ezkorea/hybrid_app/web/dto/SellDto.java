@@ -1,7 +1,5 @@
 package com.ezkorea.hybrid_app.web.dto;
 
-import com.ezkorea.hybrid_app.domain.sale.WiperSize;
-import com.ezkorea.hybrid_app.domain.sale.WiperSort;
 import lombok.Getter;
 import lombok.Setter;
 

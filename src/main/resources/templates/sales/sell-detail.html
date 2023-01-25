@@ -30,14 +30,14 @@
                             <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
                             <div>
                                 <select id="wiperSort" name="wiperSort" class="shadow-none with-border px-2">
-                                    <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.sale.WiperSort).values()}"
+                                    <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}"
                                             th:value="${sort.getName()}" th:text="|${sort.getViewName()} / ${#numbers.formatInteger(sort.getPrice(), 3, 'COMMA')}원|"></option>
                                 </select>
                             </div>
                             <h1 class="block text-md font-bold my-2"> 와이퍼 사이즈 </h1>
                             <div>
                                 <select id="wiperSize" name="wiperSize" class="shadow-none with-border px-2">
-                                    <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.sale.WiperSize).values()}"
+                                    <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}"
                                             th:value="${sort.getName()}" th:text="${sort.name}"></option>
                                 </select>
                             </div>
