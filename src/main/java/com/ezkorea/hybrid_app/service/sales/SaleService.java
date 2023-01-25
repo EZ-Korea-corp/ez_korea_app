@@ -5,7 +5,8 @@ import com.ezkorea.hybrid_app.domain.sale.SaleProductRepository;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
-import com.ezkorea.hybrid_app.web.dto.SellDto;
+import com.ezkorea.hybrid_app.domain.wiper.Wiper;
+import com.ezkorea.hybrid_app.web.dto.WiperDto;
 import com.ezkorea.hybrid_app.web.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,6 +23,8 @@ public class SaleService {
     private final SaleProductRepository spRepository;
     private final DailyTaskRepository dtRepository;
 
+    private final WiperService wiperService;
+
     public void saveDailyTask(Member member) {
         DailyTask dt = DailyTask.builder()
                 .member(member)
@@ -30,20 +33,20 @@ public class SaleService {
         dtRepository.save(dt);
     }
 
-    @Transactional
-    public void saveTaskProduct(SaleProduct product) {
-        findByMemberAndDate(product.getSeller()).addProduct(product);
-    }
-
-    public void saveSaleProduct(SellDto sellDto, Member member) {
-        SaleProduct newSaleProduct = modelMapper.map(sellDto, SaleProduct.class);
-        newSaleProduct.setBasicInfo(member, findByMemberAndDate(member));
-        spRepository.save(newSaleProduct);
-        saveTaskProduct(newSaleProduct);
-    }
-
     public DailyTask findByMemberAndDate(Member member) {
         return dtRepository.findByTaskDateAndMember(LocalDate.now(), member)
                 .orElseThrow( () -> new MemberNotFoundException("해당 유저는 오늘 출근하지 않았습니다."));
     }
+
+    public void saveSaleProduct(WiperDto dto, Member member) {
+        Wiper currentWiper = wiperService.findWiperBySizeAndSort(dto.getWiperSize(), dto.getWiperSort());
+        SaleProduct newSaleProduct = SaleProduct.builder()
+                .task(findByMemberAndDate(member))
+                .wiper(currentWiper)
+                .seller(member)
+                .build();
+        spRepository.save(newSaleProduct);
+//        saveTaskProduct();
+    }
+
 }

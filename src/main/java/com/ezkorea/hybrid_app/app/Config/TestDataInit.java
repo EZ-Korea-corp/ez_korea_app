@@ -60,6 +60,7 @@ public class TestDataInit {
                                     .wiperSize(size.getName())
                                     .wiperSort(sort.getName())
                                     .wiperPrice(sort.getPrice())
+                                    .wiperViewName(sort.getViewName())
                                     .build();
                             wiperRepository.save(w);
                         }
@@ -70,6 +71,7 @@ public class TestDataInit {
                                     .wiperSize(size.getName())
                                     .wiperSort(sort.getName())
                                     .wiperPrice(sort.getPrice())
+                                    .wiperViewName(sort.getViewName())
                                     .build();
                             wiperRepository.save(w);
                         }

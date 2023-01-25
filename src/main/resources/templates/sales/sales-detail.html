@@ -39,13 +39,7 @@
                                 <div class="flex items-center space-x-3">
                                     <div class="p-1.5 rounded-full text-xl">💵</div>
                                     <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold" th:text="${#numbers.formatInteger(#aggregates.sum(dailyTask.getProductList().![wiperPrice]), 3, 'COMMA')}">100,500</span> 원</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <div class="p-1.5 rounded-full text-xl">⏰</div>
-                                    <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold" th:text="${#temporals.format(dailyTask.getCreateDate(), 'HH시 mm분')}">10시 10분</span> 출근</div>
+                                        <div><span class="text-2xl font-semibold" th:text="${#numbers.formatInteger(#aggregates.sum(dailyTask.getProductList().![getWiper().wiperPrice]), 3, 'COMMA')}">100,500</span> 원</div>
                                     </div>
                                 </div>
                             </div>
@@ -72,9 +66,9 @@
                                 <tbody>
                                     <tr th:each="product : ${dailyTask.getProductList()}">
                                         <td th:text="${#temporals.format(product.getCreateDate(), 'HH시 mm분')}">14시 20분</td>
-                                        <td th:text="${product.getWiperSize()}">350</td>
-                                        <td th:text="${product.getWiperSort()}">일반</td>
-                                        <td th:text="|${#numbers.formatInteger(product.getWiperPrice(), 3, 'COMMA')}원|">10000원</td>
+                                        <td th:text="${product.getWiper().getWiperSize()}">350</td>
+                                        <td th:text="${product.getWiper().getWiperViewName()}">일반</td>
+                                        <td th:text="|${#numbers.formatInteger(product.getWiper().getWiperPrice(), 3, 'COMMA')}원|">10000원</td>
                                     </tr>
                                 </tbody>
                             </table>

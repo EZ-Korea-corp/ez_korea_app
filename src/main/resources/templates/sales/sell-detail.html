@@ -86,7 +86,7 @@
                         text: '가격을 입력해주세요!',
                     });
                 } else {
-                    var sellDto = {
+                    var wiperDto = {
                         wiperPrice: $('#wiperPrice').val(),
                         wiperSort: $('#wiperSort').val(),
                         wiperSize: $('#wiperSize').val()
@@ -97,7 +97,7 @@
                         url: "/sales/sell",
                         dataType: 'json',
                         contentType: 'application/json; charset=utf-8',
-                        data: JSON.stringify(sellDto),
+                        data: JSON.stringify(wiperDto),
                         beforeSend: function (jqXHR, settings) {
                             var header = $("meta[name='_csrf_header']").attr("content");
                             var token = $("meta[name='_csrf']").attr("content");

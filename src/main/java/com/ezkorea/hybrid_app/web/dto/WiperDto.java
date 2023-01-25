@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class SellDto {
+public class WiperDto {
     private String wiperSort;
     private String wiperSize;
     private int wiperPrice;

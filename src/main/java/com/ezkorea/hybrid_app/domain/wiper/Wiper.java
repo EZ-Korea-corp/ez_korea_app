@@ -1,11 +1,10 @@
 package com.ezkorea.hybrid_app.domain.wiper;
 
+import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
+import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -21,4 +20,8 @@ public class Wiper {
     private String wiperSort;
     private String wiperSize;
     private int wiperPrice;
+    private String wiperViewName;
+
+    @ManyToOne(targetEntity = SaleProduct.class, fetch = FetchType.LAZY)
+    private SaleProduct saleProduct;
 }
