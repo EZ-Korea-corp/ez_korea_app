@@ -20,7 +20,7 @@ import java.util.List;
 @ToString(callSuper = true)
 public class SaleProduct extends BaseEntity {
 
-    @ManyToOne(targetEntity = Wiper.class, fetch = FetchType.LAZY)
+    @OneToOne
     private Wiper wiper;
 
     @ManyToOne(targetEntity = DailyTask.class, fetch = FetchType.LAZY)

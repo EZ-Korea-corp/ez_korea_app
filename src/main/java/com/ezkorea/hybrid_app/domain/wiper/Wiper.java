@@ -22,6 +22,6 @@ public class Wiper {
     private int wiperPrice;
     private String wiperViewName;
 
-    @ManyToOne(targetEntity = SaleProduct.class, fetch = FetchType.LAZY)
+    @OneToOne
     private SaleProduct saleProduct;
 }
