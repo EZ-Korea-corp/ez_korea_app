@@ -14,24 +14,28 @@
         <div class="">
             <div class=" md:mb-4 mb-3" th:if="${!isOnTime}">
                 <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 환영합니다 👏</h2>
-                <p class="my-2">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요 💪</p>
+                <p class="my-2">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요 🔥</p>
                 <form th:action="@{/member}" method="post">
                     <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('ON_TIME').getKey()}"/>
-                    <button type="submit" class="button w-full">출석하기</button>
+                    <button type="submit" class="text-white bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">출근하기 🔥</button>
                 </form>
             </div>
             <div class=" md:mb-4 mb-3" th:if="${isOnTime}">
-                <th:block th:if="${status.equals('onTime')}">
-                    <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 오늘도 힘내세요 👏</h2>
+                <th:block th:if="${commute.getStatus().equals('onTime')}">
+                    <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 오늘도 힘내세요 💪</h2>
+                    <p class="my-2">⏰ 출근 시간 : <span th:text="${#temporals.format(commute.getOnTime(), 'HH시 mm분')}"></span></p>
                     <form th:action="@{/member}" method="post">
                         <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('OFF_TIME').getKey()}"/>
-                        <button type="submit" class="button w-full">퇴근하기</button>
+                        <button type="submit" class="text-white bg-yellow-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">퇴근하기 😎</button>
                     </form>
                 </th:block>
-                <th:block th:if="${status.equals('offTime')}">
+                <th:block th:if="${commute.getStatus().equals('offTime')}">
                     <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 오늘도 수고하셨습니다 🙇</h2>
+                    <p class="my-2">⏰ 퇴근 시간 : <span th:text="${#temporals.format(commute.getOffTime(), 'HH시 mm분')}"></span></p>
                 </th:block>
             </div>
+
+            <hr class="my-5">
 
             <h2 class="text-xl font-semibold mb-2"> 🧾 공지사항 </h2>
 
