@@ -9,4 +9,5 @@ public class SignUpDto {
     private String password;
     private String sex;
     private String name;
+    private boolean isLeader;
 }

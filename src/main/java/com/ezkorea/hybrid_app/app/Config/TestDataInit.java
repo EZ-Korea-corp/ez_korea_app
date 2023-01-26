@@ -13,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,19 +25,23 @@ public class TestDataInit {
     @PostConstruct
     public void testMemberDataInit() {
         if (!memberRepository.existsByUsername("test1")) {
-            memberService.saveNewMember(makeNewMember("test1", "고봉민"));
+            memberService.saveNewMember(makeNewMember("test1", "고봉민", true));
         }
         if (!memberRepository.existsByUsername("test2")) {
-            memberService.saveNewMember(makeNewMember("test2", "김경자"));
+            memberService.saveNewMember(makeNewMember("test2", "김경자", false));
+        }
+        if (!memberRepository.existsByUsername("test3")) {
+            memberService.saveNewMember(makeNewMember("test3", "한문철", false));
         }
     }
 
-    public SignUpDto makeNewMember(String username, String name) {
+    public SignUpDto makeNewMember(String username, String name, boolean isLeader) {
         SignUpDto newDto = new SignUpDto();
         newDto.setUsername(username);
         newDto.setPassword("1234");
         newDto.setName(name);
         newDto.setSex("MALE");
+        newDto.setLeader(isLeader);
 
         return newDto;
     }
@@ -48,13 +50,13 @@ public class TestDataInit {
     public void testGasStationDataInit() {
         if (gasStationRepository.findAll().size() == 0) {
             GasStation gs = GasStation.builder()
-                    .stationName("테스트 주유소1")
+                    .stationName("배트맨 주유소")
                     .stationLocation("경기도 수원시 장안구")
                     .build();
             gasStationRepository.save(gs);
 
             gs = GasStation.builder()
-                    .stationName("테스트 주유소2")
+                    .stationName("한문철 주유소")
                     .stationLocation("경기도 용인시 수지구")
                     .build();
             gasStationRepository.save(gs);
