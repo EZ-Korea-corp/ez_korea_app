@@ -29,6 +29,7 @@ public class SaleService {
         DailyTask dt = DailyTask.builder()
                 .member(member)
                 .taskDate(LocalDate.now())
+                .gasStation(null)
                 .build();
         dtRepository.save(dt);
     }
