@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .icon {
+                display: inline-block;
+                vertical-align: middle;
+            }
+        </style>
+        <div class="lg:space-x-12">
+            <form id="selectForm" onsubmit="return false;">
+                <div class="lg:w-full card">
+
+                    <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                        <div class="md:py-8 py-3">
+                            <h2 class="text-xl font-bold">
+                                <span th:text="${member.getName()}"></span> 팀장님
+                                <p>주유소와 팀원을 선택해주세요.</p>
+                            </h2>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <h1 class="block text-lg font-bold mb-4"> 주유소 및 팀원 선택  </h1>
+                            <div class="md:flex">
+                                <div class="md:w-2/3 space-y-4 -mt-2">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-1.5 rounded-full text-xl">⛽️</div>
+                                        <div class="flex-1">
+                                            <select id="gasStation" name="gasStation" class="border border-gray-300 text-sm rounded-lg block w-full p-2.5">
+                                                <option th:each="station : ${stations}" th:text="|${station.getStationName()}(${station.getStationLocation()})|" th:value="${station.getStationName()}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-1.5 rounded-full text-xl">👨‍👦‍👦</div>
+                                        <div class="flex-1">
+                                            <select id="member" name="member" class="border border-gray-300 text-sm rounded-lg block w-full p-2.5">
+                                                <option value="123">123</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <div class="space-y-3">
+                                <button type="submit" class="btn bg-blue-600 py-2 rounded-lg w-full">저장하기</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </main>
+
+</body>
+
+</html>

@@ -1,5 +1,7 @@
 package com.ezkorea.hybrid_app.service.sales;
 
+import com.ezkorea.hybrid_app.domain.gas.GasStation;
+import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
 import com.ezkorea.hybrid_app.domain.sale.SaleProductRepository;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class SaleService {
 
     private final ModelMapper modelMapper;
     private final SaleProductRepository spRepository;
+    private final GasStationRepository gsRepository;
     private final DailyTaskRepository dtRepository;
 
     private final WiperService wiperService;
@@ -49,6 +53,10 @@ public class SaleService {
                 .build();
         spRepository.save(newSaleProduct);
 //        saveTaskProduct();
+    }
+
+    public List<GasStation> findAllGasStation() {
+        return gsRepository.findAll();
     }
 
 }

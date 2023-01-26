@@ -51,13 +51,13 @@ public class TestDataInit {
         if (gasStationRepository.findAll().size() == 0) {
             GasStation gs = GasStation.builder()
                     .stationName("배트맨 주유소")
-                    .stationLocation("경기도 수원시 장안구")
+                    .stationLocation("경기도 수원시 장안구 랄로 1234번길 56")
                     .build();
             gasStationRepository.save(gs);
 
             gs = GasStation.builder()
                     .stationName("한문철 주유소")
-                    .stationLocation("경기도 용인시 수지구")
+                    .stationLocation("경기도 용인시 수지구 랄로 1004번길 44")
                     .build();
             gasStationRepository.save(gs);
         }
