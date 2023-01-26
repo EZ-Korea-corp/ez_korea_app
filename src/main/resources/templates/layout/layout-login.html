@@ -5,20 +5,22 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
 
-  <head th:replace="layout/fragments/layout/head :: head"></head>
+  <head th:replace="layout/fragments/common/head :: head"></head>
 
   <body class="bg-gray-100">
 
     <div id="wrapper" class="flex flex-col justify-between h-screen">
 
       <!-- header-->
-      <head th:replace="layout/fragments/login/header :: header"></head>
+      <div class="dark">
+        <head th:replace="layout/fragments/login/header :: header"></head>
+      </div>
 
       <!-- Content-->
       <main layout:fragment="login"></main>
 
       <!-- Footer -->
-      <div th:replace="layout/fragments/login/footer :: footer"></div>
+      <div th:replace="layout/fragments/common/footer :: footer"></div>
 
     </div>
 

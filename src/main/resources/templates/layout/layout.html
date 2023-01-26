@@ -5,23 +5,26 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
 
-  <head th:replace="layout/fragments/layout/head :: head"></head>
+  <head th:replace="layout/fragments/common/head :: head"></head>
 
   <body>
     <div id="wrapper">
 
       <!-- Header -->
-      <header th:replace="layout/fragments/layout/header :: header"></header>
-
+      <div class="dark">
+        <header th:replace="layout/fragments/main/header :: header"></header>
+      </div>
       <!-- sidebar -->
-      <div th:replace="layout/fragments/layout/side-bar :: side_bar(currentSideMenu='board')"></div>
+      <div th:replace="layout/fragments/main/side-bar :: sidebar"></div>
 
       <div class="main_content">
-        <div class="mcontainer">
-          <div sec:authorize="isAuthenticated()" th:replace="layout/fragments/service/email-fragments :: checked-email"></div>
+        <div class="mcontainer" th:with="member = ${#authentication.getPrincipal().getMember()}">
           <main layout:fragment="main"></main>
         </div>
+        <!-- Footer -->
+        <div th:replace="layout/fragments/common/footer :: footer"></div>
       </div>
+
     </div>
   </body>
 </html>

@@ -16,4 +16,11 @@ public class ExceptionHandlerController {
 
         return Script.href("/login", e.getMessage());
     }
+
+    @ExceptionHandler(value = MemberNotFoundException.class)
+    public @ResponseBody String notExistId(MemberNotFoundException e) {
+        log.error("MemberNotFoundException={}", e);
+
+        return Script.href("/", e.getMessage());
+    }
 }

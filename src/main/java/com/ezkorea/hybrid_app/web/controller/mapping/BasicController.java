@@ -1,20 +1,32 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
-import com.ezkorea.hybrid_app.service.member.MemberService;
+import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
+import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
+import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
 public class BasicController {
 
     private final MemberService memberService;
+    private final CommuteService commuteService;
 
     @GetMapping("/")
-    public String showMainPage() {
+    public String showMainPage(Model model,
+                               @AuthenticationPrincipal SecurityUser securityUser) {
+        boolean isOnTime = memberService.isOnTime(securityUser.getMember());
+        model.addAttribute("isOnTime", isOnTime);
+        if (isOnTime) {
+            model.addAttribute("commute", commuteService.findCommuteTimeByMember(securityUser.getMember()));
+        }
         return "index";
     }
 
@@ -32,5 +44,12 @@ public class BasicController {
     public String doSignUp(SignUpDto dto) {
         memberService.saveNewMember(dto);
         return "redirect:/login";
+    }
+
+    @PostMapping("/member")
+    public String doCommute(@AuthenticationPrincipal SecurityUser securityUser,
+                            @RequestParam String commuteStatus) {
+        memberService.setCommuteTime(securityUser.getMember(), commuteStatus);
+        return "redirect:/";
     }
 }

@@ -1,6 +1,6 @@
 package com.ezkorea.hybrid_app.service.post;
 
-import com.ezkorea.hybrid_app.domain.member.SecurityUser;
+import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.domain.post.Post;
 import com.ezkorea.hybrid_app.domain.post.PostRepository;
 import com.ezkorea.hybrid_app.web.dto.PostDto;

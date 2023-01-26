@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .icon {
+                display: inline-block;
+                vertical-align: middle;
+            }
+        </style>
+        <div class="lg:space-x-12">
+
+            <div class="lg:w-full card">
+
+                <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                    <div class="md:py-8 py-3">
+                        <h2 class="text-xl font-bold"> <span th:text="${member.getName()}"></span>님의 일일 영업 현황</h2>
+                        <p class="font-medium mt-1.5 text-base" th:text="${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}"></p>
+                    </div>
+
+                    <div class="md:py-8 py-3">
+                        <h1 class="block text-lg font-bold mb-9"> 영업 상세  </h1>
+                        <div class="md:flex">
+                            <div class="md:w-2/3 space-y-4 -mt-2">
+                                <div class="flex items-center space-x-3">
+                                    <div class="p-1.5 rounded-full text-xl">⛽️</div>
+                                    <div class="flex-1">
+                                        <div><span class="text-2xl font-semibold"> 태양 제2 주유소 </span>(수정)</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <div class="p-1.5 rounded-full text-xl">🔢</div>
+                                    <div class="flex-1">
+                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask.getProductList().size()}"> 23 </span> 개</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <div class="p-1.5 rounded-full text-xl">💵</div>
+                                    <div class="flex-1">
+                                        <div><span class="text-2xl font-semibold" th:text="${#numbers.formatInteger(#aggregates.sum(dailyTask.getProductList().![getWiper().wiperPrice]), 3, 'COMMA')}">100,500</span> 원</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                                <a th:href="@{/sales/input}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 입고하기 </a>
+                                <a th:href="@{/sales/sell}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매하기 </a>
+                                <a th:href="@{/sales/close}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 마감하기 </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:py-8 py-3">
+                        <h1 class="block text-lg font-bold mb-6"> 판매 상세 테이블 </h1>
+                        <div class="space-y-3">
+                            <table class="table-auto overflow-scroll w-full">
+                                <thead>
+                                    <tr>
+                                        <th>판매 시각</th>
+                                        <th>사이즈</th>
+                                        <th>종류</th>
+                                        <th>금액</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="product : ${dailyTask.getProductList()}">
+                                        <td th:text="${#temporals.format(product.getCreateDate(), 'HH시 mm분')}">14시 20분</td>
+                                        <td th:text="${product.getWiper().getWiperSize()}">350</td>
+                                        <td th:text="${product.getWiper().getWiperViewName()}">일반</td>
+                                        <td th:text="|${#numbers.formatInteger(product.getWiper().getWiperPrice(), 3, 'COMMA')}원|">10000원</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+            $("#closeBusiness").on("click", function (){
+                Swal.fire({
+                    html: '<p>마감을 진행하시겠습니까?</p><small class="text-red-600">마감은 취소가 불가능하니 신중히 진행해주세요.</small>',
+                    showDenyButton: true,
+                    confirmButtonText: '마감',
+                    denyButtonText: `닫기`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        Swal.fire('Saved!', '', 'success')
+                        // 마감 페이지로 이동 url
+                    }
+                })
+            });
+        </script>
+    </main>
+
+</body>
+
+</html>

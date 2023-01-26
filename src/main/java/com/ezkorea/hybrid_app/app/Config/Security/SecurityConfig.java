@@ -31,6 +31,11 @@ public class SecurityConfig {
                                 .loginPage("/login")
                                 .defaultSuccessUrl("/")
                 )
+                .rememberMe(
+                        rememberMe -> rememberMe
+                                .key("uniqueAndSecret")
+                                .tokenValiditySeconds(86400)
+                )
                 .logout(
                         logout -> logout
                                 .logoutUrl("/logout")
@@ -38,7 +43,8 @@ public class SecurityConfig {
                 )
                 .authorizeRequests(
                         request -> request
-                                .antMatchers("/signup", "/login", "/assets/**").anonymous()
+                                .antMatchers("/signup", "/login").anonymous()
+                                .antMatchers("/assets/**").permitAll()
                                 .antMatchers("/manager/**").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated()
                 );
