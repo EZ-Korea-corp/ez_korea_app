@@ -31,6 +31,12 @@
                         <div class="md:flex">
                             <div class="md:w-2/3 space-y-4 -mt-2">
                                 <div class="flex items-center space-x-3">
+                                    <div class="p-1.5 rounded-full text-xl">⛽️</div>
+                                    <div class="flex-1">
+                                        <div><span class="text-2xl font-semibold"> 태양 제2 주유소 </span>(수정)</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-3">
                                     <div class="p-1.5 rounded-full text-xl">🔢</div>
                                     <div class="flex-1">
                                         <div><span class="text-2xl font-semibold" th:text="${dailyTask.getProductList().size()}"> 23 </span> 개</div>
@@ -45,6 +51,7 @@
                             </div>
 
                             <div class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                                <a th:href="@{/sales/input}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 입고하기 </a>
                                 <a th:href="@{/sales/sell}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매하기 </a>
                                 <a th:href="@{/sales/close}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 마감하기 </a>
                             </div>

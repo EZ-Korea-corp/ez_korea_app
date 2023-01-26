@@ -25,4 +25,9 @@ public class SalesController {
     public String showSellPage() {
         return "sales/sell-detail";
     }
+
+    @GetMapping("/sales/input")
+    public String showInputPage() {
+        return "sales/in-detail";
+    }
 }

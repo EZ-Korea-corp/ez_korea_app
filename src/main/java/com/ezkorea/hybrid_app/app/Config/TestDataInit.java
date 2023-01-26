@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -62,8 +64,8 @@ public class TestDataInit {
     @PostConstruct
     public void testWiperDataInit() {
         if (wiperRepository.findAll().size() == 0) {
-            for (WiperSize size : WiperSize.values()) {
-                for (WiperSort sort : WiperSort.values()) {
+            for (WiperSort sort : WiperSort.values()) {
+                for (WiperSize size : WiperSize.values()) {
                     if (!size.getName().equals("700")) {
                         if (!sort.getName().equals("size_700")) {
                             Wiper w = Wiper.builder()

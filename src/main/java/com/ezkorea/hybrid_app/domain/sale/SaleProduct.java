@@ -20,6 +20,10 @@ import java.util.List;
 @ToString(callSuper = true)
 public class SaleProduct extends BaseEntity {
 
+    private String status;
+
+    private int count;
+
     @OneToOne
     private Wiper wiper;
 
