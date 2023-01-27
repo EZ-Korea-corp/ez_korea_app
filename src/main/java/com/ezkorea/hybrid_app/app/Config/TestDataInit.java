@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.division.Position;
+import com.ezkorea.hybrid_app.domain.user.division.Status;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
@@ -35,18 +37,30 @@ public class TestDataInit {
 
     @PostConstruct
     public void testMemberDataInit() {
-        if (!memberRepository.existsByUsername("test1")) {
+        if (!memberRepository.existsByUsername("01011111111")) {
             Member member = memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.LEADER));
             Team newTeam = teamService.saveNewTeam(member.getName() + "팀");
-            Division division = divisionService.saveNewDivision(newTeam, member, divisionService.makeNewDivisionDto("승인", Position.LEADER));
+            Division division = divisionService.saveNewDivision(newTeam, member, divisionService.makeNewDivisionDto(Status.COMPLETE, Position.LEADER));
             member.setDivision(division);
             memberRepository.save(member);
         }
-        if (!memberRepository.existsByUsername("test2")) {
+        if (!memberRepository.existsByUsername("01011111111")) {
             memberService.saveNewMember(makeNewMember("01022222222", "김경자", Role.EMPLOYEE));
         }
-        if (!memberRepository.existsByUsername("test3")) {
+        if (!memberRepository.existsByUsername("01011111111")) {
             memberService.saveNewMember(makeNewMember("01033333333", "한문철", Role.EMPLOYEE));
+        }
+        StringBuilder sb;
+        for (int i = 0; i < 15; i++) {
+            Random random = new Random();
+            sb = new StringBuilder();
+            for (int j = 0; j < 11; j++) {
+                int createNum = random.nextInt(9);
+                sb.append(createNum);
+            }
+            if (!memberRepository.existsByUsername(sb.toString())) {
+                memberService.saveNewMember(makeNewMember(sb.toString(), sb.substring(0, 3), Role.EMPLOYEE));
+            }
         }
     }
 

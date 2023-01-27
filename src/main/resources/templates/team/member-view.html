@@ -56,33 +56,51 @@
                         </div>
 
                         <div class="md:py-8 py-3">
-                            <h1 class="block text-lg font-bold mb-4"> 팀원 선택  </h1>
+                            <h1 class="block text-lg font-bold mb-4"> 👨‍👦‍👦 팀원 선택  </h1>
                             <div class="md:flex">
                                 <div class="md:w-2/3 space-y-4 -mt-2">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="p-1.5 rounded-full text-xl">👨‍👦‍👦</div>
+                                    <div id="select-div" class="items-center space-x-3">
                                         <div class="flex-1">
                                             <input type="text" class="live-search-box" placeholder="search here" />
 
-                                            <ul id="search-result" class="live-search-list hidden">
-                                                <form id="inviteMember" onsubmit="return false">
-                                                    <li th:each="user : ${members}">
+                                            <ul id="search-result" class="live-search-list">
+                                                <li th:each="user : ${members}">
+                                                    <form th:id="|inviteMember${user.getId()}|" onsubmit="return false">
                                                         <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
                                                             <div class="w-10 h-10 flex-shrink-0 rounded-md relative">
                                                                 <img src="assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
                                                             </div>
                                                             <div class="flex-1">
                                                                 <h3 class="text-base font-semibold capitalize" th:text="|${user.getName()}(${#strings.substring(user.getUsername(), 7, 11)})|"> 유저이름 </h3>
+                                                                <th:block th:if="${user.getDivision() == null}">
+                                                                    <input type="hidden" name="username" th:value="${user.getUsername()}">
+                                                                    <input type="hidden" name="status" value="AWAIT">
+                                                                    <div>
+                                                                        <select name="position">
+                                                                            <option th:each="position : ${T(com.ezkorea.hybrid_app.domain.user.division.Position).values()}"
+                                                                                    th:if="${!position.equals(T(com.ezkorea.hybrid_app.domain.user.division.Position).LEADER)}"
+                                                                                    th:selected="${position.equals(T(com.ezkorea.hybrid_app.domain.user.division.Position).MEMBER)}"
+                                                                                    th:value="${position}"
+                                                                                    th:text="${position.viewName}">
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                </th:block>
                                                             </div>
                                                             <th:block th:if="${user.getDivision() == null}">
-                                                                <button type="submit" th:data-value="${user.getUsername()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="flex items-center justify-center h-9 px-4 rounded-md border font-semibold"> 초대하기 </button>
+                                                                <button type="submit" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="flex items-center text-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 초대하기 </button>
                                                             </th:block>
                                                             <th:block th:if="${user.getDivision() != null}">
-                                                                <button type="button" class="flex items-center justify-center h-9 px-4 rounded-md border font-semibold"> 팀존재 </button>
+                                                                <th:block th:if="${user.getDivision().getStatus().equals('승인')}">
+                                                                    <button type="button" class="flex items-center justify-center h-9 text-red-600 px-4 rounded-md border font-semibold"> 팀존재 </button>
+                                                                </th:block>
+                                                                <th:block th:if="${user.getDivision().getStatus().equals('대기')}">
+                                                                    <button type="button" class="flex items-center justify-center h-9 text-yellow-600 px-4 rounded-md border font-semibold"> 수락대기 </button>
+                                                                </th:block>
                                                             </th:block>
                                                         </div>
-                                                    </li>
-                                                </form>
+                                                    </form>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -115,7 +133,6 @@
                     $('.live-search-list li').each(function(){
 
                         if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
-                            $('#search-result').removeClass("hidden");
                             $(this).show();
                         } else {
                             $(this).hide();
@@ -126,15 +143,33 @@
                 });
 
             });
+            jQuery.fn.serializeObject = function() {
+                var obj = null;
+                try {
+                    if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
+                        var arr = this.serializeArray();
+                        if (arr) {
+                            obj = {};
+                            jQuery.each(arr, function() {
+                                obj[this.name] = this.value;
+                            });
+                        }//if ( arr ) {
+                    }
+                } catch (e) {
+                    alert(e.message);
+                } finally {
+                }
+
+                return obj;
+            };
             let inviteBtn = {
-                doInvite: function (username) {
-                    var data = {
-                        username: username
-                    };
+                doInvite: function (id) {
+                    console.log(id);
+                    console.log($(`#inviteMember${id}`).serializeObject());
                     $.ajax({
                         type: "POST",
                         url: "/team",
-                        data: JSON.stringify(data),
+                        data: JSON.stringify($(`#inviteMember${id}`).serializeObject()),
                         dataType: 'json',
                         contentType: 'application/json; charset=utf-8',
                         beforeSend: function (jqXHR, settings) {
@@ -147,7 +182,7 @@
                                 icon: 'success',
                                 text: '정상적으로 초대되었습니다!',
                             }).then(() => {
-                                $(location).attr('href', '/team');
+                                $('#select-div').load(location.href+' #select-div');
                             })
                         },
                         error: function (xhr, status, error) {

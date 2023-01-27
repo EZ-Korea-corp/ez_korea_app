@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.service.user.division;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.division.DivisionRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Position;
+import com.ezkorea.hybrid_app.domain.user.division.Status;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
@@ -35,7 +36,10 @@ public class DivisionService {
                 .orElseThrow( () -> new MemberNotFoundException("해당 멤버의 소속을 찾을 수 없습니다."));
     }
 
-    public DivisionDto makeNewDivisionDto(String status, Position position) {
+    /**
+     * 테스트 계정 전용 메소드
+     * */
+    public DivisionDto makeNewDivisionDto(Status status, Position position) {
         DivisionDto newDto = new DivisionDto();
         newDto.setPosition(position);
         newDto.setStatus(status);
@@ -43,10 +47,9 @@ public class DivisionService {
     }
 
     @Transactional
-    public void setEmployeeDivision(String username, Member leader) {
-        Member employee = memberService.findByUsername(username);
+    public void setEmployeeDivision(DivisionDto dto, Member leader) {
+        Member employee = memberService.findByUsername(dto.getUsername());
         Division leaderDivision = findByMember(leader);
-        DivisionDto dto = makeNewDivisionDto("승인", Position.MEMBER);
         Division division = saveNewDivision(
                 leaderDivision.getTeam(), employee, dto
         );
