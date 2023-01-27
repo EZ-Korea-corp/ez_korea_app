@@ -33,7 +33,11 @@
                                 <div class="flex items-center space-x-3">
                                     <div class="p-1.5 rounded-full text-xl">⛽️</div>
                                     <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold"> 태양 제2 주유소 </span>(수정)</div>
+                                        <div>
+                                            <span class="text-2xl font-semibold" th:text="${dailyTask.getGasStation().getStationName()}"> 주유소 이름 </span>
+                                            <span class="text-sm">(수정)</span>
+                                        </div>
+                                        <p th:text="${dailyTask.getGasStation().getStationLocation()}"></p>
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">

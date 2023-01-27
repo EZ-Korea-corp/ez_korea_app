@@ -8,7 +8,7 @@
   <head th:replace="layout/fragments/common/head :: head"></head>
 
   <body>
-    <div id="wrapper">
+    <div id="wrapper" th:with="member = ${#authentication.getPrincipal().getMember()}">
 
       <!-- Header -->
       <div class="dark">
@@ -18,7 +18,7 @@
       <div th:replace="layout/fragments/main/side-bar :: sidebar"></div>
 
       <div class="main_content">
-        <div class="mcontainer" th:with="member = ${#authentication.getPrincipal().getMember()}">
+        <div class="mcontainer">
           <main layout:fragment="main"></main>
         </div>
         <!-- Footer -->
