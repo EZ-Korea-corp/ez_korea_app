@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.app.Config;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
+import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.wiper.WiperSize;
 import com.ezkorea.hybrid_app.domain.wiper.WiperSort;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
@@ -25,23 +26,23 @@ public class TestDataInit {
     @PostConstruct
     public void testMemberDataInit() {
         if (!memberRepository.existsByUsername("test1")) {
-            memberService.saveNewMember(makeNewMember("test1", "고봉민", true));
+            memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.LEADER));
         }
         if (!memberRepository.existsByUsername("test2")) {
-            memberService.saveNewMember(makeNewMember("test2", "김경자", false));
+            memberService.saveNewMember(makeNewMember("01022222222", "김경자", Role.EMPLOYEE));
         }
         if (!memberRepository.existsByUsername("test3")) {
-            memberService.saveNewMember(makeNewMember("test3", "한문철", false));
+            memberService.saveNewMember(makeNewMember("01033333333", "한문철", Role.EMPLOYEE));
         }
     }
 
-    public SignUpDto makeNewMember(String username, String name, boolean isLeader) {
+    public SignUpDto makeNewMember(String username, String name, Role role) {
         SignUpDto newDto = new SignUpDto();
         newDto.setUsername(username);
         newDto.setPassword("1234");
         newDto.setName(name);
         newDto.setSex("MALE");
-        newDto.setLeader(isLeader);
+        newDto.setRole(role);
 
         return newDto;
     }

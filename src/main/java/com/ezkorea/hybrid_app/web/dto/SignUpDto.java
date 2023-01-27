@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.web.dto;
 
+import com.ezkorea.hybrid_app.domain.user.member.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,4 +11,5 @@ public class SignUpDto {
     private String sex;
     private String name;
     private boolean isLeader;
+    private Role role;
 }

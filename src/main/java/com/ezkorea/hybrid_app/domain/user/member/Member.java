@@ -4,7 +4,6 @@ import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
-import com.ezkorea.hybrid_app.domain.user.team.Team;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,7 +37,9 @@ public class Member extends BaseEntity {
     private String name;
 
     @Setter
-    private boolean isLeader;
+    @Column(name = "member_role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<CommuteTime> commuteTimeList = new ArrayList<>();
