@@ -22,12 +22,13 @@ public class Division extends BaseEntity {
     @OneToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     private Member member;
 
-    @Enumerated(EnumType.STRING)
     @Setter
+    @Enumerated(EnumType.STRING)
     private Position position;
 
     @Setter
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     public void addBasicInfo(Team team, Member member) {
         this.member = member;

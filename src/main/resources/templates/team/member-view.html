@@ -91,10 +91,10 @@
                                                                 <button type="submit" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="flex items-center text-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 초대하기 </button>
                                                             </th:block>
                                                             <th:block th:if="${user.getDivision() != null}">
-                                                                <th:block th:if="${user.getDivision().getStatus().equals('승인')}">
+                                                                <th:block th:if="${user.getDivision().getStatus().equals(T(com.ezkorea.hybrid_app.domain.user.division.Status).COMPLETE)}">
                                                                     <button type="button" class="flex items-center justify-center h-9 text-red-600 px-4 rounded-md border font-semibold"> 팀존재 </button>
                                                                 </th:block>
-                                                                <th:block th:if="${user.getDivision().getStatus().equals('대기')}">
+                                                                <th:block th:if="${user.getDivision().getStatus().equals(T(com.ezkorea.hybrid_app.domain.user.division.Status).AWAIT)}">
                                                                     <button type="button" class="flex items-center justify-center h-9 text-yellow-600 px-4 rounded-md border font-semibold"> 수락대기 </button>
                                                                 </th:block>
                                                             </th:block>
