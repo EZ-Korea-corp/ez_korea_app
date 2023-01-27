@@ -23,4 +23,11 @@ public class ExceptionHandlerController {
 
         return Script.href("/", e.getMessage());
     }
+
+    @ExceptionHandler(value = GasStationNotFoundException.class)
+    public @ResponseBody String notExistGasStaion(GasStationNotFoundException e) {
+        log.error("GasStationNotFoundException={}", e);
+
+        return Script.href("/", e.getMessage());
+    }
 }

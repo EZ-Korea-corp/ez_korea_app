@@ -10,9 +10,36 @@
 
     <main layout:fragment="main">
         <style>
-            .icon {
-                display: inline-block;
-                vertical-align: middle;
+            .live-search-list {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                padding: 1em;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                font-family: 'Lato', sans-serif;
+                color: #fff;
+            }
+
+            .live-search-box {
+                width: 100%;
+                display: block;
+                padding: 1em;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                border: 1px solid #3498db;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+            }
+
+            .live-search-list li {
+                color: #fff;
+                list-style: none;
+                padding: 0;
+                margin: 5px 0;
             }
         </style>
         <div class="lg:space-x-12">
@@ -23,8 +50,8 @@
 
                         <div class="md:py-8 py-3">
                             <h2 class="text-xl font-bold">
-                                <span th:text="${member.getName()}"></span> 팀장님
-                                <p>주유소와 팀원을 선택해주세요.</p>
+                                <span th:text="|${member.getName()} ${member.getRole().getViewName()}|"></span>님
+                                <p>오늘 근무할 주유소를 선택해주세요.</p>
                             </h2>
                         </div>
 
@@ -40,21 +67,13 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="flex items-center space-x-3">
-                                        <div class="p-1.5 rounded-full text-xl">👨‍👦‍👦</div>
-                                        <div class="flex-1">
-                                            <select id="member" name="member" class="border border-gray-300 text-sm rounded-lg block w-full p-2.5">
-                                                <option value="123">123</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="md:py-8 py-3">
                             <div class="space-y-3">
-                                <button type="submit" class="btn bg-blue-600 py-2 rounded-lg w-full">저장하기</button>
+                                <button id="submit" type="submit" class="btn bg-blue-600 py-2 rounded-lg w-full">저장하기</button>
                             </div>
                         </div>
 
@@ -63,6 +82,50 @@
                 </div>
             </form>
         </div>
+        <script>
+            $("#submit").on("click", function (){
+                var stationName = $("#gasStation option:selected").val();
+                Swal.fire({
+                    html: stationName + '을 선택하시겠습니까?',
+                    showDenyButton: true,
+                    confirmButtonText: '선택',
+                    denyButtonText: `취소`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let data = {
+                            stationName : stationName
+                        };
+                        console.log(data);
+                        $.ajax({
+                            type: "POST",
+                            url: "/sales/select",
+                            dataType: 'json',
+                            contentType: 'application/json; charset=utf-8',
+                            data: JSON.stringify(data),
+                            beforeSend: function (jqXHR, settings) {
+                                var header = $("meta[name='_csrf_header']").attr("content");
+                                var token = $("meta[name='_csrf']").attr("content");
+                                jqXHR.setRequestHeader(header, token);
+                            },
+                            success: function () {
+                                Swal.fire({
+                                    icon: 'success',
+                                    text: '정상적으로 저장되었습니다.',
+                                }).then(() => {
+                                    $(location).attr('href', '/sales');
+                                })
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: '작성한 내용을 다시 확인해주세요!',
+                                })
+                            }
+                        });
+                    }
+                })
+            });
+        </script>
     </main>
 
 </body>

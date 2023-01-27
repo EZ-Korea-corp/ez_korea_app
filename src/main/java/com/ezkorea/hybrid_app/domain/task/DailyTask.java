@@ -27,6 +27,7 @@ public class DailyTask extends BaseEntity {
     private List<SaleProduct> productList = new ArrayList<>();
 
     @OneToOne
+    @Setter
     private GasStation gasStation;
 
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)

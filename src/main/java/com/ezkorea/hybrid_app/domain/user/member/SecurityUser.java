@@ -15,6 +15,7 @@ public class SecurityUser extends User {
     private final String username;
     private final String name;
     private final String sex;
+    private final Role role;
     private final LocalDateTime createDate;
 
     public SecurityUser(Member member, List<GrantedAuthority> authorities) {
@@ -24,6 +25,7 @@ public class SecurityUser extends User {
         this.name = member.getName();
         this.username = member.getUsername();
         this.createDate = member.getCreateDate();
+        this.role = member.getRole();
     }
 
     public Member getMember() {
@@ -32,6 +34,7 @@ public class SecurityUser extends User {
                 .createDate(createDate)
                 .name(name)
                 .sex(sex)
+                .role(role)
                 .username(username)
                 .build();
     }
