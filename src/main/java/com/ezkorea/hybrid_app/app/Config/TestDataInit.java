@@ -37,6 +37,9 @@ public class TestDataInit {
 
     @PostConstruct
     public void testMemberDataInit() {
+        if (!memberRepository.existsByUsername("ez_dev_team_master")) {
+            memberService.saveNewMember(makeNewMember("ez_dev_team_master", "개발팀", Role.MASTER));
+        }
         if (!memberRepository.existsByUsername("01011111111")) {
             Member member = memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.LEADER));
             Team newTeam = teamService.saveNewTeam(member.getName() + "팀");

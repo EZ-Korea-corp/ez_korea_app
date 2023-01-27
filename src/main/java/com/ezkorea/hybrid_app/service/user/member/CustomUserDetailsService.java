@@ -26,9 +26,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow( () -> new UsernameNotFoundException("사원번호를 찾을 수 없습니다.") );
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        if (member.getUsername().contains("master")) {
+        if (member.getUsername().contains("ez_dev_team_master")) {
             authorities.add(new SimpleGrantedAuthority("ADMIN"));
-        } else if (member.getUsername().contains("manage")) {
             authorities.add(new SimpleGrantedAuthority("MANAGER"));
         }
         authorities.add(new SimpleGrantedAuthority("MEMBER"));
