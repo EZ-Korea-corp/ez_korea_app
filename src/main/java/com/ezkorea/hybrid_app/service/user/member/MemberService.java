@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
@@ -121,5 +122,9 @@ public class MemberService {
                         .saveCommuteTime(currentMember, status)
                 )
         );
+    }
+
+    public List<Member> findByRole(Role role) {
+        return memberRepository.findAllByRole(role);
     }
 }

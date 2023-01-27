@@ -23,10 +23,15 @@ public class Division extends BaseEntity {
     private Member member;
 
     @Enumerated(EnumType.STRING)
+    @Setter
     private Position position;
 
+    @Setter
     private String status;
 
-
+    public void addBasicInfo(Team team, Member member) {
+        this.member = member;
+        this.team = team;
+    }
 
 }

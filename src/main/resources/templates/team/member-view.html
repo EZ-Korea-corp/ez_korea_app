@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .live-search-list {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                padding: 1em;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                font-family: 'Lato', sans-serif;
+                color: #fff;
+            }
+
+            .live-search-box {
+                width: 100%;
+                display: block;
+                padding: 1em;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                border: 1px solid #3498db;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+            }
+
+            .live-search-list li {
+                color: #fff;
+                list-style: none;
+                padding: 0;
+                margin: 5px 0;
+            }
+        </style>
+        <div class="lg:space-x-12">
+            <form id="selectForm" onsubmit="return false;">
+                <div class="lg:w-full card">
+
+                    <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                        <div class="md:py-8 py-3">
+                            <h2 class="text-xl font-bold">
+                                <span th:text="|${member.getName()} ${member.getRole().getViewName()}|"></span>님
+                                <p>함께할 팀원을 선택해주세요.</p>
+                            </h2>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <h1 class="block text-lg font-bold mb-4"> 팀원 선택  </h1>
+                            <div class="md:flex">
+                                <div class="md:w-2/3 space-y-4 -mt-2">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-1.5 rounded-full text-xl">👨‍👦‍👦</div>
+                                        <div class="flex-1">
+                                            <input type="text" class="live-search-box" placeholder="search here" />
+
+                                            <ul id="search-result" class="live-search-list hidden">
+                                                <form id="inviteMember" onsubmit="return false">
+                                                    <li th:each="user : ${members}">
+                                                        <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
+                                                            <div class="w-10 h-10 flex-shrink-0 rounded-md relative">
+                                                                <img src="assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
+                                                            </div>
+                                                            <div class="flex-1">
+                                                                <h3 class="text-base font-semibold capitalize" th:text="|${user.getName()}(${#strings.substring(user.getUsername(), 7, 11)})|"> 유저이름 </h3>
+                                                            </div>
+                                                            <th:block th:if="${user.getDivision() == null}">
+                                                                <button type="submit" th:data-value="${user.getUsername()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="flex items-center justify-center h-9 px-4 rounded-md border font-semibold"> 초대하기 </button>
+                                                            </th:block>
+                                                            <th:block th:if="${user.getDivision() != null}">
+                                                                <button type="button" class="flex items-center justify-center h-9 px-4 rounded-md border font-semibold"> 팀존재 </button>
+                                                            </th:block>
+                                                        </div>
+                                                    </li>
+                                                </form>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <div class="space-y-3">
+                                <button type="submit" class="btn bg-blue-600 py-2 rounded-lg w-full">저장하기</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <script th:inline="javascript">
+            jQuery(document).ready(function($){
+
+                $('.live-search-list li').each(function(){
+                    $(this).attr('data-search-term', $(this).text().toLowerCase());
+                });
+
+                $('.live-search-box').on('keyup', function(){
+
+                    var searchTerm = $(this).val().toLowerCase();
+
+                    $('.live-search-list li').each(function(){
+
+                        if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                            $('#search-result').removeClass("hidden");
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+
+                    });
+
+                });
+
+            });
+            let inviteBtn = {
+                doInvite: function (username) {
+                    var data = {
+                        username: username
+                    };
+                    $.ajax({
+                        type: "POST",
+                        url: "/team",
+                        data: JSON.stringify(data),
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        beforeSend: function (jqXHR, settings) {
+                            var header = $("meta[name='_csrf_header']").attr("content");
+                            var token = $("meta[name='_csrf']").attr("content");
+                            jqXHR.setRequestHeader(header, token);
+                        },
+                        success: function () {
+                            Swal.fire({
+                                icon: 'success',
+                                text: '정상적으로 초대되었습니다!',
+                            }).then(() => {
+                                $(location).attr('href', '/team');
+                            })
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                text: '페이지를 새로고침하고 다시 시도해주세요!',
+                            })
+                        }
+                    });
+                }
+            }
+        </script>
+    </main>
+
+</body>
+
+</html>

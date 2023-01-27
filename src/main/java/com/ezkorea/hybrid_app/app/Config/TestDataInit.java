@@ -2,18 +2,26 @@ package com.ezkorea.hybrid_app.app.Config;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
+import com.ezkorea.hybrid_app.domain.user.division.Division;
+import com.ezkorea.hybrid_app.domain.user.division.Position;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
+import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.domain.wiper.WiperSize;
 import com.ezkorea.hybrid_app.domain.wiper.WiperSort;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.wiper.Wiper;
 import com.ezkorea.hybrid_app.domain.wiper.WiperRepository;
+import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
+import com.ezkorea.hybrid_app.service.user.team.TeamService;
+import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,11 +30,17 @@ public class TestDataInit {
     private final WiperRepository wiperRepository;
     private final GasStationRepository gasStationRepository;
     private final MemberService memberService;
+    private final TeamService teamService;
+    private final DivisionService divisionService;
 
     @PostConstruct
     public void testMemberDataInit() {
         if (!memberRepository.existsByUsername("test1")) {
-            memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.LEADER));
+            Member member = memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.LEADER));
+            Team newTeam = teamService.saveNewTeam(member.getName() + "팀");
+            Division division = divisionService.saveNewDivision(newTeam, member, divisionService.makeNewDivisionDto("승인", Position.LEADER));
+            member.setDivision(division);
+            memberRepository.save(member);
         }
         if (!memberRepository.existsByUsername("test2")) {
             memberService.saveNewMember(makeNewMember("01022222222", "김경자", Role.EMPLOYEE));
