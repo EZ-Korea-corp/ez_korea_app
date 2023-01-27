@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.domain.user.member;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
+import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -49,7 +50,11 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<DailyTask> taskList = new ArrayList<>();
 
-    @ManyToOne(targetEntity = Team.class, fetch = FetchType.LAZY)
-    private Team team;
+    @OneToOne(targetEntity = Division.class, fetch = FetchType.LAZY)
+    private Division division;
+
+    public void setDivision(Division division) {
+        this.division = division;
+    }
 
 }
