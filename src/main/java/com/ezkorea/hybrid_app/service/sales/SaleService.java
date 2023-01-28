@@ -8,6 +8,8 @@ import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.wiper.Wiper;
+import com.ezkorea.hybrid_app.domain.wiper.WiperRepository;
+import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
 import com.ezkorea.hybrid_app.web.dto.WiperDto;
 import com.ezkorea.hybrid_app.web.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class SaleService {
     private final SaleProductRepository spRepository;
     private final GasStationRepository gsRepository;
     private final DailyTaskRepository dtRepository;
-
+    private final WiperRepository wpRepository;
     private final WiperService wiperService;
     private final GasStationService gsService;
 
@@ -64,5 +65,33 @@ public class SaleService {
     public void saveDailyGasStation(String stationName, Member member) {
         DailyTask task = findByMemberAndDate(member);
         task.setGasStation(gsService.findByStationName(stationName));
+    }
+
+    @Transactional
+    public void saveInputProduct(Member member, List<SaleProductDto> data) {
+        DailyTask currentTask = findByMemberAndDate(member);
+        spRepository.deleteByTaskAndStatus(currentTask, "in"); // 재등록
+
+        data.forEach(item -> {
+            // 입력된 입고만 등록
+            if(item.getCount() > 0) {
+                SaleProduct newInputProduct = SaleProduct.builder()
+                        .task(currentTask)
+                        .status("in")
+                        .count(item.getCount())
+                        .wiper(wpRepository.findById(item.getWiper()).get())
+                        .build();
+
+                spRepository.save(newInputProduct);
+            }
+        });
+    }
+
+    @Transactional
+    public List<SaleProduct> findInputProduct(Member member) {
+        DailyTask currentTask = findByMemberAndDate(member);
+        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatus(currentTask, "in");
+
+        return inputList;
     }
 }
