@@ -17,7 +17,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "member")
 public class DailyTask extends BaseEntity {
 
     private LocalDate taskDate;
