@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script th:fragment="ajax" th:inline="javascript">
+        jQuery.fn.serializeObject = function() {
+            var obj = null;
+            try {
+                if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
+                    var arr = this.serializeArray();
+                    if (arr) {
+                        obj = {};
+                        jQuery.each(arr, function() {
+                            obj[this.name] = this.value;
+                        });
+                    }//if ( arr ) {
+                }
+            } catch (e) {
+                alert(e.message);
+            } finally {
+            }
+            return obj;
+        };
+        function hrefWhenAjaxSuccess(data, url, method, successUrl, failMessage){
+            /*console.log(data);
+            console.log(url);
+            console.log(method);
+            console.log(successUrl);
+            console.log(failMessage);*/
+
+            $.ajax({
+                type: method,
+                url: url,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data),
+                beforeSend: function (jqXHR, settings) {
+                    var header = $("meta[name='_csrf_header']").attr("content");
+                    var token = $("meta[name='_csrf']").attr("content");
+                    jqXHR.setRequestHeader(header, token);
+                },
+                success: function () {
+                    Swal.fire({
+                        icon: 'success',
+                        text: '정상적으로 저장되었습니다.',
+                    }).then(() => {
+                        $(location).attr('href', successUrl);
+                    })
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: failMessage,
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
