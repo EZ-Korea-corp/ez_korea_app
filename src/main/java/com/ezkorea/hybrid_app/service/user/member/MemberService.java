@@ -6,6 +6,7 @@ import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
+import com.ezkorea.hybrid_app.web.dto.ProfileDto;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -146,5 +147,15 @@ public class MemberService {
 
     public List<Member> findAllMember() {
         return memberRepository.findAll();
+    }
+
+    public boolean updateMemberProfile(ProfileDto dto, Member member) {
+        if (passwordEncoder.matches(dto.getOriginPassword(), findMemberById(member.getId()).getPassword())) {
+            member.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            forceAuthentication(member);
+            memberRepository.save(member);
+            return true;
+        }
+        return false;
     }
 }
