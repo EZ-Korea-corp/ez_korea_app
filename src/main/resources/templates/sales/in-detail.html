@@ -73,56 +73,55 @@
             </div>
 
         </div>
+        <script>
 
+            $(document).ready(function(){
+
+                // 입고등록
+                $("#submit").on("click", function() {
+                    fnSaveInputProduct();
+                });
+
+                // 범위지정 (1~100)
+                $("#dataForm input").on("keyup", function() {
+                    checkNumber($(this), 1, 100);
+                });
+
+                fnFindInputProduct();
+            });
+
+            // 입고조회
+            function fnFindInputProduct() {
+                const url = "/sales/findInput";
+
+                fnFindJsonAjax("", url, fnFindInputProductResult);
+            }
+
+            // 입고등록
+            function fnSaveInputProduct() {
+                const url = "/sales/input";
+                const data = [];
+                const form = $('#dataForm').serializeArray();
+                form.forEach(function(item) {
+                    data.push({
+                        "wiper" : item.name,
+                        "count" : item.value
+                    })
+                })
+
+                fnCrudJsonAjax(data, url, null, "post", "정상적으로 저장되었습니다.");
+            }
+
+            function fnFindInputProductResult(data) {
+                const $form = $("#dataForm");
+
+                data.result.forEach(function(item) {
+                    $form.find("input[name=" + item.wiper + "]").val(item.count);
+                })
+            }
+
+        </script>
     </main>
 </body>
 
 </html>
-<script>
-
-    $(document).ready(function(){
-
-        // 입고등록
-        $("#submit").on("click", function() {
-            fnSaveInputProduct();
-        });
-
-        // 범위지정 (1~100)
-        $("#dataForm input").on("keyup", function() {
-            checkNumber($(this), 1, 100);
-        });
-
-        fnFindInputProduct();
-    });
-
-    // 입고조회
-    function fnFindInputProduct() {
-        const url = "/sales/findInput";
-
-        fnPostJsonAjax("", url, fnFindInputProductResult);
-    }
-
-    // 입고등록
-    function fnSaveInputProduct() {
-        const url = "/sales/input";
-        const data = [];
-        const form = $('#dataForm').serializeArray();
-        form.forEach(function(item) {
-            data.push({
-                "wiper" : item.name,
-                "count" : item.value
-            })
-        })
-
-        fnPostFireJsonAjax(data, url, null, "정상적으로 저장되었습니다.");
-    }
-
-    function fnFindInputProductResult(data) {
-        const $form = $("#dataForm");
-
-        data.result.forEach(function(item) {
-            $form.find("input[name=" + item.wiper + "]").val(item.count);
-        })
-    }
-
-</script>

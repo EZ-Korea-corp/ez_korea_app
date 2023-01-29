@@ -3,11 +3,11 @@ function checkNumber($obj, min, max) {
     if(!($obj.val() >= min && $obj.val() <= max)) $obj.val("");
 }
 
-// ajax 메소드:post, 파라미터:json, Fire
-function fnPostFireJsonAjax(data, url, fnCallBack, successMsg) {
+// ajax 메소드:post, put, delete, 파라미터:json
+function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg) {
 
     $.ajax({
-        type: 'post',
+        type: method,
         url: url,
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
@@ -35,7 +35,7 @@ function fnPostFireJsonAjax(data, url, fnCallBack, successMsg) {
 }
 
 // ajax 메소드:post, 파라미터:json
-function fnPostJsonAjax(data, url, fnCallBack) {
+function fnFindJsonAjax(data, url, fnCallBack) {
 
     $.ajax({
         type: 'post',
