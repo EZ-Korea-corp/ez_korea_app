@@ -1,12 +1,10 @@
 package com.ezkorea.hybrid_app.service.user.member;
 
-import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
-import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
@@ -83,14 +81,13 @@ public class MemberService {
      * 회원 정보 갱신을 위한 메소드
      * @param member 현재 로그인된 Member
      * */
-    public void forceAuthentication(Member member) {
+    @Transactional
+    public void forceAuthentication(Member member, Role role) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if (member.getUsername().contains("master")) {
-            authorities.add(new SimpleGrantedAuthority("ADMIN"));
-        } else if (member.getUsername().contains("manage")) {
-            authorities.add(new SimpleGrantedAuthority("MANAGER"));
-        }
-        authorities.add(new SimpleGrantedAuthority("MEMBER"));
+        authorities.add(new SimpleGrantedAuthority(role.toString().replaceAll("ROLE_", "")));
+        authorities.add(new SimpleGrantedAuthority("EMPLOYEE"));
+
+        // 현재 로그인 유저가 아닌 다른 멤버 권한 수정
 
         SecurityUser securityUser = new SecurityUser(member, authorities);
 
@@ -103,6 +100,11 @@ public class MemberService {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
+    }
+
+    @Transactional
+    public void updateMemberRole(Member member, Role role) {
+        member.setRole(role);
     }
 
     /**
@@ -120,8 +122,7 @@ public class MemberService {
         forceAuthentication(memberRepository
                 .save(commuteService
                         .saveCommuteTime(currentMember, status)
-                )
-        );
+                ), currentMember.getRole());
     }
 
     public List<Member> findByRole(Role role) {

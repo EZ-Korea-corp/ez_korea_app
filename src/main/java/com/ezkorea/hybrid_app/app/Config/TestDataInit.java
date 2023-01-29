@@ -38,20 +38,20 @@ public class TestDataInit {
     @PostConstruct
     public void testMemberDataInit() {
         if (!memberRepository.existsByUsername("ez_dev_team_master")) {
-            memberService.saveNewMember(makeNewMember("ez_dev_team_master", "개발팀", Role.MASTER));
+            memberService.saveNewMember(makeNewMember("ez_dev_team_master", "개발팀", Role.ROLE_MASTER));
         }
         if (!memberRepository.existsByUsername("01011111111")) {
-            Member member = memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.LEADER));
+            Member member = memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.ROLE_LEADER));
             Team newTeam = teamService.saveNewTeam(member.getName() + "팀");
             Division division = divisionService.saveNewDivision(newTeam, member, divisionService.makeNewDivisionDto(Status.COMPLETE, Position.LEADER));
             member.setDivision(division);
             memberRepository.save(member);
         }
         if (!memberRepository.existsByUsername("01011111111")) {
-            memberService.saveNewMember(makeNewMember("01022222222", "김경자", Role.EMPLOYEE));
+            memberService.saveNewMember(makeNewMember("01022222222", "김경자", Role.ROLE_EMPLOYEE));
         }
         if (!memberRepository.existsByUsername("01011111111")) {
-            memberService.saveNewMember(makeNewMember("01033333333", "한문철", Role.EMPLOYEE));
+            memberService.saveNewMember(makeNewMember("01033333333", "한문철", Role.ROLE_EMPLOYEE));
         }
         StringBuilder sb;
         for (int i = 0; i < 15; i++) {
@@ -62,7 +62,7 @@ public class TestDataInit {
                 sb.append(createNum);
             }
             if (!memberRepository.existsByUsername(sb.toString())) {
-                memberService.saveNewMember(makeNewMember(sb.toString(), sb.substring(0, 3), Role.EMPLOYEE));
+                memberService.saveNewMember(makeNewMember(sb.toString(), sb.substring(0, 3), Role.ROLE_EMPLOYEE));
             }
         }
     }
