@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.Map;
+
 @Controller
 @RequiredArgsConstructor
 public class SaleController {
@@ -21,14 +23,14 @@ public class SaleController {
     public String showSalesPage(@AuthenticationPrincipal SecurityUser securityUser,
                                 Model model) {
 
-        DailyTask currentTask = saleService.findByMemberAndDate(securityUser.getMember());
+        Map<String, Object> returnMap = saleService.findCurrentTask(securityUser.getMember());
 
-        if (currentTask.getGasStation() == null) {
+        if (returnMap.size() == 0) {
             model.addAttribute("stations", saleService.findAllGasStation());
             return "sales/sales-select";
         }
 
-        model.addAttribute("dailyTask", currentTask);
+        model.addAttribute("dailyTask", returnMap);
         return "sales/sales-detail";
     }
 

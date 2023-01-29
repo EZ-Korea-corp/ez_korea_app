@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -93,5 +96,25 @@ public class SaleService {
         List<SaleProduct> inputList = spRepository.findAllByTaskAndStatus(currentTask, "in");
 
         return inputList;
+    }
+
+    public Map<String, Object> findCurrentTask(Member member) {
+        Map<String, Object> map = new HashMap<>();
+        DailyTask currentTask = findByMemberAndDate(member);
+
+        if (currentTask.getGasStation() != null) {
+            List<SaleProduct> inputList = currentTask.getProductList()
+                                                     .stream()
+                                                     .filter( p -> p.getStatus().equals("out"))
+                                                     .toList();
+
+            map.put("name", currentTask.getMember().getName());
+            map.put("stationNm", currentTask.getGasStation().getStationName());
+            map.put("location", currentTask.getGasStation().getStationLocation());
+            map.put("count", inputList.size());
+            map.put("list", inputList);
+        }
+
+        return map;
     }
 }
