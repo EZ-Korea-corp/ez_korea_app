@@ -128,4 +128,8 @@ public class MemberService {
     public List<Member> findByRole(Role role) {
         return memberRepository.findAllByRole(role);
     }
+
+    public List<Member> findAllMember() {
+        return memberRepository.findAll();
+    }
 }

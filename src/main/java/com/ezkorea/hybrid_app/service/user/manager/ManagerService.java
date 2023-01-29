@@ -40,4 +40,7 @@ public class ManagerService {
         }
     }
 
+    public List<Member> findAllMember() {
+        return mService.findAllMember();
+    }
 }

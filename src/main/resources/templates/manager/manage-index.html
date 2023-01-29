@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+<main layout:fragment="main">
+    <div class="lg:space-x-12">
+
+        <div class="">
+
+            <h2 class="text-xl font-semibold mb-4"> ⚙️ 사원 관리 </h2>
+
+            <div class="card divide-y divide-gray-100 sm:m-0 -mx-4">
+
+                <div class="items-start p-7 sm:space-x-6">
+                    <div class="sm:order-2">
+                        <a th:href="@{/manager/member}">
+                            <h3 class="text-xl font-medium"> <span class="mr-2">👔</span> 사원 직급 조정 </h3>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-semibold my-4"> 🔎 현황 조회 </h2>
+
+            <div class="card divide-y divide-gray-100 sm:m-0 -mx-4">
+
+                <div class="items-start p-7 sm:space-x-6">
+                    <div class="sm:order-2">
+                        <a th:href="@{/manager/member}">
+                            <h3 class="text-xl font-medium"> <span class="mr-2">👨‍👩‍👦‍👦</span> 전체 사원 조회 </h3>
+                        </a>
+                    </div>
+                </div>
+                <div class="items-start p-7 sm:space-x-6">
+                    <div class="sm:order-2">
+                        <a th:href="@{/manager/member}">
+                            <h3 class="text-xl font-medium"> <span class="mr-2">💰</span> 금일 매출 조회 </h3>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>

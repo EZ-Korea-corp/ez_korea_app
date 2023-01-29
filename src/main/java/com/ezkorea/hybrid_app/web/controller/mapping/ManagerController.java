@@ -19,13 +19,12 @@ public class ManagerController {
 
     @GetMapping("/home")
     public String showManagerPage() {
-        return "manager/index";
+        return "manager/manage-index";
     }
 
     @GetMapping("/member")
     public String showMemberManagingPage(Model model) {
-        model.addAttribute("employeeList", managerService.findAllMemberByRole(Role.ROLE_EMPLOYEE));
-        model.addAttribute("leaderList", managerService.findAllMemberByRole(Role.ROLE_LEADER));
+        model.addAttribute("employeeList", managerService.findAllMember());
         return "manager/manage-member";
     }
 }
