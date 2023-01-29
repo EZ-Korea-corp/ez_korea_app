@@ -10,7 +10,6 @@
 
 <main layout:fragment="main">
     <div class="lg:space-x-12">
-        <p sec:authentication="principal.authorities"></p>
         <div class="">
             <form th:action="@{/member}" method="post" id="commuteForm">
                 <div class=" md:mb-4 mb-3" th:if="${!isOnTime}">
