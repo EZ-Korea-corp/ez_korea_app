@@ -9,6 +9,7 @@ import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -43,6 +45,9 @@ public class MemberService {
      */
     public Member saveNewMember(SignUpDto dto) {
         dto.setPassword(passwordEncode(dto.getPassword()));
+        if (!dto.getUsername().equals("ez_dev_team_master")) {
+            dto.setRole(Role.ROLE_EMPLOYEE);
+        }
         return memberRepository.save(mapper.map(dto, Member.class));
     }
 
@@ -82,14 +87,8 @@ public class MemberService {
      * @param member 현재 로그인된 Member
      * */
     @Transactional
-    public void forceAuthentication(Member member, Role role) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role.toString().replaceAll("ROLE_", "")));
-        authorities.add(new SimpleGrantedAuthority("EMPLOYEE"));
-
-        // 현재 로그인 유저가 아닌 다른 멤버 권한 수정
-
-        SecurityUser securityUser = new SecurityUser(member, authorities);
+    public void forceAuthentication(Member member) {
+        SecurityUser securityUser = new SecurityUser(member, makeMemberAuthority(member));
 
         UsernamePasswordAuthenticationToken authentication =
                 UsernamePasswordAuthenticationToken.authenticated(
@@ -100,6 +99,22 @@ public class MemberService {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
+    }
+
+    public List<GrantedAuthority> makeMemberAuthority(Member member) {
+        Role memberRole = member.getRole();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (memberRole.equals(Role.ROLE_MASTER)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_MASTER.toString()));
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_MANAGER.toString()));
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_LEADER.toString()));
+        } else if (memberRole.equals(Role.ROLE_LEADER)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_LEADER.toString()));
+        } else if (memberRole.equals(Role.ROLE_MANAGER)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_MANAGER.toString()));
+        }
+        authorities.add(new SimpleGrantedAuthority(Role.ROLE_EMPLOYEE.toString()));
+        return authorities;
     }
 
     @Transactional
@@ -122,7 +137,7 @@ public class MemberService {
         forceAuthentication(memberRepository
                 .save(commuteService
                         .saveCommuteTime(currentMember, status)
-                ), currentMember.getRole());
+                ));
     }
 
     public List<Member> findByRole(Role role) {

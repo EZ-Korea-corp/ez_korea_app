@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.web.exception;
 
 import com.ezkorea.hybrid_app.app.util.Script;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +28,13 @@ public class ExceptionHandlerController {
     @ExceptionHandler(value = GasStationNotFoundException.class)
     public @ResponseBody String notExistGasStaion(GasStationNotFoundException e) {
         log.error("GasStationNotFoundException={}", e);
+
+        return Script.href("/", e.getMessage());
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public @ResponseBody String accessDeniedException(AccessDeniedException e) {
+        log.error("AccessDeniedException={}", e);
 
         return Script.href("/", e.getMessage());
     }

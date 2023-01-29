@@ -45,7 +45,7 @@ public class SecurityConfig {
                         request -> request
                                 .antMatchers("/signup", "/login").anonymous()
                                 .antMatchers("/assets/**").permitAll()
-                                .antMatchers("/manager/**").hasAuthority("MANAGER")
+                                .antMatchers("/manager/**").hasAuthority("ROLE_MANAGER")
                                 .anyRequest().authenticated()
                 );
         return http.build();
