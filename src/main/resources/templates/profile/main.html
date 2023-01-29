@@ -19,14 +19,14 @@
 
             <div class="profile_avatar">
                 <div class="profile_avatar_holder">
-                    <img src="assets/images/avatars/avatar-8.jpg" alt="">
+                    <img src="/assets/images/avatars/avatar-8.jpg" alt="">
                 </div>
                 <div class="icon_change_photo" hidden> <ion-icon name="camera" class="text-xl"></ion-icon> </div>
             </div>
 
             <div class="profile_info uk-text-center">
-                <h1 th:text="${member.getName()}"> 이름 </h1>
-                <p th:text="${member.getRole().viewName}"></p>
+                <h1 th:text="${user.getName()}"> 이름 </h1>
+                <p th:text="${user.getRole().viewName}"></p>
             </div>
 
         </div>
@@ -44,11 +44,11 @@
                     <ul class="text-gray-600 space-y-3 mt-3">
                         <li class="flex items-center space-x-2">
                             <ion-icon name="call-outline" class="rounded-full bg-gray-200 text-xl p-1 mr-3"></ion-icon>
-                            전화. <strong> <a th:href="|tel:${member.getUsername()}|" th:text="${member.getUsername()}">010-1234-1234</a></strong>
+                            전화. <strong> <a th:href="|tel:${user.getUsername()}|" th:text="${user.getUsername()}">010-1234-1234</a></strong>
                         </li>
                         <li class="flex items-center space-x-2">
                             <ion-icon name="globe" class="rounded-full bg-gray-200 text-xl p-1 mr-3"></ion-icon>
-                            소속. <strong th:text="${member.getDivision() eq null ? '없음' : member.getDivision().getTeam().name}"> 소속 </strong>
+                            소속. <strong th:text="${user.getDivision() eq null ? '없음' : user.getDivision().getTeam().name}"> 소속 </strong>
                         </li>
                     </ul>
                 </div>
