@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .live-search-list {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                padding: 1em;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                font-family: 'Lato', sans-serif;
+                color: #fff;
+            }
+
+            .live-search-box {
+                width: 100%;
+                display: block;
+                padding: 1em;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                border: 1px solid #3498db;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+            }
+
+            .live-search-list li {
+                color: #fff;
+                list-style: none;
+                padding: 0;
+                margin: 5px 0;
+            }
+        </style>
+        <div class="lg:space-x-12">
+            <form id="selectForm" onsubmit="return false;">
+                <div class="lg:w-full card">
+
+                    <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                        <div class="md:py-8 py-3">
+                            <h2 class="text-xl font-bold">사원 직급 수정</h2>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <h1 class="block text-lg font-bold mb-4"> 👨‍👦‍👦 사원 선택  </h1>
+                            <div class="md:flex">
+                                <div class="md:w-2/3 space-y-4 -mt-2">
+                                    <div id="select-div" class="items-center space-x-3">
+                                        <div class="flex-1">
+                                            <input type="text" class="live-search-box" placeholder="search here" />
+
+                                            <ul id="search-result" class="live-search-list">
+                                                <li style="display: none">
+                                                    <form></form>
+                                                </li>
+                                                <li th:each="user, status : ${employeeList}">
+                                                    <form th:id="|updateMember${user.getId()}|" onsubmit="return false">
+                                                        <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
+                                                            <div class="w-10 h-10 flex-shrink-0 rounded-md relative">
+                                                                <img src="/assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
+                                                            </div>
+                                                            <div class="flex-1">
+                                                                <h3 class="text-base font-semibold capitalize" th:text="|${user.getName()}(${#strings.substring(user.getUsername(), 7, 11)})|"> 유저이름 </h3>
+                                                                <th:block th:if="${user.getDivision() == null}">
+                                                                    <input type="hidden" name="username" th:value="${user.getUsername()}">
+                                                                    <div>
+                                                                        <select name="position" class="px-2">
+                                                                            <option th:each="role : ${T(com.ezkorea.hybrid_app.domain.user.member.Role).values()}"
+                                                                                    th:if="${!role.equals(T(com.ezkorea.hybrid_app.domain.user.member.Role).ROLE_MASTER)}"
+                                                                                    th:selected="${role.equals(T(com.ezkorea.hybrid_app.domain.user.member.Role).ROLE_EMPLOYEE)}"
+                                                                                    th:value="${role}"
+                                                                                    th:text="${role.viewName}">
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                </th:block>
+                                                            </div>
+                                                            <button type="submit" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="flex items-center text-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 변경하기 </button>
+                                                        </div>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <div class="space-y-3">
+                                <button type="submit" class="btn bg-blue-600 py-2 rounded-lg w-full">저장하기</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <script th:inline="javascript">
+            jQuery(document).ready(function($){
+
+                $('.live-search-list li').each(function(){
+                    $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
+                });
+
+                $('.live-search-box').on('keyup', function(){
+
+                    let searchTerm = $(this).val().toLowerCase();
+
+                    $('.live-search-list li').each(function(){
+
+                        if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+
+                    });
+
+                });
+
+            });
+
+            let inviteBtn = {
+                doInvite: function (idx) {
+                    fnCrudRefreshAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'select-div', 'PUT');
+                }
+            }
+        </script>
+    </main>
+
+</body>
+
+</html>
