@@ -50,7 +50,7 @@ public class SaleService {
         Wiper currentWiper = wiperService.findWiperBySizeAndSort(dto.getWiperSize(), dto.getWiperSort());
         SaleProduct newSaleProduct = SaleProduct.builder()
                 .task(findByMemberAndDate(member))
-                .status("out")
+                .status(dto.getStatus())
                 .count(1)
                 .wiper(currentWiper)
                 .build();

@@ -8,4 +8,5 @@ public class WiperDto {
     private String wiperSort;
     private String wiperSize;
     private int wiperPrice;
+    private String status;
 }
