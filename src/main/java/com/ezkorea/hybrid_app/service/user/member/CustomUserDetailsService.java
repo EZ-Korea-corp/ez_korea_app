@@ -27,8 +27,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         if (member.getUsername().contains("ez_dev_team_master")) {
-            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("MASTER"));
             authorities.add(new SimpleGrantedAuthority("MANAGER"));
+            authorities.add(new SimpleGrantedAuthority("LEADER"));
         }
         authorities.add(new SimpleGrantedAuthority("MEMBER"));
 
