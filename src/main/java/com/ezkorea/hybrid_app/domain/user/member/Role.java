@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Role {
 
-    MASTER("대표"),
-    MANAGER("경리"),
-    LEADER("팀장"),
-    EMPLOYEE("직원");
+    ROLE_MASTER("대표"),
+    ROLE_MANAGER("경리"),
+    ROLE_LEADER("팀장"),
+    ROLE_EMPLOYEE("직원");
 
     private final String viewName;
 

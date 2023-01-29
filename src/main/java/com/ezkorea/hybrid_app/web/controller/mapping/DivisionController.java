@@ -17,7 +17,7 @@ public class DivisionController {
 
     @GetMapping("/team")
     public String saveTeam(Model model) {
-        model.addAttribute("members", memberService.findByRole(Role.EMPLOYEE));
+        model.addAttribute("members", memberService.findByRole(Role.ROLE_EMPLOYEE));
         return "team/member-view";
     }
 }
