@@ -43,7 +43,10 @@
                                 <div class="flex items-center space-x-3">
                                     <div class="p-1.5 rounded-full text-xl">🔢</div>
                                     <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask['count']}"> 23 </span> 개</div>
+                                        <div>
+                                            <span class="text-2xl font-semibold" th:text="${dailyTask['count']}"> 23 </span> 개
+                                            (<span class="text-2xl font-semibold" th:text="${dailyTask['count']}  / 2"> 23 </span> 쌍)
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">
