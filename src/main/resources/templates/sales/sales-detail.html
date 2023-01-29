@@ -22,7 +22,7 @@
                 <div class="p-10 pt-4 divide-y divide-gray-100">
 
                     <div class="md:py-8 py-3">
-                        <h2 class="text-xl font-bold"> <span th:text="${member.getName()}"></span>님의 일일 영업 현황</h2>
+                        <h2 class="text-xl font-bold"> <span th:text="${dailyTask['name']}"></span>님의 일일 영업 현황</h2>
                         <p class="font-medium mt-1.5 text-base" th:text="${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}"></p>
                     </div>
 
@@ -34,22 +34,25 @@
                                     <div class="p-1.5 rounded-full text-xl">⛽️</div>
                                     <div class="flex-1">
                                         <div>
-                                            <span class="text-2xl font-semibold" th:text="${dailyTask.getGasStation().getStationName()}"> 주유소 이름 </span>
+                                            <span class="text-2xl font-semibold" th:text="${dailyTask['stationNm']}"> 주유소 이름 </span>
                                             <span class="text-sm">(수정)</span>
                                         </div>
-                                        <p th:text="${dailyTask.getGasStation().getStationLocation()}"></p>
+                                        <p th:text="${dailyTask['location']}"></p>
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">
                                     <div class="p-1.5 rounded-full text-xl">🔢</div>
                                     <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask.getProductList().size()}"> 23 </span> 개</div>
+                                        <div>
+                                            <span class="text-2xl font-semibold" th:text="${dailyTask['count']}"> 23 </span> 개
+                                            (<span class="text-2xl font-semibold" th:text="${dailyTask['count']}  / 2"> 23 </span> 쌍)
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">
                                     <div class="p-1.5 rounded-full text-xl">💵</div>
                                     <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold" th:text="${#numbers.formatInteger(#aggregates.sum(dailyTask.getProductList().![getWiper().wiperPrice]), 3, 'COMMA')}">100,500</span> 원</div>
+                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask['list'].size()} eq 0 ? 0 : ${#numbers.formatInteger(#aggregates.sum(dailyTask['list'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
                                     </div>
                                 </div>
                             </div>
@@ -75,7 +78,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="product : ${dailyTask.getProductList()}">
+                                    <tr th:each="product : ${dailyTask['list']}">
                                         <td th:text="${#temporals.format(product.getCreateDate(), 'HH시 mm분')}">14시 20분</td>
                                         <td th:text="${product.getWiper().getWiperSize()}">350</td>
                                         <td th:text="${product.getWiper().getWiperViewName()}">일반</td>

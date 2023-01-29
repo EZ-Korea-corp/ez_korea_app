@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum WiperSort {
 
-    NORMAL("normal", "일반", 20000),
-    HYBRID("hybrid", "하이브리드", 30000),
-    MW("mw", "엠떠블유(MW)", 40000),
-    S_CLASS("s_class", "S클래스", 80000),
-    SIZE_700("size_700", "칠백 사이즈", 30000);
+    NORMAL("normal", "일반", 10000),
+    HYBRID("hybrid", "하이브리드", 15000),
+    MW("mw", "엠떠블유(MW)", 20000),
+    S_CLASS("s_class", "S클래스", 40000),
+    SIZE_700("size_700", "칠백 사이즈", 15000);
 
     private final String name;
     private final String viewName;
