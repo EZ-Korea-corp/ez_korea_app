@@ -36,7 +36,7 @@ public class ProfileController {
         return "profile/setting";
     }
 
-    @GetMapping("/member/chart")
+    @GetMapping("/chart/view")
     public String showMemberChart(Model model) {
         List<Member> memberList = memberService.findAllMember();
         model.addAttribute("memberList", memberList);
