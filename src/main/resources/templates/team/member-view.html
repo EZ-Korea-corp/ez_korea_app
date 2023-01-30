@@ -64,6 +64,9 @@
                                             <input type="text" class="live-search-box" placeholder="search here" />
 
                                             <ul id="search-result" class="live-search-list">
+                                                <li style="display: none">
+                                                    <form></form>
+                                                </li>
                                                 <li th:each="user : ${members}">
                                                     <form th:id="|inviteMember${user.getId()}|" onsubmit="return false">
                                                         <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
@@ -123,7 +126,7 @@
             jQuery(document).ready(function($){
 
                 $('.live-search-list li').each(function(){
-                    $(this).attr('data-search-term', $(this).text().toLowerCase());
+                    $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
                 });
 
                 $('.live-search-box').on('keyup', function(){

@@ -39,11 +39,7 @@ public class TestDataInit {
             memberService.saveNewMember(makeNewMember("ez_dev_team_master", "개발팀", Role.ROLE_MASTER));
         }
         if (!memberRepository.existsByUsername("01011111111")) {
-            Member member = memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.ROLE_LEADER));
-            Team newTeam = teamService.saveNewTeam(member.getName() + "팀");
-            Division division = divisionService.saveNewDivision(newTeam, member, divisionService.makeNewDivisionDto(Status.COMPLETE, Position.LEADER));
-            member.setDivision(division);
-            memberRepository.save(member);
+            memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.ROLE_EMPLOYEE));
         }
         if (!memberRepository.existsByUsername("01011111111")) {
             memberService.saveNewMember(makeNewMember("01022222222", "김경자", Role.ROLE_EMPLOYEE));
