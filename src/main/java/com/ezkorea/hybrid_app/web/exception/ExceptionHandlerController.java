@@ -38,4 +38,11 @@ public class ExceptionHandlerController {
 
         return Script.href("/", e.getMessage());
     }
+
+    @ExceptionHandler(value = DivisionNotFoundException.class)
+    public @ResponseBody String divisionNotFoundException(DivisionNotFoundException e) {
+        log.error("DivisionNotFoundException={}", e);
+
+        return Script.href("/", e.getMessage());
+    }
 }

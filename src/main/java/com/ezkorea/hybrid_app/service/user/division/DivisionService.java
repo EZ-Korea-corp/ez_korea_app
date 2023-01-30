@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,17 +25,26 @@ public class DivisionService {
     private final DivisionRepository divisionRepository;
     private final MemberService memberService;
 
+    @Transactional
     public Division saveNewDivision(Team team, Member member, DivisionDto dto) {
 
         Division division = mapper.map(dto, Division.class);
         division.addBasicInfo(team, member);
-
-        return divisionRepository.save(division);
+        Division saveDivision = divisionRepository.save(division);
+        if (saveDivision.getPosition().equals(Position.LEADER)) {
+            team.setDivision(saveDivision);
+        }
+        member.setDivision(saveDivision);
+        return saveDivision;
     }
 
     public Division findByMember(Member member) {
         return divisionRepository.findByMember(member)
                 .orElseThrow( () -> new MemberNotFoundException("해당 멤버의 소속을 찾을 수 없습니다."));
+    }
+
+    public List<Division> findDivisionListByMember(Member member) {
+        return divisionRepository.findAllByMember(member);
     }
 
     /**
@@ -56,5 +66,13 @@ public class DivisionService {
         );
 
         employee.setDivision(division);
+    }
+
+    public void deleteDivisionByTeam(Team team) {
+        divisionRepository.deleteByTeam(team);
+    }
+
+    public void deleteByMemberDivision(Member leader) {
+        divisionRepository.deleteByMember(leader);
     }
 }

@@ -16,7 +16,7 @@ import javax.persistence.*;
 @ToString(callSuper = true)
 public class Division extends BaseEntity {
 
-    @OneToOne
+    @OneToOne(targetEntity = Team.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Team team;
 
     @OneToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
