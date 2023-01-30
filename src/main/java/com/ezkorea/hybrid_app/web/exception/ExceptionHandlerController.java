@@ -15,7 +15,7 @@ public class ExceptionHandlerController {
     public @ResponseBody String notExistId(UsernameNotFoundException e) {
         log.error("UsernameNotFoundException={}", e);
 
-        return Script.href("/login", e.getMessage());
+        return Script.href("/", e.getMessage());
     }
 
     @ExceptionHandler(value = MemberNotFoundException.class)
