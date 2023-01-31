@@ -3,8 +3,10 @@ package com.ezkorea.hybrid_app.app.util;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Component
@@ -41,5 +43,14 @@ public class Ut {
             msg = (diffTime) + "년 전";
         }
         return msg;
+    }
+
+    public static String dateToString(LocalDate date, String _format) {
+        String format = "YYYY-MM-DD";
+
+        if(format != null && !"".equals(format)) {
+            format = _format;
+        }
+        return date.format(DateTimeFormatter.ofPattern(format));
     }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezkorea.hybrid_app.domain.myBatis.saleMbRepository">
+
+    <select id="findSaleStock" parameterType="long" resultType="Map">
+        SELECT    A.WIPER_ID AS WIPER
+                , SUM(
+                       CASE WHEN A.STATUS = 'in' THEN A.CNT
+                            ELSE A.CNT * -1
+                       END
+                  ) AS COUNT
+        FROM
+        (
+            SELECT	  A.WIPER_ID
+                    , A.STATUS
+                    , SUM(A.COUNT) AS CNT
+            FROM	SALE_PRODUCT A INNER JOIN
+            (
+                SELECT	B.ID
+                FROM	DAILY_TASK A INNER JOIN DAILY_TASK B
+                ON		A.GAS_STATION_ID = B.GAS_STATION_ID
+                AND		A.TASK_DATE	     = B.TASK_DATE
+                WHERE	A.ID = #{taskId}
+            ) B
+            ON	A.TASK_ID = B.ID
+            GROUP BY A.WIPER_ID, A.STATUS
+        ) A
+        GROUP BY A.WIPER_ID
+    </select>
+
+    <select id="selectSaleOutFix" parameterType="Map" resultType="Map">
+        SELECT	  A.WIPER_ID   AS WIPER
+                , SUM(A.COUNT) AS COUNT
+        FROM    SALE_PRODUCT A RIGHT JOIN DAILY_TASK B
+        ON		A.TASK_ID = B.ID
+        WHERE	B.ID      = #{taskId}
+        AND		A.STATUS  = #{status}
+        GROUP BY A.WIPER_ID
+    </select>
+
+</mapper>

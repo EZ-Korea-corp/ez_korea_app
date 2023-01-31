@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.service.sales;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
+import com.ezkorea.hybrid_app.domain.myBatis.saleMbRepository;
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
 import com.ezkorea.hybrid_app.domain.sale.SaleProductRepository;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
@@ -18,10 +19,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +34,8 @@ public class SaleService {
     private final GasStationRepository gsRepository;
     private final DailyTaskRepository dtRepository;
     private final WiperRepository wpRepository;
+
+    private final saleMbRepository saleMbRepository;
     private final WiperService wiperService;
     private final GasStationService gsService;
 
@@ -116,5 +120,19 @@ public class SaleService {
         }
 
         return map;
+    }
+
+    public List<Map<String, Long>> findSaleStat(Member member, Map<String, Object> paramMap) {
+        List<Map<String, Long>> statList = new ArrayList<>();
+        DailyTask currentTask = findByMemberAndDate(member);
+        paramMap.put("taskId", currentTask.getId());
+
+        if("stock".equals(paramMap.get("status"))) {
+            statList = saleMbRepository.findSaleStock(currentTask.getId());
+        } else {
+            statList = saleMbRepository.selectSaleOutFix(paramMap);
+        }
+
+        return statList;
     }
 }

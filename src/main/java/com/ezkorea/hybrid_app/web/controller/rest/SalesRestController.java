@@ -62,10 +62,21 @@ public class SalesRestController {
 
     @PostMapping("/sales/input")
     public HttpStatus saveInputProduct(@RequestBody List<SaleProductDto> data,
-                               @AuthenticationPrincipal SecurityUser securityUser) {
+                                       @AuthenticationPrincipal SecurityUser securityUser) {
 
         saleService.saveInputProduct(securityUser.getMember(), data);
 
         return HttpStatus.OK;
+    }
+
+    @PostMapping("/sales/close")
+    public Map<String, Object> findSaleStat(@RequestBody Map<String, Object> data,
+                                   @AuthenticationPrincipal SecurityUser securityUser) {
+        Map<String, Object> returnMap = new HashMap<>();
+        List<Map<String, Long>> statList = saleService.findSaleStat(securityUser.getMember(), data);
+
+        returnMap.put("result", statList);
+
+        return returnMap;
     }
 }

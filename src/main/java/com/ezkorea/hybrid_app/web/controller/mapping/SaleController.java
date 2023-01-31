@@ -43,4 +43,10 @@ public class SaleController {
     public String showInputPage() {
         return "sales/in-detail";
     }
+
+    @GetMapping("/sales/close")
+    public String showClosePage() {
+        
+        return "sales/close-detail";
+    }
 }
