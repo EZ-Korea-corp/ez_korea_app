@@ -25,6 +25,7 @@
             ) B
             ON	A.TASK_ID = B.ID
             GROUP BY A.WIPER_ID, A.STATUS
+            UNION ALL
             SELECT    C.WIPER_ID AS WIPER_ID
                     , 'in'       AS STATUS
                     , C.COUNT    AS COUNT
