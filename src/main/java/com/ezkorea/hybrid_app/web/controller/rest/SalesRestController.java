@@ -73,10 +73,21 @@ public class SalesRestController {
     public Map<String, Object> findSaleStat(@RequestBody Map<String, Object> data,
                                    @AuthenticationPrincipal SecurityUser securityUser) {
         Map<String, Object> returnMap = new HashMap<>();
-        List<Map<String, Long>> statList = saleService.findSaleStat(securityUser.getMember(), data);
+        List<SaleProductDto> statList = saleService.findSaleStat(securityUser.getMember(), data);
 
         returnMap.put("result", statList);
 
         return returnMap;
+    }
+
+    @PostMapping("/sales/closeTask")
+    public HttpStatus closeTask(@AuthenticationPrincipal SecurityUser securityUser) {
+
+        //마감처리 - 퇴근처리
+
+        //재고등록
+        saleService.closeTask(securityUser.getMember());
+
+        return HttpStatus.OK;
     }
 }

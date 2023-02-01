@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ezkorea.hybrid_app.domain.myBatis.saleMbRepository">
 
-    <select id="findSaleStock" parameterType="long" resultType="Map">
+    <select id="findSaleStock" parameterType="long" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
         SELECT    A.WIPER_ID AS WIPER
                 , SUM(
                        CASE WHEN A.STATUS = 'in' THEN A.CNT
@@ -25,11 +25,16 @@
             ) B
             ON	A.TASK_ID = B.ID
             GROUP BY A.WIPER_ID, A.STATUS
+            SELECT    C.WIPER_ID AS WIPER_ID
+                    , 'in'       AS STATUS
+                    , C.COUNT    AS COUNT
+            FROM    STOCK C
+            WHERE C.DATE =  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY), '%Y-%m-%d')
         ) A
         GROUP BY A.WIPER_ID
     </select>
 
-    <select id="selectSaleOutFix" parameterType="Map" resultType="Map">
+    <select id="selectSaleOutFix" parameterType="Map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
         SELECT	  A.WIPER_ID   AS WIPER
                 , SUM(A.COUNT) AS COUNT
         FROM    SALE_PRODUCT A RIGHT JOIN DAILY_TASK B

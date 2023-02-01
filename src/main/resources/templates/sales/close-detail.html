@@ -74,7 +74,7 @@
                             </div>
 
                             <hr class="mt-4">
-                            <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 등록하기 </button>
+                            <button type="submit" id="submit" class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white" disabled="disabled"> 마감등록 </button>
                         </form>
                     </div>
 
@@ -88,9 +88,25 @@
 
             $(document).ready(function(){
 
+                // 마감하기 - 재고등록
+                $("#submit").on("click", function() {
+                    Swal.fire({
+                        html: '마감하시겠습니까?',
+                        showDenyButton: true,
+                        confirmButtonText: '마감하기',
+                        denyButtonText: `닫기`,
+                    }).then((result) => {
+                        if(result.isConfirmed){
+                            fnCloseTask();
+                        }
+                    })
+                });
+
                 // 조회 - 판매, 재고, 고장
                 $("#check div").on("click", function() {
                     let status = $(this).attr("name");
+
+                    // 상단바
                     $("#check div").each(function() {
                         if($(this).attr("name") == status) {
                             $(this).find("a").removeClass("bg-gray-600")
@@ -100,6 +116,17 @@
                                              .addClass("bg-gray-600");
                         }
                     });
+
+                    // 재고 - 마감등록 diable 해제
+                    if(status == "stock") {
+                        $("#submit").attr('disabled', false)
+                                    .removeClass("bg-gray-600")
+                                    .addClass("bg-blue-600");
+                    } else {
+                        $("#submit").attr('disabled', true)
+                                    .removeClass("bg-blue-600")
+                                    .addClass("bg-gray-600");
+                    }
 
                     fnFindInputProduct(status);
                 });
@@ -115,12 +142,39 @@
                 fnFindJsonAjax(data, url, fnFindInputProductResult);
             }
 
+            // 테이블 그리기
             function fnFindInputProductResult(data) {
                 const $form = $("#dataForm");
                 $("#dataForm span").text("");
                 data.result.forEach(function(item) {
-                    $form.find("span[name=" + item.WIPER + "]").text(item.COUNT);
+                    $form.find("span[name=" + item.wiper + "]").text(item.count);
                 })
+            }
+
+            // 마감등록
+            function fnCloseTask() {
+                if(!fnValidCheck()) return;
+
+                const url = "/sales/closeTask";
+                const fnload = function() {location.href= "/sales";}
+
+                fnCrudJsonAjax("", url, fnload, "post", "정상적으로 저장되었습니다.");
+            }
+
+            function fnValidCheck() {
+                let isValid = true;
+                $('#dataForm').find('span').each(function() {
+                    if(Number($(this).text()) < 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: '재고에 음수가 존재합니다.',
+                        });
+
+                        isValid = false;
+                        return false;
+                    }
+                });
+                return isValid;
             }
 
         </script>

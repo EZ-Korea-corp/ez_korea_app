@@ -5,6 +5,8 @@ import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.saleMbRepository;
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
 import com.ezkorea.hybrid_app.domain.sale.SaleProductRepository;
+import com.ezkorea.hybrid_app.domain.sale.Stock;
+import com.ezkorea.hybrid_app.domain.sale.StockRepository;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
@@ -33,6 +35,8 @@ public class SaleService {
     private final SaleProductRepository spRepository;
     private final GasStationRepository gsRepository;
     private final DailyTaskRepository dtRepository;
+
+    private final StockRepository stockRepository;
     private final WiperRepository wpRepository;
 
     private final saleMbRepository saleMbRepository;
@@ -122,8 +126,8 @@ public class SaleService {
         return map;
     }
 
-    public List<Map<String, Long>> findSaleStat(Member member, Map<String, Object> paramMap) {
-        List<Map<String, Long>> statList = new ArrayList<>();
+    public List<SaleProductDto> findSaleStat(Member member, Map<String, Object> paramMap) {
+        List<SaleProductDto> statList = new ArrayList<>();
         DailyTask currentTask = findByMemberAndDate(member);
         paramMap.put("taskId", currentTask.getId());
 
@@ -134,5 +138,30 @@ public class SaleService {
         }
 
         return statList;
+    }
+
+    @Transactional
+    public void closeTask(Member member) {
+        DailyTask currentTask = findByMemberAndDate(member);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("status", "stock");
+
+        // 재고 현황
+        List<SaleProductDto> stockList = findSaleStat(member, paramMap);
+
+        // 재등록
+        stockRepository.deleteByGasStation(currentTask.getGasStation());
+
+        stockList.forEach(item -> {
+            // 입력된 입고만 등록
+            Stock stock = Stock.builder()
+                    .date(LocalDate.now())
+                    .gasStation(currentTask.getGasStation())
+                    .wiper(wpRepository.findById(item.getWiper()).get())
+                    .count(item.getCount())
+                    .build();
+
+            stockRepository.save(stock);
+        });
     }
 }

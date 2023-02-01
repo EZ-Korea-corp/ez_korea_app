@@ -102,6 +102,7 @@
                 const url = "/sales/input";
                 const data = [];
                 const form = $('#dataForm').serializeArray();
+                const fnload = function() {location.href= "/sales";}
                 form.forEach(function(item) {
                     data.push({
                         "wiper" : item.name,
@@ -109,7 +110,8 @@
                     })
                 })
 
-                fnCrudJsonAjax(data, url, null, "post", "정상적으로 저장되었습니다.");
+
+                fnCrudJsonAjax(data, url, fnload, "post", "정상적으로 저장되었습니다.");
             }
 
             function fnFindInputProductResult(data) {
