@@ -13,6 +13,8 @@ import java.util.List;
 public class SecurityUser extends User {
     private final Long id;
     private final String username;
+    private final String email;
+    private final String phone;
     private final String name;
     private final String sex;
     private final Role role;
@@ -21,21 +23,25 @@ public class SecurityUser extends User {
     public SecurityUser(Member member, List<GrantedAuthority> authorities) {
         super(member.getUsername(), member.getPassword(), authorities);
         this.id = member.getId();
-        this.sex = member.getSex();
-        this.name = member.getName();
         this.username = member.getUsername();
-        this.createDate = member.getCreateDate();
+        this.email = member.getEmail();
+        this.phone = member.getPhone();
+        this.name = member.getName();
+        this.sex = member.getSex();
         this.role = member.getRole();
+        this.createDate = member.getCreateDate();
     }
 
     public Member getMember() {
         return Member.builder()
                 .id(id)
-                .createDate(createDate)
+                .username(username)
+                .email(email)
+                .phone(phone)
                 .name(name)
                 .sex(sex)
                 .role(role)
-                .username(username)
+                .createDate(createDate)
                 .build();
     }
 }

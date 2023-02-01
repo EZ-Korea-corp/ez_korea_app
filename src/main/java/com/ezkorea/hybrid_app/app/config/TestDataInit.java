@@ -65,6 +65,8 @@ public class TestDataInit {
         SignUpDto newDto = new SignUpDto();
         newDto.setUsername(username);
         newDto.setPassword("1234");
+        newDto.setPhone("01012341234");
+        newDto.setEmail("waiting@sbs.co.kr");
         newDto.setName(name);
         newDto.setSex("MALE");
         newDto.setRole(role);

@@ -31,6 +31,12 @@ public class Member extends BaseEntity {
     private String password;
 
     @Setter
+    private String phone;
+
+    @Setter
+    private String email;
+
+    @Setter
     private String sex;
 
     @Setter
