@@ -20,8 +20,4 @@ public class Team extends BaseEntity {
 
     private String name;
 
-    @OneToOne
-    @Setter
-    private Division division;
-
 }

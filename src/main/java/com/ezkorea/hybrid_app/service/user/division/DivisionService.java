@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -31,9 +31,6 @@ public class DivisionService {
         Division division = mapper.map(dto, Division.class);
         division.addBasicInfo(team, member);
         Division saveDivision = divisionRepository.save(division);
-        if (saveDivision.getPosition().equals(Position.LEADER)) {
-            team.setDivision(saveDivision);
-        }
         member.setDivision(saveDivision);
         return saveDivision;
     }
@@ -68,11 +65,16 @@ public class DivisionService {
         employee.setDivision(division);
     }
 
-    public void deleteDivisionByTeam(Team team) {
-        divisionRepository.deleteByTeam(team);
+    @Transactional(readOnly = true)
+    public boolean existDivisionByMember(Member member) {
+        return divisionRepository.existsByMember(member);
     }
 
-    public void deleteByMemberDivision(Member leader) {
-        divisionRepository.deleteByMember(leader);
+    public List<Division> findDivisionByTeam(Team team) {
+        return divisionRepository.findAllByTeam(team);
+    }
+
+    public void deleteAll(List<Division> divisionList) {
+        divisionRepository.deleteAll(divisionList);
     }
 }

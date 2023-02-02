@@ -57,7 +57,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<DailyTask> taskList = new ArrayList<>();
 
-    @OneToOne(targetEntity = Division.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "member",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private Division division;
 
     public void setDivision(Division division) {

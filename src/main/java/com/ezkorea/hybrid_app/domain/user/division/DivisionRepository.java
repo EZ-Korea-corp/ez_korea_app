@@ -16,4 +16,10 @@ public interface DivisionRepository extends JpaRepository<Division, Long> {
     void deleteByTeam(Team team);
 
     void deleteByMember(Member leader);
+
+    boolean existsByMember(Member leader);
+
+    void deleteAllByTeam(Team team);
+
+    List<Division> findAllByTeam(Team team);
 }

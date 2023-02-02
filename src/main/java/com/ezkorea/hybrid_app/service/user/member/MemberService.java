@@ -1,6 +1,7 @@
 package com.ezkorea.hybrid_app.service.user.member;
 
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
+import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
@@ -157,5 +158,9 @@ public class MemberService {
             return true;
         }
         return false;
+    }
+
+    public List<Member> findAllMemberBySameDivision(Division division) {
+        return memberRepository.findAllByDivision(division);
     }
 }

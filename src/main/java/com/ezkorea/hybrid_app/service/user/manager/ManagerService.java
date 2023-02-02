@@ -33,18 +33,28 @@ public class ManagerService {
     @Transactional
     public void updateMemberRole(String username, Role role) {
         Member currentMember = mService.findByUsername(username);
-        if (currentMember.getRole().equals(Role.ROLE_LEADER) && role.equals(Role.ROLE_EMPLOYEE)) {
-            // 팀장이 사라지면 기존 팀(연관관계 모두) 삭제되지 않는 버그 존재
-            dService.deleteByMemberDivision(currentMember);
+        switch (role) {
+            case ROLE_LEADER -> {
+                if (!currentMember.getRole().equals(Role.ROLE_LEADER)) {
+                    Team newTeam = tService.saveNewTeam(currentMember);
+                    DivisionDto dto = new DivisionDto();
+                    dto.setPosition(Position.LEADER);
+                    dto.setStatus(Status.COMPLETE);
+                    dService.saveNewDivision(newTeam, currentMember, dto);
+                }
+            }
+            case ROLE_EMPLOYEE -> {
+                if (dService.existDivisionByMember(currentMember)) {
+                    Team currentTeam = currentMember.getDivision().getTeam();
+                    List<Division> divisionList = dService.findDivisionByTeam(currentTeam);
+                    for (Division division : divisionList) {
+                        division.getMember().setDivision(null);
+                    }
+                    dService.deleteAll(divisionList);
+                }
+            }
         }
         mService.updateMemberRole(currentMember, role);
-        if (role.equals(Role.ROLE_LEADER)) {
-            Team newTeam = tService.saveNewTeam(currentMember);
-            DivisionDto dto = new DivisionDto();
-            dto.setPosition(Position.LEADER);
-            dto.setStatus(Status.COMPLETE);
-            dService.saveNewDivision(newTeam, currentMember, dto);
-        }
     }
 
     public List<Member> findAllMember() {

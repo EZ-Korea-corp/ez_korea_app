@@ -8,6 +8,9 @@ import com.ezkorea.hybrid_app.web.exception.DivisionNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -19,16 +22,20 @@ public class TeamService {
     public Team saveNewTeam(Member member) {
         return teamRepository.save(Team.builder()
                 .name(member.getName())
-                .division(member.getDivision())
                 .build());
     }
 
-    public Team findTeamByDivision(Division division) {
+    @Transactional
+    public void deleteTeam(Team team) {
+        teamRepository.delete(team);
+    }
+
+    /*public Team findTeamByDivision(Division division) {
         return teamRepository.findByDivision(division)
                 .orElseThrow( () -> new DivisionNotFoundException("소속을 찾을 수 없습니다."));
     }
 
     public void deleteByDivision(Division division) {
         teamRepository.deleteByDivision(division);
-    }
+    }*/
 }
