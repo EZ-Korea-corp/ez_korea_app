@@ -22,7 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +90,7 @@ public class MemberService {
      * */
     @Transactional
     public void forceAuthentication(Member member) {
+        member.setRoleChanged(false);
         SecurityUser securityUser = new SecurityUser(member, makeMemberAuthority(member));
 
         UsernamePasswordAuthenticationToken authentication =
@@ -103,6 +104,7 @@ public class MemberService {
         SecurityContextHolder.setContext(context);
     }
 
+    @Transactional
     public List<GrantedAuthority> makeMemberAuthority(Member member) {
         Role memberRole = member.getRole();
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -122,6 +124,8 @@ public class MemberService {
     @Transactional
     public void updateMemberRole(Member member, Role role) {
         member.setRole(role);
+        member.setRoleChanged(true);
+        memberRepository.save(member);
     }
 
     /**

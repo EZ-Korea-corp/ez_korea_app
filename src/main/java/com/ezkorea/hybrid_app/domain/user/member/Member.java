@@ -47,6 +47,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Setter
+    private boolean isRoleChanged;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<CommuteTime> commuteTimeList = new ArrayList<>();
 
