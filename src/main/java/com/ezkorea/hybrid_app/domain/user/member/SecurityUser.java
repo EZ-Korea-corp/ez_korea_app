@@ -4,13 +4,14 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Slf4j
-public class SecurityUser extends User {
+public class SecurityUser extends User implements UserDetails {
     private final Long id;
     private final String username;
     private final String email;
@@ -46,5 +47,25 @@ public class SecurityUser extends User {
                 .isRoleChanged(isRoleChanged)
                 .createDate(createDate)
                 .build();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
