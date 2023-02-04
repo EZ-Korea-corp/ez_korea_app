@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.app.Config;
+package com.ezkorea.hybrid_app.app.config;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
@@ -16,13 +16,11 @@ import com.ezkorea.hybrid_app.domain.wiper.WiperRepository;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
-import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.util.Random;
 
 @Component
@@ -41,11 +39,7 @@ public class TestDataInit {
             memberService.saveNewMember(makeNewMember("ez_dev_team_master", "개발팀", Role.ROLE_MASTER));
         }
         if (!memberRepository.existsByUsername("01011111111")) {
-            Member member = memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.ROLE_LEADER));
-            Team newTeam = teamService.saveNewTeam(member.getName() + "팀");
-            Division division = divisionService.saveNewDivision(newTeam, member, divisionService.makeNewDivisionDto(Status.COMPLETE, Position.LEADER));
-            member.setDivision(division);
-            memberRepository.save(member);
+            memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.ROLE_EMPLOYEE));
         }
         if (!memberRepository.existsByUsername("01011111111")) {
             memberService.saveNewMember(makeNewMember("01022222222", "김경자", Role.ROLE_EMPLOYEE));
@@ -71,6 +65,8 @@ public class TestDataInit {
         SignUpDto newDto = new SignUpDto();
         newDto.setUsername(username);
         newDto.setPassword("1234");
+        newDto.setPhone("01012341234");
+        newDto.setEmail("waiting@sbs.co.kr");
         newDto.setName(name);
         newDto.setSex("MALE");
         newDto.setRole(role);

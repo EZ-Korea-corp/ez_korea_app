@@ -25,10 +25,17 @@ import java.util.List;
 public class Member extends BaseEntity {
 
     @Setter
+    @Column(unique = true)
     private String username;
 
     @Setter
     private String password;
+
+    @Setter
+    private String phone;
+
+    @Setter
+    private String email;
 
     @Setter
     private String sex;
@@ -41,6 +48,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Setter
+    private boolean isRoleChanged;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<CommuteTime> commuteTimeList = new ArrayList<>();
 
@@ -51,7 +61,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<DailyTask> taskList = new ArrayList<>();
 
-    @OneToOne(targetEntity = Division.class, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "member",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private Division division;
 
     public void setDivision(Division division) {

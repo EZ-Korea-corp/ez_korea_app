@@ -16,10 +16,12 @@ import javax.persistence.*;
 @ToString(callSuper = true)
 public class Division extends BaseEntity {
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "team_id")
     private Team team;
 
-    @OneToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
+    @OneToOne
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Setter

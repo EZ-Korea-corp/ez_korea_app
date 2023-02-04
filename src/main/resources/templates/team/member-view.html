@@ -64,6 +64,9 @@
                                             <input type="text" class="live-search-box" placeholder="search here" />
 
                                             <ul id="search-result" class="live-search-list">
+                                                <li style="display: none">
+                                                    <form></form>
+                                                </li>
                                                 <li th:each="user : ${members}">
                                                     <form th:id="|inviteMember${user.getId()}|" onsubmit="return false">
                                                         <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
@@ -71,7 +74,7 @@
                                                                 <img src="assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
                                                             </div>
                                                             <div class="flex-1">
-                                                                <h3 class="text-base font-semibold capitalize" th:text="|${user.getName()}(${#strings.substring(user.getUsername(), 7, 11)})|"> 유저이름 </h3>
+                                                                <h3 class="text-base font-semibold capitalize" th:text="|${user.getName()}(${#strings.substring(user.getPhone(), 7, 11)})|"> 유저이름 </h3>
                                                                 <th:block th:if="${user.getDivision() == null}">
                                                                     <input type="hidden" name="username" th:value="${user.getUsername()}">
                                                                     <input type="hidden" name="status" value="AWAIT">
@@ -123,7 +126,7 @@
             jQuery(document).ready(function($){
 
                 $('.live-search-list li').each(function(){
-                    $(this).attr('data-search-term', $(this).text().toLowerCase());
+                    $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
                 });
 
                 $('.live-search-box').on('keyup', function(){

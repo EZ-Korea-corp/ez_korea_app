@@ -1,14 +1,17 @@
 package com.ezkorea.hybrid_app.service.user.member;
 
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
+import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
+import com.ezkorea.hybrid_app.web.dto.ProfileDto;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,12 +22,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -43,6 +47,9 @@ public class MemberService {
      */
     public Member saveNewMember(SignUpDto dto) {
         dto.setPassword(passwordEncode(dto.getPassword()));
+        if (!dto.getUsername().equals("ez_dev_team_master")) {
+            dto.setRole(Role.ROLE_EMPLOYEE);
+        }
         return memberRepository.save(mapper.map(dto, Member.class));
     }
 
@@ -82,14 +89,9 @@ public class MemberService {
      * @param member 현재 로그인된 Member
      * */
     @Transactional
-    public void forceAuthentication(Member member, Role role) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role.toString().replaceAll("ROLE_", "")));
-        authorities.add(new SimpleGrantedAuthority("EMPLOYEE"));
-
-        // 현재 로그인 유저가 아닌 다른 멤버 권한 수정
-
-        SecurityUser securityUser = new SecurityUser(member, authorities);
+    public void forceAuthentication(Member member) {
+        member.setRoleChanged(false);
+        SecurityUser securityUser = new SecurityUser(member, makeMemberAuthority(member));
 
         UsernamePasswordAuthenticationToken authentication =
                 UsernamePasswordAuthenticationToken.authenticated(
@@ -103,8 +105,27 @@ public class MemberService {
     }
 
     @Transactional
+    public List<GrantedAuthority> makeMemberAuthority(Member member) {
+        Role memberRole = member.getRole();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (memberRole.equals(Role.ROLE_MASTER)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_MASTER.toString()));
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_MANAGER.toString()));
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_LEADER.toString()));
+        } else if (memberRole.equals(Role.ROLE_LEADER)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_LEADER.toString()));
+        } else if (memberRole.equals(Role.ROLE_MANAGER)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_MANAGER.toString()));
+        }
+        authorities.add(new SimpleGrantedAuthority(Role.ROLE_EMPLOYEE.toString()));
+        return authorities;
+    }
+
+    @Transactional
     public void updateMemberRole(Member member, Role role) {
         member.setRole(role);
+        member.setRoleChanged(true);
+        memberRepository.save(member);
     }
 
     /**
@@ -122,10 +143,32 @@ public class MemberService {
         forceAuthentication(memberRepository
                 .save(commuteService
                         .saveCommuteTime(currentMember, status)
-                ), currentMember.getRole());
+                ));
     }
 
     public List<Member> findByRole(Role role) {
         return memberRepository.findAllByRole(role);
+    }
+
+    public List<Member> findAllMember() {
+        return memberRepository.findAll();
+    }
+
+    public boolean updateMemberProfile(ProfileDto dto, Member member) {
+        if (passwordEncoder.matches(dto.getOriginPassword(), findMemberById(member.getId()).getPassword())) {
+            member.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            forceAuthentication(member);
+            memberRepository.save(member);
+            return true;
+        }
+        return false;
+    }
+
+    public List<Member> findAllMemberBySameDivision(Division division) {
+        return memberRepository.findAllByDivision(division);
+    }
+
+    public boolean existsMemberByUsername(String checkUsername) {
+        return memberRepository.existsByUsername(checkUsername);
     }
 }

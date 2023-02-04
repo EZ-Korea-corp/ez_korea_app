@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.service.user.member;
 
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,11 +28,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         if (member.getUsername().contains("ez_dev_team_master")) {
-            authorities.add(new SimpleGrantedAuthority("MASTER"));
-            authorities.add(new SimpleGrantedAuthority("MANAGER"));
-            authorities.add(new SimpleGrantedAuthority("LEADER"));
+            for (Role value : Role.values()) {
+                if (!value.equals(Role.valueOf("ROLE_EMPLOYEE"))) {
+                    authorities.add(new SimpleGrantedAuthority(value.toString()));
+                }
+            }
         }
-        authorities.add(new SimpleGrantedAuthority("MEMBER"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
 
         return new SecurityUser(member, authorities);
     }
