@@ -33,34 +33,4 @@ public class BasicController {
         }
         return "index";
     }
-
-    @GetMapping("/login")
-    public String showLoginPage() {
-        return "login/login";
-    }
-
-    @GetMapping("/signup")
-    public String showSignUpPage() {
-        return "login/sign-up";
-    }
-
-    @PostMapping("/signup")
-    public String doSignUp(SignUpDto dto) {
-        memberService.saveNewMember(dto);
-        return "redirect:/login";
-    }
-
-    @PostMapping("/reload")
-    public String doReLogin(String username) {
-        Member currentMember = memberService.findByUsername(username);
-        memberService.forceAuthentication(currentMember);
-        return "redirect:/";
-    }
-
-    @PostMapping("/member")
-    public String doCommute(@AuthenticationPrincipal SecurityUser securityUser,
-                            @RequestParam String commuteStatus) {
-        memberService.setCommuteTime(securityUser.getMember(), commuteStatus);
-        return "redirect:/";
-    }
 }

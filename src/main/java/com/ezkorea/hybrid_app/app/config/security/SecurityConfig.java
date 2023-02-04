@@ -52,7 +52,7 @@ public class SecurityConfig {
                 )
                 .authorizeRequests(
                         request -> request
-                                .antMatchers("/signup", "/login").anonymous()
+                                .antMatchers("/signup/**", "/login").anonymous()
                                 .antMatchers("/assets/**").permitAll()
                                 .antMatchers("**/manager/**").hasAuthority("ROLE_MANAGER")
                                 .anyRequest().authenticated()

@@ -81,6 +81,31 @@ function fnFindJsonAjax(data, url, fnCallBack) {
     });
 }
 
+function fnMethodFindJsonAjax(method, data, url, fnCallBack) {
+
+    $.ajax({
+        type: method,
+        url: url,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        beforeSend: function(jqXHR, settings) {
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var token = $("meta[name='_csrf']").attr("content");
+            jqXHR.setRequestHeader(header, token);
+        },
+        success: function(data) {
+            if(fnCallBack) fnCallBack(data);
+        },
+        error: function(xhr, status, error) {
+            Swal.fire({
+                icon: 'error',
+                text: '오류가 발생했습니다.',
+            });
+        }
+    });
+}
+
 function fnCrudRefreshAjax(data, url, id, method) {
 
     $.ajax({

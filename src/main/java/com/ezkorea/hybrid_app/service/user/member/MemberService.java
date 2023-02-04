@@ -167,4 +167,8 @@ public class MemberService {
     public List<Member> findAllMemberBySameDivision(Division division) {
         return memberRepository.findAllByDivision(division);
     }
+
+    public boolean existsMemberByUsername(String checkUsername) {
+        return memberRepository.existsByUsername(checkUsername);
+    }
 }
