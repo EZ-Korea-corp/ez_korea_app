@@ -25,6 +25,7 @@ import java.util.List;
 public class Member extends BaseEntity {
 
     @Setter
+    @Column(unique = true)
     private String username;
 
     @Setter
