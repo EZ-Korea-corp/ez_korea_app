@@ -44,13 +44,4 @@ public class Ut {
         }
         return msg;
     }
-
-    public static String dateToString(LocalDate date, String _format) {
-        String format = "YYYY-MM-DD";
-
-        if(format != null && !"".equals(format)) {
-            format = _format;
-        }
-        return date.format(DateTimeFormatter.ofPattern(format));
-    }
 }

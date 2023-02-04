@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ezkorea.hybrid_app.domain.myBatis.saleMbRepository">
+<mapper namespace="com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository">
 
     <select id="findSaleStock" parameterType="long" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
         SELECT    A.WIPER_ID AS WIPER
@@ -26,11 +26,21 @@
             ON	A.TASK_ID = B.ID
             GROUP BY A.WIPER_ID, A.STATUS
             UNION ALL
-            SELECT    C.WIPER_ID AS WIPER_ID
+            SELECT    A.WIPER_ID AS WIPER_ID
                     , 'in'       AS STATUS
-                    , C.COUNT    AS COUNT
-            FROM    STOCK C
-            WHERE C.DATE =  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY), '%Y-%m-%d')
+                    , A.COUNT    AS COUNT
+            FROM    STOCK A INNER JOIN
+            (
+                SELECT	  B.GAS_STATION_ID
+                        , MAX(B.DATE) AS LAST_DATE
+                FROM	DAILY_TASK A INNER JOIN STOCK B
+                ON		A.GAS_STATION_ID = B.GAS_STATION_ID
+                WHERE	A.ID = #{taskId}
+                AND		B.DATE <![CDATA[<]]> date_format(now(), '%Y-%m-%d')
+                GROUP BY B.GAS_STATION_ID
+            ) B
+            ON	A.GAS_STATION_ID = B.GAS_STATION_ID
+            AND	A.DATE           = B.LAST_DATE
         ) A
         GROUP BY A.WIPER_ID
     </select>

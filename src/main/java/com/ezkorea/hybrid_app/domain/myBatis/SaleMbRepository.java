@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
-public interface saleMbRepository {
+public interface SaleMbRepository {
 
     List<SaleProductDto> findSaleStock(long taskId);
     List<SaleProductDto> selectSaleOutFix(Map paramMap);

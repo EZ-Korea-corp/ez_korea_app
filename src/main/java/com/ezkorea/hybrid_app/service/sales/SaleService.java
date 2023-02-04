@@ -2,11 +2,8 @@ package com.ezkorea.hybrid_app.service.sales;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
-import com.ezkorea.hybrid_app.domain.myBatis.saleMbRepository;
-import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
-import com.ezkorea.hybrid_app.domain.sale.SaleProductRepository;
-import com.ezkorea.hybrid_app.domain.sale.Stock;
-import com.ezkorea.hybrid_app.domain.sale.StockRepository;
+import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
+import com.ezkorea.hybrid_app.domain.sale.*;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
@@ -39,7 +36,7 @@ public class SaleService {
     private final StockRepository stockRepository;
     private final WiperRepository wpRepository;
 
-    private final saleMbRepository saleMbRepository;
+    private final SaleMbRepository saleMbRepository;
     private final WiperService wiperService;
     private final GasStationService gsService;
 
@@ -81,14 +78,14 @@ public class SaleService {
     @Transactional
     public void saveInputProduct(Member member, List<SaleProductDto> data) {
         DailyTask currentTask = findByMemberAndDate(member);
-        spRepository.deleteByTaskAndStatus(currentTask, "in"); // 재등록
+        spRepository.deleteByTaskAndStatus(currentTask, SaleStatus.IN.toString()); // 재등록
 
         data.forEach(item -> {
             // 입력된 입고만 등록
             if(item.getCount() > 0) {
                 SaleProduct newInputProduct = SaleProduct.builder()
                         .task(currentTask)
-                        .status("in")
+                        .status(SaleStatus.IN.toString())
                         .count(item.getCount())
                         .wiper(wpRepository.findById(item.getWiper()).get())
                         .build();
@@ -101,7 +98,7 @@ public class SaleService {
     @Transactional
     public List<SaleProduct> findInputProduct(Member member) {
         DailyTask currentTask = findByMemberAndDate(member);
-        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatus(currentTask, "in");
+        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatus(currentTask, SaleStatus.IN.toString());
 
         return inputList;
     }
@@ -113,7 +110,7 @@ public class SaleService {
         if (currentTask.getGasStation() != null) {
             List<SaleProduct> inputList = currentTask.getProductList()
                                                      .stream()
-                                                     .filter( p -> p.getStatus().equals("out"))
+                                                     .filter( p -> p.getStatus().equals(SaleStatus.OUT.toString()))
                                                      .toList();
 
             map.put("name", currentTask.getMember().getName());
@@ -131,7 +128,7 @@ public class SaleService {
         DailyTask currentTask = findByMemberAndDate(member);
         paramMap.put("taskId", currentTask.getId());
 
-        if("stock".equals(paramMap.get("status"))) {
+        if(SaleStatus.STOCK.toString().equals(paramMap.get("status"))) {
             statList = saleMbRepository.findSaleStock(currentTask.getId());
         } else {
             statList = saleMbRepository.selectSaleOutFix(paramMap);
@@ -144,16 +141,15 @@ public class SaleService {
     public void closeTask(Member member) {
         DailyTask currentTask = findByMemberAndDate(member);
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("status", "stock");
+        paramMap.put("status", SaleStatus.STOCK.toString());
 
         // 재고 현황
         List<SaleProductDto> stockList = findSaleStat(member, paramMap);
 
         // 재등록
-        stockRepository.deleteByGasStation(currentTask.getGasStation());
+        stockRepository.deleteByGasStationAndDate(currentTask.getGasStation(), LocalDate.now());
 
         stockList.forEach(item -> {
-            // 입력된 입고만 등록
             Stock stock = Stock.builder()
                     .date(LocalDate.now())
                     .gasStation(currentTask.getGasStation())

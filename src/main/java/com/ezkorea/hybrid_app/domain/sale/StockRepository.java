@@ -4,9 +4,10 @@ import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
-    void deleteByGasStation(GasStation gasStation);
+    void deleteByGasStationAndDate(GasStation gasStation, LocalDate date);
 }
