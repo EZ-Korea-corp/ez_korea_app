@@ -10,20 +10,37 @@
   <body>
     <div id="wrapper" th:with="member = ${#authentication.getPrincipal().getMember()}">
 
-      <!-- Header -->
-      <div class="dark">
-        <header th:replace="layout/fragments/main/header :: header"></header>
-      </div>
-      <!-- sidebar -->
-      <div th:replace="layout/fragments/main/side-bar :: sidebar"></div>
+      <th:block th:if="${member.isRoleChanged() eq true}">
+        <form th:action="@{/reload}" method="post">
+          <div class="lg:space-x-12">
+            <div class="">
+              <div class=" md:mb-4 mb-3">
+                <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 환영합니다 👏</h2>
+                <p class="my-2">권한이 변경되었습니다. 🔥</p>
+                <input type="hidden" name="username" th:value="${member.getUsername()}">
+                <button type="submit" id="relogin" class="text-white bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">재로그인</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </th:block>
 
-      <div class="main_content">
-        <div class="mcontainer">
-          <main layout:fragment="main"></main>
+      <th:block th:if="${member.isRoleChanged() eq false}">
+        <!-- Header -->
+        <div class="dark">
+          <header th:replace="layout/fragments/main/header :: header"></header>
         </div>
-        <!-- Footer -->
-        <div th:replace="layout/fragments/common/footer :: footer"></div>
-      </div>
+        <!-- sidebar -->
+        <div th:replace="layout/fragments/main/side-bar :: sidebar"></div>
+
+        <div class="main_content">
+          <div class="mcontainer">
+            <main layout:fragment="main"></main>
+          </div>
+          <!-- Footer -->
+          <div th:replace="layout/fragments/common/footer :: footer"></div>
+        </div>
+      </th:block>
 
     </div>
   </body>

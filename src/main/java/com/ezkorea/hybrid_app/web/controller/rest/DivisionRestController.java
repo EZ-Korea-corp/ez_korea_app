@@ -28,6 +28,9 @@ public class DivisionRestController {
                                @AuthenticationPrincipal SecurityUser securityUser) {
 
         DivisionDto dto = mapper.map(data, DivisionDto.class);
+        log.info("dto.getPosition()={}", dto.getPosition());
+        log.info("dto.getUsername()={}", dto.getUsername());
+        log.info("dto.getStatus()={}", dto.getStatus());
 
         String username = (String) data.get("username");
 

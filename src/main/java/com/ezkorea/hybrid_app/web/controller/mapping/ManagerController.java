@@ -12,20 +12,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/manager")
-@PreAuthorize("hasAuthority('MANAGER')")
+@PreAuthorize("hasAuthority('ROLE_MANAGER')")
 public class ManagerController {
 
     private final ManagerService managerService;
 
     @GetMapping("/home")
     public String showManagerPage() {
-        return "manager/index";
+        return "manager/manage-index";
     }
 
     @GetMapping("/member")
     public String showMemberManagingPage(Model model) {
-        model.addAttribute("employeeList", managerService.findAllMemberByRole(Role.ROLE_EMPLOYEE));
-        model.addAttribute("leaderList", managerService.findAllMemberByRole(Role.ROLE_LEADER));
+        model.addAttribute("employeeList", managerService.findAllMember());
         return "manager/manage-member";
     }
 }

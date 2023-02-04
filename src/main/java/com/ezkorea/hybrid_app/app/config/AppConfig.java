@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.app.Config;
+package com.ezkorea.hybrid_app.app.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

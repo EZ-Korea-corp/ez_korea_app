@@ -10,9 +10,8 @@
 
 <main layout:fragment="main">
     <div class="lg:space-x-12">
-
         <div class="">
-            <form th:action="@{/member}" method="post" id="commuteForm">
+            <form th:action="@{/commute}" method="post" id="commuteForm">
                 <div class=" md:mb-4 mb-3" th:if="${!isOnTime}">
                     <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 환영합니다 👏</h2>
                     <p class="my-2">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요 🔥</p>
