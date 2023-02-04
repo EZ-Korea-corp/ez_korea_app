@@ -21,7 +21,13 @@ public class MemberRestController {
     private final MemberService memberService;
 
     @GetMapping("/signup/{username}")
-    public boolean saveTeam(@PathVariable String username) {
+    public boolean doFindExistUsername(@PathVariable String username) {
         return memberService.existsMemberByUsername(username);
+    }
+
+    @PostMapping("/findPassword")
+    public boolean doFindExistUserInfo(@RequestBody Map<String, Object> datum) {
+        // todo : 이메일, 전화번호를 통해 유저가 존재하는지 확인하고, 이메일 전송해주기
+        return true;
     }
 }

@@ -35,6 +35,11 @@ public class MemberController {
         return "redirect:/login";
     }
 
+    @GetMapping("/findPassword")
+    public String showFindPasswordPage() {
+        return "login/find-password";
+    }
+
     @PostMapping("/reload")
     public String doReLogin(String username) {
         Member currentMember = memberService.findByUsername(username);

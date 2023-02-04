@@ -9,10 +9,18 @@
     <body>
 
         <main layout:fragment="login">
+            <style>
+                #signUp{
+                    background-color: #2563EB;
+                }
+                #passwordFind{
+                    background-color: #9333EA;
+                }
+            </style>
             <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
 
                 <form th:action method="post" class="lg:p-10 p-6 space-y-3 relative bg-white shadow-xl rounded-md">
-                    <h1 class="lg:text-2xl text-xl font-semibold mb-6"> Login </h1>
+                    <h1 class="lg:text-2xl text-xl font-semibold mb-6"> 로그인 </h1>
 
                     <div>
                         <label class="mb-0"> 핸드폰번호 </label>
@@ -35,9 +43,10 @@
                             로그인</button>
                     </div>
                     <div>
-                        <a th:href="@{/signup}" class="button bg-purple-500 w-full purple-500 px-6 py-3 rounded-md shadow text-white">회원가입</a>
-                        <!--<button type="button" class="bg-purple-500 font-semibold p-2 mt-5 rounded-md text-center text-white w-full">
-                            회원가입</button>-->
+                        <a id="signUp" th:href="@{/signup}" class="button w-full px-6 py-3 rounded-md shadow text-white hover:text-white">회원가입</a>
+                    </div>
+                    <div>
+                        <a id="passwordFind" th:href="@{/findPassword}" class="button w-full px-6 py-3 rounded-md shadow text-white hover:text-white">비밀번호 찾기</a>
                     </div>
                 </form>
 
