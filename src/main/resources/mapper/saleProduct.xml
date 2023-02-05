@@ -45,7 +45,7 @@
         GROUP BY A.WIPER_ID
     </select>
 
-    <select id="selectSaleOutFix" parameterType="Map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
+    <select id="findSaleOutFix" parameterType="Map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
         SELECT	  A.WIPER_ID   AS WIPER
                 , SUM(A.COUNT) AS COUNT
         FROM    SALE_PRODUCT A RIGHT JOIN DAILY_TASK B
@@ -55,4 +55,22 @@
         GROUP BY A.WIPER_ID
     </select>
 
+    <select id="findStockHistory" parameterType="long" resultType="map">
+        SELECT    A.DATE
+                , MAX(B.NAME) AS NAME
+        FROM    STOCK A INNER JOIN MEMBER B
+        ON      A.MEMBER_ID = B.ID
+        WHERE   A.GAS_STATION_ID = #{stationId}
+        GROUP BY A.DATE
+        ORDER BY A.DATE DESC
+        LIMIT 5
+    </select>
+
+    <select id="findStockList" parameterType="map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
+        SELECT    A.WIPER_ID AS WIPER
+                , A.COUNT    AS COUNT
+        FROM    STOCK A
+        WHERE   A.GAS_STATION_ID = #{stationId}
+        AND     A.DATE = #{date}
+    </select>
 </mapper>

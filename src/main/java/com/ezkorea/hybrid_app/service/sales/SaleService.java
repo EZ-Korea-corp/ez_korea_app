@@ -1,6 +1,5 @@
 package com.ezkorea.hybrid_app.service.sales;
 
-import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
 import com.ezkorea.hybrid_app.domain.sale.*;
@@ -65,10 +64,6 @@ public class SaleService {
         spRepository.save(newSaleProduct);
     }
 
-    public List<GasStation> findAllGasStation() {
-        return gsRepository.findAll();
-    }
-
     @Transactional
     public void saveDailyGasStation(String stationName, Member member) {
         DailyTask task = findByMemberAndDate(member);
@@ -131,7 +126,7 @@ public class SaleService {
         if(SaleStatus.STOCK.toString().equals(paramMap.get("status"))) {
             statList = saleMbRepository.findSaleStock(currentTask.getId());
         } else {
-            statList = saleMbRepository.selectSaleOutFix(paramMap);
+            statList = saleMbRepository.findSaleOutFix(paramMap);
         }
 
         return statList;
@@ -152,6 +147,7 @@ public class SaleService {
         stockList.forEach(item -> {
             Stock stock = Stock.builder()
                     .date(LocalDate.now())
+                    .member(member)
                     .gasStation(currentTask.getGasStation())
                     .wiper(wpRepository.findById(item.getWiper()).get())
                     .count(item.getCount())
@@ -159,5 +155,13 @@ public class SaleService {
 
             stockRepository.save(stock);
         });
+    }
+
+    public List<Map<String, Object>> findStockHistory(Long id) {
+        return saleMbRepository.findStockHistory(id);
+    }
+
+    public List<SaleProductDto> findStockList(Map<String, Object> paramMap) {
+        return saleMbRepository.findStockList(paramMap);
     }
 }

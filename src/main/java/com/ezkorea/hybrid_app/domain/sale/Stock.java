@@ -1,6 +1,7 @@
 package com.ezkorea.hybrid_app.domain.sale;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.wiper.Wiper;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -27,6 +28,10 @@ public class Stock {
     @ManyToOne
     @Setter
     private GasStation gasStation;
+
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
+    @Setter
+    private Member member;
 
     @CreatedDate
     private LocalDate date;

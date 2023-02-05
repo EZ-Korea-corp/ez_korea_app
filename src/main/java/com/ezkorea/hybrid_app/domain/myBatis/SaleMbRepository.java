@@ -5,10 +5,13 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Mapper
 public interface SaleMbRepository {
 
     List<SaleProductDto> findSaleStock(long taskId);
-    List<SaleProductDto> selectSaleOutFix(Map paramMap);
+    List<SaleProductDto> findSaleOutFix(Map paramMap);
+    List<Map<String, Object>> findStockHistory(Long stationId);
+    List<SaleProductDto> findStockList(Map paramMap);
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .icon {
+                display: inline-block;
+                vertical-align: middle;
+            }
+        </style>
+        <div class="lg:space-x-12">
+
+            <div class="lg:w-full card">
+
+                <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                    <div class="flex items-center space-x-3">
+                        <div class="p-1.5 rounded-full text-xl">⛽️</div>
+                        <div class="flex-1">
+                            <div>
+                                <span class="text-2xl font-semibold" th:text="${station['stationName']}"> 주유소 이름 </span>
+                                <span class="text-sm">(수정)</span>
+                            </div>
+                            <p th:text="${station['stationLocation']}"></p>
+                        </div>
+                    </div>
+
+                    <div class="md:py-8 py-3">
+                        <h1 class="block text-lg font-bold mb-9"> 영업 상세  </h1>
+                        <div class="md:flex">
+                            <div class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                                <a th:href="@{|/station/stock/${station.id}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 재고기록 </a>
+                                <a th:href="@{/sales/sell}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매하기 </a>
+                                <a th:href="@{/sales/close}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 마감하기 </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+        </script>
+    </main>
+
+</body>
+
+</html>

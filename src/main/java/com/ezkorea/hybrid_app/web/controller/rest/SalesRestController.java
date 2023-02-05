@@ -90,4 +90,14 @@ public class SalesRestController {
 
         return HttpStatus.OK;
     }
+
+    @PostMapping("/sales/stock")
+    public Map<String, Object> findStockList(@RequestBody Map<String, Object> data) {
+        Map<String, Object> returnMap = new HashMap<>();
+        List<SaleProductDto> statList = saleService.findStockList(data);
+
+        returnMap.put("result", statList);
+
+        return returnMap;
+    }
 }

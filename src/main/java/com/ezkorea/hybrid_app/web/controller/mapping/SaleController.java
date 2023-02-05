@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
+import com.ezkorea.hybrid_app.service.sales.GasStationService;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class SaleController {
 
     private final SaleService saleService;
     private final MemberService memberService;
+    private final GasStationService gasStationService;
 
     @GetMapping("/sales")
     public String showSalesPage(@AuthenticationPrincipal SecurityUser securityUser,
@@ -26,7 +28,7 @@ public class SaleController {
         Map<String, Object> returnMap = saleService.findCurrentTask(securityUser.getMember());
 
         if (returnMap.size() == 0) {
-            model.addAttribute("stations", saleService.findAllGasStation());
+            model.addAttribute("stations", gasStationService.findAllGasStation());
             return "sales/sales-select";
         }
 
