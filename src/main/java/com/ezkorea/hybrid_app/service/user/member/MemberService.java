@@ -195,9 +195,9 @@ public class MemberService {
 
     @Transactional
     public void sendTempPassword(FindPasswordDto dto) {
-        Member m = findByEmail(dto.getEmail());
+        Member currentMember = findByEmail(dto.getEmail());
         String tempPassword = makeNewUUID().toString().substring(0, 8);
-        m.setPassword(passwordEncoder.encode(tempPassword));
+        currentMember.setPassword(passwordEncoder.encode(tempPassword));
         log.info("UUID={}", tempPassword);
     }
 }
