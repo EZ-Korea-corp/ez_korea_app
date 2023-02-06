@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Random;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -62,11 +63,12 @@ public class TestDataInit {
     }
 
     public SignUpDto makeNewMember(String username, String name, Role role) {
+        String email = UUID.randomUUID().toString().substring(0, 8);
         SignUpDto newDto = new SignUpDto();
         newDto.setUsername(username);
         newDto.setPassword("1234");
         newDto.setPhone("01012341234");
-        newDto.setEmail("waiting@sbs.co.kr");
+        newDto.setEmail(email + "@ezkorea.com");
         newDto.setName(name);
         newDto.setSex("MALE");
         newDto.setRole(role);
