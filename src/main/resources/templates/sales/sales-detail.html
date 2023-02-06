@@ -71,6 +71,7 @@
                             <table class="table-auto overflow-scroll w-full">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>판매 시각</th>
                                         <th>사이즈</th>
                                         <th>종류</th>
@@ -78,7 +79,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="product : ${dailyTask['list']}">
+                                    <tr th:each="product, sort : ${dailyTask['list']}">
+                                        <td th:text="${sort.count}"></td>
                                         <td th:text="${#temporals.format(product.getCreateDate(), 'HH시 mm분')}">14시 20분</td>
                                         <td th:text="${product.getWiper().getWiperSize()}">350</td>
                                         <td th:text="${product.getWiper().getWiperViewName()}">일반</td>

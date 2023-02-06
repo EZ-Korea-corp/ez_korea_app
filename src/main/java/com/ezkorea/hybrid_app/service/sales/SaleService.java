@@ -1,9 +1,8 @@
 package com.ezkorea.hybrid_app.service.sales;
 
-import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
-import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
-import com.ezkorea.hybrid_app.domain.sale.SaleProductRepository;
+import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
+import com.ezkorea.hybrid_app.domain.sale.*;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
@@ -18,10 +17,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +31,11 @@ public class SaleService {
     private final SaleProductRepository spRepository;
     private final GasStationRepository gsRepository;
     private final DailyTaskRepository dtRepository;
+
+    private final StockRepository stockRepository;
     private final WiperRepository wpRepository;
+
+    private final SaleMbRepository saleMbRepository;
     private final WiperService wiperService;
     private final GasStationService gsService;
 
@@ -60,10 +64,6 @@ public class SaleService {
         spRepository.save(newSaleProduct);
     }
 
-    public List<GasStation> findAllGasStation() {
-        return gsRepository.findAll();
-    }
-
     @Transactional
     public void saveDailyGasStation(String stationName, Member member) {
         DailyTask task = findByMemberAndDate(member);
@@ -73,14 +73,14 @@ public class SaleService {
     @Transactional
     public void saveInputProduct(Member member, List<SaleProductDto> data) {
         DailyTask currentTask = findByMemberAndDate(member);
-        spRepository.deleteByTaskAndStatus(currentTask, "in"); // 재등록
+        spRepository.deleteByTaskAndStatus(currentTask, SaleStatus.IN.toString()); // 재등록
 
         data.forEach(item -> {
             // 입력된 입고만 등록
             if(item.getCount() > 0) {
                 SaleProduct newInputProduct = SaleProduct.builder()
                         .task(currentTask)
-                        .status("in")
+                        .status(SaleStatus.IN.toString())
                         .count(item.getCount())
                         .wiper(wpRepository.findById(item.getWiper()).get())
                         .build();
@@ -93,7 +93,7 @@ public class SaleService {
     @Transactional
     public List<SaleProduct> findInputProduct(Member member) {
         DailyTask currentTask = findByMemberAndDate(member);
-        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatus(currentTask, "in");
+        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatus(currentTask, SaleStatus.IN.toString());
 
         return inputList;
     }
@@ -105,7 +105,7 @@ public class SaleService {
         if (currentTask.getGasStation() != null) {
             List<SaleProduct> inputList = currentTask.getProductList()
                                                      .stream()
-                                                     .filter( p -> p.getStatus().equals("out"))
+                                                     .filter( p -> p.getStatus().equals(SaleStatus.OUT.toString()))
                                                      .toList();
 
             map.put("name", currentTask.getMember().getName());
@@ -116,5 +116,52 @@ public class SaleService {
         }
 
         return map;
+    }
+
+    public List<SaleProductDto> findSaleStat(Member member, Map<String, Object> paramMap) {
+        List<SaleProductDto> statList = new ArrayList<>();
+        DailyTask currentTask = findByMemberAndDate(member);
+        paramMap.put("taskId", currentTask.getId());
+
+        if(SaleStatus.STOCK.toString().equals(paramMap.get("status"))) {
+            statList = saleMbRepository.findSaleStock(currentTask.getId());
+        } else {
+            statList = saleMbRepository.findSaleOutFix(paramMap);
+        }
+
+        return statList;
+    }
+
+    @Transactional
+    public void closeTask(Member member) {
+        DailyTask currentTask = findByMemberAndDate(member);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("status", SaleStatus.STOCK.toString());
+
+        // 재고 현황
+        List<SaleProductDto> stockList = findSaleStat(member, paramMap);
+
+        // 재등록
+        stockRepository.deleteByGasStationAndDate(currentTask.getGasStation(), LocalDate.now());
+
+        stockList.forEach(item -> {
+            Stock stock = Stock.builder()
+                    .date(LocalDate.now())
+                    .member(member)
+                    .gasStation(currentTask.getGasStation())
+                    .wiper(wpRepository.findById(item.getWiper()).get())
+                    .count(item.getCount())
+                    .build();
+
+            stockRepository.save(stock);
+        });
+    }
+
+    public List<Map<String, Object>> findStockHistory(Long id) {
+        return saleMbRepository.findStockHistory(id);
+    }
+
+    public List<SaleProductDto> findStockList(Map<String, Object> paramMap) {
+        return saleMbRepository.findStockList(paramMap);
     }
 }

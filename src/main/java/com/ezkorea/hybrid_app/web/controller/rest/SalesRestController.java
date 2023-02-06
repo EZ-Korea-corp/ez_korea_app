@@ -62,10 +62,42 @@ public class SalesRestController {
 
     @PostMapping("/sales/input")
     public HttpStatus saveInputProduct(@RequestBody List<SaleProductDto> data,
-                               @AuthenticationPrincipal SecurityUser securityUser) {
+                                       @AuthenticationPrincipal SecurityUser securityUser) {
 
         saleService.saveInputProduct(securityUser.getMember(), data);
 
         return HttpStatus.OK;
+    }
+
+    @PostMapping("/sales/close")
+    public Map<String, Object> findSaleStat(@RequestBody Map<String, Object> data,
+                                   @AuthenticationPrincipal SecurityUser securityUser) {
+        Map<String, Object> returnMap = new HashMap<>();
+        List<SaleProductDto> statList = saleService.findSaleStat(securityUser.getMember(), data);
+
+        returnMap.put("result", statList);
+
+        return returnMap;
+    }
+
+    @PostMapping("/sales/closeTask")
+    public HttpStatus closeTask(@AuthenticationPrincipal SecurityUser securityUser) {
+
+        //마감처리 - 퇴근처리
+
+        //재고등록
+        saleService.closeTask(securityUser.getMember());
+
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/sales/stock")
+    public Map<String, Object> findStockList(@RequestBody Map<String, Object> data) {
+        Map<String, Object> returnMap = new HashMap<>();
+        List<SaleProductDto> statList = saleService.findStockList(data);
+
+        returnMap.put("result", statList);
+
+        return returnMap;
     }
 }
