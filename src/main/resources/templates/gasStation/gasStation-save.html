@@ -17,8 +17,8 @@
                                 <h2 class="lg:text-2xl text-xl font-semibold mb-6"> 기본정보 </h2>
                                 <button type="button" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold" onclick="loadAddress()">주소 검색</button>
                             </div>
-                            <input type="text" th:value="${station['stationName']}" id="stationName" name="stationName" placeholder="주유소명 입력">
-                            <input type="text" th:value="${station['stationLocation']}" id="stationLocation" name="stationLocation" placeholder="주소 입력">
+                                <input type="text" th:value="${station != null} ? ${station['stationName']}" id="stationName" name="stationName" placeholder="주유소명 입력">
+                                <input type="text" th:value="${station != null} ? ${station['stationLocation']}" id="stationLocation" name="stationLocation" placeholder="주소 입력">
                         </div>
                         <div class="md:py-8 py-3">
                             <h2 class="lg:text-2xl text-xl font-semibold mb-6"> 공지사항 </h2>
