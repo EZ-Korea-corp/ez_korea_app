@@ -14,10 +14,10 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class KakaoMapsApiTestTemplateTest {
+class KakaoMapsApiRestTemplateTest {
 
     @Autowired
-    private KakaoMapsApiTestTemplate template;
+    private KakaoMapsApiRestTemplate template;
 
     private final String lat = "37.2976181";
     private final String lng = "126.9714921";

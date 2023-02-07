@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.service.user.manager;
 
+import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.division.Position;
 import com.ezkorea.hybrid_app.domain.user.division.Status;
@@ -58,6 +59,12 @@ public class ManagerService {
     }
 
     public List<Member> findAllMember() {
+        for (Member member : mService.findAllMember()) {
+            log.info("getMemberCommuteList = {}", member.getCommuteTimeList());
+            for (CommuteTime commuteTime : member.getCommuteTimeList()) {
+                log.info("getMemberOnTimeLocation = {}", commuteTime.getOnTimeLocation());
+            }
+        }
         return mService.findAllMember();
     }
 }

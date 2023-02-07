@@ -21,7 +21,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "commuteTimeList")
 public class Member extends BaseEntity {
 
     @Setter

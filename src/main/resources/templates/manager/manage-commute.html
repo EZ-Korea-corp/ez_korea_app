@@ -49,33 +49,55 @@
                     <div class="p-10 pt-4 divide-y divide-gray-100">
 
                         <div class="md:py-8 py-3">
-                            <h2 class="text-xl font-bold"><span class="mr-2">👔</span>사원 직급 수정</h2>
+                            <h2 class="text-xl font-bold"><span class="mr-2">🙋</span>출, 퇴근 정보</h2>
                         </div>
 
                         <div class="md:py-8 py-3">
-                            <h1 class="block text-lg font-bold mb-4"> 사원 선택  </h1>
-                            <div class="md:flex">
-                                <div class="md:w-2/3 space-y-4 -mt-2">
-                                    <div id="select-div" class="items-center space-x-3">
-                                        <div class="flex-1">
-                                            <input type="text" class="live-search-box" placeholder="사원이름을 입력해주세요."/>
-
-                                            <ul id="search-result" class="live-search-list">
-                                                <li th:each="user : ${employeeList}" th:if="${!user.getRole().toString().equals('ROLE_MASTER')}">
-                                                    <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
-                                                        <div class="w-10 h-10 flex-shrink-0 rounded-md relative">
-                                                            <img src="/assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
-                                                        </div>
-                                                        <div class="flex-1">
-                                                            <h3 class="text-base font-semibold capitalize mb-2" th:text="|${user.getName()}(${#strings.substring(user.getPhone(), 7, 11)})|"> 유저이름 </h3>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            사원명
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            출근 시간
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            출근 위치
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            퇴근 시간
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            퇴근 위치
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="bg-white border-b" th:each="user : ${employeeList}">
+                                        <th scope="row" class="px-6 py-4 font-medium" th:text="${user.getName()}">
+                                            사원명
+                                        </th>
+                                        <th:block th:if="${commute != null}" th:with="commute = ${user.getCommuteTimeList().get(0)}">
+                                            <td class="px-6 py-4" th:text="${commute.getOnTime()}">
+                                                출근 시간
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap" th:text="${commute.getOnTimeLocation()}">
+                                                출근 위치
+                                            </td>
+                                            <td class="px-6 py-4" th:text="${commute.getOffTime()}">
+                                                퇴근 시간
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap" th:text="${commute.getOnTimeLocation()()}">
+                                                퇴근 위치
+                                            </td>
+                                        </th:block>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
+
                         </div>
 
                     </div>

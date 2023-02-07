@@ -3,11 +3,10 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
-import com.ezkorea.hybrid_app.web.controller.template.KakaoMapsApiTestTemplate;
+import com.ezkorea.hybrid_app.web.controller.template.KakaoMapsApiRestTemplate;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MemberController {
 
     private final MemberService memberService;
-    private final KakaoMapsApiTestTemplate template;
+    private final KakaoMapsApiRestTemplate template;
 
     @GetMapping("/login")
     public String showLoginPage() {

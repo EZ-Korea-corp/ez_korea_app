@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class KakaoMapsApiTestTemplate {
+public class KakaoMapsApiRestTemplate {
 
     @Value("${kakao.api.key}")
     private String REST_API_KEY;
