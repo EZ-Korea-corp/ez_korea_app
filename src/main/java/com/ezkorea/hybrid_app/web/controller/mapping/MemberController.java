@@ -49,7 +49,9 @@ public class MemberController {
 
     @PostMapping("/commute")
     public String doCommute(@AuthenticationPrincipal SecurityUser securityUser,
-                            @RequestParam String commuteStatus) {
+                            @RequestParam String commuteStatus,
+                            @RequestParam String location) {
+
         memberService.setCommuteTime(securityUser.getMember(), commuteStatus);
         return "redirect:/";
     }

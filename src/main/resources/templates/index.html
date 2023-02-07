@@ -12,6 +12,7 @@
     <div class="lg:space-x-12">
         <div class="">
             <form th:action="@{/commute}" method="post" id="commuteForm">
+                <input type="hidden" id="location" name="location" value=""/>
                 <div class=" md:mb-4 mb-3" th:if="${!isOnTime}">
                     <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 환영합니다 👏</h2>
                     <p class="my-2">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요 🔥</p>
@@ -57,6 +58,25 @@
         </div>
     </div>
     <script>
+        let locationStr = "";
+        let submitFlag = true;
+
+        function setLocation() {
+            navigator.geolocation.getCurrentPosition(function (position){
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                submitFlag = true;
+                locationStr = lat + ', ' + lng;
+            }, function (){
+                Swal.fire({
+                    icon: 'question',
+                    html: '위치 정보를 가져올 수 없습니다.<br>위치 정보 허용을 해주세요.',
+                    footer: '핸드폰 설정 ➡️ 위치 서비스 ➡️ 사용하는 브라우저 위치 서비스 허용 ➡️ 메인 페이지 새로 고침'
+                })
+                submitFlag = false;
+            });
+        }
+
         $("#offTimeBtn").on("click", function (){
             Swal.fire({
                 html: '퇴근하시겠습니까?',
@@ -65,7 +85,13 @@
                 denyButtonText: `닫기`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    $( '#commuteForm' ).submit();
+                    setLocation();
+                    setTimeout(function() {
+                        $('#location').attr('value', locationStr);
+                        if (submitFlag === true  && locationStr.length !== 0) {
+                            $('#commuteForm').submit();
+                        }
+                    }, 5000);
                 }
             })
         });
