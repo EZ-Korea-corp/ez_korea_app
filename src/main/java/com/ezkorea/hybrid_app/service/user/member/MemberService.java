@@ -151,11 +151,11 @@ public class MemberService {
     }
 
     @Transactional
-    public void setCommuteTime(Member member, String status) {
+    public void setCommuteTime(Member member, String status, String currentLocation) {
         Member currentMember = findByUsername(member.getUsername());
         forceAuthentication(memberRepository
                 .save(commuteService
-                        .saveCommuteTime(currentMember, status)
+                        .saveCommuteTime(currentMember, status, currentLocation)
                 ));
     }
 

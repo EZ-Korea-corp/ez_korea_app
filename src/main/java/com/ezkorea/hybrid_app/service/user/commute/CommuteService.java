@@ -20,17 +20,20 @@ public class CommuteService {
 
     /**
      * 출근처리를 위한 메소드
-     * @param member 현재 로그인한 유저
-     * @param status 출근 : onTime, 퇴근 : offTime, 대기 : away
-     * */
+     *
+     * @param member          현재 로그인한 유저
+     * @param status          출근 : onTime, 퇴근 : offTime, 대기 : away
+     * @param currentLocation
+     */
     @Transactional
-    public Member saveCommuteTime(Member member, String status) {
+    public Member saveCommuteTime(Member member, String status, String currentLocation) {
         if (status.equals("onTime")) {
             CommuteTime ct = CommuteTime.builder()
                     .date(LocalDate.now())
                     .onTime(LocalDateTime.now())
                     .status(status)
                     .member(member)
+                    .onTimeLocation(currentLocation)
                     .build();
             member.addCommuteTime(ctRepository.save(ct));
             saleService.saveDailyTask(member);
@@ -38,6 +41,7 @@ public class CommuteService {
             CommuteTime ct = findCommuteTimeByMember(member);
             ct.setStatus(status);
             ct.setOffTime(LocalDateTime.now());
+            ct.setOffTimeLocation(currentLocation);
         } else {
             CommuteTime ct = findCommuteTimeByMember(member);
             ct.setStatus("away");

@@ -55,8 +55,7 @@ public class MemberController {
                             @RequestParam String commuteStatus,
                             @RequestParam String location) {
         String currentLocation = template.getCurrentLocation(location);
-        log.info("locationJson={}", currentLocation);
-        memberService.setCommuteTime(securityUser.getMember(), commuteStatus);
+        memberService.setCommuteTime(securityUser.getMember(), commuteStatus, currentLocation);
         return "redirect:/";
     }
 }

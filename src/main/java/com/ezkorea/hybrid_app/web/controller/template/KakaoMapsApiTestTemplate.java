@@ -28,8 +28,6 @@ public class KakaoMapsApiTestTemplate {
     public String getCurrentLocation(String location) {
         String currentLat = location.split(",")[0];
         String currentLng = location.split(",")[1];
-        log.info("lat={}", currentLat);
-        log.info("lng={}", currentLng);
         return getAddressName(getJsonObject(getCurrentPosInfo(currentLat, currentLng)));
     }
 
