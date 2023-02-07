@@ -16,3 +16,6 @@ logging:
     root: info
     com.finalProject.app: debug
     org.hibernate.type.descriptor.sql: trace
+kakao:
+  api:
+    key: 8b393b7646b69a7751e31c9adbf1e65d

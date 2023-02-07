@@ -13,3 +13,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+kakao:
+  api:
+    key: 8b393b7646b69a7751e31c9adbf1e65d
