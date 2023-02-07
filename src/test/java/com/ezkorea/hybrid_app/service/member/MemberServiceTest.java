@@ -8,10 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Profile("${test}")
 class MemberServiceTest {
 
     @Autowired
@@ -20,27 +25,21 @@ class MemberServiceTest {
     @Autowired
     MemberService memberService;
 
-    SignUpDto saveDtoInfo() {
-        SignUpDto signUpDto = new SignUpDto();
-        signUpDto.setName("테스트");
-        signUpDto.setSex("MALE");
-        signUpDto.setPassword("1234");
-        signUpDto.setUsername("01012341234");
-        return signUpDto;
-    }
-
-    @BeforeEach
-    void saveTest() {
-
-        Member member = memberService.saveNewMember(saveDtoInfo());
-        System.out.println("member = " + member.getPassword());
-        assertThat(member.getName()).isEqualTo("테스트");
-
+    @Test
+    void findMemberByUsernameTest() {
+        long start = System.currentTimeMillis();
+        Member member = memberService.findByUsername("ez_dev_team_master");
+        long end = System.currentTimeMillis();
+        System.out.println("JPA 실행 시간 : " + (end - start)/1000.0);
+        assertThat(member.getName()).isEqualTo("개발팀");
     }
 
     @Test
-    void findByUsernameTest() {
-        Member member = memberService.findByUsername("01012341234");
-        assertThat(member.getName()).isEqualTo("테스트");
+    void findMemberByIdTest() {
+        long start = System.currentTimeMillis();
+        Member member = memberService.findMemberById(1L);
+        long end = System.currentTimeMillis();
+        System.out.println("JPA 실행 시간 : " + (end - start)/1000.0);
+        assertThat(member.getName()).isEqualTo("개발팀");
     }
 }

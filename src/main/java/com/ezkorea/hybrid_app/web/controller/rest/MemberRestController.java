@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.DivisionDto;
+import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -26,8 +27,14 @@ public class MemberRestController {
     }
 
     @PostMapping("/findPassword")
-    public boolean doFindExistUserInfo(@RequestBody Map<String, Object> datum) {
-        // todo : 이메일, 전화번호를 통해 유저가 존재하는지 확인하고, 이메일 전송해주기
+    public boolean doFindExistUserInfo(@RequestBody FindPasswordDto dto) {
+
+        if (!memberService.existsMemberByEmailAndPhone(dto)) {
+            return false;
+        }
+
+        memberService.sendTempPassword(dto);
+
         return true;
     }
 }

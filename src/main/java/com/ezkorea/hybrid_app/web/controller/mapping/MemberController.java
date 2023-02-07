@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
+import com.ezkorea.hybrid_app.web.controller.template.KakaoMapsApiRestTemplate;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MemberController {
 
     private final MemberService memberService;
+    private final KakaoMapsApiRestTemplate template;
 
     @GetMapping("/login")
     public String showLoginPage() {
@@ -49,8 +51,10 @@ public class MemberController {
 
     @PostMapping("/commute")
     public String doCommute(@AuthenticationPrincipal SecurityUser securityUser,
-                            @RequestParam String commuteStatus) {
-        memberService.setCommuteTime(securityUser.getMember(), commuteStatus);
+                            @RequestParam String commuteStatus,
+                            @RequestParam String location) {
+        String currentLocation = template.getCurrentLocation(location);
+        memberService.setCommuteTime(securityUser.getMember(), commuteStatus, currentLocation);
         return "redirect:/";
     }
 }

@@ -33,6 +33,12 @@ public class CommuteTime extends BaseEntity {
     @Setter
     private LocalDateTime offTime;
 
+    @Setter
+    private String onTimeLocation;
+
+    @Setter
+    private String offTimeLocation;
+
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     private Member member;
 }

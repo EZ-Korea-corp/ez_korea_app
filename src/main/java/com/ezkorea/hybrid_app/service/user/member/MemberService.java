@@ -7,6 +7,7 @@ import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
+import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
 import com.ezkorea.hybrid_app.web.dto.ProfileDto;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -70,6 +72,17 @@ public class MemberService {
      */
     public Member findByUsername(String username) {
         return memberRepository.findByUsername(username)
+                .orElseThrow( () -> new UsernameNotFoundException("해당되는 유저가 없습니다."));
+    }
+
+    /**
+     * email을 통해 정확한 Member를 찾기 위한 메소드
+     * @param email 검색할 email
+     * @exception UsernameNotFoundException 유저가 없을 시 발생
+     * @return email에 맞는 Member 객체
+     */
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
                 .orElseThrow( () -> new UsernameNotFoundException("해당되는 유저가 없습니다."));
     }
 
@@ -138,11 +151,11 @@ public class MemberService {
     }
 
     @Transactional
-    public void setCommuteTime(Member member, String status) {
+    public void setCommuteTime(Member member, String status, String currentLocation) {
         Member currentMember = findByUsername(member.getUsername());
         forceAuthentication(memberRepository
                 .save(commuteService
-                        .saveCommuteTime(currentMember, status)
+                        .saveCommuteTime(currentMember, status, currentLocation)
                 ));
     }
 
@@ -170,5 +183,21 @@ public class MemberService {
 
     public boolean existsMemberByUsername(String checkUsername) {
         return memberRepository.existsByUsername(checkUsername);
+    }
+
+    public boolean existsMemberByEmailAndPhone(FindPasswordDto dto) {
+        return memberRepository.existsByEmailAndPhone(dto.getEmail(), dto.getPhone());
+    }
+
+    public UUID makeNewUUID() {
+        return UUID.randomUUID();
+    }
+
+    @Transactional
+    public void sendTempPassword(FindPasswordDto dto) {
+        Member currentMember = findByEmail(dto.getEmail());
+//        String tempPassword = makeNewUUID().toString().substring(0, 8);
+        String tempPassword = "1234";
+        currentMember.setPassword(passwordEncoder.encode(tempPassword));
     }
 }
