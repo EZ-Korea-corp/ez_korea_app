@@ -1,6 +1,7 @@
 package com.ezkorea.hybrid_app.web.exception;
 
 import com.ezkorea.hybrid_app.app.util.Script;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,5 +45,12 @@ public class ExceptionHandlerController {
         log.error("DivisionNotFoundException={}", e);
 
         return Script.href("/", e.getMessage());
+    }
+
+    @ExceptionHandler(value = JsonProcessingException.class)
+    public @ResponseBody String locationNotFoundException(JsonProcessingException e) {
+        log.error("JsonProcessingException={}", e);
+
+        return Script.href("/", "위치 정보를 찾을 수 없습니다. 새로고침 후 다시 시도해주세요.");
     }
 }
