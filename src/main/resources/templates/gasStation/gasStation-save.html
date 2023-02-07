@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+    <body>
+        <main layout:fragment="main">
+            <!-- Content-->
+            <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
+                <form id="saveForm" onsubmit="return false;" class="lg:p-10 p-6 space-y-3 relative bg-white shadow-xl rounded-md">
+                    <h1 class="lg:text-2xl text-xl font-semibold mb-6"> 주유소 등록 </h1>
+                        <div class="md:py-8 py-3">
+                            <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
+                                <h2 class="lg:text-2xl text-xl font-semibold mb-6"> 기본정보 </h2>
+                                <button type="button" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold" onclick="loadAddress()">주소 검색</button>
+                            </div>
+                            <input type="text" th:value="${station['stationName']}" id="stationName" name="stationName" placeholder="주유소명 입력">
+                            <input type="text" th:value="${station['stationLocation']}" id="stationLocation" name="stationLocation" placeholder="주소 입력">
+                        </div>
+                        <div class="md:py-8 py-3">
+                            <h2 class="lg:text-2xl text-xl font-semibold mb-6"> 공지사항 </h2>
+                            <textarea name="memo"></textarea>
+                        </div>
+                        <div class="md:py-8 py-3">
+                            <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
+                                <h2 class="lg:text-2xl text-xl font-semibold mb-6"> 참고 </h2>
+                                <button type="button" id="inputBt" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold">파일 선택</button>
+                                <input id="inputfile" type="file" style="display:none;" multiple/>
+                            </div>
+                            <div id="imgDiv">
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" id="submit" class="bg-blue-600 font-semibold p-2 mt-5 rounded-md text-center text-white w-full">
+                                저장하기</button>
+                        </div>
+                </form>
+
+            </div>
+            <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+            <script>
+                let fileList = [];
+
+                // 주유소 저장
+                $("#submit").on("click", function() {
+                    if(!fnValidCheck()) return;
+
+                    const data = $("#saveForm").serializeObject();
+                    const url = "/station/saveStation"
+                    const fnload = function(callbckData) {
+                        location.href= "/station/detail/" + callbckData.stationId;
+                    }
+                    const formData = new FormData();
+                    formData.append("stationName", data.stationName);
+                    formData.append("stationLocation", data.stationLocation);
+                    formData.append("memo", data.memo);
+
+                    fileList.forEach(function(item, index) {
+                        formData.append('files['+index+']', item);
+                    });
+
+                    fnFormDataAjax(formData, url, fnload);
+                });
+
+                // 파일 선택
+                $("#inputBt").on("click", function() {
+                    $("#inputfile").click();
+                });
+
+                // 파일 미리보기
+                $("#inputfile").on("change", function(event) {
+                    let file = event.target.files[0];
+
+                    if(!isImageFile(file)) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: '이미지 파일이 아닙니다.',
+                        });
+                        return;
+                    }
+                    if(isOverSize(file)) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: '파일의 용량이 너무 큽니다.',
+                        });
+                        return;
+                    }
+
+                    let reader = new FileReader();
+                    reader.onload = function(e) {
+                        $("#imgDiv").append(
+                            $("<div>", {class:"flex items-center"}).append(
+                                $("<img>", {src:e.target.result}),
+                                $("<button>", {text:"삭제", class:"flex items-center bg-blue-600"}).on("click", function() {
+                                    fileList.splice($(this).parent("div").index(), 1);
+                                    $(this).parent("div").remove();
+                                })
+                            )
+                        )
+                    }
+                    reader.readAsDataURL(file);
+                    fileList.push(file);
+                });
+
+                function fnValidCheck() {
+                    let isValid = true;
+                    let validateMsg = "";
+                    let focusObj;
+
+                    let stationName     = $('#stationName');
+                    let stationLocation = $('#stationLocation');
+
+                    if(stationName.val() == "") {
+                        validateMsg += "주유소명을 입력해주세요<br/>";
+                        focusObj = stationName;
+                    }
+                    if(stationLocation.val() == "") {
+                        validateMsg += "주유소 위치를 입력해주세요";
+                        focusObj = stationLocation;
+                    }
+
+                    if(validateMsg) {
+                        isValid = false;
+                        focusObj.focus();
+
+                        Swal.fire({
+                            icon: 'error',
+                            html: validateMsg,
+                        });
+                    }
+
+                    return isValid;
+                }
+
+                // 확장자가 이미지 파일인지 확인
+                function isImageFile(file) {
+
+                    let ext = file.name.split(".").pop().toLowerCase(); // 파일명에서 확장자를 가져온다.
+
+                    return ($.inArray(ext, ["jpg", "jpeg", "gif", "png"]) === -1) ? false : true;
+                }
+
+                // 파일의 최대 사이즈 확인
+                function isOverSize(file) {
+
+                    let maxSize = 10 * 1024 * 1024; // 10MB로 제한
+
+                    return (file.size > maxSize) ? true : false;
+                }
+
+                // 다음주소 API
+                function loadAddress() {
+                    new daum.Postcode({
+                        oncomplete: function(data) {
+                            let addr = '';
+                            let extraAddr = '';
+                            if (data.userSelectedType === 'R') {
+                                addr = data.roadAddress;
+                            } else {
+                                addr = data.jibunAddress;
+                            }
+                            $("#stationLocation").val(addr);
+                            $("#stationName").focus();
+                        }
+                    }).open();
+                }
+            </script>
+        </main>
+    </body>
+
+</html>

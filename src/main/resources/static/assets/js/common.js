@@ -134,5 +134,37 @@ function fnCrudRefreshAjax(data, url, id, method) {
             })
         }
     });
+}
+
+
+function fnFormDataAjax(data, url, fnCallBack) {
+    $.ajax({
+        url: url,                       //주소
+        data: data,                     //전송 데이터
+        type: "POST",                   //전송 타입
+        enctype: "multipart/form-data", //form data 설정
+        processData: false,             //프로세스 데이터 설정 : false 값을 해야 form data로 인식합니다
+        contentType: false,             //헤더의 Content-Type을 설정 : false 값을 해야 form data로 인식합니다
+        beforeSend: function (jqXHR, settings) {
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var token = $("meta[name='_csrf']").attr("content");
+            jqXHR.setRequestHeader(header, token);
+        },
+        success: function(data) {
+            Swal.fire({
+                icon: 'success',
+                text: '저장되었습니다.',
+            }).then(() => {
+                if(fnCallBack) fnCallBack(data);
+            })
+        },
+
+        error: function (xhr, status, error) {
+            Swal.fire({
+                icon: 'error',
+                text: '오류가 발생했습니다.',
+            })
+        }
+    });
 
 }

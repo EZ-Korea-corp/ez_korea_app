@@ -48,8 +48,9 @@
 
                     <div class="p-10 pt-4 divide-y divide-gray-100">
 
-                        <div class="md:py-8 py-3">
+                        <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
                             <h2 class="text-xl font-bold"><span class="mr-2">⛽</span>주유소 보기</h2>
+                            <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/save';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 등록 </button>
                         </div>
 
                         <div class="md:py-8 py-3">
@@ -74,6 +75,7 @@
                                                             <h2 class="text-base font-semibold capitalize mb-3" th:text="|${station.getStationLocation()}|"> 주소 </h2>
                                                         </div>
                                                         <button type="button" th:onclick="|location.href='/station/detail/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 이동 </button>
+                                                        <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/save/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 수정 </button>
                                                     </div>
                                                 </li>
                                             </ul>

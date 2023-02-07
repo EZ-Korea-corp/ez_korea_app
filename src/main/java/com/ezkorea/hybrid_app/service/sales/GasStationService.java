@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
 import com.ezkorea.hybrid_app.domain.sale.StockRepository;
+import com.ezkorea.hybrid_app.web.dto.GasStationDto;
 import com.ezkorea.hybrid_app.web.exception.GasStationNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,17 @@ public class GasStationService {
 
     public GasStation findStationById(Long id) {
         Optional<GasStation> station = gsRepository.findById(id);
-        return station.get();
+        return station.orElseThrow( () -> new GasStationNotFoundException("해당 주유소를 찾을 수 없습니다."));
+    }
+
+    public long saveGasStation(GasStationDto dto) {
+        GasStation entity = GasStation.builder()
+                .stationName(dto.getStationName())
+                .stationLocation(dto.getStationLocation())
+                .memo(dto.getMemo())
+                .build();
+        gsRepository.save(entity);
+
+        return entity.getId();
     }
 }
