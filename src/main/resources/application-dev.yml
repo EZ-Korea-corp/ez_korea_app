@@ -1,6 +1,10 @@
 server:
   port: 8080
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   thymeleaf:
     cache: false
     prefix: file:src/main/resources/templates/

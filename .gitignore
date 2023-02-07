@@ -33,10 +33,14 @@ dump.rdb
 interpolated*.xml
 lib/
 manifest.yml
+application-prod.yml
+application-dev.yml
+application.yml
+application-test.yml
 out
 overridedb.*
 target
 .flattened-pom.xml
 secrets.yml
 .gradletasknamecache
-.sts4-cache
+.sts4
