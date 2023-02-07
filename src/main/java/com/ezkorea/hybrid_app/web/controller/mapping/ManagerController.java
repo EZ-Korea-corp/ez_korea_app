@@ -27,4 +27,10 @@ public class ManagerController {
         model.addAttribute("employeeList", managerService.findAllMember());
         return "manager/manage-member";
     }
+
+    @GetMapping("/commute")
+    public String showMemberCommutePage(Model model) {
+        model.addAttribute("employeeList", managerService.findAllMember());
+        return "manager/manage-commute";
+    }
 }
