@@ -37,7 +37,7 @@ public class KakaoMapsApiTestTemplate {
     }
 
     public Map<String, Object> getCurrentPosInfo(String currentLat, String currentLng) {
-        String url = "https://dapi.kakao.com/v2/local/geo/coord2address.json?x=%s&y=%s".formatted(currentLng, currentLat);
+        String url = "https://dapi.kakao.com/v2/local/geo/coord2address.json?x={currentLng}&y={currentLat}";
         return getRestTemplateResult(url, currentLat, currentLng);
     }
 
