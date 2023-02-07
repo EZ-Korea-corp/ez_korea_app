@@ -34,7 +34,6 @@ interpolated*.xml
 lib/
 manifest.yml
 application-prod.yml
-application-dev.yml
 application.yml
 application-test.yml
 out
