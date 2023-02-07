@@ -42,9 +42,6 @@ public class CommuteService {
             ct.setStatus(status);
             ct.setOffTime(LocalDateTime.now());
             ct.setOffTimeLocation(currentLocation);
-        } else {
-            CommuteTime ct = findCommuteTimeByMember(member);
-            ct.setStatus("away");
         }
         return member;
     }

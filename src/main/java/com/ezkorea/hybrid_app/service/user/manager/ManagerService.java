@@ -59,12 +59,6 @@ public class ManagerService {
     }
 
     public List<Member> findAllMember() {
-        for (Member member : mService.findAllMember()) {
-            log.info("getMemberCommuteList = {}", member.getCommuteTimeList());
-            for (CommuteTime commuteTime : member.getCommuteTimeList()) {
-                log.info("getMemberOnTimeLocation = {}", commuteTime.getOnTimeLocation());
-            }
-        }
         return mService.findAllMember();
     }
 }
