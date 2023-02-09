@@ -1,11 +1,13 @@
-package com.ezkorea.hybrid_app.domain.gas;
+package com.ezkorea.hybrid_app.domain.attach;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,12 +15,19 @@ import javax.persistence.Id;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-public class GasStation {
+public class Attach {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    private String stationName;
-    private String stationLocation;
-    private String memo;
+    @CreatedDate
+    private LocalDateTime createDate;
+
+    private String fileId;
+
+    private String fileName;
+
+    private String path;
+
 }
