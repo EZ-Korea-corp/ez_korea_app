@@ -75,7 +75,6 @@
                                                             <h2 class="text-base font-semibold capitalize mb-3" th:text="|${station.getStationLocation()}|"> 주소 </h2>
                                                         </div>
                                                         <button type="button" th:onclick="|location.href='/station/detail/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 이동 </button>
-                                                        <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/save/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 수정 </button>
                                                     </div>
                                                 </li>
                                             </ul>

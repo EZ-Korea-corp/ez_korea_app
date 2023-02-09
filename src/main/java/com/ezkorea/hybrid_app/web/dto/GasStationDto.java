@@ -9,9 +9,11 @@ import java.util.List;
 @Getter
 @Setter
 public class GasStationDto {
+    private Long id;
     private String stationName;
     private String stationLocation;
     private String memo;
     private List<MultipartFile> files;
+    private List<Long> delFiles;
 
 }

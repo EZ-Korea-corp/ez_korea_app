@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -50,15 +51,7 @@ public class GasStationController {
     }
 
     @GetMapping("/save")
-    public String saveGasStation() {
-        return "gasStation/gasStation-save";
-    }
-
-    @GetMapping("/save/{id}")
-    public String updateGasStation(@PathVariable Long id, Model model) {
-        GasStation station = gasStationService.findStationById(id);
-
-        model.addAttribute("station", station);
+    public String saveGasStation(@RequestParam(value="id", required=false)Long id, Model model) {
         return "gasStation/gasStation-save";
     }
 }

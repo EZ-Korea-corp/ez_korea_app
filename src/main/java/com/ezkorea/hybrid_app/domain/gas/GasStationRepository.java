@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface GasStationRepository extends JpaRepository<GasStation, Long> {
     Optional<GasStation> findByStationName(String name);
+    Optional<GasStation> findById(Long id);
 }

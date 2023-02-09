@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.service.etc;
 
 import com.ezkorea.hybrid_app.domain.attach.Attach;
 import com.ezkorea.hybrid_app.domain.attach.AttachRepository;
+import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,9 @@ public class AttachService {
             try {
                 item.transferTo(changeFile); //업로드
                 saveAttachPath(fileName, path, id);
-                log.info("파일 업로드 성공");
+                log.debug("파일 업로드 성공");
             } catch (IOException e) {
-                log.info("파일 업로드 실패");
+                log.error("파일 업로드 실패");
                 e.printStackTrace();
             }
         });
@@ -56,4 +57,21 @@ public class AttachService {
         return attachRepository.findAllByFileId(id);
     }
 
+    public void deleteAttach(List<Long> delFiles, String path) {
+        if(delFiles != null && delFiles.size() > 0) {
+            delFiles.forEach(item -> {
+                Attach attach = attachRepository.findById(item)
+                                .orElseThrow(() -> new IdNotFoundException("파일을 찾을 수 없습니다."));
+                try {
+                    File file = new File(path.substring(0, path.lastIndexOf("\\"))
+                                        + attach.getPath() + "/" + attach.getFileName());
+                    if(file.exists()) file.delete();
+                } catch (Exception e) {
+                    log.error("디렉토리 파일 삭제 실패");
+                }
+
+                attachRepository.delete(attach);
+            });
+        }
+    }
 }

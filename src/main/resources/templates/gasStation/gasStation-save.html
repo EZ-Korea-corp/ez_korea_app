@@ -17,8 +17,9 @@
                                 <h2 class="lg:text-2xl text-xl font-semibold mb-6"> 기본정보 </h2>
                                 <button type="button" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold" onclick="loadAddress()">주소 검색</button>
                             </div>
-                                <input type="text" th:value="${station != null} ? ${station['stationName']}" id="stationName" name="stationName" placeholder="주유소명 입력">
-                                <input type="text" th:value="${station != null} ? ${station['stationLocation']}" id="stationLocation" name="stationLocation" placeholder="주소 입력">
+                                <input type="text" id="stationName" name="stationName" placeholder="주유소명 입력">
+                                <input type="text" id="stationLocation" name="stationLocation" placeholder="주소 입력">
+                                <input type="hidden" id="id" name="id">
                         </div>
                         <div class="md:py-8 py-3">
                             <h2 class="lg:text-2xl text-xl font-semibold mb-6"> 공지사항 </h2>
@@ -43,6 +44,40 @@
             <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
             <script>
                 let fileList = [];
+                let deleteFileList = [];
+
+                $(document).ready(function(){
+                    let url = new URL(window.location.href);
+                    let id = url.searchParams.get("id");
+
+                    if(id) {
+                        const url = "/station/restDetail";
+                        const data = {"id" : id};
+
+                        fnFindJsonAjax(data, url, fnFindStationDetail);
+                    }
+                });
+
+                function fnFindStationDetail(data) {
+                    if(data.station) {
+                        $("#id").val(data.station.id);
+                        $("#stationName").val(data.station.stationName);
+                        $("#stationLocation").val(data.station.stationLocation);
+                    }
+                    if(data.attachList) {
+                        data.attachList.forEach(function(item) {
+                            $("#imgDiv").append(
+                                $("<div>", {class:"flex items-center"}).append(
+                                    $("<img>", {src:item.path+"/"+item.fileName}),
+                                    $("<button>", {text:"삭제", class:"flex items-center bg-blue-600"}).on("click", function() {
+                                        deleteFileList.push(item.id);
+                                        $(this).parent("div").remove();
+                                    })
+                                )
+                            )
+                        })
+                    }
+                }
 
                 // 주유소 저장
                 $("#submit").on("click", function() {
@@ -54,12 +89,17 @@
                         location.href= "/station/detail/" + callbckData.stationId;
                     }
                     const formData = new FormData();
+                    formData.append("id", data.id);
                     formData.append("stationName", data.stationName);
                     formData.append("stationLocation", data.stationLocation);
                     formData.append("memo", data.memo);
 
                     fileList.forEach(function(item, index) {
                         formData.append('files['+index+']', item);
+                    });
+
+                    deleteFileList.forEach(function(item, index) {
+                       formData.append('delFiles['+index+']', item);
                     });
 
                     fnFormDataAjax(formData, url, fnload);
