@@ -1,28 +1,18 @@
 package com.ezkorea.hybrid_app.domain.attach;
 
+import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
-public class Attach {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @CreatedDate
-    private LocalDateTime createDate;
+@SuperBuilder
+public class Attach extends BaseEntity {
 
     private String fileId;
 
