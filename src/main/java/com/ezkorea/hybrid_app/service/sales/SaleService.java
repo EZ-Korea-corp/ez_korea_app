@@ -112,11 +112,11 @@ public class SaleService {
                                                      .toList();
             //카드
             ArrayList<SaleProduct> cardList = inputList.stream()
-                    .filter(product -> product.getPayment().equals(Payment.CARD.toString()))
+                    .filter(product -> product.getPayment().equals(Payment.CARD.getViewName()))
                     .collect(Collectors.toCollection(ArrayList::new));
             //현금
             ArrayList<SaleProduct> cashList = inputList.stream()
-                    .filter(product -> product.getPayment().equals(Payment.CASH.toString()))
+                    .filter(product -> product.getPayment().equals(Payment.CASH.getViewName()))
                     .collect(Collectors.toCollection(ArrayList::new));
 
             map.put("name", currentTask.getMember().getName());
