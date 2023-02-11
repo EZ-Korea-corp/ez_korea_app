@@ -33,7 +33,6 @@ public class SaleService {
     private final GasStationRepository gsRepository;
     private final DailyTaskRepository dtRepository;
 
-    private final StockRepository stockRepository;
     private final WiperRepository wpRepository;
 
     private final SaleMbRepository saleMbRepository;
@@ -143,31 +142,6 @@ public class SaleService {
         }
 
         return statList;
-    }
-
-    @Transactional
-    public void closeTask(Member member) {
-        DailyTask currentTask = findByMemberAndDate(member);
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("status", SaleStatus.STOCK.toString());
-
-        // 재고 현황
-        List<SaleProductDto> stockList = findSaleStat(member, paramMap);
-
-        // 재등록
-        stockRepository.deleteByGasStationAndDate(currentTask.getGasStation(), LocalDate.now());
-
-        stockList.forEach(item -> {
-            Stock stock = Stock.builder()
-                    .date(LocalDate.now())
-                    .member(member)
-                    .gasStation(currentTask.getGasStation())
-                    .wiper(wpRepository.findById(item.getWiper()).get())
-                    .count(item.getCount())
-                    .build();
-
-            stockRepository.save(stock);
-        });
     }
 
     public List<Map<String, Object>> findStockHistory(Long id) {

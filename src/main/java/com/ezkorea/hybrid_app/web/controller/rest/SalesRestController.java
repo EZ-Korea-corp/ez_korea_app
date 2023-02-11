@@ -85,9 +85,6 @@ public class SalesRestController {
 
         //마감처리 - 퇴근처리
 
-        //재고등록
-        saleService.closeTask(securityUser.getMember());
-
         return HttpStatus.OK;
     }
 
