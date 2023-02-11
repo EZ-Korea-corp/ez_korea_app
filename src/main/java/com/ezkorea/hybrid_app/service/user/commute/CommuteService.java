@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.service.user.commute;
 
+import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
@@ -10,12 +11,15 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class CommuteService {
 
     private final CommuteTimeRepository ctRepository;
+    private final CommuteMbRepository ctMbRepository;
     private final SaleService saleService;
 
     /**
@@ -53,5 +57,9 @@ public class CommuteService {
      * */
     public CommuteTime findCommuteTimeByMember(Member member) {
         return ctRepository.findByDateAndMember(LocalDate.now(), member);
+    }
+
+    public List<Map<String, String>> findCommuteTime(String date) {
+        return ctMbRepository.findCommuteTime(date);
     }
 }
