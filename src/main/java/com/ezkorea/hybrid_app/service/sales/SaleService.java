@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -58,6 +59,7 @@ public class SaleService {
         SaleProduct newSaleProduct = SaleProduct.builder()
                 .task(findByMemberAndDate(member))
                 .status(dto.getStatus())
+                .payment(dto.getPayment())
                 .count(1)
                 .wiper(currentWiper)
                 .build();
@@ -103,16 +105,27 @@ public class SaleService {
         DailyTask currentTask = findByMemberAndDate(member);
 
         if (currentTask.getGasStation() != null) {
+            //총계
             List<SaleProduct> inputList = currentTask.getProductList()
                                                      .stream()
                                                      .filter( p -> p.getStatus().equals(SaleStatus.OUT.toString()))
                                                      .toList();
+            //카드
+            ArrayList<SaleProduct> cardList = inputList.stream()
+                    .filter(product -> product.getPayment().equals(Payment.CARD.toString()))
+                    .collect(Collectors.toCollection(ArrayList::new));
+            //현금
+            ArrayList<SaleProduct> cashList = inputList.stream()
+                    .filter(product -> product.getPayment().equals(Payment.CASH.toString()))
+                    .collect(Collectors.toCollection(ArrayList::new));
 
             map.put("name", currentTask.getMember().getName());
             map.put("stationNm", currentTask.getGasStation().getStationName());
             map.put("location", currentTask.getGasStation().getStationLocation());
             map.put("count", inputList.size());
             map.put("list", inputList);
+            map.put("cardList", cardList);
+            map.put("cashList", cashList);
         }
 
         return map;

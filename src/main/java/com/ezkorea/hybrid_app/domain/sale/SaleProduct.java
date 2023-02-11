@@ -21,6 +21,8 @@ public class SaleProduct extends BaseEntity {
 
     private String status;
 
+    private String payment;
+
     private int count;
 
     @OneToOne
@@ -29,4 +31,7 @@ public class SaleProduct extends BaseEntity {
     @ManyToOne(targetEntity = DailyTask.class, fetch = FetchType.LAZY)
     private DailyTask task;
 
+    public String getPayment() {
+        return "card".equals(payment) ? Payment.CARD.getViewName() : Payment.CASH.getViewName();
+    }
 }
