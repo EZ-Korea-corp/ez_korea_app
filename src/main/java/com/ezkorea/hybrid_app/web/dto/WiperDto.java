@@ -9,4 +9,5 @@ public class WiperDto {
     private String wiperSize;
     private int wiperPrice;
     private String status;
+    private String payment;
 }

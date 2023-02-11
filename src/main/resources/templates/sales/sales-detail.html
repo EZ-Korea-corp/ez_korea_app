@@ -14,10 +14,13 @@
                 display: inline-block;
                 vertical-align: middle;
             }
+            button{
+                color: #FFFFFF;
+            }
         </style>
         <div class="lg:space-x-12">
 
-            <div class="lg:w-full card">
+            <div class="lg:w-full card" id="select-div">
 
                 <div class="p-10 pt-4 divide-y divide-gray-100">
 
@@ -35,7 +38,6 @@
                                     <div class="flex-1">
                                         <div>
                                             <span class="text-2xl font-semibold" th:text="${dailyTask['stationNm']}"> 주유소 이름 </span>
-                                            <span class="text-sm">(수정)</span>
                                         </div>
                                         <p th:text="${dailyTask['location']}"></p>
                                     </div>
@@ -52,7 +54,9 @@
                                 <div class="flex items-center space-x-3">
                                     <div class="p-1.5 rounded-full text-xl">💵</div>
                                     <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask['list'].size()} eq 0 ? 0 : ${#numbers.formatInteger(#aggregates.sum(dailyTask['list'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
+                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask['cardList'].size()} eq 0 ? '카드 : ' + 0 : '카드 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['cardList'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
+                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask['cashList'].size()} eq 0 ? '현금 : ' + 0 : '현금 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['cashList'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
+                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask['list'].size()} eq 0 ? '총계 : ' + 0 : '총계 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['list'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
                                     </div>
                                 </div>
                             </div>
@@ -73,8 +77,10 @@
                                     <tr>
                                         <th></th>
                                         <th>판매 시각</th>
+                                        <th>결제 수단</th>
                                         <th>사이즈</th>
                                         <th>종류</th>
+                                        <th>금액</th>
                                         <th>금액</th>
                                     </tr>
                                 </thead>
@@ -82,9 +88,11 @@
                                     <tr th:each="product, sort : ${dailyTask['list']}">
                                         <td th:text="${sort.count}"></td>
                                         <td th:text="${#temporals.format(product.getCreateDate(), 'HH시 mm분')}">14시 20분</td>
+                                        <td th:text="${product.getPayment()}">카드</td>
                                         <td th:text="${product.getWiper().getWiperSize()}">350</td>
                                         <td th:text="${product.getWiper().getWiperViewName()}">일반</td>
                                         <td th:text="|${#numbers.formatInteger(product.getWiper().getWiperPrice(), 3, 'COMMA')}원|">10000원</td>
+                                        <td><button type="button" th:onclick="fnDeleteSale(this.getAttribute('sort'), this.getAttribute('id'))" th:sort="${sort.count}" th:id="${product.getId()}" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 삭제 </button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -97,20 +105,18 @@
 
         </div>
         <script>
-            $("#closeBusiness").on("click", function (){
+            function fnDeleteSale(sort, id) {
                 Swal.fire({
-                    html: '<p>마감을 진행하시겠습니까?</p><small class="text-red-600">마감은 취소가 불가능하니 신중히 진행해주세요.</small>',
+                    html: sort + '번 판매를 삭제하시겠습니까?',
                     showDenyButton: true,
-                    confirmButtonText: '마감',
-                    denyButtonText: `닫기`,
+                    confirmButtonText: '삭제',
+                    denyButtonText: `취소`,
                 }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
-                    if (result.isConfirmed) {
-                        Swal.fire('Saved!', '', 'success')
-                        // 마감 페이지로 이동 url
+                    if(result.isConfirmed){
+                        fnCrudRefreshAjax({"id" : id}, '/sales/delete', 'select-div', 'DELETE');
                     }
                 })
-            });
+            }
         </script>
     </main>
 

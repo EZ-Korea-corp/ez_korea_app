@@ -14,6 +14,17 @@
                 display: inline-block;
                 vertical-align: middle;
             }
+            .payment-label {
+                background-color: #f2f2f2;
+                padding: 10px;
+                border-radius: 10px;
+                margin: 20px;
+            }
+            input[type=radio] {display:none;}
+            input[type=radio]:checked + label {
+                background: #2563EB;
+                color: #fff;
+            }
         </style>
         <div class="lg:space-x-12">
 
@@ -27,6 +38,14 @@
 
                     <div class="md:py-8 py-3">
                         <form onsubmit="return false" id="dataForm">
+                            <h1 class="block text-md font-bold mb-2"> 결제 수단 </h1>
+                            <div class="payment-option flex">
+                                <input type="radio" name="payment" value="card" id="card-option1" checked>
+                                <label for="card-option1" class="payment-label">카드</label>
+
+                                <input type="radio" name="payment" value="cash" id="cash-option2">
+                                <label for="cash-option2" class="payment-label">현금</label>
+                            </div>
                             <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
                             <div>
                                 <select id="wiperSort" name="wiperSort" class="shadow-none with-border px-2">
@@ -61,6 +80,10 @@
 
         </div>
         <script>
+            $("[name='payment']").on("change", function() {
+                $(this).prop("checked", true);
+            });
+
             $("#wiperStatus").on("click", function (){
                 let price;
 
@@ -106,7 +129,8 @@
                         wiperPrice: $('#wiperPrice').val(),
                         wiperSort: $('#wiperSort').val(),
                         wiperSize: $('#wiperSize').val(),
-                        status: $('#wiperStatus').is(":checked") ? 'fix' : 'out'
+                        status: $('#wiperStatus').is(":checked") ? 'fix' : 'out',
+                        payment: $("[name='payment']:checked").val()
                     };
 
                     $.ajax({
