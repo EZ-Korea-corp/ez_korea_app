@@ -75,21 +75,21 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="bg-white border-b" th:each="user : ${employeeList}">
-                                        <th scope="row" class="px-6 py-4 font-medium" th:text="${user.getName()}">
+                                    <tr class="bg-white border-b" th:each="commute : ${commuteList}">
+                                        <th scope="row" class="px-6 py-4 font-medium" th:text="${commute['NAME']}">
                                             사원명
                                         </th>
-                                        <th:block th:if="${commute != null}" th:with="commute = ${user.getCommuteTimeList().get(0)}">
-                                            <td class="px-6 py-4" th:text="${commute.getOnTime()}">
+                                        <th:block>
+                                            <td class="px-6 py-4" th:text="${#temporals.format(commute['ON_TIME'], 'HH:DD')}">
                                                 출근 시간
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap" th:text="${commute.getOnTimeLocation()}">
+                                            <td class="px-6 py-4 whitespace-nowrap" th:text="${commute['ON_TIME_LOCATION']}">
                                                 출근 위치
                                             </td>
-                                            <td class="px-6 py-4" th:text="${commute.getOffTime()}">
+                                            <td class="px-6 py-4" th:text="${#temporals.format(commute['OFF_TIME'], 'HH:DD')}">
                                                 퇴근 시간
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap" th:text="${commute.getOnTimeLocation()()}">
+                                            <td class="px-6 py-4 whitespace-nowrap" th:text="${commute['OFF_TIME_LOCATION']}">
                                                 퇴근 위치
                                             </td>
                                         </th:block>

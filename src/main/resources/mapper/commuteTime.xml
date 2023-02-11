@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository">
+
+    <select id="findCommuteTime" parameterType="String" resultType="Map">
+        SELECT	  A.ID
+                , A.NAME
+                , B.ON_TIME
+                , B.ON_TIME_LOCATION
+                , B.OFF_TIME
+                , B.OFF_TIME_LOCATION
+        FROM    MEMBER A LEFT JOIN COMMUTE_TIME B
+        ON      A.ID = B.MEMBER_ID
+        AND     B.DATE = DATE_FORMAT(IFNULL(#{date}, NOW()), '%y-%m-%d')
+    </select>
+
+</mapper>
