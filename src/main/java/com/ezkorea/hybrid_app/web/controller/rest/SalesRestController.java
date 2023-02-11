@@ -100,4 +100,11 @@ public class SalesRestController {
 
         return returnMap;
     }
+
+    @DeleteMapping("/sales/delete")
+    public HttpStatus deleteSale(@RequestBody Map<String, Long> data) {
+
+        saleService.deleteSale(data.get("id"));
+        return HttpStatus.OK;
+    }
 }

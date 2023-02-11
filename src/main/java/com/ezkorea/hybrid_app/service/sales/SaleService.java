@@ -177,4 +177,8 @@ public class SaleService {
     public List<SaleProductDto> findStockList(Map<String, Object> paramMap) {
         return saleMbRepository.findStockList(paramMap);
     }
+
+    public void deleteSale(Long id) {
+        spRepository.deleteById(id);
+    }
 }
