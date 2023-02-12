@@ -83,7 +83,7 @@
                         const fnload = function(data) {
                             location.href= "/station/withdraw?id=" + id;
                         }
-                        fnCrudJsonAjax({}, "/station/withdraw", fnload, "post", "정상적으로 저장되었습니다.");
+                        fnCrudJsonAjax({"stationId" : id, "status" : "end"}, "/station/withdraw", fnload, "post", "정상적으로 저장되었습니다.");
                     }
                 })
             }

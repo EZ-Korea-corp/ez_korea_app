@@ -14,5 +14,6 @@ public interface SaleMbRepository {
     List<SaleProductDto> findSaleOutFix(Map paramMap);
     List<SaleProductDto> findStockHistory(Map paramMap);
     List<SaleProductDto> findInOutDetail(Map paramMap);
-    List<SaleProductDto> findLastWithdraw(Map paramMap);
+    Long findLastWithdraw(Map paramMap);
+    List<SaleProductDto> findLastWithdrawList(Map paramMap);
 }

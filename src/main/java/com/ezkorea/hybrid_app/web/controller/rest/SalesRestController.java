@@ -117,10 +117,9 @@ public class SalesRestController {
     @PostMapping("/station/withdraw")
     public Map<String, Object> saveWithdraw(@RequestBody Map<String, Object> paramMap, @AuthenticationPrincipal SecurityUser securityUser) {
         Map<String, Object> returnMap = new HashMap<>();
-        DailyTask currentTask = saleService.findByMemberAndDate(securityUser.getMember());
 
-        saleService.deleteByTaskAndStatus(currentTask); // 삭제 -Transaction 분리
-        saleService.saveWithdraw(paramMap, securityUser.getMember(), currentTask); // 저장
+        saleService.deleteByTaskAndStatus(paramMap); // 삭제 -Transaction 분리
+        saleService.saveWithdraw(paramMap, securityUser.getMember()); // 저장
 
         return returnMap;
     }

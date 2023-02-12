@@ -166,8 +166,9 @@ public class SaleService {
         return saleMbRepository.findInOutDetail(paramMap);
     }
 
-    public void saveWithdraw(Map<String, Object> paramMap, Member member, DailyTask currentTask) {
+    public void saveWithdraw(Map<String, Object> paramMap, Member member) {
         paramMap.put("status", SaleStatus.STOCK.toString());
+        DailyTask currentTask = findByMemberAndDate(member);
 
         // 현재 재고 > 철수
         List<SaleProductDto> saleStat = findSaleStat(member, paramMap);
@@ -184,20 +185,33 @@ public class SaleService {
     }
 
     @Transactional
-    public void deleteByTaskAndStatus(DailyTask currentTask) {
-        spRepository.deleteByTaskAndStatus(currentTask, SaleStatus.END.toString()); // 재등록
+    public void deleteByTaskAndStatus(Map<String, Object> paramMap) {
+        DailyTask dailyTask = lastEndTask(paramMap);
+
+        if(dailyTask != null) {
+            spRepository.deleteByTaskAndStatus(dailyTask, SaleStatus.END.toString()); // 재등록
+        }
+    }
+
+    private DailyTask lastEndTask(Map<String, Object> paramMap) {
+        Long lastWithdrawId = saleMbRepository.findLastWithdraw(paramMap);
+        if(lastWithdrawId == null) {
+            return null;
+        }
+
+        return dtRepository.findById(lastWithdrawId).orElseThrow(() -> new IdNotFoundException("데이터를 찾을 수 없습니다."));
     }
 
     public void findLastWithdraw(Map<String, Object> paramMap, Map<String, Object> returnMap) {
-        List<SaleProductDto> withdrawList = saleMbRepository.findLastWithdraw(paramMap);
+        DailyTask dailyTask = lastEndTask(paramMap);
 
-        if(withdrawList != null && withdrawList.size() > 0) {
-            DailyTask dailyTask = dtRepository.findById(withdrawList.get(0).getTaskId())
-                    .orElseThrow(() -> new IdNotFoundException("데이터를 찾을 수 없습니다."));
+        if(dailyTask != null) {
+            paramMap.put("taskId", dailyTask.getId());
+            List<SaleProductDto> withdrawList = saleMbRepository.findLastWithdrawList(paramMap);
 
             returnMap.put("taskDate", dailyTask.getTaskDate());
             returnMap.put("name", dailyTask.getMember().getName());
+            returnMap.put("withdrawList", withdrawList);
         }
-        returnMap.put("withdrawList", withdrawList);
     }
 }
