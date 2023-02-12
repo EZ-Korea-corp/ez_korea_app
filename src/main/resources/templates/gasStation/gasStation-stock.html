@@ -14,9 +14,6 @@
             display: inline-block;
             vertical-align: middle;
         }
-        input[type=text]{
-            width: 4.5em;
-        }
     </style>
     <div class="lg:space-x-12">
 
@@ -24,49 +21,31 @@
 
             <div class="p-10 pt-4 divide-y divide-gray-100">
 
-                <div class="md:py-8 py-3">
-                    <h2 class="text-xl font-bold">✅재고기록 확인</h2>
+                <div style="position:relative;" class="md:py-8 py-3 flex">
+                    <div style="position:absolute; top:0; left:0;">
+                        <h2 class="text-xl font-bold">재고기록</h2>
+                    </div>
+                    <div style="position:absolute; top:0; right:0;">
+                        <input type="text" id="datepicker" name="datepicker"  style="width:9em" readonly>
+                    </div>
                 </div>
 
-                <div class="md:py-8 py-3">
-                        <div class="space-y-3">
-                            <table class="table-auto overflow-scroll w-full">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>마감 담당자</th>
-                                        <th>마감 일자</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="rbody">
-                                    <tr th:each="stock, sort : ${stockList}">
-                                        <td th:text="${sort.count}"></td>
-                                        <td th:text="${stock['NAME']}">350</td>
-                                        <td th:text="${stock['DATE']}">14시 20분</td>
-                                        <td>
-                                            <button type="button" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold" th:gas="${station.getId()}" th:date="${stock['DATE']}" th:onclick="fnFindStock(this.getAttribute('gas'), this.getAttribute('date'))">확인</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    <form onsubmit="return false" id="dataForm">
 
-                        <div class="relative overflow-x-auto shadow-md">
-                            <table class="w-full text-sm text-left text-gray-500">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">
-                                        구분
-                                    </th>
-                                    <th scope="col" class="px-2 py-3 uk-text-center"
-                                        th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}"
-                                        th:text="${sort.getName()}">
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                <div class="md:py-8 py-3">
+                    <div class="relative overflow-x-auto shadow-md">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    구분
+                                </th>
+                                <th scope="col" class="px-2 py-3 uk-text-center"
+                                    th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}"
+                                    th:text="${sort.getName()}">
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="dataForm">
                                 <tr class="bg-white border-b"
                                     th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}">
                                     <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap" th:text="${sort.getViewName()}"></th>
@@ -80,12 +59,9 @@
                                         </th:block>
                                     </td>
                                 </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <hr class="mt-4">
-                    </form>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
 
@@ -96,21 +72,61 @@
     </div>
     <script>
 
-        $(document).ready(function(){
+        $(document).ready(function() {
+            fnCalenderMaker($('#datepicker'));
+
+            // 재고 조회
+            $('#datepicker').on("change", function() {
+                fnFindStock($(this).val());
+            }).change();
+
+            // 조회 - 판매, 재고, 고장
+            $("#check div").on("click", function() {
+                let status = $(this).attr("name");
+
+                // 상단바
+                $("#check div").each(function() {
+                    if($(this).attr("name") == status) {
+                        $(this).find("a").removeClass("bg-gray-600")
+                            .addClass("bg-blue-600");
+                    } else {
+                        $(this).find("a").removeClass("bg-blue-600")
+                            .addClass("bg-gray-600");
+                    }
+                });
+
+                // 재고 - 마감등록 diable 해제
+                if(status == "stock") {
+                    $("#submit").attr('disabled', false)
+                        .removeClass("bg-gray-600")
+                        .addClass("bg-blue-600");
+                } else {
+                    $("#submit").attr('disabled', true)
+                        .removeClass("bg-blue-600")
+                        .addClass("bg-gray-600");
+                }
+
+                fnFindInputProduct(status);
+            });
+
+            //fnFindInputProduct("out"); //default 판매
         });
 
         // 재고 조회
-        function fnFindStock(id, date) {
-            const url = "/sales/stock";
-            const data = {
-                            "stationId"   : id,
-                            "date" : date
-                         };
-            fnFindJsonAjax(data, url, fnFindStockResult);
+        function fnFindStock(date) {
+            let url = new URL(window.location.href);
+            let id = url.searchParams.get("id");
+
+            if(id) {
+                const url = "/stock/hisoty";
+                const data = {"stationId" : id, "date" : date};
+
+                fnFindJsonAjax(data, url, fnFindInputProductResult);
+            }
         }
 
         // 테이블 그리기
-        function fnFindStockResult(data) {
+        function fnFindInputProductResult(data) {
             const $form = $("#dataForm");
             $("#dataForm span").text("");
             data.result.forEach(function(item) {

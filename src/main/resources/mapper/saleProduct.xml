@@ -39,22 +39,34 @@
         GROUP BY A.WIPER_ID
     </select>
 
-    <select id="findStockHistory" parameterType="long" resultType="map">
-        SELECT    A.DATE
-                , MAX(B.NAME) AS NAME
-        FROM    STOCK A INNER JOIN MEMBER B
-        ON      A.MEMBER_ID = B.ID
-        WHERE   A.GAS_STATION_ID = #{stationId}
-        GROUP BY A.DATE
-        ORDER BY A.DATE DESC
-        LIMIT 5
+    <select id="findStockHistory" parameterType="map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
+        SELECT    A.WIPER_ID AS WIPER
+                 , SUM(
+                        CASE WHEN A.STATUS = 'in' THEN A.CNT
+                             ELSE A.CNT * -1
+                        END
+                  ) AS COUNT
+        FROM
+            (
+                SELECT	  B.WIPER_ID
+                        , B.STATUS
+                        , SUM(B.COUNT) AS CNT
+                FROM    DAILY_TASK A INNER JOIN SALE_PRODUCT B
+                ON      A.ID = B.TASK_ID
+                WHERE   A.GAS_STATION_ID = #{stationId}
+                AND		A.TASK_DATE <![CDATA[<=]]> IFNULL(#{date}, DATE_FORMAT(NOW(), '%y-%m-%d'))
+                GROUP BY B.WIPER_ID, B.STATUS
+            ) A
+        GROUP BY A.WIPER_ID
     </select>
 
-    <select id="findStockList" parameterType="map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
-        SELECT    A.WIPER_ID AS WIPER
-                , A.COUNT    AS COUNT
-        FROM    STOCK A
-        WHERE   A.GAS_STATION_ID = #{stationId}
-        AND     A.DATE = #{date}
+    <select id="findInOutDetail" parameterType="map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
+        SELECT	  B.WIPER_ID   AS WIPER
+                , SUM(B.COUNT) AS COUNT
+        FROM    DAILY_TASK A INNER JOIN SALE_PRODUCT B
+        ON      A.ID = B.TASK_ID
+        WHERE   A.ID = #{taskId}
+        AND		B.STATUS = #{status}
+        GROUP BY B.WIPER_ID
     </select>
 </mapper>

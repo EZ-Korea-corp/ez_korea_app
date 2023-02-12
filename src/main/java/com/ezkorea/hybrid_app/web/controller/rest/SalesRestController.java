@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -88,20 +89,28 @@ public class SalesRestController {
         return HttpStatus.OK;
     }
 
-    @PostMapping("/sales/stock")
-    public Map<String, Object> findStockList(@RequestBody Map<String, Object> data) {
-        Map<String, Object> returnMap = new HashMap<>();
-        List<SaleProductDto> statList = saleService.findStockList(data);
-
-        returnMap.put("result", statList);
-
-        return returnMap;
-    }
-
     @DeleteMapping("/sales/delete")
     public HttpStatus deleteSale(@RequestBody Map<String, Long> data) {
 
         saleService.deleteSale(data.get("id"));
         return HttpStatus.OK;
     }
+
+    @PostMapping("/stock/hisoty")
+    public Map<String, Object> findStockHistory(@RequestBody Map<String, Object> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("result", saleService.findStockHistory(paramMap));
+
+        return returnMap;
+    }
+
+    @PostMapping("/inout/hisoty")
+    public Map<String, Object> findInOutDetail(@RequestBody Map<String, Object> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("result", saleService.findInOutDetail(paramMap));
+
+        return returnMap;
+    }
+
+
 }

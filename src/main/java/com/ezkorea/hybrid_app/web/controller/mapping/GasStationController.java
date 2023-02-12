@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
@@ -40,18 +37,38 @@ public class GasStationController {
         return "gasStation/gasStation-detail";
     }
 
-    @GetMapping("/stock/{id}")
-    public String showStockHistoryPage(@PathVariable Long id, Model model) {
-        model.addAttribute("station"  , gasStationService.findStationById(id));
-        model.addAttribute("stockList", saleService.findStockHistory(id));
-        
-        // if(stockList.size() == 0) 재고기록 없을때 상세페이지 리다이렉트 처리
-
-        return "gasStation/gasStation-stock";
+    @GetMapping("/save")
+    public String saveGasStationPage() {
+        return "gasStation/gasStation-save";
     }
 
-    @GetMapping("/save")
-    public String saveGasStation(@RequestParam(value="id", required=false)Long id, Model model) {
-        return "gasStation/gasStation-save";
+    @GetMapping("/inoutList")
+    public String showInoutListPage(@RequestParam(value="id") Long id,
+                                    @RequestParam(value="date") String date,
+                                    Model model) {
+
+        model.addAttribute("inoutList", saleService.findInoutList(id, date));
+
+        return "gasStation/gasStation-inoutList";
+    }
+
+    @GetMapping("/inOutDetail")
+    public String showSaleInHistoryPage(@RequestParam(value="id") Long id) {
+        return "gasStation/gasStation-inoutDetail";
+    }
+
+    @GetMapping("/out")
+    public String showSaleOutHistoryPage() {
+        return "gasStation/gasStation-out";
+    }
+
+    @GetMapping("/fix")
+    public String showSaleFixHistoryPage() {
+        return "gasStation/gasStation-fix";
+    }
+
+    @GetMapping("/stock")
+    public String showStockHistoryPage() {
+        return "gasStation/gasStation-stock";
     }
 }

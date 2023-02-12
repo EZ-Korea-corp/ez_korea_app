@@ -48,7 +48,6 @@ public class SaleController {
 
     @GetMapping("/sales/close")
     public String showClosePage() {
-        
         return "sales/close-detail";
     }
 }

@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.service.sales;
 
+import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
 import com.ezkorea.hybrid_app.domain.sale.*;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,7 +138,7 @@ public class SaleService {
         paramMap.put("taskId", currentTask.getId());
 
         if(SaleStatus.STOCK.toString().equals(paramMap.get("status"))) {
-            statList = saleMbRepository.findSaleStock(currentTask.getId());
+            statList = saleMbRepository.findSaleStock(paramMap);
         } else {
             statList = saleMbRepository.findSaleOutFix(paramMap);
         }
@@ -144,15 +146,22 @@ public class SaleService {
         return statList;
     }
 
-    public List<Map<String, Object>> findStockHistory(Long id) {
-        return saleMbRepository.findStockHistory(id);
-    }
-
-    public List<SaleProductDto> findStockList(Map<String, Object> paramMap) {
-        return saleMbRepository.findStockList(paramMap);
+    public  List<SaleProductDto> findStockHistory(Map<String, Object> paramMap) {
+        return saleMbRepository.findStockHistory(paramMap);
     }
 
     public void deleteSale(Long id) {
         spRepository.deleteById(id);
+    }
+
+    public List<DailyTask> findInoutList(Long id, String date) {
+        GasStation station = gsService.findStationById(id);
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        return dtRepository.findAllByTaskDateAndGasStation(localDate, station);
+    }
+
+    public List<SaleProductDto> findInOutDetail(Map<String, Object> paramMap) {
+        return saleMbRepository.findInOutDetail(paramMap);
     }
 }

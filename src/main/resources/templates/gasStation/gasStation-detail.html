@@ -48,7 +48,8 @@
                             </div>
 
                             <div class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                                <a th:href="@{|/station/stock/${station.id}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 재고기록 </a>
+                                <a th:href="@{|/station/inoutList?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 입출고기록 </a>
+                                <a th:href="@{|/station/stock?id=${station.id}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 재고기록 </a>
                             </div>
                         </div>
                     </div>
