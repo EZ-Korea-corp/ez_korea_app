@@ -112,8 +112,10 @@
         </div>
         <script th:inline="javascript">
             jQuery(document).ready(function($){
+                let url = new URL(window.location.href);
+                let date = url.searchParams.get("date");
 
-                fnCalenderMaker($('#datepicker'));
+                fnCalenderMaker($('#datepicker'), date);
 
                 $('#datepicker').on("change", function() {
                     location.href= "/manager/commute?date=" + $(this).val();

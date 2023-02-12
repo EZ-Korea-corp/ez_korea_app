@@ -170,7 +170,7 @@ function fnFormDataAjax(data, url, fnCallBack) {
 }
 
 
-function fnCalenderMaker($calender) {
+function fnCalenderMaker($calender, date) {
     $calender.datepicker({
           dateFormat: 'yy-mm-dd'
         , showMonthAfterYear: true
@@ -180,5 +180,9 @@ function fnCalenderMaker($calender) {
         , maxDate: "+0d"
     });
 
-    $calender.datepicker('setDate', 'today');
+    if(date) {
+        $calender.datepicker('setDate', date);
+    } else {
+        $calender.datepicker('setDate', 'today');
+    }
 }
