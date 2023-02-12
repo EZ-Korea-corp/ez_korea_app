@@ -79,37 +79,6 @@
             $('#datepicker').on("change", function() {
                 fnFindStock($(this).val());
             }).change();
-
-            // 조회 - 판매, 재고, 고장
-            $("#check div").on("click", function() {
-                let status = $(this).attr("name");
-
-                // 상단바
-                $("#check div").each(function() {
-                    if($(this).attr("name") == status) {
-                        $(this).find("a").removeClass("bg-gray-600")
-                            .addClass("bg-blue-600");
-                    } else {
-                        $(this).find("a").removeClass("bg-blue-600")
-                            .addClass("bg-gray-600");
-                    }
-                });
-
-                // 재고 - 마감등록 diable 해제
-                if(status == "stock") {
-                    $("#submit").attr('disabled', false)
-                        .removeClass("bg-gray-600")
-                        .addClass("bg-blue-600");
-                } else {
-                    $("#submit").attr('disabled', true)
-                        .removeClass("bg-blue-600")
-                        .addClass("bg-gray-600");
-                }
-
-                fnFindInputProduct(status);
-            });
-
-            //fnFindInputProduct("out"); //default 판매
         });
 
         // 재고 조회

@@ -11,6 +11,7 @@ import com.ezkorea.hybrid_app.domain.wiper.Wiper;
 import com.ezkorea.hybrid_app.domain.wiper.WiperRepository;
 import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
 import com.ezkorea.hybrid_app.web.dto.WiperDto;
+import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import com.ezkorea.hybrid_app.web.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -163,5 +164,40 @@ public class SaleService {
 
     public List<SaleProductDto> findInOutDetail(Map<String, Object> paramMap) {
         return saleMbRepository.findInOutDetail(paramMap);
+    }
+
+    public void saveWithdraw(Map<String, Object> paramMap, Member member, DailyTask currentTask) {
+        paramMap.put("status", SaleStatus.STOCK.toString());
+
+        // 현재 재고 > 철수
+        List<SaleProductDto> saleStat = findSaleStat(member, paramMap);
+        saleStat.forEach(item -> {
+            SaleProduct withdrawProduct = SaleProduct.builder()
+                    .task(currentTask)
+                    .status(SaleStatus.END.toString())
+                    .count(item.getCount())
+                    .wiper(wpRepository.findById(item.getWiper()).get())
+                    .build();
+
+            spRepository.save(withdrawProduct);
+        });
+    }
+
+    @Transactional
+    public void deleteByTaskAndStatus(DailyTask currentTask) {
+        spRepository.deleteByTaskAndStatus(currentTask, SaleStatus.END.toString()); // 재등록
+    }
+
+    public void findLastWithdraw(Map<String, Object> paramMap, Map<String, Object> returnMap) {
+        List<SaleProductDto> withdrawList = saleMbRepository.findLastWithdraw(paramMap);
+
+        if(withdrawList != null && withdrawList.size() > 0) {
+            DailyTask dailyTask = dtRepository.findById(withdrawList.get(0).getTaskId())
+                    .orElseThrow(() -> new IdNotFoundException("데이터를 찾을 수 없습니다."));
+
+            returnMap.put("taskDate", dailyTask.getTaskDate());
+            returnMap.put("name", dailyTask.getMember().getName());
+        }
+        returnMap.put("withdrawList", withdrawList);
     }
 }

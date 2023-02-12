@@ -9,4 +9,5 @@ public class SaleProductDto {
     private String status;
     private int count;
     private Long wiper;
+    private Long taskId;
 }

@@ -71,4 +71,9 @@ public class GasStationController {
     public String showStockHistoryPage() {
         return "gasStation/gasStation-stock";
     }
+
+    @GetMapping("/withdraw")
+    public String showWithdrawHistoryPage() {
+        return "gasStation/gasStation-end";
+    }
 }

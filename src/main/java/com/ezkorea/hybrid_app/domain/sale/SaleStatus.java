@@ -10,7 +10,8 @@ public enum SaleStatus {
     IN("in"),
     OUT("out"),
     FIX("fix"),
-    STOCK("stock");
+    STOCK("stock"),
+    END("end");
 
     private final String viewName;
 

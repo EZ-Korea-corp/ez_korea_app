@@ -1,6 +1,8 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
+import com.ezkorea.hybrid_app.domain.task.DailyTask;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
@@ -108,6 +110,26 @@ public class SalesRestController {
     public Map<String, Object> findInOutDetail(@RequestBody Map<String, Object> paramMap) {
         Map<String, Object> returnMap = new HashMap<>();
         returnMap.put("result", saleService.findInOutDetail(paramMap));
+
+        return returnMap;
+    }
+
+    @PostMapping("/station/withdraw")
+    public Map<String, Object> saveWithdraw(@RequestBody Map<String, Object> paramMap, @AuthenticationPrincipal SecurityUser securityUser) {
+        Map<String, Object> returnMap = new HashMap<>();
+        DailyTask currentTask = saleService.findByMemberAndDate(securityUser.getMember());
+
+        saleService.deleteByTaskAndStatus(currentTask); // 삭제 -Transaction 분리
+        saleService.saveWithdraw(paramMap, securityUser.getMember(), currentTask); // 저장
+
+        return returnMap;
+    }
+
+    @PostMapping("/station/lastWithdraw")
+    public Map<String, Object> findLastWithdraw(@RequestBody Map<String, Object> paramMap, @AuthenticationPrincipal SecurityUser securityUser) {
+        Map<String, Object> returnMap = new HashMap<>();
+
+        saleService.findLastWithdraw(paramMap, returnMap);
 
         return returnMap;
     }

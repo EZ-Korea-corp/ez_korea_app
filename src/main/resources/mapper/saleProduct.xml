@@ -69,4 +69,24 @@
         AND		B.STATUS = #{status}
         GROUP BY B.WIPER_ID
     </select>
+
+    <select id="findLastWithdraw" parameterType="Map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
+        SELECT    A.WIPER_ID AS WIPER
+                , SUM(A.COUNT) AS COUNT
+                , MAX(A.TASK_ID) AS TASK_ID
+        FROM    SALE_PRODUCT A INNER JOIN
+        (
+              SELECT A.ID
+              FROM   DAILY_TASK A INNER JOIN SALE_PRODUCT B
+              ON     A.ID = B.TASK_ID
+              WHERE  GAS_STATION_ID = #{stationId}
+              AND    B.STATUS       = #{status}
+              ORDER BY B.CREATE_DATE DESC
+              LIMIT 1
+        ) B
+        ON    A.TASK_ID = B.ID
+        WHERE A.STATUS = #{status}
+        GROUP BY A.WIPER_ID
+    </select>
+
 </mapper>
