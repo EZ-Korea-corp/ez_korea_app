@@ -32,38 +32,22 @@ public class ManagerService {
     }
 
     @Transactional
-    public void updateMemberRole(String username, Role role) {
+    public void updateMemberRole(String username, Role role, MemberStatus status) {
         Member currentMember = mService.findByUsername(username);
-        switch (role) {
-            case ROLE_LEADER -> {
-                if (!currentMember.getRole().equals(Role.ROLE_LEADER)) {
-                    Team newTeam = tService.saveNewTeam(currentMember);
-                    DivisionDto dto = new DivisionDto();
-                    dto.setPosition(Position.LEADER);
-                    dto.setStatus(Status.COMPLETE);
-                    dService.saveNewDivision(newTeam, currentMember, dto);
-                }
+        /*switch (status) {
+            case AWAY -> {
+
             }
-            case ROLE_EMPLOYEE -> {
-                if (dService.existDivisionByMember(currentMember)) {
-                    Team currentTeam = currentMember.getDivision().getTeam();
-                    List<Division> divisionList = dService.findDivisionByTeam(currentTeam);
-                    for (Division division : divisionList) {
-                        division.getMember().setDivision(null);
-                    }
-                    dService.deleteAll(divisionList);
-                }
-            }
-        }
-        mService.updateMemberRole(currentMember, role);
+        }*/
+        mService.updateMemberRole(currentMember, role, status);
     }
 
-    public List<Member> findAllMemberByStatus() {
-        return mService.findAllMemberByStatus(MemberStatus.AWAIT);
+    public List<Member> findAllMemberByStatus(MemberStatus status) {
+        return mService.findAllMemberByStatus(status);
     }
 
-    public List<Member> findAllMember() {
-        return mService.findAllMember();
+    public List<Member> findAllMemberExcludeAwait() {
+        return mService.findAllMemberExcludeStatus(MemberStatus.AWAIT);
     }
 
     public void updateMemberStatus(Long id, MemberStatus status) {

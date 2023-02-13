@@ -62,6 +62,45 @@ function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg) {
     });
 }
 
+function fnResponseCrudJsonAjax(data, url, method, fnCallBack) {
+
+    $.ajax({
+        type: method,
+        url: url,
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        beforeSend: function(jqXHR, settings) {
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var token = $("meta[name='_csrf']").attr("content");
+            jqXHR.setRequestHeader(header, token);
+        },
+        success: function(xhr, data) {
+            console.log("success");
+            Swal.fire({
+                icon: 'success',
+                text: '반영되었습니다.',
+            }).then(() => {
+                if(fnCallBack) fnCallBack(data);
+            })
+        },
+        error: function(xhr, status, error) {
+            console.log("fail");
+            console.log(error);
+            if (xhr.status === 400 || status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    text: data.message,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    text: '에러가 발생했습니다.',
+                });
+            }
+        }
+    });
+}
+
 // ajax 메소드:post, 파라미터:json
 function fnFindJsonAjax(data, url, fnCallBack) {
 

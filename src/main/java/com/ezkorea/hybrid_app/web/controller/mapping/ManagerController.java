@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
+import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
@@ -30,19 +31,19 @@ public class ManagerController {
 
     @GetMapping("/approval")
     public String showMemberApprovalPage(Model model) {
-        model.addAttribute("employeeList", managerService.findAllMemberByStatus());
+        model.addAttribute("employeeList", managerService.findAllMemberByStatus(MemberStatus.AWAIT));
         return "manager/manage-approval";
     }
 
     @GetMapping("/member")
     public String showMemberManagingPage(Model model) {
-        model.addAttribute("employeeList", managerService.findAllMember());
+        model.addAttribute("employeeList", managerService.findAllMemberExcludeAwait());
         return "manager/manage-member";
     }
 
     @GetMapping("/commute")
     public String showMemberCommutePage(@RequestParam(value="date", required=false)String date, Model model) {
-        model.addAttribute("employeeList", managerService.findAllMember());
+        model.addAttribute("employeeList", managerService.findAllMemberByStatus(MemberStatus.FULL_TIME));
         model.addAttribute("commuteList", commuteService.findCommuteTime(date));
 
         return "manager/manage-commute";

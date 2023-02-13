@@ -46,6 +46,9 @@ public class MemberService {
      */
     public Member saveNewMember(SignUpDto dto) {
         dto.setPassword(passwordEncode(dto.getPassword()));
+        if (dto.getUsername().equals("master")) {
+            dto.setMemberStatus(MemberStatus.FULL_TIME);
+        }
         return memberRepository.save(mapper.map(dto, Member.class));
     }
 
@@ -138,9 +141,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberRole(Member member, Role role) {
+    public void updateMemberRole(Member member, Role role, MemberStatus status) {
         member.setRole(role);
         member.setRoleChanged(true);
+        member.setMemberStatus(status);
         memberRepository.save(member);
     }
 
@@ -168,6 +172,10 @@ public class MemberService {
 
     public List<Member> findAllMember() {
         return memberRepository.findAll();
+    }
+
+    public List<Member> findAllMemberExcludeStatus(MemberStatus status) {
+        return memberRepository.findAllByMemberStatusNot(status);
     }
 
     public boolean updateMemberProfile(ProfileDto dto, Member member) {
