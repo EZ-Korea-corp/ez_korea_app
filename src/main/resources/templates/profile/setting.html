@@ -74,7 +74,7 @@
     <script>
         $("#submit").on("click", function (){
             if ($('#newPassword').val() === $('#newPasswordChk').val()) {
-                fnCrudJsonAjax($('#passwordForm').serializeObject(), "/profile/setting", requestFail, "PUT", "정상적으로 변경되었습니다.");
+                fnResponseCrudJsonAjax($('#passwordForm').serializeObject(), '/profile/setting', 'PUT', requestFail);
             } else {
                 Swal.fire({
                     icon: 'error',

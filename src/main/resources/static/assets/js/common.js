@@ -67,6 +67,7 @@ function fnResponseCrudJsonAjax(data, url, method, fnCallBack) {
     $.ajax({
         type: method,
         url: url,
+        dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(data),
         beforeSend: function(jqXHR, settings) {
@@ -75,21 +76,18 @@ function fnResponseCrudJsonAjax(data, url, method, fnCallBack) {
             jqXHR.setRequestHeader(header, token);
         },
         success: function(xhr, data) {
-            console.log("success");
             Swal.fire({
                 icon: 'success',
-                text: '반영되었습니다.',
+                text: xhr.message,
             }).then(() => {
                 if(fnCallBack) fnCallBack(data);
             })
         },
         error: function(xhr, status, error) {
-            console.log("fail");
-            console.log(error);
             if (xhr.status === 400 || status === 400) {
                 Swal.fire({
                     icon: 'error',
-                    text: data.message,
+                    text: jQuery.parseJSON(xhr.responseText).message,
                 });
             } else {
                 Swal.fire({

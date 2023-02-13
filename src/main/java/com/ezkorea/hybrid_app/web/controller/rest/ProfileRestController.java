@@ -31,8 +31,8 @@ public class ProfileRestController {
 
         ProfileDto dto = mapper.map(datum, ProfileDto.class);
         if (!memberService.updateMemberProfile(dto, securityUser.getMember())) {
-            return new ResponseEntity<>("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("message", "비밀번호가 일치하지 않습니다."), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("비밀번호가 성공적으로 변경되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("message", "비밀번호가 성공적으로 변경되었습니다."), HttpStatus.OK);
     }
 }

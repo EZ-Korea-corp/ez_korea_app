@@ -23,10 +23,10 @@ public class ManagerRestController {
     private final ManagerService managerService;
 
     @PutMapping("/approval")
-    public HttpStatus updateMemberApproval(@RequestBody Map<String, Object> datum) {
+    public ResponseEntity<Object> updateMemberApproval(@RequestBody Map<String, Object> datum) {
         String idStr = (String) datum.get("id");
         managerService.updateMemberStatus(Long.valueOf(idStr), MemberStatus.FULL_TIME);
-        return HttpStatus.OK;
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 
     @PutMapping("/member")
@@ -34,10 +34,7 @@ public class ManagerRestController {
         String username = (String) datum.get("username");
         String memberRole = (String) datum.get("memberRole");
         String memberStatus = (String) datum.get("memberStatus");
-        log.info("username={}", username);
-        log.info("memberRole={}", memberRole);
-        log.info("memberStatus={}", memberStatus);
         managerService.updateMemberRole(username, Role.valueOf(memberRole), MemberStatus.valueOf(memberStatus));
-        return new ResponseEntity<>("반영되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 }
