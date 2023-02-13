@@ -47,10 +47,17 @@ function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg) {
             })
         },
         error: function(xhr, status, error) {
-            Swal.fire({
-                icon: 'error',
-                text: '오류가 발생했습니다.',
-            });
+            if (xhr.status === 400 || status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr.responseText,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    text: '에러가 발생했습니다.',
+                });
+            }
         }
     });
 }

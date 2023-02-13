@@ -19,7 +19,6 @@
                 -moz-border-radius: 5px;
                 border-radius: 5px;
                 font-family: 'Lato', sans-serif;
-                color: #fff;
             }
 
             .live-search-box {
@@ -36,7 +35,6 @@
             }
 
             .live-search-list li {
-                color: #fff;
                 list-style: none;
                 padding: 0;
                 margin: 5px 0;
@@ -84,7 +82,7 @@
                                                                     </select>
                                                                 </th:block>
                                                             </div>
-                                                            <button type="submit" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 변경하기 </button>
+                                                            <button type="submit" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="flex items-center text-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 변경하기 </button>
                                                         </div>
                                                     </form>
                                                 </li>
@@ -94,13 +92,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="md:py-8 py-3">
-                            <div class="space-y-3">
-                                <button type="submit" class="btn bg-blue-600 py-2 rounded-lg w-full">저장하기</button>
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>

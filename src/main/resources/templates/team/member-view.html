@@ -19,7 +19,6 @@
                 -moz-border-radius: 5px;
                 border-radius: 5px;
                 font-family: 'Lato', sans-serif;
-                color: #fff;
             }
 
             .live-search-box {
@@ -36,7 +35,6 @@
             }
 
             .live-search-list li {
-                color: #fff;
                 list-style: none;
                 padding: 0;
                 margin: 5px 0;
@@ -55,68 +53,59 @@
                             </h2>
                         </div>
 
-                        <div class="md:py-8 py-3">
+                        <div class="md:py-8 py-3 mx-auto">
                             <h1 class="block text-lg font-bold mb-4"> 👨‍👦‍👦 팀원 선택  </h1>
-                            <div class="md:flex">
-                                <div class="md:w-2/3 space-y-4 -mt-2">
-                                    <div id="select-div" class="items-center space-x-3">
-                                        <div class="flex-1">
-                                            <input type="text" class="live-search-box" placeholder="search here" />
+                            <div class="md:w-2/3 space-y-4 -mt-2">
+                                <div id="select-div" class="items-center space-x-3">
+                                    <div class="flex-1">
+                                        <input type="text" class="live-search-box w-full" placeholder="사원이름을 입력해주세요." />
 
-                                            <ul id="search-result" class="live-search-list">
-                                                <li style="display: none">
-                                                    <form></form>
-                                                </li>
-                                                <li th:each="user : ${members}">
-                                                    <form th:id="|inviteMember${user.getId()}|" onsubmit="return false">
-                                                        <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
-                                                            <div class="w-10 h-10 flex-shrink-0 rounded-md relative">
-                                                                <img src="assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
-                                                            </div>
-                                                            <div class="flex-1">
-                                                                <h3 class="text-base font-semibold capitalize" th:text="|${user.getName()}(${#strings.substring(user.getPhone(), 7, 11)})|"> 유저이름 </h3>
-                                                                <th:block th:if="${user.getDivision() == null}">
-                                                                    <input type="hidden" name="username" th:value="${user.getUsername()}">
-                                                                    <input type="hidden" name="status" value="AWAIT">
-                                                                    <div>
-                                                                        <select name="position">
-                                                                            <option th:each="position : ${T(com.ezkorea.hybrid_app.domain.user.division.Position).values()}"
-                                                                                    th:if="${!position.equals(T(com.ezkorea.hybrid_app.domain.user.division.Position).LEADER)}"
-                                                                                    th:selected="${position.equals(T(com.ezkorea.hybrid_app.domain.user.division.Position).MEMBER)}"
-                                                                                    th:value="${position}"
-                                                                                    th:text="${position.viewName}">
-                                                                            </option>
-                                                                        </select>
-                                                                    </div>
-                                                                </th:block>
-                                                            </div>
+                                        <ul id="search-result" class="live-search-list">
+                                            <li style="display: none">
+                                                <form></form>
+                                            </li>
+                                            <li th:each="user : ${members}">
+                                                <form th:id="|inviteMember${user.getId()}|" onsubmit="return false">
+                                                    <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
+                                                        <div class="w-10 h-10 flex-shrink-0 rounded-md relative">
+                                                            <img src="assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
+                                                        </div>
+                                                        <div class="flex-1">
+                                                            <h3 class="text-base font-semibold capitalize mb-2" th:text="|${user.getName()}(${#strings.substring(user.getPhone(), 7, 11)})|"> 유저이름 </h3>
                                                             <th:block th:if="${user.getDivision() == null}">
-                                                                <button type="submit" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="flex items-center text-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 초대하기 </button>
-                                                            </th:block>
-                                                            <th:block th:if="${user.getDivision() != null}">
-                                                                <th:block th:if="${user.getDivision().getStatus().equals(T(com.ezkorea.hybrid_app.domain.user.division.Status).COMPLETE)}">
-                                                                    <button type="button" class="flex items-center justify-center h-9 text-red-600 px-4 rounded-md border font-semibold"> 팀존재 </button>
-                                                                </th:block>
-                                                                <th:block th:if="${user.getDivision().getStatus().equals(T(com.ezkorea.hybrid_app.domain.user.division.Status).AWAIT)}">
-                                                                    <button type="button" class="flex items-center justify-center h-9 text-yellow-600 px-4 rounded-md border font-semibold"> 수락대기 </button>
-                                                                </th:block>
+                                                                <input type="hidden" name="username" th:value="${user.getUsername()}">
+                                                                <input type="hidden" name="status" value="AWAIT">
+                                                                <div>
+                                                                    <select name="position" class="px-2">
+                                                                        <option th:each="position : ${T(com.ezkorea.hybrid_app.domain.user.division.Position).values()}"
+                                                                                th:if="${!position.equals(T(com.ezkorea.hybrid_app.domain.user.division.Position).LEADER)}"
+                                                                                th:selected="${position.equals(T(com.ezkorea.hybrid_app.domain.user.division.Position).MEMBER)}"
+                                                                                th:value="${position}"
+                                                                                th:text="${position.viewName}">
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
                                                             </th:block>
                                                         </div>
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                                        <th:block th:if="${user.getDivision() == null}">
+                                                            <button type="submit" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="flex items-center text-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 초대하기 </button>
+                                                        </th:block>
+                                                        <th:block th:if="${user.getDivision() != null}">
+                                                            <th:block th:if="${user.getDivision().getStatus().equals(T(com.ezkorea.hybrid_app.domain.user.division.Status).COMPLETE)}">
+                                                                <button type="button" class="flex items-center justify-center h-9 text-red-600 px-4 rounded-md border font-semibold"> 팀존재 </button>
+                                                            </th:block>
+                                                            <th:block th:if="${user.getDivision().getStatus().equals(T(com.ezkorea.hybrid_app.domain.user.division.Status).AWAIT)}">
+                                                                <button type="button" class="flex items-center justify-center h-9 text-yellow-600 px-4 rounded-md border font-semibold"> 수락대기 </button>
+                                                            </th:block>
+                                                        </th:block>
+                                                    </div>
+                                                </form>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="md:py-8 py-3">
-                            <div class="space-y-3">
-                                <button type="submit" class="btn bg-blue-600 py-2 rounded-lg w-full">저장하기</button>
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>
