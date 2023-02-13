@@ -2,10 +2,7 @@ package com.ezkorea.hybrid_app.service.user.member;
 
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
-import com.ezkorea.hybrid_app.domain.user.member.Member;
-import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
-import com.ezkorea.hybrid_app.domain.user.member.Role;
-import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
+import com.ezkorea.hybrid_app.domain.user.member.*;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
 import com.ezkorea.hybrid_app.web.dto.ProfileDto;
@@ -49,9 +46,6 @@ public class MemberService {
      */
     public Member saveNewMember(SignUpDto dto) {
         dto.setPassword(passwordEncode(dto.getPassword()));
-        if (!dto.getUsername().equals("ez_dev_team_master")) {
-            dto.setRole(Role.ROLE_EMPLOYEE);
-        }
         return memberRepository.save(mapper.map(dto, Member.class));
     }
 
@@ -123,12 +117,21 @@ public class MemberService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (memberRole.equals(Role.ROLE_MASTER)) {
             authorities.add(new SimpleGrantedAuthority(Role.ROLE_MASTER.toString()));
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_DIRECTOR.toString()));
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_GM.toString()));
             authorities.add(new SimpleGrantedAuthority(Role.ROLE_MANAGER.toString()));
             authorities.add(new SimpleGrantedAuthority(Role.ROLE_LEADER.toString()));
-        } else if (memberRole.equals(Role.ROLE_LEADER)) {
+        } else if (memberRole.equals(Role.ROLE_DIRECTOR)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_DIRECTOR.toString()));
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_GM.toString()));
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_MANAGER.toString()));
             authorities.add(new SimpleGrantedAuthority(Role.ROLE_LEADER.toString()));
         } else if (memberRole.equals(Role.ROLE_MANAGER)) {
             authorities.add(new SimpleGrantedAuthority(Role.ROLE_MANAGER.toString()));
+        } else if (memberRole.equals(Role.ROLE_GM)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_GM.toString()));
+        } else if (memberRole.equals(Role.ROLE_LEADER)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ROLE_LEADER.toString()));
         }
         authorities.add(new SimpleGrantedAuthority(Role.ROLE_EMPLOYEE.toString()));
         return authorities;

@@ -49,6 +49,10 @@ public class Member extends BaseEntity {
     private Role role;
 
     @Setter
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @Setter
     private boolean isRoleChanged;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
