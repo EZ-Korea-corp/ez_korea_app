@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Status {
+public enum MemberStatus {
 
     AWAIT("가입대기"),
     FULL_TIME("현직"),

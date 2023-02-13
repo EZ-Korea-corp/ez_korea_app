@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.app.config;
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
+import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.wiper.WiperSize;
 import com.ezkorea.hybrid_app.domain.wiper.WiperSort;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
@@ -64,6 +65,7 @@ public class TestDataInit {
         String email = UUID.randomUUID().toString().substring(0, 8);
         SignUpDto newDto = new SignUpDto();
         newDto.setUsername(username);
+        newDto.setMemberStatus(MemberStatus.AWAIT);
         newDto.setPassword("1234");
         newDto.setPhone("01012341234");
         newDto.setEmail(email + "@ezkorea.com");

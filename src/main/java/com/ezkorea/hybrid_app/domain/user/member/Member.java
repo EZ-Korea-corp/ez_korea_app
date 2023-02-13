@@ -50,7 +50,7 @@ public class Member extends BaseEntity {
 
     @Setter
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private MemberStatus memberStatus;
 
     @Setter
     private boolean isRoleChanged;

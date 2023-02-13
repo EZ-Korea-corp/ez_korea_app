@@ -203,4 +203,8 @@ public class MemberService {
         String tempPassword = "1234";
         currentMember.setPassword(passwordEncoder.encode(tempPassword));
     }
+
+    public List<Member> findAllMemberByStatus(MemberStatus status) {
+        return memberRepository.findAllByMemberStatus(status);
+    }
 }

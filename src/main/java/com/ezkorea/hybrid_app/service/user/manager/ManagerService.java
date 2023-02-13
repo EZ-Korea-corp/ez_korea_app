@@ -1,10 +1,10 @@
 package com.ezkorea.hybrid_app.service.user.manager;
 
-import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.division.Position;
 import com.ezkorea.hybrid_app.domain.user.division.Status;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
+import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
@@ -56,6 +56,10 @@ public class ManagerService {
             }
         }
         mService.updateMemberRole(currentMember, role);
+    }
+
+    public List<Member> findAllMemberByStatus() {
+        return mService.findAllMemberByStatus(MemberStatus.AWAIT);
     }
 
     public List<Member> findAllMember() {

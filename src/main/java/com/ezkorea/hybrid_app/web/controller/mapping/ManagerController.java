@@ -28,6 +28,12 @@ public class ManagerController {
         return "manager/manage-index";
     }
 
+    @GetMapping("/approval")
+    public String showMemberApprovalPage(Model model) {
+        model.addAttribute("employeeList", managerService.findAllMemberByStatus());
+        return "manager/manage-approval";
+    }
+
     @GetMapping("/member")
     public String showMemberManagingPage(Model model) {
         model.addAttribute("employeeList", managerService.findAllMember());
