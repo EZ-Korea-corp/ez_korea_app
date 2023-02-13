@@ -73,8 +73,19 @@
     </div>
     <script>
         $("#submit").on("click", function (){
-            fnCrudRefreshAjax($('#passwordForm').serializeObject(), "/profile/setting", "passwordForm", "PUT" )
+            if ($('#newPassword').val() === $('#newPasswordChk').val()) {
+                fnCrudJsonAjax($('#passwordForm').serializeObject(), "/profile/setting", requestFail, "PUT", "정상적으로 변경되었습니다.");
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    text: '변경할 비밀번호와 재입력 비밀번호를 확인해주세요.',
+                });
+            }
         });
+
+        function requestFail(data) {
+            $(`#passwordForm`).load(location.href+` #passwordForm`);
+        }
     </script>
 </main>
 
