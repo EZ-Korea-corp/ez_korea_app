@@ -65,4 +65,9 @@ public class ManagerService {
     public List<Member> findAllMember() {
         return mService.findAllMember();
     }
+
+    public void updateMemberStatus(Long id, MemberStatus status) {
+        Member currentMember = mService.findMemberById(id);
+        mService.updateMemberStatus(currentMember, status);
+    }
 }

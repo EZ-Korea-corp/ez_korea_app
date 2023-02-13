@@ -207,4 +207,9 @@ public class MemberService {
     public List<Member> findAllMemberByStatus(MemberStatus status) {
         return memberRepository.findAllByMemberStatus(status);
     }
+
+    @Transactional
+    public void updateMemberStatus(Member currentMember, MemberStatus status) {
+        currentMember.setMemberStatus(status);
+    }
 }

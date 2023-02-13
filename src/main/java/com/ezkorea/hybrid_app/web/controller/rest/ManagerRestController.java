@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
+import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,14 @@ import java.util.Map;
 public class ManagerRestController {
 
     private final ManagerService managerService;
+
+    @PutMapping("/approval")
+    public HttpStatus updateMemberApproval(@RequestBody Map<String, Object> datum) {
+        String idStr = (String) datum.get("id");
+        managerService.updateMemberStatus(Long.valueOf(idStr), MemberStatus.FULL_TIME);
+        return HttpStatus.OK;
+    }
+
     @PutMapping("/member")
     public HttpStatus updateMemberRole(@RequestBody Map<String, Object> datum) {
         managerService.updateMemberRole((String) datum.get("username"), Role.valueOf((String) datum.get("position")));
