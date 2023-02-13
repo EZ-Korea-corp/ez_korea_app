@@ -48,8 +48,13 @@
 
                     <div class="p-10 pt-4 divide-y divide-gray-100">
 
-                        <div class="md:py-8 py-3">
-                            <h2 class="text-xl font-bold"><span class="mr-2">🙋</span>출, 퇴근 정보</h2>
+                        <div style="position:relative;" class="md:py-8 py-3 flex">
+                            <div style="position:absolute; top:0; left:0;">
+                                <h2 class="text-xl font-bold"><span class="mr-2">🙋</span>출, 퇴근 정보</h2>
+                            </div>
+                            <div style="position:absolute; top:0; right:0;">
+                                <input type="text" id="datepicker" name="datepicker" style="width:9em" readonly>
+                            </div>
                         </div>
 
                         <div class="md:py-8 py-3">
@@ -107,6 +112,14 @@
         </div>
         <script th:inline="javascript">
             jQuery(document).ready(function($){
+                let url = new URL(window.location.href);
+                let date = url.searchParams.get("date");
+
+                fnCalenderMaker($('#datepicker'), date);
+
+                $('#datepicker').on("change", function() {
+                    location.href= "/manager/commute?date=" + $(this).val();
+                });
 
                 $('.live-search-list li').each(function(){
                     $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());

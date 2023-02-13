@@ -10,8 +10,10 @@ import java.util.Optional;
 @Mapper
 public interface SaleMbRepository {
 
-    List<SaleProductDto> findSaleStock(long taskId);
+    List<SaleProductDto> findSaleStock(Map paramMap);
     List<SaleProductDto> findSaleOutFix(Map paramMap);
-    List<Map<String, Object>> findStockHistory(Long stationId);
-    List<SaleProductDto> findStockList(Map paramMap);
+    List<SaleProductDto> findStockHistory(Map paramMap);
+    List<SaleProductDto> findInOutDetail(Map paramMap);
+    Long findLastWithdraw(Map paramMap);
+    List<SaleProductDto> findLastWithdrawList(Map paramMap);
 }

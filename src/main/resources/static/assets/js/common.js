@@ -175,3 +175,21 @@ function fnFormDataAjax(data, url, fnCallBack) {
     });
 
 }
+
+
+function fnCalenderMaker($calender, date) {
+    $calender.datepicker({
+          dateFormat: 'yy-mm-dd'
+        , showMonthAfterYear: true
+        , monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        , monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+        , dayNamesMin: ['일','월','화','수','목','금','토']
+        , maxDate: "+0d"
+    });
+
+    if(date) {
+        $calender.datepicker('setDate', date);
+    } else {
+        $calender.datepicker('setDate', 'today');
+    }
+}

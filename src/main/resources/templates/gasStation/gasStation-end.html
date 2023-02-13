@@ -23,10 +23,10 @@
 
                 <div style="position:relative;" class="md:py-8 py-3 flex">
                     <div style="position:absolute; top:0; left:0;">
-                        <h2 class="text-xl font-bold">재고기록</h2>
+                        <h2 class="text-xl font-bold">철수기록</h2>
                     </div>
                     <div style="position:absolute; top:0; right:0;">
-                        <input type="text" id="datepicker" name="datepicker"  style="width:9em" readonly>
+                        <span id="name"></span>
                     </div>
                 </div>
 
@@ -73,34 +73,30 @@
     <script>
 
         $(document).ready(function() {
-            fnCalenderMaker($('#datepicker'));
-
-            // 재고 조회
-            $('#datepicker').on("change", function() {
-                fnFindStock($(this).val());
-            }).change();
+            findLastWithdraw();
         });
 
-        // 재고 조회
-        function fnFindStock(date) {
+        // 철수 조회
+        function findLastWithdraw() {
             let url = new URL(window.location.href);
             let id = url.searchParams.get("id");
 
             if(id) {
-                const url = "/stock/hisoty";
-                const data = {"stationId" : id, "date" : date};
+                const url = "/station/lastWithdraw";
+                const data = {"stationId" : id, "status" : "end"};
 
-                fnFindJsonAjax(data, url, fnFindInputProductResult);
+                fnFindJsonAjax(data, url, findLastWithdrawResult);
             }
         }
 
         // 테이블 그리기
-        function fnFindInputProductResult(data) {
+        function findLastWithdrawResult(data) {
             const $form = $("#dataForm");
             $("#dataForm span").text("");
-            data.result.forEach(function(item) {
+            data.withdrawList.forEach(function(item) {
                 $form.find("span[name=" + item.wiper + "]").text(item.count);
             })
+            $("#name").text("근무자 : " + data.name + " [" + data.taskDate + "]");
         }
     </script>
 </main>

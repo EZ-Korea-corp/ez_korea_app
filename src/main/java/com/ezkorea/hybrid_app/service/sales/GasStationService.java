@@ -3,8 +3,6 @@ package com.ezkorea.hybrid_app.service.sales;
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
-import com.ezkorea.hybrid_app.domain.sale.StockRepository;
-import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.web.dto.GasStationDto;
 import com.ezkorea.hybrid_app.web.exception.GasStationNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GasStationService {
     private final GasStationRepository gsRepository;
-    private final StockRepository stockRepository;
     private final SaleMbRepository saleMbRepository;
 
     private final ModelMapper mapper;

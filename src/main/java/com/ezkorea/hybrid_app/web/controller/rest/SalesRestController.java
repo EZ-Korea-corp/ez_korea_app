@@ -1,6 +1,8 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
+import com.ezkorea.hybrid_app.domain.task.DailyTask;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -85,20 +88,7 @@ public class SalesRestController {
 
         //마감처리 - 퇴근처리
 
-        //재고등록
-        saleService.closeTask(securityUser.getMember());
-
         return HttpStatus.OK;
-    }
-
-    @PostMapping("/sales/stock")
-    public Map<String, Object> findStockList(@RequestBody Map<String, Object> data) {
-        Map<String, Object> returnMap = new HashMap<>();
-        List<SaleProductDto> statList = saleService.findStockList(data);
-
-        returnMap.put("result", statList);
-
-        return returnMap;
     }
 
     @DeleteMapping("/sales/delete")
@@ -107,4 +97,41 @@ public class SalesRestController {
         saleService.deleteSale(data.get("id"));
         return HttpStatus.OK;
     }
+
+    @PostMapping("/stock/hisoty")
+    public Map<String, Object> findStockHistory(@RequestBody Map<String, Object> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("result", saleService.findStockHistory(paramMap));
+
+        return returnMap;
+    }
+
+    @PostMapping("/inout/hisoty")
+    public Map<String, Object> findInOutDetail(@RequestBody Map<String, Object> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("result", saleService.findInOutDetail(paramMap));
+
+        return returnMap;
+    }
+
+    @PostMapping("/station/withdraw")
+    public Map<String, Object> saveWithdraw(@RequestBody Map<String, Object> paramMap, @AuthenticationPrincipal SecurityUser securityUser) {
+        Map<String, Object> returnMap = new HashMap<>();
+
+        saleService.deleteByTaskAndStatus(paramMap); // 삭제 -Transaction 분리
+        saleService.saveWithdraw(paramMap, securityUser.getMember()); // 저장
+
+        return returnMap;
+    }
+
+    @PostMapping("/station/lastWithdraw")
+    public Map<String, Object> findLastWithdraw(@RequestBody Map<String, Object> paramMap, @AuthenticationPrincipal SecurityUser securityUser) {
+        Map<String, Object> returnMap = new HashMap<>();
+
+        saleService.findLastWithdraw(paramMap, returnMap);
+
+        return returnMap;
+    }
+
+
 }
