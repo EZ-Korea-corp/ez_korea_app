@@ -22,17 +22,17 @@
                     <div class="p-10 space-y-7">
 
                         <div>
-                            <label for="teamName" class="font-semibold text-base"> 팀 이름 </label>
-                            <input id="teamName" class="with-border" name="teamName" type="text" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
+                            <label for="teamGM" class="font-semibold text-base"> 지점 선택 </label>
+                            <select id="teamGM" name="teamGM"  class="shadow-none selectpicker with-border">
+                                <option th:each="division : ${divisionList}"
+                                        th:value="${division.getDivisionName()}"
+                                        th:text="|${division.getDivisionName()}(팀장 : ${division.getLeader().getName()})|">이름</option>
+                            </select>
                         </div>
 
                         <div>
-                            <label for="teamGM" class="font-semibold text-base"> 지점장 선택 </label>
-                            <select id="teamGM" name="teamGM"  class="shadow-none selectpicker with-border">
-                                <option th:each="gm : ${gmList}"
-                                        th:value="${gm.getUsername()}"
-                                        th:text="|${gm.getName()}(${gm.getPhone()})|">이름</option>
-                            </select>
+                            <label for="teamName" class="font-semibold text-base"> 팀 이름 </label>
+                            <input id="teamName" class="with-border" name="teamName" type="text" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
                         </div>
 
                         <div>

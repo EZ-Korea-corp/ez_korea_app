@@ -67,13 +67,11 @@ public class Member extends BaseEntity {
     private List<DailyTask> taskList = new ArrayList<>();
 
     @ManyToOne
+    @Setter
     private Division division;
 
     @ManyToOne
+    @Setter
     private Team team;
-
-    public void setDivision(Division division) {
-        this.division = division;
-    }
 
 }

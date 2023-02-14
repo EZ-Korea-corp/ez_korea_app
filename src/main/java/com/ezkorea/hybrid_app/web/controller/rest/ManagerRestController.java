@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.web.controller.rest;
 
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
+import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,12 @@ public class ManagerRestController {
     public ResponseEntity<Object> createNewTeam(@RequestBody Map<String, Object> datum) {
         log.info("datum={}", datum.toString());
         String teamName = (String) datum.get("teamName");
-        String teamGm = (String) datum.get("teamGM");
+        String divisionName = (String) datum.get("teamGM");
         String teamLeader = (String) datum.get("teamLeader");
         String teamEmployee = (String) datum.get("teamEmployee");
-        String[] arr = teamEmployee.split(",");
+
+        managerService.saveNewTeam(divisionName, teamName, teamLeader, teamEmployee);
+
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 
