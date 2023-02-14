@@ -26,7 +26,7 @@ public class SalesRestController {
     private final SaleService saleService;
 
     @PostMapping("/sales/sell")
-    public HttpStatus saveSalesProduct(@RequestBody WiperDto wiperDto,
+    public HttpStatus saveSalesProduct(@RequestBody List<WiperDto> wiperDto,
                                        @AuthenticationPrincipal SecurityUser securityUser) {
 
         saleService.saveSaleProduct(wiperDto, securityUser.getMember());

@@ -56,16 +56,21 @@ public class SaleService {
                 .orElseThrow( () -> new MemberNotFoundException("해당 유저는 오늘 출근하지 않았습니다."));
     }
 
-    public void saveSaleProduct(WiperDto dto, Member member) {
-        Wiper currentWiper = wiperService.findWiperBySizeAndSort(dto.getWiperSize(), dto.getWiperSort());
-        SaleProduct newSaleProduct = SaleProduct.builder()
-                .task(findByMemberAndDate(member))
-                .status(dto.getStatus())
-                .payment(dto.getPayment())
-                .count(1)
-                .wiper(currentWiper)
-                .build();
-        spRepository.save(newSaleProduct);
+    public void saveSaleProduct(List<WiperDto> dto, Member member) {
+        DailyTask currentTask = findByMemberAndDate(member);
+        
+        // 판매등록
+        dto.forEach(item -> {
+            Wiper currentWiper = wiperService.findWiperBySizeAndSort(item.getWiperSize(), item.getWiperSort());
+            SaleProduct newSaleProduct = SaleProduct.builder()
+                    .task(currentTask)
+                    .status(item.getStatus())
+                    .payment(item.getPayment())
+                    .count(1)
+                    .wiper(currentWiper)
+                    .build();
+            spRepository.save(newSaleProduct);
+        });
     }
 
     @Transactional
