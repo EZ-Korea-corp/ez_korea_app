@@ -7,11 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,6 +25,23 @@ public class ManagerRestController {
     public ResponseEntity<Object> updateMemberApproval(@RequestBody Map<String, Object> datum) {
         String idStr = (String) datum.get("id");
         managerService.updateMemberStatus(Long.valueOf(idStr), MemberStatus.FULL_TIME);
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+    }
+
+    @PostMapping("/team")
+    public ResponseEntity<Object> createNewTeam(@RequestBody Map<String, Object> datum) {
+        log.info("datum={}", datum.toString());
+        String teamName = (String) datum.get("teamName");
+        String teamGm = (String) datum.get("teamGM");
+        String teamLeader = (String) datum.get("teamLeader");
+        String teamEmployee = (String) datum.get("teamEmployee");
+        String[] arr = teamEmployee.split(",");
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+    }
+
+    @PutMapping("/team")
+    public ResponseEntity<Object> modifyTeam(@RequestBody Map<String, Object> datum) {
+
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 

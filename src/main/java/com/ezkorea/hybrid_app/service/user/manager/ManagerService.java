@@ -1,16 +1,11 @@
 package com.ezkorea.hybrid_app.service.user.manager;
 
-import com.ezkorea.hybrid_app.domain.user.division.Division;
-import com.ezkorea.hybrid_app.domain.user.division.Position;
-import com.ezkorea.hybrid_app.domain.user.division.Status;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
-import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
-import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +24,10 @@ public class ManagerService {
 
     public List<Member> findAllMemberByRole(Role role) {
         return mService.findByRole(role);
+    }
+
+    public List<Member> findAllMemberByRoleAndStatus(Role role, MemberStatus status) {
+        return mService.findByRoleAndStatus(role, status);
     }
 
     @Transactional

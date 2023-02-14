@@ -170,6 +170,10 @@ public class MemberService {
         return memberRepository.findAllByRole(role);
     }
 
+    public List<Member> findByRoleAndStatus(Role role, MemberStatus status) {
+        return memberRepository.findAllByRoleAndMemberStatus(role, status);
+    }
+
     public List<Member> findAllMember() {
         return memberRepository.findAll();
     }

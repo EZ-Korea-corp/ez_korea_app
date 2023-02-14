@@ -6,14 +6,24 @@ function checkNumber($obj, min, max) {
 jQuery.fn.serializeObject = function() {
     let obj = null;
     try {
-        if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
-            var arr = this.serializeArray();
-            if (arr) {
+        if (this[0].tagName && this[0].tagName.toUpperCase() === "FORM") {
+            let formData = this.serializeArray();
+            console.log(formData);
+            if (formData) {
                 obj = {};
-                jQuery.each(arr, function() {
+                jQuery.each(formData, function() {
                     obj[this.name] = this.value;
                 });
-            }//if ( arr ) {
+            }
+            let checkboxData = this.find('input[type=checkbox]').serializeArray();
+            if (checkboxData) {
+                $.each(checkboxData, function(index, value) {
+                    if (index === 0) {
+                        obj[this.name] = '';
+                    }
+                    obj[this.name] += (this.value + ',');
+                });
+            }
         }
     } catch (e) {
         console.log(e);
