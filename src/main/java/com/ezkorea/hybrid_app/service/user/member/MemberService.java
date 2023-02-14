@@ -1,7 +1,6 @@
 package com.ezkorea.hybrid_app.service.user.member;
 
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
-import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.*;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
@@ -19,8 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -190,10 +189,6 @@ public class MemberService {
             return true;
         }
         return false;
-    }
-
-    public List<Member> findAllMemberBySameDivision(Division division) {
-        return memberRepository.findAllByDivision(division);
     }
 
     public boolean existsMemberByUsername(String checkUsername) {

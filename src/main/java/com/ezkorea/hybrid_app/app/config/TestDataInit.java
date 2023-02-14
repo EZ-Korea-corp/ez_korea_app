@@ -2,16 +2,15 @@ package com.ezkorea.hybrid_app.app.config;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
-import com.ezkorea.hybrid_app.domain.user.member.Role;
-import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
-import com.ezkorea.hybrid_app.domain.wiper.WiperSize;
-import com.ezkorea.hybrid_app.domain.wiper.WiperSort;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
+import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.wiper.Wiper;
 import com.ezkorea.hybrid_app.domain.wiper.WiperRepository;
+import com.ezkorea.hybrid_app.domain.wiper.WiperSize;
+import com.ezkorea.hybrid_app.domain.wiper.WiperSort;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
-import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,7 +26,6 @@ public class TestDataInit {
     private final WiperRepository wiperRepository;
     private final GasStationRepository gasStationRepository;
     private final MemberService memberService;
-    private final TeamService teamService;
     private final DivisionService divisionService;
 
     @PostConstruct

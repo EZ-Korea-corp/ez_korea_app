@@ -1,7 +1,5 @@
 package com.ezkorea.hybrid_app.domain.user.member;
 
-
-import com.ezkorea.hybrid_app.domain.user.division.Division;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,8 +12,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findAllByRole(Role role);
     List<Member> findAllByRoleAndMemberStatus(Role role, MemberStatus status);
-
-    List<Member> findAllByDivision(Division division);
 
     boolean existsByEmailAndPhone(String email, String phone);
 
