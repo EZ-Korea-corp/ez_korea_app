@@ -38,6 +38,12 @@ public class ManagerController {
         return "manager/manage-team";
     }
 
+    @GetMapping("/division/create")
+    public String showCreateDivisionPage(Model model) {
+        model.addAttribute("gmList", managerService.findAllMemberByRole(Role.ROLE_GM));
+        return "manager/manage-division-create";
+    }
+
     @GetMapping("/team/create")
     public String showCreateTeamPage(Model model) {
         model.addAttribute("gmList", managerService.findAllMemberByRole(Role.ROLE_GM));

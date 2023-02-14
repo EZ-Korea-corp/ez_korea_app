@@ -1,10 +1,12 @@
 package com.ezkorea.hybrid_app.service.user.manager;
 
+import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
+import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,5 +52,11 @@ public class ManagerService {
     public void updateMemberStatus(Long id, MemberStatus status) {
         Member currentMember = mService.findMemberById(id);
         mService.updateMemberStatus(currentMember, status);
+    }
+
+    public Division saveNewDivision(String teamName, String teamGm) {
+        Member currentMember = mService.findByUsername(teamGm);
+        DivisionDto dto = new DivisionDto(teamName, currentMember);
+        return dService.saveNewDivision(dto);
     }
 }

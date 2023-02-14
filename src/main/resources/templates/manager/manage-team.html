@@ -16,16 +16,18 @@
                     <div class="p-10 pt-4 divide-y divide-gray-100">
 
                         <div class="md:py-8 py-3">
-                            <h2 class="text-xl font-bold"><span class="mr-2">👑</span>팀 관리</h2>
+                            <h2 class="text-xl font-bold"><span class="mr-2">👑</span>지점 관리</h2>
                             <p>PC 버전 혹은 핸드폰 가로 모드로 확인해주세요.</p>
                         </div>
 
                         <div class="md:py-8 py-3">
-                            <h1 class="block text-lg font-bold mb-4"> 팀 선택  </h1>
+                            <h1 class="block text-lg font-bold mb-4"> 지점 선택  </h1>
+                            <div class="grid grid-cols-2 gap-4">
+                                <a class="btn button text-white" th:href="@{/manager/division/create}">지점 생성</a>
+                                <a class="btn button text-white" th:href="@{/manager/team/create}">팀 생성</a>
+                            </div>
 
-                            <button class="btn button text-white"><a th:href="@{/manager/team/create}">팀 생성</a></button>
-
-                            <input type="text" class="table-live-search-box" placeholder="사원이름을 입력해주세요."/>
+                            <input type="text" class="table-live-search-box my-4" placeholder="사원이름을 입력해주세요."/>
 
                             <hr class="my-4">
 

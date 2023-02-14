@@ -3,8 +3,10 @@ package com.ezkorea.hybrid_app.web.controller.rest;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
+import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -20,6 +22,7 @@ import java.util.Map;
 public class ManagerRestController {
 
     private final ManagerService managerService;
+    private final ModelMapper mapper;
 
     @PutMapping("/approval")
     public ResponseEntity<Object> updateMemberApproval(@RequestBody Map<String, Object> datum) {
@@ -36,6 +39,18 @@ public class ManagerRestController {
         String teamLeader = (String) datum.get("teamLeader");
         String teamEmployee = (String) datum.get("teamEmployee");
         String[] arr = teamEmployee.split(",");
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+    }
+
+    @PostMapping("/division")
+    public ResponseEntity<Object> createNewDivision(@RequestBody Map<String, Object> datum) {
+        log.info("datum={}", datum.toString());
+
+        String teamName = (String) datum.get("teamName");
+        String teamGm = (String) datum.get("teamGM");
+
+        managerService.saveNewDivision(teamName, teamGm);
+
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 

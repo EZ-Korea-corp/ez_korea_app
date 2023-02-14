@@ -37,13 +37,13 @@ public class TestDataInit {
             memberService.saveNewMember(makeNewMember("master", "남명원", Role.ROLE_MASTER));
         }
         if (!memberRepository.existsByUsername("01011112222")) {
-            memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.ROLE_EMPLOYEE));
+            memberService.saveNewMember(makeNewMember("01011112222", "고봉민", Role.ROLE_EMPLOYEE));
         }
         if (!memberRepository.existsByUsername("01011113333")) {
-            memberService.saveNewMember(makeNewMember("01022222222", "김경자", Role.ROLE_EMPLOYEE));
+            memberService.saveNewMember(makeNewMember("01011113333", "김경자", Role.ROLE_EMPLOYEE));
         }
         if (!memberRepository.existsByUsername("01011114444")) {
-            memberService.saveNewMember(makeNewMember("01033333333", "한문철", Role.ROLE_EMPLOYEE));
+            memberService.saveNewMember(makeNewMember("01011114444", "한문철", Role.ROLE_EMPLOYEE));
         }
         StringBuilder sb;
         for (int i = 0; i < 15; i++) {
