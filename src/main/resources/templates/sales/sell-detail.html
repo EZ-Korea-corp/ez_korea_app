@@ -148,6 +148,8 @@
 
             // 판매 등록
             $("#submit").on("click", function (){
+                if($("#sellList tr").length === 0) return;
+
                 let list = [];
                 $("#sellList tr").each(function() {
                     let data = {

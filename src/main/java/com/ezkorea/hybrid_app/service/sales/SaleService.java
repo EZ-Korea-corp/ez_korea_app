@@ -112,16 +112,22 @@ public class SaleService {
         DailyTask currentTask = findByMemberAndDate(member);
 
         if (currentTask.getGasStation() != null) {
-            //총계
+            //총계(판매, 고장)
+            List<SaleProduct> detailList = currentTask.getProductList()
+                    .stream()
+                    .filter( p -> p.getStatus().equals(SaleStatus.OUT.toString()) || p.getStatus().equals(SaleStatus.FIX.toString()))
+                    .toList();
+
+            //판매리스트
             List<SaleProduct> inputList = currentTask.getProductList()
                                                      .stream()
                                                      .filter( p -> p.getStatus().equals(SaleStatus.OUT.toString()))
                                                      .toList();
-            //카드
+            //판매리스트-카드
             ArrayList<SaleProduct> cardList = inputList.stream()
                     .filter(product -> product.getPayment().equals(Payment.CARD.getViewName()))
                     .collect(Collectors.toCollection(ArrayList::new));
-            //현금
+            //판매리스트-현금
             ArrayList<SaleProduct> cashList = inputList.stream()
                     .filter(product -> product.getPayment().equals(Payment.CASH.getViewName()))
                     .collect(Collectors.toCollection(ArrayList::new));
@@ -130,7 +136,7 @@ public class SaleService {
             map.put("stationNm", currentTask.getGasStation().getStationName());
             map.put("location", currentTask.getGasStation().getStationLocation());
             map.put("count", inputList.size());
-            map.put("list", inputList);
+            map.put("list", detailList);
             map.put("cardList", cardList);
             map.put("cashList", cashList);
         }
