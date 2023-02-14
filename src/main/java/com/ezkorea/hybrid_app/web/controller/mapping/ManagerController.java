@@ -48,15 +48,15 @@ public class ManagerController {
 
     @GetMapping("/division/create")
     public String showCreateDivisionPage(Model model) {
-        model.addAttribute("gmList", managerService.findAllMemberByRole(Role.ROLE_GM));
+        model.addAttribute("gmList", managerService.findAllMemberByRoleAndDivisionIsNull(Role.ROLE_GM));
         return "manager/group/manage-division-create";
     }
 
     @GetMapping("/team/create")
     public String showCreateTeamPage(Model model) {
         model.addAttribute("divisionList", managerService.findAllDivision());
-        model.addAttribute("leaderList", managerService.findAllMemberByRole(Role.ROLE_LEADER));
-        model.addAttribute("employeeList", managerService.findAllMemberByRoleAndStatus(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME));
+        model.addAttribute("leaderList", managerService.findAllMemberByRoleAndTeamIsNull(Role.ROLE_LEADER));
+        model.addAttribute("employeeList", managerService.findAllMemberByRoleAndStatusAndTeamIsNull(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME));
         return "manager/group/manage-team-create";
     }
 

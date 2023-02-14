@@ -31,8 +31,20 @@ public class ManagerService {
         return mService.findByRole(role);
     }
 
+    public List<Member> findAllMemberByRoleAndDivisionIsNull(Role role) {
+        return mService.findByRoleAndDivisionIsNull(role);
+    }
+
+    public List<Member> findAllMemberByRoleAndTeamIsNull(Role role) {
+        return mService.findByRoleAndTeamIsNull(role);
+    }
+
     public List<Member> findAllMemberByRoleAndStatus(Role role, MemberStatus status) {
         return mService.findByRoleAndStatus(role, status);
+    }
+
+    public List<Member> findAllMemberByRoleAndStatusAndTeamIsNull(Role role, MemberStatus status) {
+        return mService.findByRoleAndStatusAndTeamIsNull(role, status);
     }
 
     @Transactional

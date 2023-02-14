@@ -169,8 +169,20 @@ public class MemberService {
         return memberRepository.findAllByRole(role);
     }
 
+    public List<Member> findByRoleAndDivisionIsNull(Role role) {
+        return memberRepository.findAllByRoleAndDivisionIsNull(role);
+    }
+
+    public List<Member> findByRoleAndTeamIsNull(Role role) {
+        return memberRepository.findAllByRoleAndTeamIsNull(role);
+    }
+
     public List<Member> findByRoleAndStatus(Role role, MemberStatus status) {
         return memberRepository.findAllByRoleAndMemberStatus(role, status);
+    }
+
+    public List<Member> findByRoleAndStatusAndTeamIsNull(Role role, MemberStatus status) {
+        return memberRepository.findAllByRoleAndMemberStatusAndTeamIsNull(role, status);
     }
 
     public List<Member> findAllMember() {

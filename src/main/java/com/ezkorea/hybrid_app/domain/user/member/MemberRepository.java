@@ -20,4 +20,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findAllByMemberStatus(MemberStatus status);
     List<Member> findAllByMemberStatusNot(MemberStatus status);
 
+    // IsNull Opt
+    List<Member> findAllByRoleAndDivisionIsNull(Role role);
+    List<Member> findAllByRoleAndTeamIsNull(Role role);
+    List<Member> findAllByRoleAndMemberStatusAndTeamIsNull(Role role, MemberStatus status);
 }
