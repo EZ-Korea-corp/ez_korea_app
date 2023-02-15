@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .live-search-list {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                padding: 1em;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                font-family: 'Lato', sans-serif;
+                color: #fff;
+            }
+
+            .live-search-box {
+                width: 100%;
+                display: block;
+                padding: 1em;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                border: 1px solid #3498db;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+            }
+
+            .live-search-list li {
+                color: #fff;
+                list-style: none;
+                padding: 0;
+                margin: 5px 0;
+            }
+        </style>
+        <div class="lg:space-x-12">
+            <form id="selectForm" onsubmit="return false;">
+                <div class="lg:w-full card">
+
+                    <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                        <div style="position:relative;" class="md:py-8 py-3 flex">
+                            <div style="position:absolute; top:0; left:0;">
+                                <h2 class="text-xl font-bold"><span class="mr-2">🙋</span>출, 퇴근 정보</h2>
+                            </div>
+                            <div style="position:absolute; top:0; right:0;">
+                                <input type="text" id="datepicker" name="datepicker" style="width:9em" readonly>
+                            </div>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            사원명
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            출근 시간
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            출근 위치
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            퇴근 시간
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            퇴근 위치
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="bg-white border-b" th:each="commute : ${commuteList}">
+                                        <th scope="row" class="px-6 py-4 font-medium" th:text="${commute['NAME']}">
+                                            사원명
+                                        </th>
+                                        <th:block>
+                                            <td class="px-6 py-4" th:text="${#temporals.format(commute['ON_TIME'], 'HH:DD')}">
+                                                출근 시간
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap" th:text="${commute['ON_TIME_LOCATION']}">
+                                                출근 위치
+                                            </td>
+                                            <td class="px-6 py-4" th:text="${#temporals.format(commute['OFF_TIME'], 'HH:DD')}">
+                                                퇴근 시간
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap" th:text="${commute['OFF_TIME_LOCATION']}">
+                                                퇴근 위치
+                                            </td>
+                                        </th:block>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <script th:inline="javascript">
+            jQuery(document).ready(function($){
+                let url = new URL(window.location.href);
+                let date = url.searchParams.get("date");
+
+                fnCalenderMaker($('#datepicker'), date);
+
+                $('#datepicker').on("change", function() {
+                    location.href= "/manager/commute?date=" + $(this).val();
+                });
+
+                $('.live-search-list li').each(function(){
+                    $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
+                });
+
+                $('.live-search-box').on('keyup', function(){
+
+                    let searchTerm = $(this).val().toLowerCase();
+
+                    $('.live-search-list li').each(function(){
+
+                        if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+
+                    });
+
+                });
+
+            });
+
+            let inviteBtn = {
+                doInvite: function (idx) {
+                    fnCrudRefreshAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'select-div', 'PUT');
+                }
+            }
+        </script>
+    </main>
+
+</body>
+
+</html>

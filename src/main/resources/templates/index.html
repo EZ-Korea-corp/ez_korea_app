@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+<main layout:fragment="main">
+    <div class="lg:space-x-12">
+        <div class="" id="body_div">
+            <form th:action="@{/commute}" method="post" id="commuteForm">
+                <input type="hidden" id="location" name="location" value=""/>
+                <div class=" md:mb-4 mb-3" th:if="${!isOnTime}">
+                    <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 환영합니다 👏</h2>
+                    <p class="my-2">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요 🔥</p>
+                    <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('ON_TIME').getKey()}"/>
+                    <button type="button" id="onTimeBtn" class="text-white bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">출근하기 🔥</button>
+                </div>
+                <div class=" md:mb-4 mb-3" th:if="${isOnTime}">
+                    <th:block th:if="${commute.getStatus().equals('onTime')}">
+                        <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 오늘도 힘내세요 💪</h2>
+                        <p class="my-2">⏰ 출근 시간 : <span th:text="${#temporals.format(commute.getOnTime(), 'HH시 mm분')}"></span></p>
+                        <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('OFF_TIME').getKey()}"/>
+                        <button type="button" id="offTimeBtn" class="text-white bg-yellow-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">퇴근하기 😎</button>
+                    </th:block>
+                    <th:block th:if="${commute.getStatus().equals('offTime')}">
+                        <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 오늘도 수고하셨습니다 🙇</h2>
+                        <p class="my-2">⏰ 퇴근 시간 : <span th:text="${#temporals.format(commute.getOffTime(), 'HH시 mm분')}"></span></p>
+                    </th:block>
+                </div>
+            </form>
+
+            <hr class="my-5">
+
+            <h2 class="text-xl font-semibold mb-2"> 🧾 공지사항 </h2>
+
+            <div class="card divide-y divide-gray-100 sm:m-0">
+
+                <!-- job 1 -->
+                <div class="flex items-start flex-wrap p-7 sm:space-x-6">
+                    <a href="#" class="w-14 h-14 relative mt-1 order-1">
+                        <img src="/assets/images/brand/brand-avatar-4.png" alt="" class="rounded-md">
+                    </a>
+                    <div class="flex-1 sm:order-2">
+                        <h4 class="text-base text-gray-500 font-medium mb-2"> 경리팀 </h4>
+                        <a href="#">
+                            <h3 class="text-xl font-medium mb-4"> 공지 제목 </h3>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+    <script>
+        let locationStr = "";
+        let submitFlag = true;
+
+        function setLocation() {
+            navigator.geolocation.getCurrentPosition(function (position){
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                submitFlag = true;
+                locationStr = lat + ',' + lng;
+            }, function (){
+                Swal.fire({
+                    icon: 'question',
+                    html: '위치 정보를 가져올 수 없습니다.<br>위치 정보 허용을 해주세요.',
+                    footer: '핸드폰 설정 ➡️ 위치 서비스 ➡️ 사용하는 브라우저 위치 서비스 허용 ➡️ 메인 페이지 새로 고침'
+                })
+                submitFlag = false;
+            });
+        }
+
+        $("#offTimeBtn").on("click", function (){
+            Swal.fire({
+                html: '퇴근하시겠습니까?',
+                showDenyButton: true,
+                confirmButtonText: '퇴근하기',
+                denyButtonText: `닫기`,
+            }).then((result) => {
+                if(result.isConfirmed){
+                    showLoadingSpinner();
+                    setLocation();
+                    setTimeout(function() {
+                        $('#location').attr('value', locationStr);
+                        if (submitFlag === true  && locationStr.length !== 0) {
+                            $('#commuteForm').submit();
+                        }
+                    }, 5000);
+                }
+            })
+        });
+
+        function showLoadingSpinner() {
+            $('#body_div').hide();
+            let timerInterval
+            Swal.fire({
+                title: "요청을 처리하고 있습니다.",
+                html: '완료될 때까지 <b></b> ms 남았습니다.',
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                    timerInterval = setInterval(() => {
+                        b.textContent = Swal.getTimerLeft()
+                    }, 100)
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            })
+        }
+
+        $("#onTimeBtn").on("click", function (){
+            Swal.fire({
+                html: '출근하시겠습니까?',
+                showDenyButton: true,
+                confirmButtonText: '출근하기',
+                denyButtonText: `닫기`,
+            }).then((result) => {
+                if(result.isConfirmed){
+                    showLoadingSpinner();
+                    setLocation();
+                    setTimeout(function() {
+                        $('#location').attr('value', locationStr);
+                        if (submitFlag === true  && locationStr.length !== 0) {
+                            $('#commuteForm').submit();
+                        }
+                    }, 5000);
+                }
+            })
+        });
+    </script>
+</main>
+
+</body>
+
+</html>

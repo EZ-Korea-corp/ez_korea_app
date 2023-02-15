@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .icon {
+                display: inline-block;
+                vertical-align: middle;
+            }
+            input[type=text]{
+                width: 4.5em;
+            }
+            #check div a{
+                color: #FFFFFF;
+            }
+        </style>
+        <div class="lg:space-x-12">
+
+            <div class="lg:w-full card">
+
+                <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                    <div class="md:py-8 py-3">
+                        <h2 class="text-xl font-bold">마감하기🌝</h2>
+                    </div>
+
+                    <div class="md:py-8 py-3">
+                        <div class="md:flex" id="check">
+                            <div name="out" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                                <a class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매 </a>
+                            </div>
+                            <div name="stock" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 재고 </a>
+                            </div>
+                            <div name="fix" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 고장 </a>
+                            </div>
+                        </div>
+                        <form onsubmit="return false" id="dataForm">
+
+                            <div class="relative overflow-x-auto shadow-md">
+                                <table class="w-full text-sm text-left text-gray-500">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">
+                                                구분
+                                            </th>
+                                            <th scope="col" class="px-2 py-3 uk-text-center"
+                                                th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}"
+                                                th:text="${sort.getName()}">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="bg-white border-b"
+                                        th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}">
+                                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap" th:text="${sort.getViewName()}"></th>
+                                        <td class="px-2 py-4" th:with="item=1"
+                                            th:each="size : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}">
+                                            <th:block th:if="${!sort.getName().equals('size_700') && !size.getName().equals('700')}">
+                                                <span type="text" th:name="${(sortStat.index) * 8 + (sizeStat.count)}"/>
+                                            </th:block>
+                                            <th:block th:if="${sort.getName().equals('size_700') && size.getName().equals('700')}">
+                                                <span type="text" th:name="33"/>
+                                            </th:block>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <hr class="mt-4">
+                            <button type="submit" id="submit" class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white" disabled="disabled"> 마감등록 </button>
+                            <a th:href="@{/sales}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                        </form>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+
+            $(document).ready(function(){
+
+                // 마감하기 - 재고등록
+                $("#submit").on("click", function() {
+                    Swal.fire({
+                        html: '마감하시겠습니까?',
+                        showDenyButton: true,
+                        confirmButtonText: '마감하기',
+                        denyButtonText: `닫기`,
+                    }).then((result) => {
+                        if(result.isConfirmed){
+                            fnCloseTask();
+                        }
+                    })
+                });
+
+                // 조회 - 판매, 재고, 고장
+                $("#check div").on("click", function() {
+                    let status = $(this).attr("name");
+
+                    // 상단바
+                    $("#check div").each(function() {
+                        if($(this).attr("name") == status) {
+                            $(this).find("a").removeClass("bg-gray-600")
+                                             .addClass("bg-blue-600");
+                        } else {
+                            $(this).find("a").removeClass("bg-blue-600")
+                                             .addClass("bg-gray-600");
+                        }
+                    });
+
+                    // 재고 - 마감등록 diable 해제
+                    if(status == "stock") {
+                        $("#submit").attr('disabled', false)
+                                    .removeClass("bg-gray-600")
+                                    .addClass("bg-blue-600");
+                    } else {
+                        $("#submit").attr('disabled', true)
+                                    .removeClass("bg-blue-600")
+                                    .addClass("bg-gray-600");
+                    }
+
+                    fnFindInputProduct(status);
+                });
+
+                fnFindInputProduct("out"); //default 판매
+            });
+
+            // 입고조회
+            function fnFindInputProduct(status) {
+                const url = "/sales/close";
+                const data = {"status" : status};
+
+                fnFindJsonAjax(data, url, fnFindInputProductResult);
+            }
+
+            // 테이블 그리기
+            function fnFindInputProductResult(data) {
+                const $form = $("#dataForm");
+                $("#dataForm span").text("");
+                data.result.forEach(function(item) {
+                    $form.find("span[name=" + item.wiper + "]").text(item.count);
+                })
+            }
+
+            // 마감등록
+            function fnCloseTask() {
+                if(!fnValidCheck()) return;
+
+                const url = "/sales/closeTask";
+                const fnload = function() {location.href= "/sales";}
+
+                fnCrudJsonAjax("", url, fnload, "post", "정상적으로 저장되었습니다.");
+            }
+
+            function fnValidCheck() {
+                let isValid = true;
+                $('#dataForm').find('span').each(function() {
+                    if(Number($(this).text()) < 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: '재고에 음수가 존재합니다.',
+                        });
+
+                        isValid = false;
+                        return false;
+                    }
+                });
+                return isValid;
+            }
+
+        </script>
+    </main>
+</body>
+
+</html>

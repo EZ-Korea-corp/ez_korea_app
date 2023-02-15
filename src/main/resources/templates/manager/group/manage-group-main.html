@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <div class="lg:space-x-12">
+            <form id="selectForm" onsubmit="return false;">
+                <div class="lg:w-full card">
+
+                    <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                        <div class="md:py-8 py-3">
+                            <h2 class="text-xl font-bold"><span class="mr-2">👑</span>지점 관리</h2>
+                            <p>PC 버전 혹은 핸드폰 가로 모드로 확인해주세요.</p>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <h1 class="block text-lg font-bold mb-4"> 지점 선택  </h1>
+                            <div class="grid grid-cols-2 gap-4">
+                                <a class="btn button text-white" th:href="@{/manager/division/create}">지점 생성</a>
+                                <a class="btn button text-white" th:href="@{/manager/team/create}">팀 생성</a>
+                            </div>
+
+                            <input type="text" class="table-live-search-box my-4" placeholder="지점명을 입력해주세요."/>
+
+                            <hr class="my-4">
+
+                            <div class="relative overflow-x-auto shadow-md" id="select-div">
+
+                                <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                                명칭
+                                            </th>
+                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                                리더
+                                            </th>
+                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                                상세 페이지
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="uk-text-center">
+                                        <tr class="bg-white border-b" th:each="division : ${divisionList}">
+                                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                                <h3 th:text="${division.getDivisionName()}"></h3>
+                                            </th>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="|${division.getLeader().getName()} (${division.getLeader().getPhone()})|"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap"> <a th:href="@{|/manager/division/${division.getId()}|}" class="uk-text-center h-9 px-4"> 상세보기 </a> </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <script th:inline="javascript">
+            jQuery(document).ready(function($){
+
+                $('.live-search-table tbody tr').each(function(){
+                    $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
+                });
+
+                $('.table-live-search-box').on('keyup', function(){
+
+                    let searchTerm = $(this).val().toLowerCase();
+
+                    $('.live-search-table tbody tr').each(function(){
+                        if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                });
+
+            });
+
+            let inviteBtn = {
+                doInvite: function (idx) {
+                    const obj = {
+                        id : idx
+                    }
+                    console.log(obj);
+                    fnCrudRefreshAjax(obj, '/manager/approval', 'select-div', 'PUT');
+                }
+            }
+        </script>
+    </main>
+
+</body>
+
+</html>
