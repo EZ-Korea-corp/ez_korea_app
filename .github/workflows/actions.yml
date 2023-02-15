@@ -1,15 +1,19 @@
 # workflow의 이름
-name: CI
+name: CI/CD
 
 # 해당 workflow가 언제 실행될 것인지에 대한 트리거를 지정
 on:
   push:
-    branches: [ master ] # master branch로 push 될 때 실행됩니다.
-  pull_request:
-    branches: [ master ]  # master branch로 pull request될 때 실행됩니다.
+    branches:
+      - master
+
+# 해당 yml 내에서 사용할 key - value
+env:
+  S3_BUCKET_NAME: ezkorea-bucket
+  PROJECT_NAME: ezkorea_app
 
 jobs:
-  CI:
+  CI-CD:
     runs-on: ubuntu-latest
     steps:
 
@@ -54,17 +58,32 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
 
-      - name: Build with Gradle
-        run: ./gradlew build
-        shell: bash
-
       ## gradle build
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_IAM_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_IAM_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # script files 복사
+      - name: Copy script
+        run: cp ./scripts/*.sh ./deploy
+      
+      # S3에 업로드
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
+
   ## time
   current-time:
-    needs: CI
+    needs: CI-CD
     runs-on: ubuntu-latest
     steps:
       - name: Get Current Time
