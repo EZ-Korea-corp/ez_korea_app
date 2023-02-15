@@ -37,6 +37,7 @@ application-prod.yml
 application-dev.yml
 application.yml
 application-test.yml
+!gradle/wrapper/gradle-wrapper.jar
 out
 overridedb.*
 target
