@@ -1,14 +1,12 @@
-# github repository Actions 페이지에 나타낼 이름
-name: CI/CD
+# workflow의 이름
+name: CI
 
-# event trigger
+# 해당 workflow가 언제 실행될 것인지에 대한 트리거를 지정
 on:
   push:
-    branches:
-      - master
-
-permissions:
-  contents: read
+    branches: [ main ] # main branch로 push 될 때 실행됩니다.
+  pull_request:
+    branches: [ main ]  # main branch로 pull request될 때 실행됩니다.
 
 jobs:
   CI-CD:
