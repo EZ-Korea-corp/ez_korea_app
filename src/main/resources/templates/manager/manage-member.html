@@ -47,50 +47,82 @@
                     <div class="p-10 pt-4 divide-y divide-gray-100">
 
                         <div class="md:py-8 py-3">
-                            <h2 class="text-xl font-bold"><span class="mr-2">👔</span>사원 직급 수정</h2>
+                            <h2 class="text-xl font-bold"><span class="mr-2">👔</span>사원 관리</h2>
+                            <p>PC 버전 혹은 핸드폰 가로 모드로 확인해주세요.</p>
                         </div>
 
                         <div class="md:py-8 py-3">
                             <h1 class="block text-lg font-bold mb-4"> 사원 선택  </h1>
-                            <div class="md:flex">
-                                <div class="md:w-2/3 space-y-4 -mt-2">
-                                    <div id="select-div" class="items-center space-x-3">
-                                        <div class="flex-1">
-                                            <input type="text" class="live-search-box" placeholder="사원이름을 입력해주세요."/>
 
-                                            <ul id="search-result" class="live-search-list">
-                                                <li style="display: none">
-                                                    <form></form>
-                                                </li>
-                                                <li th:each="user : ${employeeList}" th:if="${!user.getRole().toString().equals('ROLE_MASTER')}">
-                                                    <form th:id="|updateMember${user.getId()}|" onsubmit="return false">
-                                                        <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
-                                                            <div class="w-10 h-10 flex-shrink-0 rounded-md relative">
-                                                                <img src="/assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
-                                                            </div>
-                                                            <div class="flex-1">
-                                                                <h3 class="text-base font-semibold capitalize mb-2" th:text="|${user.getName()}(${#strings.substring(user.getPhone(), 7, 11)})|"> 유저이름 </h3>
-                                                                <th:block>
-                                                                    <input type="hidden" name="username" th:value="${user.getUsername()}">
-                                                                    <select name="position" class="px-2">
-                                                                        <option th:each="role : ${T(com.ezkorea.hybrid_app.domain.user.member.Role).values()}"
-                                                                                th:if="${!role.equals(T(com.ezkorea.hybrid_app.domain.user.member.Role).ROLE_MASTER)}"
-                                                                                th:value="${role}"
-                                                                                th:selected="${role.equals(user.getRole())}"
-                                                                                th:text="${role.viewName}">
-                                                                        </option>
-                                                                    </select>
-                                                                </th:block>
-                                                            </div>
-                                                            <button type="submit" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="flex items-center text-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 변경하기 </button>
-                                                        </div>
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                            <input type="text" class="table-live-search-box" placeholder="사원이름을 입력해주세요."/>
+
+                            <hr class="my-4">
+
+                            <div class="relative overflow-x-auto shadow-md" id="select-div">
+
+                                <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                            이름
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                            핸드폰 번호
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                            이메일
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                            직급
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                            상태
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                            변경
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="uk-text-center">
+                                    <tr class="hidden"><form></form></tr>
+                                    <tr class="bg-white border-b" th:each="user : ${employeeList}"
+                                        th:if="${!user.getRole().toString().equals('ROLE_MASTER')}">
+                                        <form th:id="|updateMember${user.getId()}|" onsubmit="return false">
+                                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                                <h3 th:text="${user.getName()}"></h3>
+                                            </th>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${user.getPhone()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${user.getEmail()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap">
+                                                <input name="username" type="hidden" th:value="${user.getUsername()}" readonly>
+                                                <select name="memberRole" class="px-2">
+                                                    <option th:each="role : ${T(com.ezkorea.hybrid_app.domain.user.member.Role).values()}"
+                                                            th:if="${!role.equals(T(com.ezkorea.hybrid_app.domain.user.member.Role).ROLE_MASTER)}"
+                                                            th:value="${role}"
+                                                            th:selected="${role.equals(user.getRole())}"
+                                                            th:text="${role.viewName}">
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td class="px-2 py-4 whitespace-nowrap">
+                                                <select name="memberStatus" class="px-2">
+                                                    <option th:each="status : ${T(com.ezkorea.hybrid_app.domain.user.member.MemberStatus).values()}"
+                                                            th:if="${!status.equals(T(com.ezkorea.hybrid_app.domain.user.member.MemberStatus).AWAIT)}"
+                                                            th:value="${status}"
+                                                            th:selected="${status.equals(user.getMemberStatus())}"
+                                                            th:text="${status.viewName}">
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td class="px-2 py-4 whitespace-nowrap">
+                                                <button type="button" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border font-semibold"> 변경하기 </button>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
+
                         </div>
                     </div>
 
@@ -100,32 +132,33 @@
         <script th:inline="javascript">
             jQuery(document).ready(function($){
 
-                $('.live-search-list li').each(function(){
+                $('.live-search-table tbody tr').each(function(){
                     $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
                 });
 
-                $('.live-search-box').on('keyup', function(){
+                $('.table-live-search-box').on('keyup', function(){
 
                     let searchTerm = $(this).val().toLowerCase();
 
-                    $('.live-search-list li').each(function(){
-
+                    $('.live-search-table tbody tr').each(function(){
                         if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
                             $(this).show();
                         } else {
                             $(this).hide();
                         }
-
                     });
-
                 });
 
             });
 
             let inviteBtn = {
                 doInvite: function (idx) {
-                    fnCrudRefreshAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'select-div', 'PUT');
+                    fnResponseCrudJsonAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'PUT', refreshPage);
                 }
+            }
+
+            function refreshPage(data) {
+                location.reload();
             }
         </script>
     </main>

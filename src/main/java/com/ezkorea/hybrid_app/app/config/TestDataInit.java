@@ -2,20 +2,15 @@ package com.ezkorea.hybrid_app.app.config;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
-import com.ezkorea.hybrid_app.domain.user.division.Division;
-import com.ezkorea.hybrid_app.domain.user.division.Position;
-import com.ezkorea.hybrid_app.domain.user.division.Status;
-import com.ezkorea.hybrid_app.domain.user.member.Member;
-import com.ezkorea.hybrid_app.domain.user.member.Role;
-import com.ezkorea.hybrid_app.domain.user.team.Team;
-import com.ezkorea.hybrid_app.domain.wiper.WiperSize;
-import com.ezkorea.hybrid_app.domain.wiper.WiperSort;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
+import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
+import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.wiper.Wiper;
 import com.ezkorea.hybrid_app.domain.wiper.WiperRepository;
+import com.ezkorea.hybrid_app.domain.wiper.WiperSize;
+import com.ezkorea.hybrid_app.domain.wiper.WiperSort;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
-import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -31,7 +26,6 @@ public class TestDataInit {
     private final WiperRepository wiperRepository;
     private final GasStationRepository gasStationRepository;
     private final MemberService memberService;
-    private final TeamService teamService;
     private final DivisionService divisionService;
 
     @PostConstruct
@@ -39,14 +33,17 @@ public class TestDataInit {
         if (!memberRepository.existsByUsername("ez_dev_team_master")) {
             memberService.saveNewMember(makeNewMember("ez_dev_team_master", "개발팀", Role.ROLE_MASTER));
         }
-        if (!memberRepository.existsByUsername("01011111111")) {
-            memberService.saveNewMember(makeNewMember("01011111111", "고봉민", Role.ROLE_EMPLOYEE));
+        if (!memberRepository.existsByUsername("master")) {
+            memberService.saveNewMember(makeNewMember("master", "남명원", Role.ROLE_MASTER));
         }
-        if (!memberRepository.existsByUsername("01011111111")) {
-            memberService.saveNewMember(makeNewMember("01022222222", "김경자", Role.ROLE_EMPLOYEE));
+        if (!memberRepository.existsByUsername("01011112222")) {
+            memberService.saveNewMember(makeNewMember("01011112222", "고봉민", Role.ROLE_EMPLOYEE));
         }
-        if (!memberRepository.existsByUsername("01011111111")) {
-            memberService.saveNewMember(makeNewMember("01033333333", "한문철", Role.ROLE_EMPLOYEE));
+        if (!memberRepository.existsByUsername("01011113333")) {
+            memberService.saveNewMember(makeNewMember("01011113333", "김경자", Role.ROLE_EMPLOYEE));
+        }
+        if (!memberRepository.existsByUsername("01011114444")) {
+            memberService.saveNewMember(makeNewMember("01011114444", "한문철", Role.ROLE_EMPLOYEE));
         }
         StringBuilder sb;
         for (int i = 0; i < 15; i++) {
@@ -66,6 +63,7 @@ public class TestDataInit {
         String email = UUID.randomUUID().toString().substring(0, 8);
         SignUpDto newDto = new SignUpDto();
         newDto.setUsername(username);
+        newDto.setMemberStatus(MemberStatus.AWAIT);
         newDto.setPassword("1234");
         newDto.setPhone("01012341234");
         newDto.setEmail(email + "@ezkorea.com");

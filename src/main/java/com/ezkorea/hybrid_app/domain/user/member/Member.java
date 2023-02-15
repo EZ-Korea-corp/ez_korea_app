@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
+import com.ezkorea.hybrid_app.domain.user.team.Team;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,6 +50,10 @@ public class Member extends BaseEntity {
     private Role role;
 
     @Setter
+    @Enumerated(EnumType.STRING)
+    private MemberStatus memberStatus;
+
+    @Setter
     private boolean isRoleChanged;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
@@ -61,13 +66,12 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<DailyTask> taskList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "member",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+    @ManyToOne
+    @Setter
     private Division division;
 
-    public void setDivision(Division division) {
-        this.division = division;
-    }
+    @ManyToOne
+    @Setter
+    private Team team;
 
 }

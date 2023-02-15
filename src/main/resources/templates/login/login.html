@@ -51,6 +51,16 @@
                 </form>
 
             </div>
+            <script>
+                const urlParams = new URL(location.href).searchParams;
+
+                if (urlParams.has('error')) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '입력한 정보를 확인해주세요.',
+                    });
+                }
+            </script>
         </main>
 
     </body>

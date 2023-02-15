@@ -8427,9 +8427,6 @@ input[type="button"].dark1, input[type="submit"].dark1 {
   right: 0;
   height: 100%;
   width: 35px;
-  background: transparent;
-  background: -webkit-gradient(linear, right top, left top, from(#25283D), to(rgba(143, 57, 133, 0)));
-  background: linear-gradient(to left, #25283D, rgba(143, 57, 133, 0));
   pointer-events: none;
   -webkit-transition: opacity .2s;
   transition: opacity .2s;

@@ -6,14 +6,24 @@ function checkNumber($obj, min, max) {
 jQuery.fn.serializeObject = function() {
     let obj = null;
     try {
-        if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
-            var arr = this.serializeArray();
-            if (arr) {
+        if (this[0].tagName && this[0].tagName.toUpperCase() === "FORM") {
+            let formData = this.serializeArray();
+            console.log(formData);
+            if (formData) {
                 obj = {};
-                jQuery.each(arr, function() {
+                jQuery.each(formData, function() {
                     obj[this.name] = this.value;
                 });
-            }//if ( arr ) {
+            }
+            let checkboxData = this.find('input[type=checkbox]').serializeArray();
+            if (checkboxData) {
+                $.each(checkboxData, function(index, value) {
+                    if (index === 0) {
+                        obj[this.name] = '';
+                    }
+                    obj[this.name] += (this.value + ',');
+                });
+            }
         }
     } catch (e) {
         console.log(e);
@@ -51,6 +61,43 @@ function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg) {
                 Swal.fire({
                     icon: 'error',
                     text: xhr.responseText,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    text: '에러가 발생했습니다.',
+                });
+            }
+        }
+    });
+}
+
+function fnResponseCrudJsonAjax(data, url, method, fnCallBack) {
+
+    $.ajax({
+        type: method,
+        url: url,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        beforeSend: function(jqXHR, settings) {
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var token = $("meta[name='_csrf']").attr("content");
+            jqXHR.setRequestHeader(header, token);
+        },
+        success: function(xhr, data) {
+            Swal.fire({
+                icon: 'success',
+                text: xhr.message,
+            }).then(() => {
+                if(fnCallBack) fnCallBack(data);
+            })
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status === 400 || status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    text: jQuery.parseJSON(xhr.responseText).message,
                 });
             } else {
                 Swal.fire({

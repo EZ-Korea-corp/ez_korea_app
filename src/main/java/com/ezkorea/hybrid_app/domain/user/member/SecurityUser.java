@@ -19,6 +19,7 @@ public class SecurityUser extends User implements UserDetails {
     private final String name;
     private final String sex;
     private final Role role;
+    private final MemberStatus memberStatus;
     private final boolean isRoleChanged;
     private final LocalDateTime createDate;
 
@@ -31,6 +32,7 @@ public class SecurityUser extends User implements UserDetails {
         this.name = member.getName();
         this.sex = member.getSex();
         this.role = member.getRole();
+        this.memberStatus = member.getMemberStatus();
         this.isRoleChanged = member.isRoleChanged();
         this.createDate = member.getCreateDate();
     }
@@ -44,6 +46,7 @@ public class SecurityUser extends User implements UserDetails {
                 .name(name)
                 .sex(sex)
                 .role(role)
+                .memberStatus(memberStatus)
                 .isRoleChanged(isRoleChanged)
                 .createDate(createDate)
                 .build();

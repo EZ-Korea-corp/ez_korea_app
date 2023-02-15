@@ -1,41 +1,39 @@
 package com.ezkorea.hybrid_app.service.user.team;
 
-import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.domain.user.team.TeamRepository;
-import com.ezkorea.hybrid_app.web.exception.DivisionNotFoundException;
+import com.ezkorea.hybrid_app.web.dto.TeamDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class TeamService {
 
     private final TeamRepository teamRepository;
 
-    public Team saveNewTeam(Member member) {
-        return teamRepository.save(Team.builder()
-                .name(member.getName())
+    @Transactional
+    public Team saveNewTeam(TeamDto dto) {
+        Team savedTeam = teamRepository.save(Team.builder()
+                .division(dto.getDivision())
+                .teamName(dto.getTeamName())
+                .leader(dto.getLeader())
+                .memberList(dto.getMemberList())
                 .build());
+        setMemberTeam(savedTeam);
+        return savedTeam;
     }
 
     @Transactional
-    public void deleteTeam(Team team) {
-        teamRepository.delete(team);
+    public void setMemberTeam(Team team) {
+        team.getLeader().setTeam(team);
+        team.getLeader().setDivision(team.getDivision());
+        for (Member member : team.getMemberList()) {
+            member.setTeam(team);
+            member.setDivision(team.getDivision());
+        }
     }
-
-    /*public Team findTeamByDivision(Division division) {
-        return teamRepository.findByDivision(division)
-                .orElseThrow( () -> new DivisionNotFoundException("소속을 찾을 수 없습니다."));
-    }
-
-    public void deleteByDivision(Division division) {
-        teamRepository.deleteByDivision(division);
-    }*/
 }

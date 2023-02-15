@@ -3,10 +3,17 @@ package com.ezkorea.hybrid_app.domain.user.division;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,25 +23,11 @@ import javax.persistence.*;
 @ToString(callSuper = true)
 public class Division extends BaseEntity {
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "team_id")
-    private Team team;
+    private String divisionName;
 
     @OneToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    private Member leader;
 
-    @Setter
-    @Enumerated(EnumType.STRING)
-    private Position position;
-
-    @Setter
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
-    public void addBasicInfo(Team team, Member member) {
-        this.member = member;
-        this.team = team;
-    }
-
+    @OneToMany(mappedBy = "division")
+    private List<Team> teamList;
 }
