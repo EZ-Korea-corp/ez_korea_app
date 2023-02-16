@@ -103,9 +103,9 @@ jobs:
           aws deploy create-deployment \
           --application-name ezkorea-project \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ezkorea-prod \
+          --deployment-group-name ezkorea-app-prod \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=project-bucket-v1,bundleType=zip,key=ez_korea_app/$GITHUB_SHA.zip \
+          --s3-location bucket=ezkorea-bucket,bundleType=zip,key=ez_korea_app/$GITHUB_SHA.zip \
           --region ap-northeast-2 \
 
   ## time
