@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -77,8 +74,16 @@ public class SaleService {
     }
 
     @Transactional
-    public void saveDailyGasStation(Long stationId, Member member) {
-        saveDailyTask(member, gsService.findStationById(stationId));
+    public boolean saveDailyGasStation(Long stationId, Member member) {
+        GasStation station = gsService.findStationById(stationId);
+        DailyTask currentTask = dtRepository.findByTaskDateAndMemberAndGasStation(LocalDate.now(), member, station).orElse(null);
+
+        if(currentTask == null) {
+            saveDailyTask(member, gsService.findStationById(stationId));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Transactional

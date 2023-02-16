@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,9 +38,15 @@ public class SalesRestController {
 
     @PostMapping("/sales/select")
     public Map<String, Object> saveTeam(@RequestBody Map<String, Long> data,
-                               @AuthenticationPrincipal SecurityUser securityUser) {
+                               @AuthenticationPrincipal SecurityUser securityUser,
+                               HttpServletResponse response) throws Exception {
         Map<String, Object> returnMap = new HashMap<>();
-        saleService.saveDailyGasStation(data.get("stationId"), securityUser.getMember());
+        boolean isSave = saleService.saveDailyGasStation(data.get("stationId"), securityUser.getMember());
+
+        if(!isSave) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "이미 등록된 주유소입니다.");
+            return returnMap;
+        }
 
         returnMap.put("result", data.get("stationId"));
         return returnMap;
