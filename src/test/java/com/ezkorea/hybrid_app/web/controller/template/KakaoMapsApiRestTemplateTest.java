@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Profile("${test}")
 class KakaoMapsApiRestTemplateTest {
+    // test
 
     @Autowired
     private KakaoMapsApiRestTemplate template;
