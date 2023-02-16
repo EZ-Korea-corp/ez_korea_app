@@ -37,12 +37,12 @@ jobs:
             ${{ runner.os }}-gradle-
 
       ## create application-dev.yml
-      - name: make application-dev.yml
+      - name: make dev application.yml
         if: contains(github.ref, 'develop')
         run: |
           cd ./src/main/resources
-          touch ./application-dev.yml
-          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
+          touch ./application.yml
+          echo "${{ secrets.PROPERTIES_DEV }}" > ./application.yml
         shell: bash
 
       ## create application-test.yml
@@ -54,12 +54,12 @@ jobs:
         shell: bash
 
       ## create application-prod.yml
-      - name: make application-prod.yml
+      - name: make prod application.yml
         if: contains(github.ref, 'master')
         run: |
           cd ./src/main/resources
-          touch ./application-prod.yml
-          echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.yml
+          touch ./application.yml
+          echo "${{ secrets.PROPERTIES_PROD }}" > ./application.yml
         shell: bash
 
       - name: Setup MySQL
