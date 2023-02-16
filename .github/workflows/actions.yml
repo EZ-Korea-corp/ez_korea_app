@@ -45,7 +45,7 @@ jobs:
           echo "${{ secrets.PROPERTIES_MAIN_DEV }}" > ./application.yml
         shell: bash
 
-      ## create application-dev.yml
+      ## create dev application-dev.yml
       - name: make dev application-dev.yml
         if: contains(github.ref, 'develop')
         run: |
