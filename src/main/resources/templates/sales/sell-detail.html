@@ -31,7 +31,7 @@
             <div class="lg:w-full card">
 
                 <div class="p-10 pt-4 divide-y divide-gray-100">
-
+                    <input type="hidden" id="stationId" th:value="${stationId}">
                     <div class="md:py-8 py-3">
                         <h2 class="text-xl font-bold">어떤 상품을 판매하셨나요?</h2>
                     </div>
@@ -97,7 +97,7 @@
                             </div>
                             <hr class="mt-2">
                             <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 등록하기 </button>
-                            <a th:href="@{/sales}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                            <a th:href="@{|/sales/index/${stationId}|}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
 
                     </div>
 
@@ -166,9 +166,13 @@
 
             function fnSave(list) {
                 const url = "/sales/sell";
-                const fnload = function() {location.href= "/sales";}
+                const fnload = function() {location.href= "/sales/index/" + $("#stationId").val();}
+                const data = {
+                                "stationId" : $("#stationId").val(),
+                                "wiperDtoList" : list
+                }
 
-                fnCrudJsonAjax(list, url, fnload, "post", "정상적으로 저장되었습니다.");
+                fnCrudJsonAjax(data, url, fnload, "post", "정상적으로 저장되었습니다.");
             }
         </script>
     </main>

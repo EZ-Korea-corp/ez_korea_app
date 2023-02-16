@@ -1,11 +1,13 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
+import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
+import com.ezkorea.hybrid_app.web.dto.TaskDto;
 import com.ezkorea.hybrid_app.web.dto.WiperDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,29 +28,29 @@ public class SalesRestController {
     private final SaleService saleService;
 
     @PostMapping("/sales/sell")
-    public HttpStatus saveSalesProduct(@RequestBody List<WiperDto> wiperDto,
+    public HttpStatus saveSalesProduct(@RequestBody TaskDto taskDto,
                                        @AuthenticationPrincipal SecurityUser securityUser) {
-
-        saleService.saveSaleProduct(wiperDto, securityUser.getMember());
+        saleService.saveSaleProduct(taskDto.getWiperDtoList(), securityUser.getMember(), taskDto.getStationId());
 
         return HttpStatus.OK;
     }
 
     @PostMapping("/sales/select")
-    public HttpStatus saveTeam(@RequestBody Map<String, Object> data,
+    public Map<String, Object> saveTeam(@RequestBody Map<String, Long> data,
                                @AuthenticationPrincipal SecurityUser securityUser) {
+        Map<String, Object> returnMap = new HashMap<>();
+        saleService.saveDailyGasStation(data.get("stationId"), securityUser.getMember());
 
-        saleService.saveDailyGasStation((String) data.get("stationName"), securityUser.getMember());
-
-
-        return HttpStatus.OK;
+        returnMap.put("result", data.get("stationId"));
+        return returnMap;
     }
 
     @PostMapping("/sales/findInput")
-    public Map<String, Object> findInputProduct(@AuthenticationPrincipal SecurityUser securityUser) {
+    public Map<String, Object> findInputProduct(@RequestBody Map<String, Long> data,
+                                                @AuthenticationPrincipal SecurityUser securityUser) {
         Map<String, Object> returnMap = new HashMap<>();
         List<SaleProductDto> dtolist  = new ArrayList<>();
-        List<SaleProduct> inputList   = saleService.findInputProduct(securityUser.getMember());
+        List<SaleProduct> inputList   = saleService.findInputProduct(securityUser.getMember(), data.get("stationId"));
 
         inputList.forEach(item -> {
             SaleProductDto dto = new SaleProductDto();
@@ -64,7 +66,7 @@ public class SalesRestController {
     }
 
     @PostMapping("/sales/input")
-    public HttpStatus saveInputProduct(@RequestBody List<SaleProductDto> data,
+    public HttpStatus saveInputProduct(@RequestBody TaskDto data,
                                        @AuthenticationPrincipal SecurityUser securityUser) {
 
         saleService.saveInputProduct(securityUser.getMember(), data);

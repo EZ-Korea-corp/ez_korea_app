@@ -43,7 +43,6 @@
             }
         </style>
         <div class="lg:space-x-12">
-            <form id="selectForm" onsubmit="return false;">
                 <div class="lg:w-full card">
 
                     <div class="p-10 pt-4 divide-y divide-gray-100">
@@ -51,7 +50,7 @@
                         <div class="md:py-8 py-3">
                             <h2 class="text-xl font-bold">
                                 <span th:text="|${member.getName()} ${member.getRole().getViewName()}|"></span>님
-                                <p>오늘 근무할 주유소를 선택해주세요.</p>
+                                <p>주유소를 선택해주세요.</p>
                             </h2>
                         </div>
 
@@ -73,34 +72,17 @@
 
                         <div class="md:py-8 py-3">
                             <div class="space-y-3">
-                                <button id="submit" type="submit" class="btn bg-blue-600 py-2 rounded-lg w-full text-white">저장하기</button>
+                                <button id="submit" class="btn bg-blue-600 py-2 rounded-lg w-full text-white">이동하기</button>
+                                <button id="add" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white" onclick="location.href='/sales/select'">추가등록</button>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
-            </form>
         </div>
         <script>
             $("#submit").on("click", function () {
-                let stationName = $("#gasStation option:selected").val();
                 let stationId = $("#gasStation option:selected").data("id");
-
-                Swal.fire({
-                    html: stationName + '을 선택하시겠습니까?',
-                    showDenyButton: true,
-                    confirmButtonText: '선택',
-                    denyButtonText: `취소`,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const url = "/sales/select";
-                        const data = {stationId : stationId};
-                        const fnload = function(data) {$(location).attr('href', '/sales/index/' + data.result);}
-
-                        fnCrudJsonAjax(data, url, fnload, "post", "정상적으로 저장되었습니다.");
-                    }
-                })
+                location.href= "/sales/index/" + stationId;
             });
         </script>
     </main>

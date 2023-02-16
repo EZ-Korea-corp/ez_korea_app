@@ -26,7 +26,7 @@
             <div class="lg:w-full card">
 
                 <div class="p-10 pt-4 divide-y divide-gray-100">
-
+                    <input type="hidden" id="stationId" th:value="${stationId}">
                     <div class="md:py-8 py-3">
                         <h2 class="text-xl font-bold">마감하기🌝</h2>
                     </div>
@@ -78,7 +78,7 @@
 
                             <hr class="mt-4">
                             <button type="submit" id="submit" class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white" disabled="disabled"> 마감등록 </button>
-                            <a th:href="@{/sales}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                            <a th:href="@{|/sales/index/${stationId}|}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
                         </form>
                     </div>
 
@@ -141,7 +141,10 @@
             // 입고조회
             function fnFindInputProduct(status) {
                 const url = "/sales/close";
-                const data = {"status" : status};
+                const data = {
+                    "stationId" : $("#stationId").val(),
+                    "status" : status
+                };
 
                 fnFindJsonAjax(data, url, fnFindInputProductResult);
             }
