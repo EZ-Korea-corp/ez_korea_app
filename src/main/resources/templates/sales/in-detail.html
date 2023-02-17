@@ -103,7 +103,11 @@
             // 입고조회
             function fnFindInputProduct() {
                 const url = "/sales/findInput/";
-                const data = {"stationId" : $("#stationId").val()};
+                const data = {
+                    "stationId" : $("#stationId").val(),
+                    "partTime"  : $("[name='time']").val()
+                };
+
                 fnFindJsonAjax(data, url, fnFindInputProductResult);
             }
 
