@@ -18,6 +18,7 @@ else
   echo "> kill -9 $CURRENT_PID"
   kill -9 $CURRENT_PID
   sleep 5
+  echo "> 애플리케이션이 정상 종료되었습니다." >> /home/ec2-user/action/deploy.log
 fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
