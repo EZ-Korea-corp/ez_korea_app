@@ -62,6 +62,11 @@ function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg) {
                     icon: 'error',
                     text: xhr.responseText,
                 });
+            } else if(xhr.status === 404 || status === 404) {
+                Swal.fire({
+                    icon: 'error',
+                    text: eval("(" + xhr.responseText + ")").message,
+                });
             } else {
                 Swal.fire({
                     icon: 'error',

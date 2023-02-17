@@ -31,20 +31,20 @@
             <div class="lg:w-full card">
 
                 <div class="p-10 pt-4 divide-y divide-gray-100">
-
+                    <input type="hidden" id="stationId" th:value="${stationId}">
                     <div class="md:py-8 py-3">
                         <h2 class="text-xl font-bold">어떤 상품을 판매하셨나요?</h2>
                     </div>
 
                     <div class="md:py-8 py-3">
-                        <form onsubmit="return false" id="dataForm">
+
                             <h1 class="block text-md font-bold mb-2"> 결제 수단 </h1>
                             <div class="payment-option flex">
-                                <input type="radio" name="payment" value="card" id="card-option1" checked>
-                                <label for="card-option1" class="payment-label">카드</label>
+                                <input type="radio" name="payment" value="card" id="card" checked>
+                                <label for="card" class="payment-label">카드</label>
 
-                                <input type="radio" name="payment" value="cash" id="cash-option2">
-                                <label for="cash-option2" class="payment-label">현금</label>
+                                <input type="radio" name="payment" value="cash" id="cash">
+                                <label for="cash" class="payment-label">현금</label>
                             </div>
                             <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
                             <div>
@@ -54,15 +54,42 @@
                                 </select>
                             </div>
                             <h1 class="block text-md font-bold my-2"> 와이퍼 사이즈 </h1>
-                            <div>
-                                <select id="wiperSize" name="wiperSize" class="shadow-none with-border px-2">
-                                    <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}"
-                                            th:value="${sort.getName()}" th:text="${sort.name}"></option>
-                                </select>
+                            <div id="sizeDIv">
+                                <div id="divDefault">
+                                    <div class="flex items-center space-x-4 rounded-md -mx-2 p-2">
+                                        <button type="button" value="300" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 300 </button>
+                                        <button type="button" value="400" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 400 </button>
+                                        <button type="button" value="500" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 500 </button>
+                                        <button type="button" value="600" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 600 </button>
+                                    </div>
+                                    <div class="flex items-center space-x-4 rounded-md -mx-2 p-2">
+                                        <button type="button" value="350" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 350 </button>
+                                        <button type="button" value="450" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 450 </button>
+                                        <button type="button" value="550" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 550 </button>
+                                        <button type="button" value="650" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 650 </button>
+                                    </div>
+                                </div>
+                                <div id="div700">
+                                    <button type="button" value="700" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 700 </button>
+                                </div>
                             </div>
-                            <h1 class="block text-md font-bold my-2"> 실제 판매 가격 </h1>
-                            <div>
-                                <input type="number" readonly id="wiperPrice" value="10000" name="wiperPrice" class="shadow-none with-border px-2" placeholder="위 옵션을 선택해주세요."/>
+                            <h1 class="block text-md font-bold my-2"> 판매 리스트 </h1>
+                            <div class="relative overflow-x-auto">
+                                <form onsubmit="return false" id="dataForm">
+                                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">결제 수단</th>
+                                            <th scope="col" class="px-6 py-3">종류</th>
+                                            <th scope="col" class="px-6 py-3">사이즈</th>
+                                            <th scope="col" class="px-6 py-3">상태</th>
+                                            <th scope="col" class="px-6 py-3"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="sellList">
+                                        </tbody>
+                                    </table>
+                                </form>
                             </div>
                             <div class="flex items-center mt-2 align-middle">
                                 <input type="checkbox" id="wiperStatus" name="wiperStatus" class="mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -70,8 +97,8 @@
                             </div>
                             <hr class="mt-2">
                             <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 등록하기 </button>
-                            <a th:href="@{/sales}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
-                        </form>
+                            <a th:href="@{|/sales/index/${stationId}|}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+
                     </div>
 
 
@@ -81,85 +108,72 @@
 
         </div>
         <script>
+            // 결제수단
             $("[name='payment']").on("change", function() {
                 $(this).prop("checked", true);
             });
 
-            $("#wiperStatus").on("click", function (){
-                let price;
-
-                if($(this).is(":checked")) {
-                    price = "0"
-                } else {
-                    price = $("select[name=wiperSort] option:selected").text().replace(/[^0-9]/g, "");
-                }
-
-                $('input[name=wiperPrice]').attr('value', price);
+            // 판매 리스트
+            $("#sizeDIv button").on("click", function() {
+                $("#sellList").append(
+                    $("<tr>", {class:"bg-white border-b dark:bg-gray-900 dark:border-gray-700"}).append(
+                        $("<td>", {class:"px-6 py-4", text:$("[name='payment']:checked + label").text()}),
+                        $("<td>", {class:"px-6 py-4", text:$('#wiperSort option:selected').text().replace(/\/.*/, '')}),
+                        $("<td>", {class:"px-6 py-4", text:$(this).val()}),
+                        $("<td>", {class:"px-6 py-4", text:$('#wiperStatus').is(":checked") ? '고장' : '판매'}),
+                        $("<td>").append(
+                            $("<button>", {text:"취소", class:"bg-blue-600 text-white py-2.5 text-center font-semibold w-full  block rounded hover:text-white"}).on("click", function() {
+                                $(this).parents("tr").remove();
+                            })
+                        ),
+                        $("<input>", {type:"hidden", name:"payment", value:$("[name='payment']:checked").val()}),
+                        $("<input>", {type:"hidden", name:"wiperSort", value:$("#wiperSort").val()}),
+                        $("<input>", {type:"hidden", name:"wiperSize", value:$(this).val()}),
+                        $("<input>", {type:"hidden", name:"status", value:$('#wiperStatus').is(":checked") ? 'fix' : 'out'})
+                    )
+                );
             });
 
+            // 종류별 사이즈 버튼 바인딩
             $("select[name=wiperSort]").change(function(){
                 let currentData = $(this).val();
-                console.log(currentData);
-                let dataText = $("select[name=wiperSort] option:selected").text();
-                console.log(dataText);
-                var regex = /[^0-9]/g;
-                let price = dataText.replace(regex, "");
-                console.log(price);
-                $('input[name=wiperPrice]').attr('value', $('#wiperStatus').is(":checked") ? "0" : price);
                 if (currentData === "size_700") {
-                    $("select[name=wiperSize] option[value!='700']").prop('disabled', true);
-                    $("select[name=wiperSize] option[value='700']").prop('selected', true).prop('disabled', false);
+                    $("#divDefault").hide();
+                    $("#div700").show();
                 } else {
-                    $("select[name=wiperSize] option[value='700']").prop('disabled', true);
-                    $("select[name=wiperSize] option[value!='700']").prop('disabled', false);
-                    $("select[name=wiperSize] option[value='300']").prop('selected', true);
+                    $("#divDefault").show();
+                    $("#div700").hide();
                 }
-            });
-        </script>
-        <script>
-            $("#submit").on("click", function (){
-                if ($("#wiperPrice").val().length === 0) {
-                    Swal.fire({
-                        icon: 'error',
-                        text: '가격을 입력해주세요!',
-                    });
-                } else {
-                    var wiperDto = {
-                        wiperPrice: $('#wiperPrice').val(),
-                        wiperSort: $('#wiperSort').val(),
-                        wiperSize: $('#wiperSize').val(),
-                        status: $('#wiperStatus').is(":checked") ? 'fix' : 'out',
-                        payment: $("[name='payment']:checked").val()
-                    };
+            }).change();
 
-                    $.ajax({
-                        type: "POST",
-                        url: "/sales/sell",
-                        dataType: 'json',
-                        contentType: 'application/json; charset=utf-8',
-                        data: JSON.stringify(wiperDto),
-                        beforeSend: function (jqXHR, settings) {
-                            var header = $("meta[name='_csrf_header']").attr("content");
-                            var token = $("meta[name='_csrf']").attr("content");
-                            jqXHR.setRequestHeader(header, token);
-                        },
-                        success: function () {
-                            Swal.fire({
-                                icon: 'success',
-                                text: '정상적으로 저장되었습니다.',
-                            }).then(() => {
-                                $(location).attr('href', '/sales');
-                            })
-                        },
-                        error: function (xhr, status, error) {
-                            Swal.fire({
-                                icon: 'error',
-                                text: '작성한 내용을 다시 확인해주세요!',
-                            })
-                        }
-                    });
-                }
+            // 판매 등록
+            $("#submit").on("click", function (){
+                if($("#sellList tr").length === 0) return;
+
+                let list = [];
+                $("#sellList tr").each(function() {
+                    let data = {
+                        payment   : $(this).find("[name='payment']").val(),
+                        wiperSort : $(this).find("[name='wiperSort']").val(),
+                        wiperSize : $(this).find("[name='wiperSize']").val(),
+                        status    : $(this).find("[name='status']").val()
+                    }
+                    list.push(data);
+                });
+
+                fnSave(list);
             });
+
+            function fnSave(list) {
+                const url = "/sales/sell";
+                const fnload = function() {location.href= "/sales/index/" + $("#stationId").val();}
+                const data = {
+                                "stationId" : $("#stationId").val(),
+                                "wiperDtoList" : list
+                }
+
+                fnCrudJsonAjax(data, url, fnload, "post", "정상적으로 저장되었습니다.");
+            }
         </script>
     </main>
 

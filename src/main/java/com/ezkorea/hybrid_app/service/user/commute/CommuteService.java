@@ -40,7 +40,6 @@ public class CommuteService {
                     .onTimeLocation(currentLocation)
                     .build();
             member.addCommuteTime(ctRepository.save(ct));
-            saleService.saveDailyTask(member);
         } else if (status.equals("offTime")) {
             CommuteTime ct = findCommuteTimeByMember(member);
             ct.setStatus(status);

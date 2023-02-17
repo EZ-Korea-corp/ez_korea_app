@@ -1,11 +1,13 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
+import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
+import com.ezkorea.hybrid_app.web.dto.TaskDto;
 import com.ezkorea.hybrid_app.web.dto.WiperDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,29 +29,35 @@ public class SalesRestController {
     private final SaleService saleService;
 
     @PostMapping("/sales/sell")
-    public HttpStatus saveSalesProduct(@RequestBody WiperDto wiperDto,
+    public HttpStatus saveSalesProduct(@RequestBody TaskDto taskDto,
                                        @AuthenticationPrincipal SecurityUser securityUser) {
-
-        saleService.saveSaleProduct(wiperDto, securityUser.getMember());
+        saleService.saveSaleProduct(taskDto.getWiperDtoList(), securityUser.getMember(), taskDto.getStationId());
 
         return HttpStatus.OK;
     }
 
     @PostMapping("/sales/select")
-    public HttpStatus saveTeam(@RequestBody Map<String, Object> data,
-                               @AuthenticationPrincipal SecurityUser securityUser) {
+    public Map<String, Object> saveTeam(@RequestBody Map<String, Long> data,
+                               @AuthenticationPrincipal SecurityUser securityUser,
+                               HttpServletResponse response) throws Exception {
+        Map<String, Object> returnMap = new HashMap<>();
+        boolean isSave = saleService.saveDailyGasStation(data.get("stationId"), securityUser.getMember());
 
-        saleService.saveDailyGasStation((String) data.get("stationName"), securityUser.getMember());
+        if(!isSave) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "이미 등록된 주유소입니다.");
+            return returnMap;
+        }
 
-
-        return HttpStatus.OK;
+        returnMap.put("result", data.get("stationId"));
+        return returnMap;
     }
 
     @PostMapping("/sales/findInput")
-    public Map<String, Object> findInputProduct(@AuthenticationPrincipal SecurityUser securityUser) {
+    public Map<String, Object> findInputProduct(@RequestBody Map<String, Object> data,
+                                                @AuthenticationPrincipal SecurityUser securityUser) {
         Map<String, Object> returnMap = new HashMap<>();
         List<SaleProductDto> dtolist  = new ArrayList<>();
-        List<SaleProduct> inputList   = saleService.findInputProduct(securityUser.getMember());
+        List<SaleProduct> inputList   = saleService.findInputProduct(securityUser.getMember(), Long.valueOf((String)data.get("stationId")));
 
         inputList.forEach(item -> {
             SaleProductDto dto = new SaleProductDto();
@@ -64,7 +73,7 @@ public class SalesRestController {
     }
 
     @PostMapping("/sales/input")
-    public HttpStatus saveInputProduct(@RequestBody List<SaleProductDto> data,
+    public HttpStatus saveInputProduct(@RequestBody TaskDto data,
                                        @AuthenticationPrincipal SecurityUser securityUser) {
 
         saleService.saveInputProduct(securityUser.getMember(), data);

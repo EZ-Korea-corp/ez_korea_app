@@ -23,7 +23,7 @@
             <div class="lg:w-full card">
 
                 <div class="p-10 pt-4 divide-y divide-gray-100">
-
+                    <input type="hidden" id="stationId" th:value="${stationId}">
                     <div class="md:py-8 py-3">
                         <h2 class="text-xl font-bold">어떤 상품을 입고하시나요?</h2>
                     </div>
@@ -64,7 +64,7 @@
 
                             <hr class="mt-4">
                             <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 등록하기 </button>
-                            <a th:href="@{/sales}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                            <a th:href="@{|/sales/index/${stationId}|}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
                         </form>
                     </div>
 
@@ -80,7 +80,16 @@
 
                 // 입고등록
                 $("#submit").on("click", function() {
-                    fnSaveInputProduct();
+                    Swal.fire({
+                        html: '입고 등록하시겠습니까?',
+                        showDenyButton: true,
+                        confirmButtonText: '등록',
+                        denyButtonText: `취소`,
+                    }).then((result) => {
+                        if(result.isConfirmed) {
+                            fnSaveInputProduct();
+                        }
+                    })
                 });
 
                 // 범위지정 (1~100)
@@ -93,26 +102,33 @@
 
             // 입고조회
             function fnFindInputProduct() {
-                const url = "/sales/findInput";
+                const url = "/sales/findInput/";
+                const data = {
+                    "stationId" : $("#stationId").val(),
+                    "partTime"  : $("[name='time']").val()
+                };
 
-                fnFindJsonAjax("", url, fnFindInputProductResult);
+                fnFindJsonAjax(data, url, fnFindInputProductResult);
             }
 
             // 입고등록
             function fnSaveInputProduct() {
                 const url = "/sales/input";
-                const data = [];
+                const saleDtoList = [];
                 const form = $('#dataForm').serializeArray();
-                const fnload = function() {location.href= "/sales";}
+                const fnload = function() {location.href= "/sales/index/" + $("#stationId").val();}
                 form.forEach(function(item) {
-                    data.push({
+                    saleDtoList.push({
                         "wiper" : item.name,
                         "count" : item.value
                     })
                 })
+                const data = {
+                                "stationId"    : $("#stationId").val(),
+                                "saleDtoList" : saleDtoList
+                             }
 
-
-                fnCrudJsonAjax(data, url, fnload, "post", "정상적으로 저장되었습니다.");
+                fnCrudJsonAjax(data, url, fnload, "post", "정상적으로 저장되었습니다.")
             }
 
             function fnFindInputProductResult(data) {
