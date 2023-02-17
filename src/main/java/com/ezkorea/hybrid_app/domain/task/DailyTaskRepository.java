@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DailyTaskRepository extends JpaRepository<DailyTask, Long> {
-    Optional<DailyTask> findByTaskDateAndMember(LocalDate taskDate, Member member);
+    Optional<DailyTask> findByTaskDateAndMemberAndGasStation(LocalDate taskDate, Member member, GasStation station);
 
     List<DailyTask> findAllByTaskDateAndGasStation(LocalDate taskDate, GasStation station);
 }
