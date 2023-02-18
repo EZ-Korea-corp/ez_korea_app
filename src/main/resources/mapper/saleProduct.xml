@@ -67,6 +67,9 @@
         ON      A.ID = B.TASK_ID
         WHERE   A.ID = #{taskId}
         AND		B.STATUS = #{status}
+        <if test="rn != null and rn != ''">
+            AND		B.RN = #{rn}
+        </if>
         GROUP BY B.WIPER_ID
     </select>
 
@@ -89,5 +92,18 @@
         AND     A.STATUS  = #{status}
         GROUP BY A.WIPER_ID
     </select>
+
+    <select id="findInProductList" parameterType="long" resultType="Map">
+        SELECT    A.RN AS RN
+                , DATE_FORMAT(MAX(A.CREATE_DATE), '%H:%i') AS CREATE_DATE
+        FROM    sale_product A
+        WHERE   A.TASK_ID = #{taskId}
+        AND     A.STATUS = 'in'
+        GROUP BY A.RN
+        ORDER BY A.RN
+    </select>
+
+
+
 
 </mapper>

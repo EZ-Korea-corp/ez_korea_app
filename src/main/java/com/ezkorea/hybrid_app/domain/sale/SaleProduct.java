@@ -25,6 +25,8 @@ public class SaleProduct extends BaseEntity {
 
     private int count;
 
+    private int rn;
+
     @OneToOne
     private Wiper wiper;
 

@@ -74,8 +74,15 @@ public class SaleController {
     }
 
     @GetMapping("/sales/input/{id}")
-    public String showInputPage(@PathVariable Long id, Model model) {
+    public String showInputPage(@PathVariable Long id,
+                                @AuthenticationPrincipal SecurityUser securityUser,
+                                Model model) {
+
+        List<Map<String, Object>> list = saleService.findInProductList(securityUser.getMember(), id);
+        int maxRn = (list.size() > 0) ? (int)list.get(list.size() - 1).get("RN") : 0;
         model.addAttribute("stationId", id);
+        model.addAttribute("list", list);
+        model.addAttribute("maxRn", maxRn);
         return "sales/in-detail";
     }
 
