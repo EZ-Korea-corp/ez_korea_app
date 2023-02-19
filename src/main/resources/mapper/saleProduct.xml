@@ -141,5 +141,49 @@
         LIMIT 10
     </select>
 
-
+    <select id="findTotalStat" parameterType="Map" resultType="Map">
+        WITH STAT AS (
+            SELECT     MAX(B.WIPER_VIEW_NAME) AS NAME
+                     , MAX(B.WIPER_SORT) AS SORT
+                     , SUM(A.COUNT) AS COUNT
+                     , MAX(B.WIPER_PRICE) * SUM(A.COUNT) AS PRICE
+            FROM
+            (
+                SELECT	  A.WIPER_ID
+                        , SUM(A.COUNT) AS COUNT
+                FROM    SALE_PRODUCT A INNER JOIN DAILY_TASK B
+                ON      A.TASK_ID = B.ID
+                WHERE   A.STATUS = 'out'
+                <if test="status != null and !''.equals(status)">
+                    <choose>
+                        <when test="'day'.equals(status)">
+                            AND B.TASK_DATE = DATE_FORMAT(NOW(), '%y-%m-%d')
+                        </when>
+                        <when test="'week'.equals(status)">
+                            AND B.TASK_DATE <![CDATA[>=]]> ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 0 )
+                            AND B.TASK_DATE <![CDATA[<=]]> ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 6 )
+                        </when>
+                        <otherwise>
+                            AND B.TASK_DATE <![CDATA[>=]]> LAST_DAY(NOW() - INTERVAL 1 MONTH) + INTERVAL 1 DAY
+                            AND B.TASK_DATE <![CDATA[<=]]> LAST_DAY(NOW())
+                        </otherwise>
+                    </choose>
+                </if>
+                GROUP BY A.WIPER_ID
+            ) A INNER JOIN WIPER B
+            ON A.WIPER_ID = B.ID
+            GROUP BY B.WIPER_SORT
+        )
+        SELECT    A.NAME AS NAME
+                , A.SORT AS SORT
+                , A.COUNT AS COUNT
+                , A.PRICE AS PRICE
+        FROM    STAT A
+        UNION ALL
+        SELECT    '합계' AS NAME
+                , 'total' AS SORT
+                , SUM(A.COUNT) AS COUNT
+				, SUM(A.PRICE) AS PRICE
+        FROM    STAT A
+    </select>
 </mapper>

@@ -101,4 +101,14 @@ public class ManagerController {
         return "redirect:/";
     }
 
+    @GetMapping("/stat")
+    public String showStatPage() {
+        return "manager/manage-stat";
+    }
+
+    @GetMapping("/totalStat")
+    public String showTotalStatPage() {
+        return "manager/stat/manage-totalStat";
+    }
+
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+<main layout:fragment="main">
+    <div class="lg:space-x-12">
+
+        <div class="">
+
+            <h2 class="text-xl font-semibold mb-4"> 📈 매출 관리 </h2>
+
+            <div class="card divide-y divide-gray-100 sm:m-0">
+                <div class="items-start p-7 sm:space-x-6">
+                    <div class="sm:order-2">
+                        <a th:href="@{/manager/totalStat}">
+                            <h3 class="text-xl font-medium"> <span class="mr-2"></span> 전체통계 </h3>
+                        </a>
+                    </div>
+                </div>
+                <div class="items-start p-7 sm:space-x-6">
+                    <div class="sm:order-2">
+                        <a href="#">
+                            <h3 class="text-xl font-medium"> <span class="mr-2"></span> 상세통계 </h3>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>

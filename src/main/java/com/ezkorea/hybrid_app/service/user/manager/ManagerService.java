@@ -1,6 +1,7 @@
 package com.ezkorea.hybrid_app.service.user.manager;
 
 import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
+import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
@@ -35,6 +36,7 @@ public class ManagerService {
 
     private final CommuteMbRepository commuteMbRepository;
     private final DailyTaskRepository dailyTaskRepository;
+    private final SaleMbRepository saleMbRepository;
 
     public List<Member> findAllMemberByRole(Role role) {
         return mService.findByRole(role);
@@ -115,5 +117,9 @@ public class ManagerService {
     public List<DailyTask> findTaskList(String date, Long id) {
         LocalDate searchDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
         return dailyTaskRepository.findByTaskDateAndMemberId(searchDate, id);
+    }
+
+    public Object findTotalStat(Map<String, Object> data) {
+        return saleMbRepository.findTotalStat(data);
     }
 }

@@ -81,4 +81,12 @@ public class ManagerRestController {
 
         return returnMap;
     }
+
+    @PostMapping("/totalStat")
+    public Map<String, Object> findTotalStat(@RequestBody Map<String, Object> data) {
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("list", managerService.findTotalStat(data));
+
+        return returnMap;
+    }
 }
