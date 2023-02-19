@@ -8,6 +8,11 @@
 
     <body>
         <main layout:fragment="main">
+            <style>
+                button{
+                    color: #FFFFFF;
+                }
+            </style>
             <!-- Content-->
             <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto px-6 space-y-">
                 <form id="saveForm" onsubmit="return false;" class="lg:p-10 p-6 space-y-3 relative bg-white shadow-xl rounded-md">
@@ -26,7 +31,7 @@
                             <hr class="my-4"/>
                             <div class="form-control">
                                 <h1 class="block text-md font-bold my-2"> 공지사항 </h1>
-                                <textarea name="memo" class="p-3"></textarea>
+                                <textarea id="memo" name="memo" class="p-3"></textarea>
                             </div>
                             <div class="form-control">
                                 <h1 class="block text-md font-bold my-2"> 참고 사진 </h1>
@@ -65,6 +70,7 @@
                         $("#id").val(data.station.id);
                         $("#stationName").val(data.station.stationName);
                         $("#stationLocation").val(data.station.stationLocation);
+                        $("#memo").val(data.station.memo);
                     }
                     if(data.attachList) {
                         data.attachList.forEach(function(item) {
