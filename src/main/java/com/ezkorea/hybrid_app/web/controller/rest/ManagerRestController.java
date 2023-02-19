@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
+import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,5 +72,13 @@ public class ManagerRestController {
         String memberStatus = (String) datum.get("memberStatus");
         managerService.updateMemberRole(username, Role.valueOf(memberRole), MemberStatus.valueOf(memberStatus));
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+    }
+
+    @PostMapping("/taskList")
+    public Map<String, Object> findTaskList(@RequestBody Map<String, Object> data) {
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("list", managerService.findTaskDateList(data));
+
+        return returnMap;
     }
 }

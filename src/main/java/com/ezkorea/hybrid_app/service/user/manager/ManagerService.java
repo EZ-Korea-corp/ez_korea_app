@@ -1,5 +1,8 @@
 package com.ezkorea.hybrid_app.service.user.manager;
 
+import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
+import com.ezkorea.hybrid_app.domain.task.DailyTask;
+import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
@@ -15,8 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +32,9 @@ public class ManagerService {
     private final MemberService mService;
     private final DivisionService dService;
     private final TeamService tService;
+
+    private final CommuteMbRepository commuteMbRepository;
+    private final DailyTaskRepository dailyTaskRepository;
 
     public List<Member> findAllMemberByRole(Role role) {
         return mService.findByRole(role);
@@ -96,5 +105,15 @@ public class ManagerService {
 
     public Division findDivisionById(Long id) {
         return dService.findDivisionById(id);
+    }
+
+    public List<Map<String, String>> findTaskDateList(Map<String, Object> data) {
+        return commuteMbRepository.findTaskDateList(data);
+    }
+
+
+    public List<DailyTask> findTaskList(String date, Long id) {
+        LocalDate searchDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+        return dailyTaskRepository.findByTaskDateAndMemberId(searchDate, id);
     }
 }

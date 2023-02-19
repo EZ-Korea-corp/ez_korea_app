@@ -1,6 +1,8 @@
 package com.ezkorea.hybrid_app.service.user.commute;
 
 import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
+import com.ezkorea.hybrid_app.domain.task.DailyTask;
+import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
