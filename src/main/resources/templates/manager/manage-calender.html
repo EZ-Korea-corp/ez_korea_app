@@ -171,7 +171,6 @@
                 let currentYear = thisMonth.getFullYear(); // 달력에서 표기하는 연
                 let currentMonth = thisMonth.getMonth(); // 달력에서 표기하는 월
                 let currentDate = thisMonth.getDate(); // 달력에서 표기하는 일
-                let currentYYMM = thisMonth.getFullYear() + '-' + (String(Number(thisMonth.getMonth()) + 1).padStart(2, "0"));
 
                 // kst 기준 현재시간
                 // console.log(thisMonth);
@@ -230,7 +229,7 @@
 
                 function findTaskList() {
                     const memberId = $("#id").val();
-                    const date = currentYYMM;
+                    const date = thisMonth.getFullYear() + '-' + (String(Number(thisMonth.getMonth()) + 1).padStart(2, "0"));
                     const data = {"id" : memberId, "date" : date}
                     const url = "/manager/taskList";
 
@@ -239,11 +238,12 @@
 
                 function findTaskListResult(data) {
                     if(data.list.length == 0 ) return;
+                    const date = thisMonth.getFullYear() + '-' + (String(Number(thisMonth.getMonth()) + 1).padStart(2, "0"));
 
                     data.list.forEach(function(item) {
                         $($('.day.current').get(Number(item.TASK_DATE) - 1)).css('background-color', '#CEF6F5')
                             .on("click", function() {
-                                location.href= "/manager/taskList?id=" + $("#id").val() + "&date=" + currentYYMM + "-" + $(this).text().padStart(2, "0");
+                                location.href= "/manager/taskList?id=" + $("#id").val() + "&date=" + date + "-" + $(this).text().padStart(2, "0");
                             });
                     });
                 }
