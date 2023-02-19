@@ -17,4 +17,5 @@ public interface SaleMbRepository {
     Long findLastWithdraw(Map paramMap);
     List<SaleProductDto> findLastWithdrawList(Map paramMap);
     List<Map<String, Object>> findInProductList(Long taskId);
+    List<Map<String, Object>> findStatList(Map paramMap);
 }

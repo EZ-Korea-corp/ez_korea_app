@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+<main layout:fragment="main">
+    <style>
+        #chartdiv {
+            width: 100%;
+            height: 500px;
+        }
+        #check div a{
+            color: #FFFFFF;
+        }
+    </style>
+    <div>
+        <div class="flex" id="check">
+            <div name="day" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                <a class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 일간 </a>
+            </div>
+            <div name="week" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 주간 </a>
+            </div>
+            <div name="month" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 월간 </a>
+            </div>
+        </div>
+        <div id="chartdiv"></div>
+    </div>
+    <script>
+        $(document).ready(function(){
+
+            $("#check div").on("click", function() {
+                let status = $(this).attr("name");
+
+                // 상단바
+                $("#check div").each(function() {
+                    if($(this).attr("name") == status) {
+                        $(this).find("a").removeClass("bg-gray-600")
+                            .addClass("bg-blue-600");
+                    } else {
+                        $(this).find("a").removeClass("bg-blue-600")
+                            .addClass("bg-gray-600");
+                    }
+                });
+
+                fnFindStat(status);
+            });
+
+            fnFindStat('day');
+        });
+
+        function fnFindStat(status) {
+            const url = "/stat/graph";
+            const data = {"status" : status};
+
+            fnFindJsonAjax(data, url, fnFindStatResult);
+        }
+
+        function fnFindStatResult(data) {
+            am4core.useTheme(am4themes_animated);
+
+            let chart = am4core.create("chartdiv", am4charts.XYChart);
+            chart.data = data.result;
+
+            let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.dataFields.category = "NAME";
+            categoryAxis.renderer.minGridDistance = 1;
+            categoryAxis.renderer.inversed = true;
+            categoryAxis.renderer.grid.template.disabled = true;
+
+            let valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+            valueAxis.min = 0;
+
+            let series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.categoryY = "NAME";
+            series.dataFields.valueX = "COUNT";
+            series.tooltipText = "{valueX.value}";
+            series.columns.template.strokeOpacity = 0;
+            series.columns.template.column.cornerRadiusBottomRight = 5;
+            series.columns.template.column.cornerRadiusTopRight = 5;
+            series.columns.template.fill = am4core.color("#5CD1E5");
+
+            let labelBullet = series.bullets.push(new am4charts.LabelBullet());
+            labelBullet.label.horizontalCenter = "left";
+            labelBullet.label.dx = 10;
+            labelBullet.label.text = "{values.valueX.workingValue}" + "개";
+            labelBullet.label.truncate = false;
+            labelBullet.label.hideOversized = false;
+            labelBullet.locationX = 1;
+        }
+    </script>
+</main>
+
+</body>
+
+</html>
