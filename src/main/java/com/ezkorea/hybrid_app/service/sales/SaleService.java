@@ -239,4 +239,8 @@ public class SaleService {
         DailyTask currentTask = findByMemberAndStation(member, id);
         return saleMbRepository.findInProductList(currentTask.getId());
     }
+
+    public List<Map<String, Object>> findInOutProductList(Long id) {
+        return saleMbRepository.findInProductList(id);
+    }
 }

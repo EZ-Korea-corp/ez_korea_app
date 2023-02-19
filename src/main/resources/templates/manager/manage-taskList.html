@@ -92,7 +92,7 @@
                     denyButtonText: `취소`,
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        location.href= "/station/inOutDetail?id=" + $("#gasStation option:selected").val();
+                        location.href= "/station/inOutMemberDetail?id=" + $("#gasStation option:selected").val();
                     }
                 })
             });

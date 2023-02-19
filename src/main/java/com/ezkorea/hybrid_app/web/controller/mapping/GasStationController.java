@@ -68,6 +68,17 @@ public class GasStationController {
         return "gasStation/gasStation-inoutDetail";
     }
 
+    @GetMapping("/inOutMemberDetail")
+    public String showSaleInOutHistoryPage(@RequestParam(value="id") Long id,
+                                        Model model) {
+
+        List<Map<String, Object>> list = saleService.findInOutProductList(id);
+        model.addAttribute("list", list);
+
+        return "gasStation/gasStation-inoutDetail";
+    }
+
+
     @GetMapping("/out")
     public String showSaleOutHistoryPage() {
         return "gasStation/gasStation-out";

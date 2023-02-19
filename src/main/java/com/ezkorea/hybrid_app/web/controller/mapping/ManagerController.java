@@ -91,7 +91,7 @@ public class ManagerController {
         List<DailyTask> taskList = managerService.findTaskList(date, id);
 
         if(taskList.size() == 1) {
-            return "redirect:/station/inOutDetail?id=" + taskList.get(0).getId();
+            return "redirect:/station/inOutMemberDetail?id=" + taskList.get(0).getId();
         } else if(taskList.size() > 1) {
             model.addAttribute("task", taskList.get(0));
             model.addAttribute("taskList", taskList);

@@ -81,7 +81,7 @@
                                                                     <input type="hidden" name="username" th:value="${task.getMember().getUsername()}">
                                                                 </th:block>
                                                             </div>
-                                                            <button type="submit" th:onclick="|location.href='/station/inOutDetail?id=${task.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 조회 </button>
+                                                            <button type="submit" th:onclick="|location.href='/station/inOutMemberDetail?id=${task.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 조회 </button>
                                                         </div>
                                                     </li>
                                                 </ul>
