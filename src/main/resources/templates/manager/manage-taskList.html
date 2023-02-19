@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .live-search-list {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                padding: 1em;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                font-family: 'Lato', sans-serif;
+                color: #fff;
+            }
+
+            .live-search-box {
+                width: 100%;
+                display: block;
+                padding: 1em;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                border: 1px solid #3498db;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+            }
+
+            .live-search-list li {
+                color: #fff;
+                list-style: none;
+                padding: 0;
+                margin: 5px 0;
+            }
+        </style>
+        <div class="lg:space-x-12">
+            <form id="selectForm" onsubmit="return false;">
+                <div class="lg:w-full card">
+
+                    <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                        <div class="md:py-8 py-3">
+                            <h2 class="text-xl font-bold">
+                                <span th:text="|${task.member.getName()} ${task.member.getRole().getViewName()}|"></span>님
+                                (<span th:text="|${task.getTaskDate()}|"></span>)
+                                <p>주유소를 선택해주세요.</p>
+                            </h2>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <h1 class="block text-lg font-bold mb-4"> 주유소 선택  </h1>
+                            <div class="md:flex">
+                                <div class="md:w-2/3 space-y-4 -mt-2">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-1.5 rounded-full text-xl">⛽️</div>
+                                        <div class="flex-1">
+                                            <select id="gasStation" name="gasStation" class="border border-gray-300 text-sm rounded-lg block w-full p-2.5">
+                                                <option th:each="task : ${taskList}" th:text="|${task.getGasStation().getStationName()}(${task.getGasStation().getStationLocation()})|" th:value="${task.getId()}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <div class="space-y-3">
+                                <button id="submit" type="submit" class="btn bg-blue-600 py-2 rounded-lg w-full text-white">확인하기</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <script>
+            $("#submit").on("click", function () {
+                Swal.fire({
+                    html: '해당 주유소를 선택하시겠습니까?',
+                    showDenyButton: true,
+                    confirmButtonText: '선택',
+                    denyButtonText: `취소`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href= "/station/inOutDetail?id=" + $("#gasStation option:selected").val();
+                    }
+                })
+            });
+        </script>
+    </main>
+
+</body>
+
+</html>
