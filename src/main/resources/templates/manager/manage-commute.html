@@ -41,6 +41,11 @@
                 padding: 0;
                 margin: 5px 0;
             }
+            .move{
+                color: #FFFFFF;
+                justify-content: center;
+                align-items: center;
+            }
         </style>
         <div class="lg:space-x-12">
             <form id="selectForm" onsubmit="return false;">
@@ -77,6 +82,9 @@
                                         <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
                                             퇴근 위치
                                         </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            상세보기
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -96,6 +104,9 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap" th:text="${commute['OFF_TIME_LOCATION']}">
                                                 퇴근 위치
+                                            </td>
+                                            <td class="move flex">
+                                                <button type="button" th:onclick="|location.href='/manager/calender/${commute.ID}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 이동 </button>
                                             </td>
                                         </th:block>
                                     </tr>

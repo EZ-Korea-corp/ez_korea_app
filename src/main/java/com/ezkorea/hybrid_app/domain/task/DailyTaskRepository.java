@@ -1,6 +1,7 @@
 package com.ezkorea.hybrid_app.domain.task;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
+import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,4 +13,6 @@ public interface DailyTaskRepository extends JpaRepository<DailyTask, Long> {
     Optional<DailyTask> findByTaskDateAndMemberAndGasStation(LocalDate taskDate, Member member, GasStation station);
 
     List<DailyTask> findAllByTaskDateAndGasStation(LocalDate taskDate, GasStation station);
+
+    List<DailyTask> findByTaskDateAndMemberId(LocalDate taskDate, Long memberId);
 }

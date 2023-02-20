@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface SaleProductRepository extends JpaRepository<SaleProduct, Long> {
 
-    List<SaleProduct> findAllByTaskAndStatus(DailyTask task, String status);
+    List<SaleProduct> findAllByTaskAndStatusAndRn(DailyTask task, String status, int rn);
 
     void deleteByTaskAndStatus(DailyTask task, String status);
+    void deleteByTaskAndStatusAndRn(DailyTask task, String status, int rn);
 }

@@ -53,11 +53,11 @@ public class SalesRestController {
     }
 
     @PostMapping("/sales/findInput")
-    public Map<String, Object> findInputProduct(@RequestBody Map<String, Object> data,
+    public Map<String, Object> findInputProduct(@RequestBody Map<String, Long> data,
                                                 @AuthenticationPrincipal SecurityUser securityUser) {
         Map<String, Object> returnMap = new HashMap<>();
         List<SaleProductDto> dtolist  = new ArrayList<>();
-        List<SaleProduct> inputList   = saleService.findInputProduct(securityUser.getMember(), Long.valueOf((String)data.get("stationId")));
+        List<SaleProduct> inputList   = saleService.findInputProduct(securityUser.getMember(), data);
 
         inputList.forEach(item -> {
             SaleProductDto dto = new SaleProductDto();

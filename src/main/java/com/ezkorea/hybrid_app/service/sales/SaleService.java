@@ -89,7 +89,7 @@ public class SaleService {
     @Transactional
     public void saveInputProduct(Member member, TaskDto taskDto) {
         DailyTask currentTask = findByMemberAndStation(member, taskDto.getStationId());
-        spRepository.deleteByTaskAndStatus(currentTask, SaleStatus.IN.toString()); // 재등록
+        spRepository.deleteByTaskAndStatusAndRn(currentTask, SaleStatus.IN.toString(), taskDto.getRn()); // 재등록
 
         taskDto.getSaleDtoList().forEach(item -> {
             // 입력된 입고만 등록
@@ -98,6 +98,7 @@ public class SaleService {
                         .task(currentTask)
                         .status(SaleStatus.IN.toString())
                         .count(item.getCount())
+                        .rn(taskDto.getRn())
                         .wiper(wpRepository.findById(item.getWiper()).get())
                         .build();
 
@@ -107,9 +108,9 @@ public class SaleService {
     }
 
     @Transactional
-    public List<SaleProduct> findInputProduct(Member member, Long stationId) {
-        DailyTask currentTask = findByMemberAndStation(member, stationId);
-        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatus(currentTask, SaleStatus.IN.toString());
+    public List<SaleProduct> findInputProduct(Member member, Map<String, Long> data) {
+        DailyTask currentTask = findByMemberAndStation(member, data.get("stationId"));
+        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatusAndRn(currentTask, SaleStatus.IN.toString(), data.get("rn").intValue());
 
         return inputList;
     }
@@ -232,5 +233,14 @@ public class SaleService {
             returnMap.put("name", dailyTask.getMember().getName());
             returnMap.put("withdrawList", withdrawList);
         }
+    }
+
+    public List<Map<String, Object>> findInProductList(Member member, Long id) {
+        DailyTask currentTask = findByMemberAndStation(member, id);
+        return saleMbRepository.findInProductList(currentTask.getId());
+    }
+
+    public List<Map<String, Object>> findInOutProductList(Long id) {
+        return saleMbRepository.findInProductList(id);
     }
 }

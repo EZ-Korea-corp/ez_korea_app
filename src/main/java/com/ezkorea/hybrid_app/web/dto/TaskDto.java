@@ -9,6 +9,7 @@ import java.util.List;
 public class TaskDto {
     private Long stationId;
     private Long memberId;
+    private int rn;
 
     List<WiperDto> wiperDtoList;
     List<SaleProductDto> saleDtoList;

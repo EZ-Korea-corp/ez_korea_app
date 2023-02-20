@@ -1,10 +1,11 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
-import com.ezkorea.hybrid_app.domain.user.division.Division;
+import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
+import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/manager")
@@ -22,6 +25,7 @@ public class ManagerController {
 
     private final ManagerService managerService;
     private final CommuteService commuteService;
+    private final MemberService memberService;
 
     @GetMapping("/home")
     public String showManagerPage() {
@@ -68,9 +72,43 @@ public class ManagerController {
 
     @GetMapping("/commute")
     public String showMemberCommutePage(@RequestParam(value="date", required=false)String date, Model model) {
-        model.addAttribute("employeeList", managerService.findAllMemberByStatus(MemberStatus.FULL_TIME));
+        //model.addAttribute("employeeList", managerService.findAllMemberByStatus(MemberStatus.FULL_TIME));
         model.addAttribute("commuteList", commuteService.findCommuteTime(date));
 
         return "manager/manage-commute";
     }
+
+    @GetMapping("/calender/{id}")
+    public String showMemberCalenderPage(@PathVariable Long id, Model model) {
+        model.addAttribute("id", id);
+        return "manager/manage-calender";
+    }
+
+    @GetMapping("/taskList")
+    public String showMemberTaskPage(@RequestParam(value="id", required=false)Long id,
+                                     @RequestParam(value="date", required=false)String date,
+                                     Model model) {
+        List<DailyTask> taskList = managerService.findTaskList(date, id);
+
+        if(taskList.size() == 1) {
+            return "redirect:/station/inOutMemberDetail?id=" + taskList.get(0).getId();
+        } else if(taskList.size() > 1) {
+            model.addAttribute("task", taskList.get(0));
+            model.addAttribute("taskList", taskList);
+            return "manager/manage-taskList";
+        }
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/stat")
+    public String showStatPage() {
+        return "manager/manage-stat";
+    }
+
+    @GetMapping("/totalStat")
+    public String showTotalStatPage() {
+        return "manager/stat/manage-totalStat";
+    }
+
 }
