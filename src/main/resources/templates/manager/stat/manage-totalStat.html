@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+<main layout:fragment="main">
+    <style>
+        #check div a{
+            color: #FFFFFF;
+        }
+        td {
+            text-align: center;
+        }
+        th {
+            text-align: center;
+        }
+    </style>
+    <div>
+        <div class="flex" id="check">
+            <div name="day" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                <a class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 일간 </a>
+            </div>
+            <div name="week" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 주간 </a>
+            </div>
+            <div name="month" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 월간 </a>
+            </div>
+        </div>
+        <div class="relative overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">종류</th>
+                        <th scope="col" class="px-6 py-3">갯수</th>
+                        <th scope="col" class="px-6 py-3">금액</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="normal" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">일반</th>
+                        <td class="px-6 py-4">0</td>
+                        <td class="px-6 py-4">0</td>
+                    </tr>
+                    <tr id="hybrid" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">하이브리드</th>
+                        <td class="px-6 py-4">0</td>
+                        <td class="px-6 py-4">0</td>
+                    </tr>
+                    <tr id="mw" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">엠떠블유(MW)</th>
+                        <td class="px-6 py-4">0</td>
+                        <td class="px-6 py-4">0</td>
+                    </tr>
+                    <tr id="s_class" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">S클래스</th>
+                        <td class="px-6 py-4">0</td>
+                        <td class="px-6 py-4">0</td>
+                    </tr>
+                    <tr id="size_700" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">칠백사이즈</th>
+                        <td class="px-6 py-4">0</td>
+                        <td class="px-6 py-4">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+
+            $("#check div").on("click", function() {
+                let status = $(this).attr("name");
+
+                // 상단바
+                $("#check div").each(function() {
+                    if($(this).attr("name") == status) {
+                        $(this).find("a").removeClass("bg-gray-600")
+                            .addClass("bg-blue-600");
+                    } else {
+                        $(this).find("a").removeClass("bg-blue-600")
+                            .addClass("bg-gray-600");
+                    }
+                });
+
+                fnFindStat(status);
+            });
+
+            fnFindStat('day');
+        });
+
+        function fnFindStat(status) {
+            const url = "/manager/totalStat";
+            const data = {"status" : status};
+
+            fnFindJsonAjax(data, url, fnFindStatResult);
+        }
+
+        function fnFindStatResult(data) {
+            let $body = $('tbody');
+            $body.find('td').text('0');
+            data.list.forEach(function(item) {
+                let $tr = $body.find("#" + item.SORT);
+                $($tr.find('td').get(0)).text(item.COUNT);
+                $($tr.find('td').get(1)).text(item.PRICE);
+            });
+            console.log(data);
+        }
+    </script>
+</main>
+
+</body>
+
+</html>

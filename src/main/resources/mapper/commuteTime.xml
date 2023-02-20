@@ -13,6 +13,15 @@
         FROM    MEMBER A LEFT JOIN COMMUTE_TIME B
         ON      A.ID = B.MEMBER_ID
         AND     B.DATE = DATE_FORMAT(IFNULL(#{date}, NOW()), '%y-%m-%d')
+        WHERE   A.MEMBER_STATUS = 'FULL_TIME'
+    </select>
+
+    <select id="findTaskDateList" parameterType="Map" resultType="Map">
+        SELECT  DATE_FORMAT(A.TASK_DATE, '%d') AS TASK_DATE
+        FROM    DAILY_TASK A
+        WHERE   A.MEMBER_ID = #{id}
+        AND     A.TASK_DATE LIKE CONCAT('%', #{date}, '%')
+        GROUP BY A.TASK_DATE
     </select>
 
 </mapper>

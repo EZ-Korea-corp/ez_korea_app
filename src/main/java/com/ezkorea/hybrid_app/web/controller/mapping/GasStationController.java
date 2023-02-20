@@ -1,14 +1,19 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
+import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.etc.AttachService;
 import com.ezkorea.hybrid_app.service.sales.GasStationService;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -53,9 +58,26 @@ public class GasStationController {
     }
 
     @GetMapping("/inOutDetail")
-    public String showSaleInHistoryPage(@RequestParam(value="id") Long id) {
+    public String showSaleInHistoryPage(@RequestParam(value="id") Long id,
+                                        @AuthenticationPrincipal SecurityUser securityUser,
+                                        Model model) {
+
+        List<Map<String, Object>> list = saleService.findInProductList(securityUser.getMember(), id);
+        model.addAttribute("list", list);
+
         return "gasStation/gasStation-inoutDetail";
     }
+
+    @GetMapping("/inOutMemberDetail")
+    public String showSaleInOutHistoryPage(@RequestParam(value="id") Long id,
+                                        Model model) {
+
+        List<Map<String, Object>> list = saleService.findInOutProductList(id);
+        model.addAttribute("list", list);
+
+        return "gasStation/gasStation-inoutDetail";
+    }
+
 
     @GetMapping("/out")
     public String showSaleOutHistoryPage() {

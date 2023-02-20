@@ -20,6 +20,10 @@
         #check div a{
             color: #FFFFFF;
         }
+        .rightBt{
+            width: 10em;
+            float: right;
+        }
     </style>
     <div class="lg:space-x-12">
 
@@ -27,8 +31,13 @@
 
             <div class="p-10 pt-4 divide-y divide-gray-100">
 
-                <div class="md:py-8 py-3">
+                <div class="md:py-8 py-3 flex">
                     <h2 class="text-xl font-bold">입출고 기록</h2>
+                    <div class="flex-1" th:if="${list.size() > 0}">
+                        <select id="inList" class="rightBt border border-gray-300 text-sm rounded-lg block w-full p-2.5">
+                            <option th:each="inSale : ${list}" th:text="|${inSale.RN + 1}차(${inSale.CREATE_DATE})|" th:value="${inSale.RN}"></option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="md:py-8 py-3">
@@ -104,16 +113,27 @@
                     }
                 });
 
+                if($("#inList")) {
+                    if(status == "in") {
+                        $("#inList").show();
+                    } else {
+                        $("#inList").hide();
+                    }
+                }
+
                 fnFindInputProduct(status, id);
             });
 
-            fnFindInputProduct("in", id); //default 판매
+            // 입고 상세 조회
+            $("#inList").on("change", function() {
+                fnFindInputProduct("in", id, $(this).val());
+            }).change();
         });
 
         // 조회
-        function fnFindInputProduct(status, id) {
+        function fnFindInputProduct(status, id, rn) {
             const url = "/inout/hisoty";
-            const data = {"status" : status, "taskId" : id};
+            const data = {"status" : status, "taskId" : id, "rn" : rn};
 
             fnFindJsonAjax(data, url, fnFindInputProductResult);
         }

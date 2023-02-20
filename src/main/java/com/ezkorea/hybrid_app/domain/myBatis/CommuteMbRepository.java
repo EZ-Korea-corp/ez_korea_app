@@ -10,4 +10,6 @@ import java.util.Map;
 public interface CommuteMbRepository {
 
     List<Map<String, String>> findCommuteTime(String date);
+
+    List<Map<String, String>> findTaskDateList(Map map);
 }

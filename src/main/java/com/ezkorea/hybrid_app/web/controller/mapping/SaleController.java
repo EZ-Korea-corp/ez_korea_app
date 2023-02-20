@@ -1,6 +1,8 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
+import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
+import com.ezkorea.hybrid_app.domain.sale.SaleStatus;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
@@ -15,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +36,12 @@ public class SaleController {
                                 Model model) {
 
         Member memeber = memberService.findMemberById(securityUser.getMember().getId());
+        List<DailyTask> DailyList = memeber.getTaskList()
+                                           .stream()
+                                           .filter(p -> p.getTaskDate().equals(LocalDate.now()))
+                                           .toList();
 
-        if (memeber.getTaskList().size() == 0) return "redirect:/sales/select";
+        if (DailyList.size() == 0) return "redirect:/sales/select";
 
         List<GasStation> stations = new ArrayList<>();
         memeber.getTaskList().forEach(item ->
@@ -67,8 +74,15 @@ public class SaleController {
     }
 
     @GetMapping("/sales/input/{id}")
-    public String showInputPage(@PathVariable Long id, Model model) {
+    public String showInputPage(@PathVariable Long id,
+                                @AuthenticationPrincipal SecurityUser securityUser,
+                                Model model) {
+
+        List<Map<String, Object>> list = saleService.findInProductList(securityUser.getMember(), id);
+        int maxRn = (list.size() > 0) ? (int)list.get(list.size() - 1).get("RN") : 0;
         model.addAttribute("stationId", id);
+        model.addAttribute("list", list);
+        model.addAttribute("maxRn", maxRn);
         return "sales/in-detail";
     }
 
