@@ -30,7 +30,7 @@
 
             <div class="lg:w-full card">
 
-                <div class="p-10 pt-4 divide-y divide-gray-100">
+                <div class="p-10 pt-4">
                     <input type="hidden" id="stationId" th:value="${stationId}">
                     <input type="hidden" id="maxRn" th:value="${maxRn}">
                     <div class="md:py-8 py-3 flex">
@@ -42,6 +42,8 @@
                         </div>
                         <button th:if="${list.size() > 0}" type="button" th:onclick="saveAddInput()" class="rightBt flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 추가 </button>
                     </div>
+
+                    <hr class="my-4">
 
                     <div class="md:py-8 py-3">
                         <form onsubmit="return false" id="dataForm">

@@ -18,16 +18,16 @@
             color: #FFFFFF;
         }
     </style>
-    <div>
-        <div class="flex" id="check">
-            <div name="day" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                <a class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 일간 </a>
+    <div style="background-color: #FFFFFF">
+        <div class="grid grid-cols-3 gap-8 p-4" id="check">
+            <div name="day" class="text-sm font-medium">
+                <a class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg"> 일간 </a>
             </div>
-            <div name="week" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 주간 </a>
+            <div name="week" class="text-sm font-medium">
+                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg"> 주간 </a>
             </div>
-            <div name="month" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 월간 </a>
+            <div name="month" class="text-sm font-medium">
+                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg"> 월간 </a>
             </div>
         </div>
         <div id="chartdiv"></div>
@@ -94,6 +94,10 @@
             labelBullet.label.truncate = false;
             labelBullet.label.hideOversized = false;
             labelBullet.locationX = 1;
+
+            series.columns.template.adapter.add("fill", function(fill, target){
+                return chart.colors.getIndex(target.dataItem.index);
+            });
         }
     </script>
 </main>
