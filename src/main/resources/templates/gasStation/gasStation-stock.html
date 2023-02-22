@@ -19,17 +19,27 @@
 
         <div class="lg:w-full card">
 
-            <div class="p-10 pt-4 divide-y divide-gray-100">
+            <div class="p-8">
 
-                <div style="position:relative;" class="md:py-8 py-3 flex">
-                    <div style="position:absolute; top:0; left:0;">
+                <div>
+                    <div>
                         <h2 class="text-xl font-bold">재고기록</h2>
-                    </div>
-                    <div style="position:absolute; top:0; right:0;">
-                        <input type="text" id="datepicker" name="datepicker"  style="width:9em" readonly>
                     </div>
                 </div>
 
+                <hr class="my-4">
+
+                <div class="flex items-center space-x-3">
+                    <div class="p-1.5 rounded-full text-2xl">📅</div>
+                    <div class="flex-1">
+                        <div class="mb-2">
+                            <span class="text-lg font-semibold"> 날짜 선택 </span>
+                        </div>
+                        <input type="text" id="datepicker" name="datepicker" readonly>
+                    </div>
+                </div>
+
+                <hr class="my-4">
 
                 <div class="md:py-8 py-3">
                     <div class="relative overflow-x-auto shadow-md">
