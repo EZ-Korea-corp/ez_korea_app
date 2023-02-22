@@ -29,27 +29,32 @@
 
         <div class="lg:w-full card">
 
-            <div class="p-10 pt-4 divide-y divide-gray-100">
+            <div class="p-8">
 
-                <div class="md:py-8 py-3 flex">
+                <div class="py-3">
                     <h2 class="text-xl font-bold">입출고 기록</h2>
-                    <div class="flex-1" th:if="${list.size() > 0}">
+                </div>
+
+                <div>
+                    <div th:if="${list.size() > 0}">
                         <select id="inList" class="rightBt border border-gray-300 text-sm rounded-lg block w-full p-2.5">
                             <option th:each="inSale : ${list}" th:text="|${inSale.RN + 1}차(${inSale.CREATE_DATE})|" th:value="${inSale.RN}"></option>
                         </select>
                     </div>
                 </div>
 
-                <div class="md:py-8 py-3">
-                    <div class="md:flex" id="check">
-                        <div name="in" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                            <a class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 입고 </a>
+                <hr class="my-4">
+
+                <div>
+                    <div class="grid grid-cols-3 gap-4 mb-4" id="check">
+                        <div name="in" class="text-sm font-medium">
+                            <a class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 입고 </a>
                         </div>
-                        <div name="out" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                            <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매 </a>
+                        <div name="out" class="text-sm font-medium">
+                            <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
                         </div>
-                        <div name="fix" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                            <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 고장 </a>
+                        <div name="fix" class="text-sm font-medium">
+                            <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 고장 </a>
                         </div>
                     </div>
 

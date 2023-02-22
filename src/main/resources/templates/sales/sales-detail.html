@@ -34,29 +34,29 @@
                         <div class="md:flex">
                             <div class="md:w-2/3 space-y-4 -mt-2">
                                 <div class="flex items-center space-x-3">
-                                    <div class="p-1.5 rounded-full text-xl">⛽️</div>
+                                    <div class="p-1.5 rounded-full text-2xl">⛽️</div>
                                     <div class="flex-1">
                                         <div>
-                                            <span class="text-2xl font-semibold" th:text="${dailyTask['stationNm']}"> 주유소 이름 </span>
+                                            <span class="text-xl font-semibold" th:text="${dailyTask['stationNm']}"> 주유소 이름 </span>
                                         </div>
                                         <p th:text="${dailyTask['location']}"></p>
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">
-                                    <div class="p-1.5 rounded-full text-xl">🔢</div>
+                                    <div class="p-1.5 rounded-full text-2xl">🔢</div>
                                     <div class="flex-1">
                                         <div>
-                                            <span class="text-2xl font-semibold" th:text="${dailyTask['count']}"> 23 </span> 개
-                                            (<span class="text-2xl font-semibold" th:text="${dailyTask['count']}  / 2"> 23 </span> 쌍)
+                                            <span class="text-xl font-semibold" th:text="${dailyTask['count']}"> 23 </span> 개
+                                            (<span class="font-semibold" th:text="${dailyTask['count']}  / 2"> 23 </span> 쌍)
                                         </div>
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">
-                                    <div class="p-1.5 rounded-full text-xl">💵</div>
+                                    <div class="p-1.5 rounded-full text-2xl">💵</div>
                                     <div class="flex-1">
-                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask['cardList'].size()} eq 0 ? '카드 : ' + 0 : '카드 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['cardList'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
-                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask['cashList'].size()} eq 0 ? '현금 : ' + 0 : '현금 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['cashList'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
-                                        <div><span class="text-2xl font-semibold" th:text="${dailyTask['list'].size()} eq 0 ? '총계 : ' + 0 : '총계 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['list'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
+                                        <div><span class="text-lg font-semibold" th:text="${dailyTask['cardList'].size()} eq 0 ? '카드 : ' + 0 : '카드 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['cardList'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
+                                        <div><span class="text-lg font-semibold" th:text="${dailyTask['cashList'].size()} eq 0 ? '현금 : ' + 0 : '현금 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['cashList'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
+                                        <div><span class="text-lg font-semibold" th:text="${dailyTask['list'].size()} eq 0 ? '총계 : ' + 0 : '총계 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['list'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
                                     </div>
                                 </div>
                             </div>
@@ -73,25 +73,40 @@
                         <h1 class="block text-lg font-bold mb-6"> 판매 상세 테이블 </h1>
                         <div class="space-y-3">
                             <table class="table-auto overflow-scroll w-full">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>판매 시각</th>
-                                        <th>결제 수단</th>
-                                        <th>종류</th>
-                                        <th>사이즈</th>
-                                        <th>상태</th>
-                                    </tr>
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        no
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        판매 시각
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        결제 수단
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        종류
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        사이즈
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        상태
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        상태
+                                    </th>
+                                </tr>
                                 </thead>
-                                <tbody>
-                                    <tr th:each="product, sort : ${dailyTask['list']}">
-                                        <td th:text="${sort.count}"></td>
-                                        <td th:text="${#temporals.format(product.getCreateDate(), 'HH시 mm분')}">14시 20분</td>
-                                        <td th:text="${product.getPayment()}">카드</td>
-                                        <td th:text="${product.getWiper().getWiperViewName()}">일반</td>
-                                        <td th:text="${product.getWiper().getWiperSize()}">350</td>
-                                        <td th:text="${product.getStatus() == 'out' ? '판매' : '고장'}">350</td>
-                                        <td><button type="button" th:onclick="fnDeleteSale(this.getAttribute('sort'), this.getAttribute('id'))" th:sort="${sort.count}" th:id="${product.getId()}" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 삭제 </button></td>
+                                <tbody class="uk-text-center">
+                                    <tr scope="row" class="mb-4 uk-text-center font-medium whitespace-nowrap" th:each="product, sort : ${dailyTask['list']}">
+                                        <td class="py-4 whitespace-nowrap" th:text="${sort.count}"></td>
+                                        <td class="py-4 whitespace-nowrap" th:text="${#temporals.format(product.getCreateDate(), 'HH시 mm분')}">14시 20분</td>
+                                        <td class="py-4 whitespace-nowrap" th:text="${product.getPayment()}">카드</td>
+                                        <td class="py-4 whitespace-nowrap" th:text="${product.getWiper().getWiperViewName()}">일반</td>
+                                        <td class="py-4 whitespace-nowrap" th:text="${product.getWiper().getWiperSize()}">350</td>
+                                        <td class="py-4 whitespace-nowrap" th:text="${product.getStatus() == 'out' ? '판매' : '고장'}">350</td>
+                                        <td><button type="button" th:onclick="fnDeleteSale(this.getAttribute('sort'), this.getAttribute('id'))" th:sort="${sort.count}" th:id="${product.getId()}" class="bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button></td>
                                     </tr>
                                 </tbody>
                             </table>
