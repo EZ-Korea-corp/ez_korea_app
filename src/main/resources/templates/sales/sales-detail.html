@@ -34,7 +34,7 @@
                         <div class="md:flex">
                             <div class="md:w-2/3 space-y-4 -mt-2">
                                 <div class="flex items-center space-x-3">
-                                    <div class="p-1.5 rounded-full text-xl">⛽️</div>
+                                    <div class="p-1.5 rounded-full text-2xl">⛽️</div>
                                     <div class="flex-1">
                                         <div>
                                             <span class="text-xl font-semibold" th:text="${dailyTask['stationNm']}"> 주유소 이름 </span>
@@ -43,7 +43,7 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">
-                                    <div class="p-1.5 rounded-full text-xl">🔢</div>
+                                    <div class="p-1.5 rounded-full text-2xl">🔢</div>
                                     <div class="flex-1">
                                         <div>
                                             <span class="text-xl font-semibold" th:text="${dailyTask['count']}"> 23 </span> 개
@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-3">
-                                    <div class="p-1.5 rounded-full text-xl">💵</div>
+                                    <div class="p-1.5 rounded-full text-2xl">💵</div>
                                     <div class="flex-1">
                                         <div><span class="text-lg font-semibold" th:text="${dailyTask['cardList'].size()} eq 0 ? '카드 : ' + 0 : '카드 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['cardList'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
                                         <div><span class="text-lg font-semibold" th:text="${dailyTask['cashList'].size()} eq 0 ? '현금 : ' + 0 : '현금 : ' + ${#numbers.formatInteger(#aggregates.sum(dailyTask['cashList'].![getWiper().wiperPrice]), 3, 'COMMA')} ">100,500</span> 원</div>
@@ -99,14 +99,14 @@
                                 </tr>
                                 </thead>
                                 <tbody class="uk-text-center">
-                                    <tr scope="row" class="px-2 py-4 font-medium whitespace-nowrap" th:each="product, sort : ${dailyTask['list']}">
-                                        <td th:text="${sort.count}"></td>
-                                        <td th:text="${#temporals.format(product.getCreateDate(), 'HH시 mm분')}">14시 20분</td>
-                                        <td th:text="${product.getPayment()}">카드</td>
-                                        <td th:text="${product.getWiper().getWiperViewName()}">일반</td>
-                                        <td th:text="${product.getWiper().getWiperSize()}">350</td>
-                                        <td th:text="${product.getStatus() == 'out' ? '판매' : '고장'}">350</td>
-                                        <td><button type="button" th:onclick="fnDeleteSale(this.getAttribute('sort'), this.getAttribute('id'))" th:sort="${sort.count}" th:id="${product.getId()}" class="flex items-center bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button></td>
+                                    <tr scope="row" class="mb-4 uk-text-center font-medium whitespace-nowrap" th:each="product, sort : ${dailyTask['list']}">
+                                        <td class="py-4 whitespace-nowrap" th:text="${sort.count}"></td>
+                                        <td class="py-4 whitespace-nowrap" th:text="${#temporals.format(product.getCreateDate(), 'HH시 mm분')}">14시 20분</td>
+                                        <td class="py-4 whitespace-nowrap" th:text="${product.getPayment()}">카드</td>
+                                        <td class="py-4 whitespace-nowrap" th:text="${product.getWiper().getWiperViewName()}">일반</td>
+                                        <td class="py-4 whitespace-nowrap" th:text="${product.getWiper().getWiperSize()}">350</td>
+                                        <td class="py-4 whitespace-nowrap" th:text="${product.getStatus() == 'out' ? '판매' : '고장'}">350</td>
+                                        <td><button type="button" th:onclick="fnDeleteSale(this.getAttribute('sort'), this.getAttribute('id'))" th:sort="${sort.count}" th:id="${product.getId()}" class="bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button></td>
                                     </tr>
                                 </tbody>
                             </table>
