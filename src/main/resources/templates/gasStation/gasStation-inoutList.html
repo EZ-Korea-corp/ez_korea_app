@@ -46,24 +46,24 @@
             <form id="selectForm" onsubmit="return false;">
                 <div class="lg:w-full card">
 
-                    <div class="p-10 pt-4 divide-y divide-gray-100">
+                    <div class="p-10 pt-4 divide-gray-100">
 
-                        <div style="position:relative;" class="md:py-8 py-3 flex">
-                            <div style="position:absolute; top:0; left:0;">
-                                <h2 class="text-xl font-bold">입출고 개별 조회</h2>
-                            </div>
-                            <div style="position:absolute; top:0; right:0;">
-                                <input type="text" id="datepicker" name="datepicker"  style="width:9em" readonly>
-                            </div>
+                        <div>
+                            <h2 class="text-xl font-bold mt-2">입출고 개별 조회</h2>
                         </div>
 
-                        <div class="md:py-8 py-3">
+                        <hr class="my-4">
+
+                        <div class="py-3">
                             <h1 class="block text-lg font-bold mb-4"> 근무자 선택 </h1>
-                            <div class="md:flex">
-                                <div class="md:w-2/3 space-y-4 -mt-2">
+                            <div class="w-full">
+                                <div>
                                     <div id="select-div" class="items-center space-x-3">
                                         <div class="flex-1">
-                                            <input type="text" class="live-search-box" placeholder="근무자 이름을 입력해주세요."/>
+                                            <div class="grid grid-cols-3 gap-4 w-full">
+                                                <input type="text" class="live-search-box col-span-2" placeholder="근무자 이름을 입력해주세요."/>
+                                                <input type="text" id="datepicker" name="datepicker" class="w-full" readonly>
+                                            </div>
 
                                             <th:block th:if="${inoutList != null}">
                                                 <ul id="search-result" class="live-search-list">
