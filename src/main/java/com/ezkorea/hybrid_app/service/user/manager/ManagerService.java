@@ -59,13 +59,18 @@ public class ManagerService {
     }
 
     @Transactional
+    public void updateMemberSubAuth(String username, String memberPostAuth, String memberInputAuth) {
+        Member currentMember = mService.findByUsername(username);
+
+        boolean postAuth = memberPostAuth != null;
+        boolean inputAuth = memberInputAuth != null;
+
+        mService.updateMemberSubAuth(currentMember, postAuth, inputAuth);
+    }
+
+    @Transactional
     public void updateMemberRole(String username, Role role, MemberStatus status) {
         Member currentMember = mService.findByUsername(username);
-        /*switch (status) {
-            case AWAY -> {
-
-            }
-        }*/
         mService.updateMemberRole(currentMember, role, status);
     }
 

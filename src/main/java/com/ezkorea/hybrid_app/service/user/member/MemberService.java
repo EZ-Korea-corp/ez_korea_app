@@ -233,4 +233,9 @@ public class MemberService {
     public void updateMemberStatus(Member currentMember, MemberStatus status) {
         currentMember.setMemberStatus(status);
     }
+
+    @Transactional
+    public void updateMemberSubAuth(Member currentMember, boolean postAuth, boolean inputAuth) {
+        currentMember.setAuthInfo(postAuth, inputAuth);
+    }
 }

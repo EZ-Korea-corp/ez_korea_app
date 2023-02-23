@@ -78,6 +78,12 @@
                                         <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
                                             상태
                                         </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                            글쓰기 권한
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                            입고 권한
+                                        </th>
                                         <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                             변경
                                         </th>
@@ -113,6 +119,12 @@
                                                             th:text="${status.viewName}">
                                                     </option>
                                                 </select>
+                                            </td>
+                                            <td class="px-2 py-4 whitespace-nowrap">
+                                                <input type="checkbox" th:checked="${user.isPostAuth()}" name="memberPostAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border"/>
+                                            </td>
+                                            <td class="px-2 py-4 whitespace-nowrap">
+                                                <input type="checkbox" th:checked="${user.isInputAuth()}" name="memberInputAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border"/>
                                             </td>
                                             <td class="px-2 py-4 whitespace-nowrap">
                                                 <button type="button" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border font-semibold"> 변경하기 </button>

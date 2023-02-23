@@ -70,7 +70,18 @@ public class ManagerRestController {
         String username = (String) datum.get("username");
         String memberRole = (String) datum.get("memberRole");
         String memberStatus = (String) datum.get("memberStatus");
+
+        // 글쓰기 권한
+        String memberPostAuth = (String) datum.get("memberPostAuth");
+        log.info("memberPostAuth={}", memberPostAuth);
+
+        // 입고 권한
+        String memberInputAuth = (String) datum.get("memberInputAuth");
+        log.info("memberInAuth={}", memberInputAuth);
+
+        managerService.updateMemberSubAuth(username, memberPostAuth, memberInputAuth);
         managerService.updateMemberRole(username, Role.valueOf(memberRole), MemberStatus.valueOf(memberStatus));
+
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 

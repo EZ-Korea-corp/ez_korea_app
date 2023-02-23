@@ -56,6 +56,15 @@ public class Member extends BaseEntity {
     @Setter
     private boolean isRoleChanged;
 
+    private boolean postAuth;
+
+    private boolean inputAuth;
+
+    public void setAuthInfo(boolean postAuth, boolean inputAuth) {
+        this.postAuth = postAuth;
+        this.inputAuth = inputAuth;
+    }
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<CommuteTime> commuteTimeList = new ArrayList<>();
 
