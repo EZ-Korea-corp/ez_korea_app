@@ -56,6 +56,10 @@ public class Member extends BaseEntity {
     @Setter
     private boolean isRoleChanged;
 
+    @Setter
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private SubAuth subAuth;
+
     private boolean postAuth;
 
     private boolean inputAuth;

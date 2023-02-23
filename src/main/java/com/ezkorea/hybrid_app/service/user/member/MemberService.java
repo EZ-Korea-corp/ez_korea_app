@@ -37,6 +37,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final CommuteTimeRepository ctRepository;
+    private final SubAuthRepository saRepository;
 
     private final CommuteService commuteService;
 
@@ -45,12 +46,22 @@ public class MemberService {
      * 회원가입을 하기 위한 메소드
      * @param dto sign-up.html에서 받아온 정보
      */
-    public Member saveNewMember(SignUpDto dto) {
+    @Transactional
+    public void saveNewMember(SignUpDto dto) {
         dto.setPassword(passwordEncode(dto.getPassword()));
-        if (dto.getUsername().equals("master")) {
+        boolean postAuth = false;
+        boolean inputAuth = false;
+        if (dto.getUsername().equals("master") || dto.getUsername().equals("dev")) {
             dto.setMemberStatus(MemberStatus.FULL_TIME);
+            postAuth = true;
+            inputAuth = true;
         }
-        return memberRepository.save(mapper.map(dto, Member.class));
+        Member savedMember = memberRepository.save(mapper.map(dto, Member.class));
+        savedMember.setSubAuth(SubAuth.builder()
+                .member(savedMember)
+                .postAuth(postAuth)
+                .inputAuth(inputAuth)
+                .build());
     }
 
     /**
@@ -236,6 +247,10 @@ public class MemberService {
 
     @Transactional
     public void updateMemberSubAuth(Member currentMember, boolean postAuth, boolean inputAuth) {
-        currentMember.setAuthInfo(postAuth, inputAuth);
+
+        SubAuth subAuth = saRepository.findByMember(currentMember);
+        subAuth.setInputAuth(inputAuth);
+        subAuth.setPostAuth(postAuth);
+
     }
 }

@@ -121,10 +121,10 @@
                                                 </select>
                                             </td>
                                             <td class="px-2 py-4 whitespace-nowrap">
-                                                <input type="checkbox" th:checked="${user.isPostAuth()}" name="memberPostAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border"/>
+                                                <input type="checkbox" th:checked="${user.getSubAuth().isPostAuth()}" name="memberPostAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border"/>
                                             </td>
                                             <td class="px-2 py-4 whitespace-nowrap">
-                                                <input type="checkbox" th:checked="${user.isInputAuth()}" name="memberInputAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border"/>
+                                                <input type="checkbox" th:checked="${user.getSubAuth().isInputAuth()}" name="memberInputAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border"/>
                                             </td>
                                             <td class="px-2 py-4 whitespace-nowrap">
                                                 <button type="button" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border font-semibold"> 변경하기 </button>
