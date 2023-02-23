@@ -132,16 +132,20 @@ public class ManagerService {
     @Transactional
     public void updateTeam(Long teamId, String divisionName, String teamName, String teamLeader, String teamEmployee) {
         Team currentTeam = tService.findById(teamId);
+        Division currentDivision = dService.findDivisionByDivisionName(divisionName);
         Member currentTeamLeader = mService.findByUsername(teamLeader);
 
-        currentTeamLeader.setDivision(currentTeam.getDivision());
+        // 리더 설정
+        currentTeamLeader.setDivision(currentDivision);
         currentTeamLeader.setTeam(currentTeam);
 
+        // 기존 소속 팀원 설정
         for (Member member : currentTeam.getMemberList()) {
             member.setDivision(null);
             member.setTeam(null);
         }
 
+        // 변경된 소속 팀원 설정
         List<Member> memberList = new ArrayList<>();
         for (String employeeUsername : teamEmployee.split(",")) {
             Member currentMember = mService.findByUsername(employeeUsername);
@@ -150,8 +154,9 @@ public class ManagerService {
             currentMember.setTeam(currentTeam);
         }
 
-        currentTeam.setDivision(dService.findDivisionByDivisionName(divisionName));
+        // 팀 정보 변경
         currentTeam.setTeamName(teamName);
+        currentTeam.setDivision(currentDivision);
         currentTeam.setLeader(currentTeamLeader);
         currentTeam.setMemberList(memberList);
 
