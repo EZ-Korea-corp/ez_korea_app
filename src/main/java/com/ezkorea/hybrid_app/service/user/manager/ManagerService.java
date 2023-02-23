@@ -50,6 +50,18 @@ public class ManagerService {
         return mService.findByRoleAndTeamIsNull(role);
     }
 
+    public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team) {
+        return mService.findAllByRoleAndTeamIsNullOrTeam(role, team);
+    }
+
+    public Team findTeamById(Long id) {
+        return tService.findById(id);
+    }
+
+    public List<Member> findAllMemberByRoleAndStatusOrTeam(Role role, MemberStatus status, Team team) {
+        return mService.findByRoleAndStatusAndTeam(role, status, team);
+    }
+
     public List<Member> findAllMemberByRoleAndStatus(Role role, MemberStatus status) {
         return mService.findByRoleAndStatus(role, status);
     }
@@ -115,6 +127,34 @@ public class ManagerService {
                 .leader(mService.findByUsername(teamLeader))
                 .memberList(memberList)
                 .build());
+    }
+
+    @Transactional
+    public void updateTeam(Long teamId, String divisionName, String teamName, String teamLeader, String teamEmployee) {
+        Team currentTeam = tService.findById(teamId);
+        Member currentTeamLeader = mService.findByUsername(teamLeader);
+
+        currentTeamLeader.setDivision(currentTeam.getDivision());
+        currentTeamLeader.setTeam(currentTeam);
+
+        for (Member member : currentTeam.getMemberList()) {
+            member.setDivision(null);
+            member.setTeam(null);
+        }
+
+        List<Member> memberList = new ArrayList<>();
+        for (String employeeUsername : teamEmployee.split(",")) {
+            Member currentMember = mService.findByUsername(employeeUsername);
+            memberList.add(currentMember);
+            currentMember.setDivision(currentTeam.getDivision());
+            currentMember.setTeam(currentTeam);
+        }
+
+        currentTeam.setDivision(dService.findDivisionByDivisionName(divisionName));
+        currentTeam.setTeamName(teamName);
+        currentTeam.setLeader(currentTeamLeader);
+        currentTeam.setMemberList(memberList);
+
     }
 
     public Division findDivisionById(Long id) {

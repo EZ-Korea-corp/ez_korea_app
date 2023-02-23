@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
+import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
@@ -73,9 +74,12 @@ public class ManagerController {
 
     @GetMapping("/team/update/{id}")
     public String showUpdateTeamPage(Model model, @PathVariable Long id) {
+        Team currentTeam = managerService.findTeamById(id);
+        model.addAttribute("currentTeam", currentTeam);
+        model.addAttribute("employeeList", managerService.findAllMemberByRoleAndStatusOrTeam(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME, currentTeam));
+        // 현재 팀의 리더인 사람 + 리더지만 팀이 없는 사람만 조회
+        model.addAttribute("leaderList", managerService.findAllByRoleAndTeamIsNullOrTeam(Role.ROLE_LEADER, currentTeam));
         model.addAttribute("divisionList", managerService.findAllDivision());
-        model.addAttribute("leaderList", managerService.findAllMemberByRoleAndTeamIsNull(Role.ROLE_LEADER));
-        model.addAttribute("employeeList", managerService.findAllMemberByRoleAndStatusAndTeamIsNull(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME));
         return "manager/group/manage-team-update";
     }
 

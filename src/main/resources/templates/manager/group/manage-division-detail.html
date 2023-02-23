@@ -59,7 +59,7 @@
                                         <td class="px-2 py-4 whitespace-nowrap" th:text="|${team.getLeader().getName()} (팀장)|"></td>
                                         <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getPhone()}"></td>
                                         <td class="px-2 py-4 whitespace-nowrap">
-                                            <a th:href="@{/manager/division/update/{id}(id=${division.getId()})}" class="button w-full">팀 수정</a>
+                                            <a th:href="@{/manager/team/update/{id}(id=${team.getId()})}" class="button w-full">팀 수정</a>
                                         </td>
                                     </tr>
                                     <tr class="bg-white border-b" th:each="employee, status : ${team.getMemberList()}">

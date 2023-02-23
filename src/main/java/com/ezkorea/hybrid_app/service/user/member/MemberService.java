@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.*;
+import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
 import com.ezkorea.hybrid_app.web.dto.ProfileDto;
@@ -190,8 +191,16 @@ public class MemberService {
         return memberRepository.findAllByRoleAndTeamIsNull(role);
     }
 
+    public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team) {
+        return memberRepository.findAllByRoleAndTeamIsNullOrTeam(role, team);
+    }
+
     public List<Member> findByRoleAndStatus(Role role, MemberStatus status) {
         return memberRepository.findAllByRoleAndMemberStatus(role, status);
+    }
+
+    public List<Member> findByRoleAndStatusAndTeam(Role role, MemberStatus status, Team team) {
+        return memberRepository.findAllByRoleAndMemberStatusOrTeam(role, status, team);
     }
 
     public List<Member> findByRoleAndStatusAndTeamIsNull(Role role, MemberStatus status) {
