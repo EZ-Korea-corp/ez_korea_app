@@ -59,6 +59,16 @@ public class ManagerRestController {
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 
+    @PutMapping("/division/{id}")
+    public ResponseEntity<Object> updateDivision(@RequestBody Map<String, Object> datum, @PathVariable Long id) {
+
+        String teamName = (String) datum.get("teamName");
+        String teamGm = (String) datum.get("teamGM");
+        managerService.updateDivision(id, teamName, teamGm);
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+    }
+
     @PutMapping("/team")
     public ResponseEntity<Object> modifyTeam(@RequestBody Map<String, Object> datum) {
 

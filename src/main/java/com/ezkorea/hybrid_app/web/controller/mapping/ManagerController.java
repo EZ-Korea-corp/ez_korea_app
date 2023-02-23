@@ -50,6 +50,13 @@ public class ManagerController {
         return "manager/group/manage-division-detail";
     }
 
+    @GetMapping("/division/update/{id}")
+    public String showDivisionUpdatePage(Model model, @PathVariable Long id) {
+        model.addAttribute("gmList", managerService.findAllMemberByRole(Role.ROLE_GM));
+        model.addAttribute("division", managerService.findDivisionById(id));
+        return "manager/group/manage-division-update";
+    }
+
     @GetMapping("/division/create")
     public String showCreateDivisionPage(Model model) {
         model.addAttribute("gmList", managerService.findAllMemberByRoleAndDivisionIsNull(Role.ROLE_GM));
@@ -62,6 +69,14 @@ public class ManagerController {
         model.addAttribute("leaderList", managerService.findAllMemberByRoleAndTeamIsNull(Role.ROLE_LEADER));
         model.addAttribute("employeeList", managerService.findAllMemberByRoleAndStatusAndTeamIsNull(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME));
         return "manager/group/manage-team-create";
+    }
+
+    @GetMapping("/team/update/{id}")
+    public String showUpdateTeamPage(Model model, @PathVariable Long id) {
+        model.addAttribute("divisionList", managerService.findAllDivision());
+        model.addAttribute("leaderList", managerService.findAllMemberByRoleAndTeamIsNull(Role.ROLE_LEADER));
+        model.addAttribute("employeeList", managerService.findAllMemberByRoleAndStatusAndTeamIsNull(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME));
+        return "manager/group/manage-team-update";
     }
 
     @GetMapping("/member")

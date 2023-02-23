@@ -3,11 +3,7 @@ package com.ezkorea.hybrid_app.domain.user.division;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Entity;
@@ -23,9 +19,11 @@ import java.util.List;
 @ToString(callSuper = true)
 public class Division extends BaseEntity {
 
+    @Setter
     private String divisionName;
 
     @OneToOne
+    @Setter
     private Member leader;
 
     @OneToMany(mappedBy = "division")
