@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            #editor {
+                background-color: white;
+            }
+        </style>
+        <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+        <div id="bg" class="lg:space-x-12">
+            <form id="createTeamForm" onsubmit="return false;">
+                <div class="">
+
+                    <!-- form header -->
+                    <div class="text-center border-b border-gray-100 py-6">
+                        <h3 class="font-bold text-xl"> 공지 글 작성 </h3>
+                    </div>
+
+                    <!-- form body -->
+                    <div class="p-10 space-y-7">
+                        <div>
+                            <label for="title" class="font-semibold text-base"> 제목 </label>
+                            <input id="title" class="with-border" name="title" type="text" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold text-base"> 내용 </label>
+
+                        </div>
+
+                        <div id="editor"></div>
+
+                    </div>
+
+                    <!-- form footer -->
+                    <div class="grid grid-cols-2 gap-4 m-4 p-4">
+                        <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
+                        <button id="submit" type="button" class="button w-full">생성하기</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+        <script>
+
+            const Editor = toastui.Editor;
+
+            const editor = new Editor({
+                el: document.querySelector('#editor'),
+                height: '600px',
+                initialEditType: 'markdown',
+                previewStyle: 'vertical'
+            });
+
+            $("#submit").on("click", function (){
+                let title = $('#title').val();
+                let content = editor.getHTML();
+                const data = {
+                    title : title,
+                    content : content
+                }
+
+                console.log(data);
+                if (title.length !== 0) {
+                    fnResponseCrudJsonAjax(data, '/notice', 'POST', successHref);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '제목을 입력해주세요.',
+                    });
+                }
+            });
+
+            function successHref(data, xhr) {
+                $(location).attr("href", "/notice/".concat(xhr.id));
+            }
+        </script>
+    </main>
+
+</body>
+
+</html>

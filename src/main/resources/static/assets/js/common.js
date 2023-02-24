@@ -95,7 +95,7 @@ function fnResponseCrudJsonAjax(data, url, method, fnCallBack) {
                 icon: 'success',
                 text: xhr.message,
             }).then(() => {
-                if(fnCallBack) fnCallBack(data);
+                if(fnCallBack) fnCallBack(data, xhr);
             })
         },
         error: function(xhr, status, error) {

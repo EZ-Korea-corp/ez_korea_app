@@ -22,6 +22,7 @@ public class SecurityUser extends User implements UserDetails {
     private final MemberStatus memberStatus;
     private final boolean isRoleChanged;
     private final LocalDateTime createDate;
+    private final SubAuth subAuth;
 
     public SecurityUser(Member member, List<GrantedAuthority> authorities) {
         super(member.getUsername(), member.getPassword(), authorities);
@@ -35,6 +36,7 @@ public class SecurityUser extends User implements UserDetails {
         this.memberStatus = member.getMemberStatus();
         this.isRoleChanged = member.isRoleChanged();
         this.createDate = member.getCreateDate();
+        this.subAuth = member.getSubAuth();
     }
 
     public Member getMember() {
@@ -49,6 +51,7 @@ public class SecurityUser extends User implements UserDetails {
                 .memberStatus(memberStatus)
                 .isRoleChanged(isRoleChanged)
                 .createDate(createDate)
+                .subAuth(subAuth)
                 .build();
     }
 
