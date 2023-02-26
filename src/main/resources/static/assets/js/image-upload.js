@@ -27,7 +27,8 @@ function checkFileCount(e) {
                     `<img src="${e.target.result}" data-file=${f.name} className="article-image" style="height: 150px"/>` +
                     '</div>'
                 );
-                fileNum ++;
+                fileNum++;
+                fileCount++;
             };
             reader.readAsDataURL(f);
         });
@@ -44,40 +45,42 @@ function fileDelete(fileNum){
 }
 
 function imageUpload(entity, id, url, type) {
-    const form = $("#s3Form")[0];
-    const formData = new FormData(form);
+    if (fileCount !== 0) {
+        const form = $("#s3Form")[0];
+        const formData = new FormData(form);
 
-    formData.append("entity", entity);
-    formData.append("id", id);
+        formData.append("entity", entity);
+        formData.append("id", id);
 
 
-    for (let x = 0; x < content_files.length; x++) {
-        // 삭제 안한것만 담아 준다.
-        if (!content_files[x].is_delete) {
-            formData.append("files", content_files[x]);
+        for (let x = 0; x < content_files.length; x++) {
+            // 삭제 안한것만 담아 준다.
+            if (!content_files[x].is_delete) {
+                formData.append("files", content_files[x]);
+            }
         }
+
+        /*
+        * 파일업로드 multiple ajax처리
+        */
+        $.ajax({
+            type: type,
+            enctype: "multipart/form-data",
+            url: url,
+            processData: false,
+            contentType: false,
+            data: formData,
+            beforeSend: function(jqXHR, settings) {
+                var header = $("meta[name='_csrf_header']").attr("content");
+                var token = $("meta[name='_csrf']").attr("content");
+                jqXHR.setRequestHeader(header, token);
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    text: '이미지 업로드에 실패했습니다.',
+                });
+            }
+        });
     }
-
-    /*
-    * 파일업로드 multiple ajax처리
-    */
-    $.ajax({
-        type: type,
-        enctype: "multipart/form-data",
-        url: url,
-        processData: false,
-        contentType: false,
-        data: formData,
-        beforeSend: function(jqXHR, settings) {
-            var header = $("meta[name='_csrf_header']").attr("content");
-            var token = $("meta[name='_csrf']").attr("content");
-            jqXHR.setRequestHeader(header, token);
-        },
-        error: function (xhr, status, error) {
-            Swal.fire({
-                icon: 'error',
-                text: '이미지 업로드에 실패했습니다.',
-            });
-        }
-    });
 }

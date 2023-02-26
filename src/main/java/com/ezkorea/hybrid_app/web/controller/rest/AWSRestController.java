@@ -1,8 +1,10 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
-import com.ezkorea.hybrid_app.service.AWSService;
+import com.ezkorea.hybrid_app.service.aws.AWSService;
+import com.ezkorea.hybrid_app.web.dto.S3ImageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,14 +21,20 @@ import java.util.Map;
 public class AWSRestController {
     private final AWSService awsService;
 
+    private final ModelMapper modelMapper;
+
     @PutMapping("/image/upload")
     public ResponseEntity<Object> upload(@RequestParam(value = "files", required = false) List<MultipartFile> multipartFile,
                                          @RequestParam Map<String, Object> params) {
 
-        log.info("multipartFile.toString()={}", multipartFile.toString());
-        log.info("params.toString()={}", params.toString());
+        log.info("multipartFileList.toString()={}", multipartFile.toString());
 
-//        List<String> imagePathList = awsService.saveImage(multipartFileList);
+        S3ImageDto dto = modelMapper.map(params, S3ImageDto.class);
+
+        log.info("dto.toString()={}", dto.toString());
+
+        awsService.findCurrentEntity(dto, multipartFile);
+        log.info("파일 저장");
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }

@@ -8,6 +8,8 @@ import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 @RequiredArgsConstructor
 public class NoticeService {
@@ -19,6 +21,7 @@ public class NoticeService {
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .writer(member)
+                .imageList(new ArrayList<>())
                 .build());
     }
 
