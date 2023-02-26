@@ -85,7 +85,7 @@
                 denyButtonText: `닫기`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    showLoadingSpinner();
+                    showLoadingSpinner(5000, "위치 정보를 저장하고 있습니다.");
                     setLocation();
                     setTimeout(function() {
                         $('#location').attr('value', locationStr);
@@ -96,27 +96,6 @@
                 }
             })
         });
-
-        function showLoadingSpinner() {
-            $('#body_div').hide();
-            let timerInterval
-            Swal.fire({
-                title: "요청을 처리하고 있습니다.",
-                html: '완료될 때까지 <b></b> ms 남았습니다.',
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: () => {
-                    Swal.showLoading()
-                    const b = Swal.getHtmlContainer().querySelector('b')
-                    timerInterval = setInterval(() => {
-                        b.textContent = Swal.getTimerLeft()
-                    }, 100)
-                },
-                willClose: () => {
-                    clearInterval(timerInterval)
-                }
-            })
-        }
 
         $("#onTimeBtn").on("click", function (){
             Swal.fire({
