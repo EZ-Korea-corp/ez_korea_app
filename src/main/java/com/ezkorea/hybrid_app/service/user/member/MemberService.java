@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.*;
+import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
 import com.ezkorea.hybrid_app.web.dto.ProfileDto;
@@ -37,6 +38,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final CommuteTimeRepository ctRepository;
+    private final SubAuthRepository saRepository;
 
     private final CommuteService commuteService;
 
@@ -45,12 +47,22 @@ public class MemberService {
      * 회원가입을 하기 위한 메소드
      * @param dto sign-up.html에서 받아온 정보
      */
-    public Member saveNewMember(SignUpDto dto) {
+    @Transactional
+    public void saveNewMember(SignUpDto dto) {
         dto.setPassword(passwordEncode(dto.getPassword()));
-        if (dto.getUsername().equals("master")) {
+        boolean postAuth = false;
+        boolean inputAuth = false;
+        if (dto.getUsername().equals("master") || dto.getUsername().equals("dev")) {
             dto.setMemberStatus(MemberStatus.FULL_TIME);
+            postAuth = true;
+            inputAuth = true;
         }
-        return memberRepository.save(mapper.map(dto, Member.class));
+        Member savedMember = memberRepository.save(mapper.map(dto, Member.class));
+        savedMember.setSubAuth(SubAuth.builder()
+                .member(savedMember)
+                .postAuth(postAuth)
+                .inputAuth(inputAuth)
+                .build());
     }
 
     /**
@@ -179,8 +191,16 @@ public class MemberService {
         return memberRepository.findAllByRoleAndTeamIsNull(role);
     }
 
+    public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team) {
+        return memberRepository.findAllByRoleAndTeamIsNullOrTeam(role, team);
+    }
+
     public List<Member> findByRoleAndStatus(Role role, MemberStatus status) {
         return memberRepository.findAllByRoleAndMemberStatus(role, status);
+    }
+
+    public List<Member> findByRoleAndStatusAndTeam(Role role, MemberStatus status, Team team) {
+        return memberRepository.findAllByRoleAndMemberStatusOrTeam(role, status, team);
     }
 
     public List<Member> findByRoleAndStatusAndTeamIsNull(Role role, MemberStatus status) {
@@ -232,5 +252,14 @@ public class MemberService {
     @Transactional
     public void updateMemberStatus(Member currentMember, MemberStatus status) {
         currentMember.setMemberStatus(status);
+    }
+
+    @Transactional
+    public void updateMemberSubAuth(Member currentMember, boolean postAuth, boolean inputAuth) {
+
+        SubAuth subAuth = saRepository.findByMember(currentMember);
+        subAuth.setInputAuth(inputAuth);
+        subAuth.setPostAuth(postAuth);
+
     }
 }

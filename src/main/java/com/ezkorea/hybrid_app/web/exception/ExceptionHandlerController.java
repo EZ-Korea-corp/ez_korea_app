@@ -47,6 +47,13 @@ public class ExceptionHandlerController {
         return Script.href("/", e.getMessage());
     }
 
+    @ExceptionHandler(value = TeamNotFoundException.class)
+    public @ResponseBody String teamNotFoundException(TeamNotFoundException e) {
+        log.error("TeamNotFoundException={}", e);
+
+        return Script.href("/", e.getMessage());
+    }
+
     @ExceptionHandler(value = JsonProcessingException.class)
     public @ResponseBody String locationNotFoundException(JsonProcessingException e) {
         log.error("JsonProcessingException={}", e);

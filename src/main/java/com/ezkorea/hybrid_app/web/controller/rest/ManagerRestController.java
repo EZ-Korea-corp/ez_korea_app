@@ -59,8 +59,26 @@ public class ManagerRestController {
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 
-    @PutMapping("/team")
-    public ResponseEntity<Object> modifyTeam(@RequestBody Map<String, Object> datum) {
+    @PutMapping("/division/{id}")
+    public ResponseEntity<Object> updateDivision(@RequestBody Map<String, Object> datum, @PathVariable Long id) {
+
+        String teamName = (String) datum.get("teamName");
+        String teamGm = (String) datum.get("teamGM");
+        managerService.updateDivision(id, teamName, teamGm);
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+    }
+
+    @PutMapping("/team/{id}")
+    public ResponseEntity<Object> modifyTeam(@RequestBody Map<String, Object> datum, @PathVariable Long id) {
+
+        log.info("datum={}", datum.toString());
+        String teamName = (String) datum.get("teamName");
+        String divisionName = (String) datum.get("teamGM");
+        String teamLeader = (String) datum.get("teamLeader");
+        String teamEmployee = (String) datum.get("teamEmployee");
+
+        managerService.updateTeam(id, divisionName, teamName, teamLeader, teamEmployee);
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
@@ -70,7 +88,18 @@ public class ManagerRestController {
         String username = (String) datum.get("username");
         String memberRole = (String) datum.get("memberRole");
         String memberStatus = (String) datum.get("memberStatus");
+
+        // 글쓰기 권한
+        String memberPostAuth = (String) datum.get("memberPostAuth");
+        log.info("memberPostAuth={}", memberPostAuth);
+
+        // 입고 권한
+        String memberInputAuth = (String) datum.get("memberInputAuth");
+        log.info("memberInAuth={}", memberInputAuth);
+
+        managerService.updateMemberSubAuth(username, memberPostAuth, memberInputAuth);
         managerService.updateMemberRole(username, Role.valueOf(memberRole), MemberStatus.valueOf(memberStatus));
+
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 

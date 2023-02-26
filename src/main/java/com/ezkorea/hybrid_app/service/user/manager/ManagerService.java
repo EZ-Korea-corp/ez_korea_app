@@ -50,6 +50,18 @@ public class ManagerService {
         return mService.findByRoleAndTeamIsNull(role);
     }
 
+    public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team) {
+        return mService.findAllByRoleAndTeamIsNullOrTeam(role, team);
+    }
+
+    public Team findTeamById(Long id) {
+        return tService.findById(id);
+    }
+
+    public List<Member> findAllMemberByRoleAndStatusOrTeam(Role role, MemberStatus status, Team team) {
+        return mService.findByRoleAndStatusAndTeam(role, status, team);
+    }
+
     public List<Member> findAllMemberByRoleAndStatus(Role role, MemberStatus status) {
         return mService.findByRoleAndStatus(role, status);
     }
@@ -59,13 +71,18 @@ public class ManagerService {
     }
 
     @Transactional
+    public void updateMemberSubAuth(String username, String memberPostAuth, String memberInputAuth) {
+        Member currentMember = mService.findByUsername(username);
+
+        boolean postAuth = memberPostAuth != null;
+        boolean inputAuth = memberInputAuth != null;
+
+        mService.updateMemberSubAuth(currentMember, postAuth, inputAuth);
+    }
+
+    @Transactional
     public void updateMemberRole(String username, Role role, MemberStatus status) {
         Member currentMember = mService.findByUsername(username);
-        /*switch (status) {
-            case AWAY -> {
-
-            }
-        }*/
         mService.updateMemberRole(currentMember, role, status);
     }
 
@@ -88,6 +105,13 @@ public class ManagerService {
         return dService.saveNewDivision(dto);
     }
 
+    @Transactional
+    public void updateDivision(Long divisionId, String teamName, String teamGm) {
+        Division currentDivision = dService.findDivisionById(divisionId);
+        currentDivision.setDivisionName(teamName);
+        currentDivision.setLeader(mService.findByUsername(teamGm));
+    }
+
     public List<Division> findAllDivision() {
         return dService.findAllDivision();
     }
@@ -103,6 +127,39 @@ public class ManagerService {
                 .leader(mService.findByUsername(teamLeader))
                 .memberList(memberList)
                 .build());
+    }
+
+    @Transactional
+    public void updateTeam(Long teamId, String divisionName, String teamName, String teamLeader, String teamEmployee) {
+        Team currentTeam = tService.findById(teamId);
+        Division currentDivision = dService.findDivisionByDivisionName(divisionName);
+        Member currentTeamLeader = mService.findByUsername(teamLeader);
+
+        // 리더 설정
+        currentTeamLeader.setDivision(currentDivision);
+        currentTeamLeader.setTeam(currentTeam);
+
+        // 기존 소속 팀원 설정
+        for (Member member : currentTeam.getMemberList()) {
+            member.setDivision(null);
+            member.setTeam(null);
+        }
+
+        // 변경된 소속 팀원 설정
+        List<Member> memberList = new ArrayList<>();
+        for (String employeeUsername : teamEmployee.split(",")) {
+            Member currentMember = mService.findByUsername(employeeUsername);
+            memberList.add(currentMember);
+            currentMember.setDivision(currentTeam.getDivision());
+            currentMember.setTeam(currentTeam);
+        }
+
+        // 팀 정보 변경
+        currentTeam.setTeamName(teamName);
+        currentTeam.setDivision(currentDivision);
+        currentTeam.setLeader(currentTeamLeader);
+        currentTeam.setMemberList(memberList);
+
     }
 
     public Division findDivisionById(Long id) {

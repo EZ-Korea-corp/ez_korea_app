@@ -51,20 +51,19 @@
             <form id="selectForm" onsubmit="return false;">
                 <div class="lg:w-full card">
 
-                    <div class="p-10 pt-4 divide-y divide-gray-100">
+                    <div class="p-8">
 
-                        <div style="position:relative;" class="md:py-8 py-3 flex">
-                            <div style="position:absolute; top:0; left:0;">
-                                <h2 class="text-xl font-bold"><span class="mr-2">🙋</span>출, 퇴근 정보</h2>
-                            </div>
-                            <div style="position:absolute; top:0; right:0;">
-                                <input type="text" id="datepicker" name="datepicker" style="width:9em" readonly>
-                            </div>
+                        <div class="mb-4">
+                            <h2 class="text-xl font-bold"><span class="mr-2">🙋</span>출, 퇴근 정보</h2>
+                        </div>
+
+                        <div>
+                            <input type="text" id="datepicker" name="datepicker" readonly>
                         </div>
 
                         <div class="md:py-8 py-3">
                             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <table class="w-full uk-text-center text-sm text-left text-gray-500 dark:text-gray-400">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
@@ -106,7 +105,7 @@
                                                 퇴근 위치
                                             </td>
                                             <td class="move flex">
-                                                <button type="button" th:onclick="|location.href='/manager/calender/${commute.ID}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 이동 </button>
+                                                <button type="button" th:onclick="|location.href='/manager/calender/${commute.ID}';|" class="bg-blue-600 mt-2 h-9 px-4 rounded-lg border font-semibold"> 이동 </button>
                                             </td>
                                         </th:block>
                                     </tr>

@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.domain.user.team.TeamRepository;
 import com.ezkorea.hybrid_app.web.dto.TeamDto;
+import com.ezkorea.hybrid_app.web.exception.TeamNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,10 @@ public class TeamService {
             member.setTeam(team);
             member.setDivision(team.getDivision());
         }
+    }
+
+    public Team findById(Long id) {
+        return teamRepository.findById(id)
+                .orElseThrow( () -> new TeamNotFoundException("팀이 존재하지 않습니다."));
     }
 }
