@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,5 +29,9 @@ public class NoticeService {
     public Notice findNoticeById(Long id) {
         return noticeRepository.findById(id)
                 .orElseThrow( () -> new IdNotFoundException(id + "번 공지사항을 찾을 수 없습니다."));
+    }
+
+    public List<Notice> findTop5NoticeOrderByUploadTime() {
+        return noticeRepository.findTop5ByOrderByCreateDateDesc();
     }
 }
