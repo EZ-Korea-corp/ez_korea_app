@@ -23,7 +23,7 @@ public class AWSService {
     private String bucketName;
     private final AmazonS3Client amazonS3Client;
 
-    public List<String> saveImage(MultipartFile[] multipartFileList) {
+    public List<String> saveImage(List<MultipartFile> multipartFileList) {
 
         List<String> imagePathList = new ArrayList<>();
 
@@ -42,7 +42,7 @@ public class AWSService {
                                 .withCannedAcl(CannedAccessControlList.PublicRead)
                 );
             } catch (IOException e) {
-                log.warn("S3 Image Upload Fail=()", e);
+                log.warn("S3Image Image Upload Fail=()", e);
             }
 
             String imagePath = amazonS3Client.getUrl(bucketName, originalName).toString(); // 접근가능한 URL 가져오기

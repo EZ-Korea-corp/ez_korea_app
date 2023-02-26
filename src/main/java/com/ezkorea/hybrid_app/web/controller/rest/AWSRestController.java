@@ -1,33 +1,34 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ezkorea.hybrid_app.service.AWSService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class AWSRestController {
     private final AWSService awsService;
 
-    @GetMapping("/image/upload")
-    public ResponseEntity<Object> upload(MultipartFile[] multipartFileList) {
+    @PutMapping("/image/upload")
+    public ResponseEntity<Object> upload(@RequestParam(value = "files", required = false) List<MultipartFile> multipartFile,
+                                         @RequestParam Map<String, Object> params) {
 
-        List<String> imagePathList = awsService.saveImage(multipartFileList);
+        log.info("multipartFile.toString()={}", multipartFile.toString());
+        log.info("params.toString()={}", params.toString());
 
-        return new ResponseEntity<Object>(imagePathList, HttpStatus.OK);
+//        List<String> imagePathList = awsService.saveImage(multipartFileList);
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 
 }

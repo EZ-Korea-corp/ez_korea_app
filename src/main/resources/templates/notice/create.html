@@ -10,11 +10,10 @@
 
     <main layout:fragment="main">
         <style>
-            #editor {
-                background-color: white;
+            textarea {
+                resize: none;
             }
         </style>
-        <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
         <div id="bg" class="lg:space-x-12">
             <form id="createTeamForm" onsubmit="return false;">
                 <div class="">
@@ -33,15 +32,26 @@
 
                         <div>
                             <label class="font-semibold text-base"> 내용 </label>
-
+                            <textarea id="content" name="content" rows="8" class="p-4 bg-gray-100"></textarea>
                         </div>
-
-                        <div id="editor"></div>
 
                     </div>
 
+                    <form id="s3Form" onsubmit="return false;">
+                        <div class="flex items-center justify-center bg-grey-lighter">
+                            <label class="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white">
+                                <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                </svg>
+                                <span class="mt-2 text-base leading-normal">Select a Images</span>
+                                <input type='file' name="files" class="hidden" accept=".png, .jpeg, .jpg" id="multipleFiles" multiple max="5"/>
+                            </label>
+                        </div>
+                        <div id="imageChange" class="grid grid-cols-2 gap-4 p-10"></div>
+                    </form>
+
                     <!-- form footer -->
-                    <div class="grid grid-cols-2 gap-4 m-4 p-4">
+                    <div class="grid grid-cols-2 gap-4 m-4 p-10">
                         <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
                         <button id="submit" type="button" class="button w-full">생성하기</button>
                     </div>
@@ -50,38 +60,36 @@
             </form>
         </div>
 
-        <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
         <script>
 
-            const Editor = toastui.Editor;
-
-            const editor = new Editor({
-                el: document.querySelector('#editor'),
-                height: '600px',
-                initialEditType: 'markdown',
-                previewStyle: 'vertical'
-            });
-
             $("#submit").on("click", function (){
+                let flag = true;
                 let title = $('#title').val();
-                let content = editor.getHTML();
-                const data = {
-                    title : title,
-                    content : content
-                }
+                let content = $('#content').val();
 
-                console.log(data);
-                if (title.length !== 0) {
-                    fnResponseCrudJsonAjax(data, '/notice', 'POST', successHref);
-                } else {
+                if (title.length === 0) {
                     Swal.fire({
                         icon: 'error',
                         text: '제목을 입력해주세요.',
                     });
+                    flag = false;
+                }
+
+                if (content.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '내용을 입력해주세요.',
+                    });
+                    flag = false;
+                }
+                if (flag === true) {
+                    fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), '/notice', 'POST', successHref);
                 }
             });
 
             function successHref(data, xhr) {
+                let savedId = xhr.id;
+                imageUpload('notice', savedId, '/image/upload', 'PUT');
                 $(location).attr("href", "/notice/".concat(xhr.id));
             }
         </script>
