@@ -89,9 +89,10 @@
 
             function successHref(data, xhr) {
                 let savedId = xhr.id;
-                alert(savedId);
                 imageUpload('notice', savedId, '/image/upload', 'PUT');
-                $(location).attr("href", "/notice/".concat(xhr.id));
+                setTimeout(function() {
+                    $(location).attr("href", "/notice/".concat(xhr.id));
+                }, 1000);
             }
         </script>
     </main>

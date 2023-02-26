@@ -19,7 +19,7 @@ public class NoticeService {
     public Notice saveNewNotice(Member member, NoticeDto dto) {
         return noticeRepository.save(Notice.builder()
                 .title(dto.getTitle())
-                .content(dto.getContent())
+                .content(dto.getContent().replaceAll("\n", "<br/>"))
                 .writer(member)
                 .imageList(new ArrayList<>())
                 .build());

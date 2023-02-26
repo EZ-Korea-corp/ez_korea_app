@@ -27,14 +27,9 @@ public class AWSRestController {
     public ResponseEntity<Object> upload(@RequestParam(value = "files", required = false) List<MultipartFile> multipartFile,
                                          @RequestParam Map<String, Object> params) {
 
-        log.info("multipartFileList.toString()={}", multipartFile.toString());
-
         S3ImageDto dto = modelMapper.map(params, S3ImageDto.class);
 
-        log.info("dto.toString()={}", dto.toString());
-
         awsService.findCurrentEntity(dto, multipartFile);
-        log.info("파일 저장");
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }

@@ -31,18 +31,16 @@ public class AWSService {
     private final S3ImageRepository s3ImageRepository;
     private final ManagerService managerService;
 
+    @Transactional
     public void findCurrentEntity(S3ImageDto dto, List<MultipartFile> multipartFileList) {
-        log.info("multipartFileList.toString()={}", multipartFileList.toString());
-        log.info("dto={}", dto);
         switch (dto.getEntity()) {
             case "notice" -> {
                 Notice currentNotice = managerService.findNoticeById(dto.getId());
                 for (String url : saveImage(dto, multipartFileList)) {
-                    log.info("findCurrentEntity-url={}", url);
                     S3Image savedImage = s3ImageRepository.save(S3Image.builder()
                             .notice(currentNotice)
                             .filePath(url)
-                            .fileName(url)
+                            .fileName(url.split(dto.getEntity() + "/" + dto.getId() + "/")[1])
                             .build());
                     currentNotice.getImageList().add(savedImage);
                 }
@@ -74,8 +72,7 @@ public class AWSService {
                 log.warn("S3Image Image Upload Fail=()", e);
             }
 
-            String imagePath = amazonS3Client.getUrl(bucketName, originalName).toString(); // 접근가능한 URL 가져오기
-            log.info("imagePath={}", imagePath);
+            String imagePath = amazonS3Client.getUrl(bucketName, sb.toString()).toString(); // 접근가능한 URL 가져오기
             imagePathList.add(imagePath);
         }
 
