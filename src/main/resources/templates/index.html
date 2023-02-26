@@ -42,7 +42,7 @@
                 <!-- job 1 -->
                 <div class="p-7 sm:space-x-6" th:each="notice : ${noticeList}">
                     <div class="sm:order-2">
-                        <a href="#">
+                        <a th:href="@{/notice/{id}(id = ${notice.getId()})}">
                             <h3 class="text-xl font-medium mb-2" th:text="${notice.getTitle()}"> 공지 제목 </h3>
                         </a>
                         <p class="text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일 HH시 mm분')}">작성일</p>
