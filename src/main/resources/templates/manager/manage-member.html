@@ -64,6 +64,9 @@
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                            사진
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                             이름
                                         </th>
                                         <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
@@ -94,6 +97,11 @@
                                     <tr class="bg-white border-b" th:each="user : ${employeeList}"
                                         th:if="${!user.getRole().toString().equals('ROLE_MASTER')}">
                                         <form th:id="|updateMember${user.getId()}|" onsubmit="return false">
+                                            <td>
+                                                <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
+                                                    <img th:src="${user.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
+                                                </div>
+                                            </td>
                                             <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
                                                 <h3 th:text="${user.getName()}"></h3>
                                             </th>
