@@ -9,7 +9,6 @@ import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
-import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.web.dto.S3ImageDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,7 @@ public class AWSService {
     private final NoticeRepository noticeRepository;
 
     @Transactional
-    public void findCurrentEntity(S3ImageDto dto, List<MultipartFile> multipartFileList) {
+    public void saveImageInCurrentEntity(S3ImageDto dto, List<MultipartFile> multipartFileList) {
         StringBuilder sb;
         switch (dto.getEntity()) {
             case "notice" -> {
