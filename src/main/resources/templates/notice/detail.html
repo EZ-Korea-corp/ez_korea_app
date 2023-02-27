@@ -55,6 +55,7 @@
                     <div class="m-4 p-4">
                         <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
                         <a th:if="${member.getUsername() eq notice.getWriter().getUsername()}" th:href="@{/notice/{id}/update(id=${notice.getId()})}" class="button w-full mt-4">수정하기</a>
+                        <button type="button" id="deleteNotice" class="w-full mt-4 bg-red-600 h-10 rounded">삭제하기</button>
                     </div>
 
                 </div>
@@ -69,18 +70,18 @@
                 /*const Editor = toastui.Editor;*/
 
                 /*<![CDATA[*/
-                let content = "[[${notice.getContent()}]]";
+                let id = "[[${notice.getId()}]]";
                 /*]]>*/
 
-                /*const viewer = new Editor({
-                    el: document.querySelector('#editor'),
-                    initialValue: content
+                $("#deleteNotice").on("click", function (){
+                    let url = '/notice/'.concat(id);
+                    fnResponseCrudJsonAjax($('#createNoticeForm').serializeObject(), url, 'DELETE', successHref);
                 });
-
-                var view = document.getElementById('content');
-                view.innerHTML = content;*/
-
             });
+
+            function successHref(data, xhr) {
+                $(location).attr("href", "/");
+            }
 
         </script>
     </main>

@@ -4,11 +4,9 @@ import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.service.aws.AWSService;
-import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.web.dto.NoticeDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -48,5 +46,10 @@ public class NoticeService {
 
     public List<Notice> findTop5NoticeOrderByUploadTime() {
         return noticeRepository.findTop5ByOrderByCreateDateDesc();
+    }
+
+    public void deleteNotice(Notice notice) {
+        awsService.deleteImages(notice.getImageList());
+        noticeRepository.delete(notice);
     }
 }

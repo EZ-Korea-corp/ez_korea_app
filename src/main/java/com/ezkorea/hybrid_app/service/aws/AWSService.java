@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -58,13 +59,25 @@ public class AWSService {
         }
     }
 
+    private String createFileName(String originalFilename) {
+        return UUID.randomUUID().toString().concat(getFileExtension(originalFilename));
+    }
+
+    private String getFileExtension(String fileName) {
+        try {
+            return fileName.substring(fileName.lastIndexOf("."));
+        } catch (StringIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(String.format("잘못된 형식의 파일 %s 입니다", fileName));
+        }
+    }
+
     public List<String> saveImage(S3ImageDto dto, List<MultipartFile> multipartFileList) {
 
         List<String> imagePathList = new ArrayList<>();
 
         for(MultipartFile multipartFile: multipartFileList) {
             StringBuilder sb = new StringBuilder();
-            String originalName = multipartFile.getOriginalFilename(); // 파일 이름
+            String originalName = createFileName(multipartFile.getOriginalFilename()); // 파일 이름
             sb.append("images/").append(dto.getEntity()).append("/").append(dto.getId()).append("/").append(originalName);
             long size = multipartFile.getSize(); // 파일 크기
 
@@ -100,10 +113,11 @@ public class AWSService {
             boolean isExistObject = amazonS3Client.doesObjectExist(bucketName, sb.toString());
 
             log.info("S3 : 이미지 삭제 Object Key : {}", deleteObjectRequest.getKey());
+            log.info("S3 : Object Key 존재 확인: {}", isExistObject);
 
             if (isExistObject) {
                 amazonS3Client.deleteObject(
-                        new DeleteObjectRequest(bucketName, sb.toString())
+                        new DeleteObjectRequest(bucketName, deleteObjectRequest.getKey())
                 );
             }
             s3ImageRepository.delete(s3Image);
