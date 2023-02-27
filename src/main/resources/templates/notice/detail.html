@@ -49,6 +49,21 @@
 
                         <div th:utext="${notice.getContent()}"></div>
 
+                        <th:block sec:authorize="hasAuthority('ROLE_MANAGER')">
+                            <hr>
+                            <h3 class="uk-text-center">읽지 않은 사원</h3>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div th:each="user : ${notReadList}" class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow">
+                                    <div class="flex flex-col items-center py-10">
+                                        <img class="w-12 h-12 mb-3 rounded-full shadow-lg" src="/assets/images/avatars/avatar-2.jpg"/>
+                                        <h5 class="mb-1 text-lg font-medium" th:text="${user.getName()}">이름</h5>
+                                        <span class="text-sm" th:text="${user.getRole().viewName}">직위</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+
                     </div>
 
                     <!-- form footer -->

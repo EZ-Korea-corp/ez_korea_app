@@ -57,7 +57,20 @@ public class MemberService {
             postAuth = true;
             inputAuth = true;
         }
-        Member savedMember = memberRepository.save(mapper.map(dto, Member.class));
+        Member savedMember = memberRepository.save(Member.builder()
+                .username(dto.getUsername())
+                .password(dto.getPassword())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .sex(dto.getSex())
+                .name(dto.getName())
+                .role(dto.getRole())
+                .memberStatus(dto.getMemberStatus())
+                .commuteTimeList(new ArrayList<>())
+                .taskList(new ArrayList<>())
+                .noticeList(new ArrayList<>())
+                .build());
+//        Member savedMember = memberRepository.save(mapper.map(dto, Member.class));
         savedMember.setSubAuth(SubAuth.builder()
                 .member(savedMember)
                 .postAuth(postAuth)

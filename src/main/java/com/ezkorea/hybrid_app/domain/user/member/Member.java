@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.domain.user.member;
 
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
+import com.ezkorea.hybrid_app.domain.read.MemberPostRead;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
