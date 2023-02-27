@@ -55,7 +55,7 @@ function imageUpload(entity, id, url, type) {
 
         for (let x = 0; x < content_files.length; x++) {
             // 삭제 안한것만 담아 준다.
-            if (!content_files[x].is_delete) {
+            if (!content_files[x].is_delete && x < 5) {
                 formData.append("files", content_files[x]);
             }
         }

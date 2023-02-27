@@ -24,4 +24,10 @@ public class NoticeController {
         model.addAttribute("notice", noticeService.findNoticeById(id));
         return "notice/detail";
     }
+
+    @GetMapping("/notice/{id}/update")
+    public String showNoticeUpdatePage(@PathVariable Long id, Model model) {
+        model.addAttribute("notice", noticeService.findNoticeById(id));
+        return "notice/update";
+    }
 }

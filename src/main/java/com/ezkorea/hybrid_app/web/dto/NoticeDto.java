@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 public class NoticeDto {
 
+    private Long id;
     private String title;
     private String content;
 }

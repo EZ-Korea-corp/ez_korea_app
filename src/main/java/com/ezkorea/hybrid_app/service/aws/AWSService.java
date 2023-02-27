@@ -2,14 +2,18 @@ package com.ezkorea.hybrid_app.service.aws;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
+import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.web.dto.S3ImageDto;
+import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,24 +27,30 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@ToString(exclude = "amazonS3Client, managerService")
 public class AWSService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
     private final AmazonS3Client amazonS3Client;
     private final S3ImageRepository s3ImageRepository;
-    private final ManagerService managerService;
+    private final NoticeRepository noticeRepository;
 
     @Transactional
     public void findCurrentEntity(S3ImageDto dto, List<MultipartFile> multipartFileList) {
+        StringBuilder sb;
         switch (dto.getEntity()) {
             case "notice" -> {
-                Notice currentNotice = managerService.findNoticeById(dto.getId());
+                Notice currentNotice = noticeRepository.findById(dto.getId())
+                        .orElseThrow( () -> new IdNotFoundException("해당하는 id가 존재하지 않습니다."));
                 for (String url : saveImage(dto, multipartFileList)) {
+                    sb = new StringBuilder();
+                    sb.append("images/").append(dto.getEntity()).append("/").append(dto.getId()).append("/");
                     S3Image savedImage = s3ImageRepository.save(S3Image.builder()
                             .notice(currentNotice)
                             .filePath(url)
-                            .fileName(url.split(dto.getEntity() + "/" + dto.getId() + "/")[1])
+                            .fileName(url.split(sb.toString())[1])
+                            .fileRepo(sb.toString())
                             .build());
                     currentNotice.getImageList().add(savedImage);
                 }
@@ -55,7 +65,7 @@ public class AWSService {
         for(MultipartFile multipartFile: multipartFileList) {
             StringBuilder sb = new StringBuilder();
             String originalName = multipartFile.getOriginalFilename(); // 파일 이름
-            sb.append("images").append("/").append(dto.getEntity()).append("/").append(dto.getId()).append("/").append(originalName);
+            sb.append("images/").append(dto.getEntity()).append("/").append(dto.getId()).append("/").append(originalName);
             long size = multipartFile.getSize(); // 파일 크기
 
             ObjectMetadata objectMetaData = new ObjectMetadata();
@@ -77,5 +87,26 @@ public class AWSService {
         }
 
         return imagePathList;
+    }
+
+    public void deleteImages(List<S3Image> imageList) {
+        StringBuilder sb;
+        // S3에 업로드
+        for (S3Image s3Image : imageList) {
+            sb = new StringBuilder();
+            sb.append(s3Image.getFileRepo()).append(s3Image.getFileName());
+
+            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, sb.toString());
+            boolean isExistObject = amazonS3Client.doesObjectExist(bucketName, sb.toString());
+
+            log.info("S3 : 이미지 삭제 Object Key : {}", deleteObjectRequest.getKey());
+
+            if (isExistObject) {
+                amazonS3Client.deleteObject(
+                        new DeleteObjectRequest(bucketName, sb.toString())
+                );
+            }
+            s3ImageRepository.delete(s3Image);
+        }
     }
 }

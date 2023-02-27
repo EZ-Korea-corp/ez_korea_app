@@ -20,8 +20,8 @@ public class S3Image extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "notice_id")
     private Notice notice;
-
     private String filePath;
     private String fileName;
+    private String fileRepo;
 
 }

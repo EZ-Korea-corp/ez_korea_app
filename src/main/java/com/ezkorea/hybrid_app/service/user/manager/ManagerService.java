@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.service.user.manager;
 
+import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
@@ -11,6 +12,7 @@ import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
+import com.ezkorea.hybrid_app.service.aws.AWSService;
 import com.ezkorea.hybrid_app.service.notiece.NoticeService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
@@ -37,6 +39,7 @@ public class ManagerService {
     private final DivisionService dService;
     private final TeamService tService;
     private final NoticeService nService;
+    private final AWSService awsService;
 
     private final CommuteMbRepository commuteMbRepository;
     private final DailyTaskRepository dailyTaskRepository;
@@ -184,7 +187,4 @@ public class ManagerService {
         return saleMbRepository.findTotalStat(data);
     }
 
-    public Notice findNoticeById(Long id) {
-        return nService.findNoticeById(id);
-    }
 }
