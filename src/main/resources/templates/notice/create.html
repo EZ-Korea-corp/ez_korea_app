@@ -90,10 +90,14 @@
             function successHref(data, xhr) {
                 let savedId = xhr.id;
                 imageUpload('notice', savedId, '/image/upload', 'PUT');
-                showLoadingSpinner(2500, "이미지를 저장하고 있습니다.");
-                setTimeout(function() {
+                if (fileCount !== 0) {
+                    showLoadingSpinner(2500, "이미지를 저장하고 있습니다.");
+                    setTimeout(function () {
+                        $(location).attr("href", "/notice/".concat(xhr.id));
+                    }, 2500);
+                } else {
                     $(location).attr("href", "/notice/".concat(xhr.id));
-                }, 2500);
+                }
             }
         </script>
     </main>
