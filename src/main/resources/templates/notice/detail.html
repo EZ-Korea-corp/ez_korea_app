@@ -75,7 +75,7 @@
 
                 $("#deleteNotice").on("click", function (){
                     let url = '/notice/'.concat(id);
-                    fnResponseCrudJsonAjax($('#createNoticeForm').serializeObject(), url, 'DELETE', successHref);
+                    fnResponseCrudJsonAjax($('#noticeForm').serializeObject(), url, 'DELETE', successHref);
                 });
             });
 

@@ -36,6 +36,11 @@ public class AWSService {
     private final S3ImageRepository s3ImageRepository;
     private final NoticeRepository noticeRepository;
 
+    /**
+     * S3Image를 저장하기 위한 함수
+     * @param dto entity 정보가 담긴 DTO
+     * @param multipartFileList 사용자가 업로드한 파일 리스트
+     * */
     @Transactional
     public void saveImageInCurrentEntity(S3ImageDto dto, List<MultipartFile> multipartFileList) {
         StringBuilder sb;
@@ -58,10 +63,21 @@ public class AWSService {
         }
     }
 
+    /**
+     * 파일 이름을 새로 지정하기 위한 함수
+     * @param originalFilename 업로드한 파일의 이름
+     * @return 임의로 지어진 파일 이름 반환
+     * */
     private String createFileName(String originalFilename) {
+        // S3에서 한글 파일을 찾을 수 없기 때문에 영어로 된 임의의 이름으로 변경
         return UUID.randomUUID().toString().concat(getFileExtension(originalFilename));
     }
 
+    /**
+     * 파일 확장자를 가져오는 함수
+     * @param fileName 확장자를 가져올 파일의 이름
+     * @return 파일 확장자를 반환
+     * */
     private String getFileExtension(String fileName) {
         try {
             return fileName.substring(fileName.lastIndexOf("."));
@@ -70,6 +86,11 @@ public class AWSService {
         }
     }
 
+    /**
+     * 이미지를 저장하는 함수
+     * @param dto S3 bucket에 저장될 경로를 설정하기 위한 DTO
+     * @param multipartFileList 업로드할 파일 리스트
+     * */
     public List<String> saveImage(S3ImageDto dto, List<MultipartFile> multipartFileList) {
 
         List<String> imagePathList = new ArrayList<>();
@@ -101,6 +122,10 @@ public class AWSService {
         return imagePathList;
     }
 
+    /**
+     * 이미지를 삭제하는 함수
+     * @param imageList Entity를 통해 가져온 S3Image 리스트
+     * */
     public void deleteImages(List<S3Image> imageList) {
         StringBuilder sb;
         // S3에 업로드
@@ -111,8 +136,7 @@ public class AWSService {
             DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, sb.toString());
             boolean isExistObject = amazonS3Client.doesObjectExist(bucketName, sb.toString());
 
-            log.info("S3 : 이미지 삭제 Object Key : {}", deleteObjectRequest.getKey());
-            log.info("S3 : Object Key 존재 확인: {}", isExistObject);
+            log.info("S3 : 삭제할 이미지의 Key = ({}) {}", isExistObject, deleteObjectRequest.getKey());
 
             if (isExistObject) {
                 amazonS3Client.deleteObject(
