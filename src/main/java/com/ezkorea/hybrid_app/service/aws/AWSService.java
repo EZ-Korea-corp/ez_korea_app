@@ -9,6 +9,9 @@ import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
+import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
+import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.S3ImageDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +38,8 @@ public class AWSService {
     private final AmazonS3Client amazonS3Client;
     private final S3ImageRepository s3ImageRepository;
     private final NoticeRepository noticeRepository;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     /**
      * S3Image를 저장하기 위한 함수
@@ -58,6 +63,24 @@ public class AWSService {
                             .fileRepo(sb.toString())
                             .build());
                     currentNotice.getImageList().add(savedImage);
+                }
+            }
+            case "member" -> {
+                Member currentMember = memberRepository.findById(dto.getId())
+                        .orElseThrow(() -> new IdNotFoundException("해당하는 id가 존재하지 않습니다."));
+
+                deleteS3Image(currentMember.getS3Image(), false);
+
+                for (String url : saveImage(dto, multipartFileList)) {
+                    sb = new StringBuilder();
+                    sb.append("images/").append(dto.getEntity()).append("/").append(dto.getId()).append("/");
+
+                    S3Image currentMemberS3Image = currentMember.getS3Image();
+                    currentMemberS3Image.setFilePath(url);
+                    currentMemberS3Image.setFileName(url.split(sb.toString())[1]);
+                    currentMemberS3Image.setFileRepo(sb.toString());
+
+                    memberService.forceAuthentication(currentMember);
                 }
             }
         }
@@ -123,26 +146,38 @@ public class AWSService {
     }
 
     /**
-     * 이미지를 삭제하는 함수
+     * 여러 이미지들을 삭제하는 함수
      * @param imageList Entity를 통해 가져온 S3Image 리스트
      * */
     public void deleteImages(List<S3Image> imageList) {
-        StringBuilder sb;
-        // S3에 업로드
+        // S3에 있는 이미지 제거
         for (S3Image s3Image : imageList) {
-            sb = new StringBuilder();
-            sb.append(s3Image.getFileRepo()).append(s3Image.getFileName());
+            deleteS3Image(s3Image, true);
+        }
+    }
 
-            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, sb.toString());
-            boolean isExistObject = amazonS3Client.doesObjectExist(bucketName, sb.toString());
+    /**
+     * 단일 이미지를 삭제하는 함수
+     * @param s3Image 삭제할 S3Image 객체
+     * @param isDelete DB에서 삭제할 것인지에 대한 여부
+     *                 true : S3 + DB 모두 제거
+     *                 false : S3 단일 제거
+     * */
+    public void deleteS3Image(S3Image s3Image, boolean isDelete) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(s3Image.getFileRepo()).append(s3Image.getFileName());
 
-            log.info("S3 : 삭제할 이미지의 Key = ({}) {}", isExistObject, deleteObjectRequest.getKey());
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, sb.toString());
+        boolean isExistObject = amazonS3Client.doesObjectExist(bucketName, sb.toString());
 
-            if (isExistObject) {
-                amazonS3Client.deleteObject(
-                        new DeleteObjectRequest(bucketName, deleteObjectRequest.getKey())
-                );
-            }
+        log.info("S3 : 삭제할 이미지의 Key = ({}) {}", isExistObject, deleteObjectRequest.getKey());
+
+        if (isExistObject) {
+            amazonS3Client.deleteObject(
+                    new DeleteObjectRequest(bucketName, deleteObjectRequest.getKey())
+            );
+        }
+        if (isDelete) {
             s3ImageRepository.delete(s3Image);
         }
     }

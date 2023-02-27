@@ -29,6 +29,8 @@ public class AWSRestController {
 
         S3ImageDto dto = modelMapper.map(params, S3ImageDto.class);
 
+        log.info("multipartFile={}", multipartFile.toString());
+
         awsService.saveImageInCurrentEntity(dto, multipartFile);
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
