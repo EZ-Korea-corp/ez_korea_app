@@ -56,7 +56,7 @@
                                         <li class="my-2" th:if="${currentTeam.getLeader().getId() != employee.getId()}" th:each="employee : ${employeeList}">
                                             <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
                                                 <div class="w-10 h-10 flex-shrink-0 rounded-md relative">
-                                                    <img src="/assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
+                                                    <img th:src="${employee.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" alt="">
                                                 </div>
                                                 <div class="flex-1">
                                                     <h3 class="text-base font-semibold capitalize mb-2" th:text="|${employee.getName()}(${#strings.substring(employee.getPhone(), 7, 11)})|"> 유저이름 </h3>
