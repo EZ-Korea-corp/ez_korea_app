@@ -462,12 +462,12 @@
 
 
             <a href="#">
-              <img src="/assets/images/avatars/avatar-2.jpg" class="is_avatar" alt="">
+              <img th:src="${member.getS3Image().getFilePath()}" class="is_avatar" alt="">
             </a>
             <div uk-drop="mode: click;offset:5" class="header_dropdown profile_dropdown">
               <a th:href="@{|/profile/${member.getUsername()}|}" class="user">
                 <div class="user_avatar">
-                  <img src="/assets/images/avatars/avatar-2.jpg" alt="">
+                  <img th:src="${member.getS3Image().getFilePath()}" alt="">
                 </div>
                 <div class="user_name">
                   <div th:text="${member.getName()}">이름</div>

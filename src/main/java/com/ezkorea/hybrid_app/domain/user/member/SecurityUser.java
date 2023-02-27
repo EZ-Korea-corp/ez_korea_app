@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.domain.user.member;
 
+import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +24,7 @@ public class SecurityUser extends User implements UserDetails {
     private final boolean isRoleChanged;
     private final LocalDateTime createDate;
     private final SubAuth subAuth;
+    private final S3Image s3Image;
 
     public SecurityUser(Member member, List<GrantedAuthority> authorities) {
         super(member.getUsername(), member.getPassword(), authorities);
@@ -37,6 +39,7 @@ public class SecurityUser extends User implements UserDetails {
         this.isRoleChanged = member.isRoleChanged();
         this.createDate = member.getCreateDate();
         this.subAuth = member.getSubAuth();
+        this.s3Image = member.getS3Image();
     }
 
     public Member getMember() {
@@ -52,6 +55,7 @@ public class SecurityUser extends User implements UserDetails {
                 .isRoleChanged(isRoleChanged)
                 .createDate(createDate)
                 .subAuth(subAuth)
+                .s3Image(s3Image)
                 .build();
     }
 

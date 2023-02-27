@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.domain.user.member;
 
+import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.read.MemberPostRead;
@@ -82,5 +83,10 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Notice> noticeList = new ArrayList<>();
+
+
+    @ManyToOne
+    @Setter
+    private S3Image s3Image;
 
 }

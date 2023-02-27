@@ -2,12 +2,11 @@ package com.ezkorea.hybrid_app.domain.aws;
 
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -20,6 +19,10 @@ public class S3Image extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "notice_id")
     private Notice notice;
+
+    @OneToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
     private String filePath;
     private String fileName;
     private String fileRepo;
