@@ -48,11 +48,12 @@
                                 }).then((result) => {
                                     /* Read more about isConfirmed, isDenied below */
                                     if (result.isConfirmed) {
-                                        showLoadingSpinner(2000, "이미지를 저장하고 있습니다.");
+                                        let time = fileCount * 1050;
+                                        showLoadingSpinner(time, "이미지를 저장하고 있습니다.");
                                         imageUpload('member', id, '/image/upload', 'PUT');
                                         setTimeout(function () {
                                             $(location).attr("href", "/profile/".concat(username));
-                                        }, 2000);
+                                        }, time);
                                     } else if (result.isDenied) {
                                         Swal.fire('변경되지 않았습니다.')
                                     }
