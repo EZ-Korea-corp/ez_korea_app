@@ -1,7 +1,5 @@
 package com.ezkorea.hybrid_app.web.template;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -16,8 +14,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
-
 @Component
 @Slf4j
 public class OpinetApiRestTemplate {
@@ -27,7 +23,13 @@ public class OpinetApiRestTemplate {
     private final int GASOLINE_NUM = 1;
     private final int DIESEL_NUM = 2;
 
-    @Scheduled(cron = "0 0 6 * * ?")
+    /**
+     * 매일 새벽 3시에 실행되는 메소드
+     * "0 0 6 * * ?": 초, 분, 시, 일, 월, 요일 순서로 표현한 cron 표현식
+     * - *: 해당 필드의 모든 값
+     * - ? : 해당 필드를 사용하지 않음
+     * */
+    @Scheduled(cron = "0 0 3 * * ?")
     public void saveTodayFuelCost() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -43,6 +45,11 @@ public class OpinetApiRestTemplate {
 
     }
 
+    /**
+     * Json 형태의 문자열을 JSONObject로 변환하는 함수
+     * @param jsonString REST API를 통해 받아온 유가 정보 문자열
+     * @return String to JSONObject
+     * */
     public static JSONObject convertToJson(String jsonString) {
         JSONObject jsonObject = null;
         try {
@@ -55,6 +62,12 @@ public class OpinetApiRestTemplate {
         return jsonObject;
     }
 
+    /**
+     * JSON 객체에서 유가 정보를 받아오는 함수
+     * @param jsonObject 유가 정보가 담긴 JSONObject
+     * @param sort 휘발유와 경유를 나누기 위한 변수(1 : 휘발유, 2 : 경유)
+     * @return 구분에 맞는 평균 리터 가격
+     * */
     public int getFuelCost(JSONObject jsonObject, int sort) {
         JSONObject result = (JSONObject) jsonObject.get("RESULT");
         JSONObject gasoline = ((JSONObject) ((JSONArray) result.get("OIL")).get(sort));
