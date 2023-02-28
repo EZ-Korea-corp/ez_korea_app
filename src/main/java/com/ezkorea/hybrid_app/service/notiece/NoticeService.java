@@ -7,6 +7,9 @@ import com.ezkorea.hybrid_app.service.aws.AWSService;
 import com.ezkorea.hybrid_app.web.dto.NoticeDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -51,5 +54,10 @@ public class NoticeService {
     public void deleteNotice(Notice notice) {
         awsService.deleteImages(notice.getImageList());
         noticeRepository.delete(notice);
+    }
+
+    public Page<Notice> findAllNotice(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return noticeRepository.findAll(pageable);
     }
 }
