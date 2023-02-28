@@ -30,6 +30,14 @@ public class ExpensesRestController {
         return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", savedExpenses.getId()), HttpStatus.OK);
     }
 
+    @PutMapping("/expenses")
+    public ResponseEntity<Object> checkExpenses(@RequestBody ExpensesDto dto) {
+
+        Expenses currentExpenses = expensesService.checkExpenses(dto);
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", currentExpenses.getId()), HttpStatus.OK);
+    }
+
     @DeleteMapping("/expenses")
     public ResponseEntity<Object> deleteExpenses(@RequestBody ExpensesDto dto,
                                                  @AuthenticationPrincipal SecurityUser securityUser) {

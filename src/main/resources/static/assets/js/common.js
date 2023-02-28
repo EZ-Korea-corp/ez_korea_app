@@ -77,6 +77,31 @@ function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg) {
     });
 }
 
+function fnOnlyCrudJsonAjax(data, url, method, fnCallBack) {
+
+    $.ajax({
+        type: method,
+        url: url,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        beforeSend: function(jqXHR, settings) {
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var token = $("meta[name='_csrf']").attr("content");
+            jqXHR.setRequestHeader(header, token);
+        },
+        success: function(xhr, data) {
+            if(fnCallBack) fnCallBack(data, xhr);
+        },
+        error: function(xhr, status, error) {
+            Swal.fire({
+                icon: 'error',
+                text: '에러가 발생했습니다.',
+            });
+        }
+    });
+}
+
 function fnResponseCrudJsonAjax(data, url, method, fnCallBack) {
 
     $.ajax({

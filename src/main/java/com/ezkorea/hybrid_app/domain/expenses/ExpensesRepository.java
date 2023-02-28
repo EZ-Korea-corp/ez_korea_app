@@ -10,4 +10,5 @@ public interface ExpensesRepository extends JpaRepository<Expenses, Long> {
 
     Page<Expenses> findAllByMemberOrderByPayDateDesc(Member member, Pageable pageable);
 
+    Page<Expenses> findAllByOrderByPayDateDesc(Pageable pageable);
 }

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <div class="lg:space-x-12">
+            <div class="lg:w-full card">
+
+                <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                    <div class="md:py-8 py-3">
+                        <div class="flex justify-between">
+                            <h2 class="text-xl font-bold">
+                                <span class="mr-2">💰</span>경비 관리
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="md:py-8 py-3">
+
+                        <div class="relative overflow-x-auto shadow-md" id="select-div">
+
+                            <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        신청 번호
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        사원 정보
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        비용
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        구분
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        유종
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                        날짜
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                        영수증
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                        확인 여부
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="uk-text-center">
+                                <tr class="bg-white border-b" th:each="expenses, loop : ${expensesList}">
+                                    <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                        <h3 th:text="${expenses.getId()}">아이디</h3>
+                                    </th>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getMember().getName()}">이름</td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${#numbers.formatInteger(expenses.getCost(), 3, 'COMMA')}">비용</td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getExpensesStatus().getViewName()}">구분</td>
+                                    <td class="px-2 py-4 whitespace-nowrap">
+                                        <a th:if="${expenses.getExpensesStatus().equals(T(com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus).FUEL)}" th:text="${expenses.getFuelStatus().getViewName()}"></a>
+                                    </td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getPayDate()}"></td>
+                                    <td class="px-2 py-4 whitespace-nowrap">
+                                        <button class="button gray" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|" th:onclick="|checkTask(${expenses.getId()})|" >영수증 확인</button>
+
+                                        <!-- This is the modal with the default close button -->
+                                        <div th:id="|modal${expenses.getId()}|" uk-modal>
+                                            <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
+                                                <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
+                                                <h2 class="mb-2 uk-modal-title">영수증</h2>
+                                                <img th:src="${expenses.getS3Image().getFilePath()}">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-4 whitespace-nowrap" >
+                                        <div th:id="|expenses${expenses.getId()}|">
+                                            <input type="checkbox" th:checked="${expenses.isManagerCheck()}" disabled>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-10 pb-10 mx-auto">
+                    <nav th:if="${!expensesList.isEmpty()}">
+                        <div class="flex justify-center">
+                            <ul class="inline-flex items-center -space-x-px">
+                                <li>
+                                    <a th:href="@{|?page=${expensesList.number - 1}|}" th:classappend="${!expensesList.hasPrevious} ? 'hidden'"
+                                       class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" >
+                                        <span class="sr-only">Previous</span>
+                                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                    </a>
+                                </li>
+                                <li th:each="page : ${#numbers.sequence(0, expensesList.totalPages - 1)}"
+                                    th:if="${page >= expensesList.number - 2 and page <= expensesList.number + 2}">
+                                    <a th:text="${page + 1}" th:href="@{|?page=${page}|}"
+                                       th:classappend="${page == expensesList.number} ? 'bg-blue-500 z-10 text-white'"
+                                       th:aria-current="${page == expensesList.number} ? 'page' : ''"
+                                       class="px-3 py-2 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700">1</a>
+                                </li>
+                                <li th:classappend="${!expensesList.hasNext} ? 'hidden'">
+                                    <a th:href="@{|?page=${expensesList.number+1}|}" class="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                        <span class="sr-only">Next</span>
+                                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <script th:inline="javascript">
+
+            function checkTask(id) {
+                let data = {
+                    id: id
+                }
+                fnOnlyCrudJsonAjax(data, '/expenses', 'PUT', refreshDiv);
+            }
+
+            function removeTask(id) {
+
+                Swal.fire({
+                    title: '내역 삭제',
+                    text: id + '번 내역을 삭제하시겠습니까?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: '삭제하기',
+                    denyButtonText: '취소',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let data = {
+                            id: id
+                        }
+                        fnResponseCrudJsonAjax(data, '/expenses', 'DELETE', refreshPage);
+                        setTimeLoadingSpinner(1100, "내역을 삭제하고 있습니다.");
+                        setTimeout(function () {
+                            $(location).attr("href", "/expenses");
+                        }, 1100);
+                    } else if (result.isDenied) {
+                        Swal.fire('변경되지 않았습니다.')
+                    }
+                })
+
+            }
+
+            jQuery(document).ready(function($){
+
+                $('.live-search-table tbody tr').each(function(){
+                    $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
+                });
+
+                $('.table-live-search-box').on('keyup', function(){
+
+                    let searchTerm = $(this).val().toLowerCase();
+
+                    $('.live-search-table tbody tr').each(function(){
+                        if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                });
+
+            });
+
+            let inviteBtn = {
+                doInvite: function (idx) {
+                    fnResponseCrudJsonAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'PUT', refreshPage);
+                }
+            }
+
+            function refreshPage(data) {
+                location.reload();
+            }
+
+            function refreshDiv(data, xhr) {
+                $(`#expenses${xhr.id}`).load(location.href+` #expenses${xhr.id}`);
+            }
+        </script>
+    </main>
+
+</body>
+
+</html>

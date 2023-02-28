@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
+import com.ezkorea.hybrid_app.service.expenses.ExpensesService;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
@@ -27,6 +28,7 @@ public class ManagerController {
     private final ManagerService managerService;
     private final CommuteService commuteService;
     private final MemberService memberService;
+    private final ExpensesService expensesService;
 
     @GetMapping("/home")
     public String showManagerPage() {
@@ -128,6 +130,12 @@ public class ManagerController {
     @GetMapping("/totalStat")
     public String showTotalStatPage() {
         return "manager/stat/manage-totalStat";
+    }
+
+    @GetMapping("/expenses")
+    public String showExpensesPage(Model model, @RequestParam(value="page", defaultValue="0", required = false) int page) {
+        model.addAttribute("expensesList", expensesService.findAllExpenses(page));
+        return "manager/expenses/list";
     }
 
 }

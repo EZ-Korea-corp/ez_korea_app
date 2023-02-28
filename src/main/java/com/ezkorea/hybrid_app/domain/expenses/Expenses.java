@@ -37,4 +37,7 @@ public class Expenses extends BaseEntity {
     @Setter
     private S3Image s3Image;
 
+    @Setter
+    private boolean isManagerCheck;
+
 }

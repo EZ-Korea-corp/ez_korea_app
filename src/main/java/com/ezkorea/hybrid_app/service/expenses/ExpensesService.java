@@ -54,4 +54,15 @@ public class ExpensesService {
         return expensesRepository.findAllByMemberOrderByPayDateDesc(member, pageable);
     }
 
+    public Page<Expenses> findAllExpenses(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return expensesRepository.findAllByOrderByPayDateDesc(pageable);
+    }
+
+    @Transactional
+    public Expenses checkExpenses(ExpensesDto dto) {
+        Expenses currentExpenses = findExpensesById(dto.getId());
+        currentExpenses.setManagerCheck(true);
+        return currentExpenses;
+    }
 }
