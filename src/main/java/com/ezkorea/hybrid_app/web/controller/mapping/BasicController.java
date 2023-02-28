@@ -34,6 +34,7 @@ public class BasicController {
         if (isOnTime) {
             model.addAttribute("commute", commuteService.findCommuteTimeByMember(securityUser.getMember()));
         }
+        memberService.forceAuthentication(memberService.findMemberById(securityUser.getId()));
         return "index";
     }
 }
