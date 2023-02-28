@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ExpensesStatus {
 
-    FUEL("주유비"),
-    FOOD("식비");
+    FOOD("식비"),
+    FUEL("주유비");
     private final String viewName;
 
 }

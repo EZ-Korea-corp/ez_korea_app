@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -17,12 +18,15 @@ public class Expenses extends BaseEntity {
 
     private int cost;
 
+    private LocalDate payDate;
+
     @Column(name = "expenses_status")
     @Enumerated(EnumType.STRING)
     private ExpensesStatus expensesStatus;
 
     @Column(name = "fuel_status")
     @Enumerated(EnumType.STRING)
+    @Setter
     private FuelStatus fuelStatus;
 
     @ManyToOne

@@ -10,8 +10,8 @@
 
     <main layout:fragment="main">
         <style>
-            textarea {
-                resize: none;
+            #payDate {
+                padding: 0 2.5rem !important;
             }
         </style>
         <div id="bg" class="lg:space-x-12">
@@ -20,21 +20,44 @@
 
                     <!-- form header -->
                     <div class="text-center border-b border-gray-100 py-6">
-                        <h3 class="font-bold text-xl"> 공지 글 작성 </h3>
+                        <h3 class="font-bold text-xl"> 경비 사용 보고서 </h3>
                     </div>
 
                     <!-- form body -->
                     <div class="p-10 space-y-7">
-                        <div>
-                            <label for="title" class="font-semibold text-base"> 제목 </label>
-                            <input id="title" class="with-border" name="title" type="text" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
+
+                        <div id="expensesDiv">
+                            <label for="expensesStatus" class="font-semibold text-lg"> 사용 분류 </label>
+                            <select name="expensesStatus" id="expensesStatus" class="px-4">
+                                <option th:each="expensesStatus : ${T(com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus).values()}"
+                                        th:value="${expensesStatus}"
+                                        th:text="${expensesStatus.viewName}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div id="fuelDiv" class="hidden">
+                            <label for="fuelStatus" class="font-semibold text-lg"> 유종 </label>
+                            <select name="fuelStatus" id="fuelStatus" class="px-4">
+                                <option th:each="fuelStatus : ${T(com.ezkorea.hybrid_app.domain.expenses.FuelStatus).values()}"
+                                        th:value="${fuelStatus}"
+                                        th:text="${fuelStatus.viewName}">
+                                </option>
+                            </select>
                         </div>
 
                         <div>
-                            <label class="font-semibold text-base"> 내용 </label>
-                            <textarea id="content" name="content" rows="8" class="p-4 bg-gray-100"></textarea>
+                            <label for="cost" class="font-semibold text-lg"> 비용 </label>
+                            <input id="cost" class="with-border" name="cost" type="number" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off" required>
                         </div>
 
+                        <div class="relative">
+                            <label for="payDate" class="font-semibold text-lg"> 사용 날짜 </label>
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pt-8 pointer-events-none">
+                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                            </div>
+                            <input datepicker datepicker-format="yyyy-mm-dd" type="text" name="payDate" id="payDate" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="날짜를 선택해주세요.">
+                        </div>
                     </div>
 
                     <form id="s3Form" onsubmit="return false;">
@@ -44,7 +67,7 @@
                                     <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
                                 </svg>
                                 <span class="mt-2 text-base leading-normal">Select a Images</span>
-                                <input type='file' name="files" class="hidden" accept=".png, .jpeg, .jpg" id="multipleFiles" multiple max="5"/>
+                                <input type='file' name="files" class="hidden" accept=".png, .jpeg, .jpg" id="multipleFiles"/>
                             </label>
                         </div>
                         <div id="imageChange" class="grid grid-cols-2 gap-4 p-10"></div>
@@ -60,30 +83,28 @@
             </form>
         </div>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/datepicker.min.js"></script>
         <script>
 
+            $(document).ready(function() {
+                $("#expensesStatus").change(function() {
+                    let selectedValue = $(this).val();
+                    if (selectedValue === "FUEL") {
+                        $("#fuelDiv").show();
+                    } else {
+                        $("#fuelDiv").hide();
+                    }
+                });
+            });
+
             $("#submit").on("click", function (){
-                let flag = true;
-                let title = $('#title').val();
-                let content = $('#content').val();
-
-                if (title.length === 0) {
-                    Swal.fire({
-                        icon: 'error',
-                        text: '제목을 입력해주세요.',
-                    });
-                    flag = false;
-                }
-
-                if (content.length === 0) {
-                    Swal.fire({
-                        icon: 'error',
-                        text: '내용을 입력해주세요.',
-                    });
-                    flag = false;
-                }
-                if (flag === true) {
+                if (fileCount === 1) {
                     fnResponseCrudJsonAjax($('#createNoticeForm').serializeObject(), '/expenses', 'POST', successHref);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '영수증 사진을 한 장 첨부해주세요.',
+                    });
                 }
             });
 
