@@ -110,7 +110,7 @@
 
             function successHref(data, xhr) {
                 let savedId = xhr.id;
-                imageUpload('notice', savedId, '/image/upload', 'PUT');
+                imageUpload('expenses', savedId, '/image/upload', 'PUT');
                 if (fileCount !== 0) {
                     showLoadingSpinner(2500, "이미지를 저장하고 있습니다.");
                     setTimeout(function () {
