@@ -1,19 +1,16 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
-import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
-import com.ezkorea.hybrid_app.domain.task.DailyTask;
-import com.ezkorea.hybrid_app.domain.user.member.Member;
+import com.ezkorea.hybrid_app.domain.sale.SaleStatus;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
 import com.ezkorea.hybrid_app.web.dto.TaskDto;
-import com.ezkorea.hybrid_app.web.dto.WiperDto;
+import com.ezkorea.hybrid_app.web.dto.TimeTableDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,27 +26,10 @@ public class SalesRestController {
     private final SaleService saleService;
 
     @PostMapping("/sales/sell")
-    public HttpStatus saveSalesProduct(@RequestBody TaskDto taskDto,
-                                       @AuthenticationPrincipal SecurityUser securityUser) {
-        saleService.saveSaleProduct(taskDto.getWiperDtoList(), securityUser.getMember(), taskDto.getStationId());
+    public HttpStatus saveSellsProduct(@RequestBody TimeTableDto timeTableDto) {
+        saleService.saveSellProduct(timeTableDto);
 
         return HttpStatus.OK;
-    }
-
-    @PostMapping("/sales/select")
-    public Map<String, Object> saveTeam(@RequestBody Map<String, Long> data,
-                               @AuthenticationPrincipal SecurityUser securityUser,
-                               HttpServletResponse response) throws Exception {
-        Map<String, Object> returnMap = new HashMap<>();
-        boolean isSave = saleService.saveDailyGasStation(data.get("stationId"), securityUser.getMember());
-
-        if(!isSave) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "이미 등록된 주유소입니다.");
-            return returnMap;
-        }
-
-        returnMap.put("result", data.get("stationId"));
-        return returnMap;
     }
 
     @PostMapping("/sales/findInput")
@@ -73,21 +53,24 @@ public class SalesRestController {
     }
 
     @PostMapping("/sales/input")
-    public HttpStatus saveInputProduct(@RequestBody TaskDto data,
-                                       @AuthenticationPrincipal SecurityUser securityUser) {
+    public HttpStatus saveInputProduct(@RequestBody TimeTableDto timeTableDto) {
 
-        saleService.saveInputProduct(securityUser.getMember(), data);
+        saleService.saveInputProduct(timeTableDto);
 
         return HttpStatus.OK;
     }
 
     @PostMapping("/sales/close")
-    public Map<String, Object> findSaleStat(@RequestBody Map<String, Object> data,
-                                   @AuthenticationPrincipal SecurityUser securityUser) {
+    public Map<String, Object> findTableStat(@RequestBody Map<String, String> paramMap) {
         Map<String, Object> returnMap = new HashMap<>();
-        List<SaleProductDto> statList = saleService.findSaleStat(securityUser.getMember(), data);
-
-        returnMap.put("result", statList);
+        
+        if(SaleStatus.OUT.toString().equals(paramMap.get("status"))) {
+            // 판매현황
+            returnMap = saleService.findTableStat(paramMap); 
+        } else {
+            // 재고현황
+            returnMap.put("stockList", saleService.findStockProduct(paramMap));
+        }
 
         return returnMap;
     }
@@ -142,5 +125,20 @@ public class SalesRestController {
         return returnMap;
     }
 
+    @PostMapping("/timeTable/save")
+    public Map<String, Object> saveTimeTable(@RequestBody Map<String, Object> pramMap,
+                                        @AuthenticationPrincipal SecurityUser securityUser,
+                                        HttpServletResponse response) throws Exception {
+        Map<String, Object> returnMap = new HashMap<>();
 
+        Long tTid = saleService.saveTimeTable(pramMap, securityUser.getMember());
+
+        if(tTid.equals(0L)) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "이미 등록된 주유소입니다.");
+            return returnMap;
+        }
+
+        returnMap.put("result", tTid);
+        return returnMap;
+    }
 }

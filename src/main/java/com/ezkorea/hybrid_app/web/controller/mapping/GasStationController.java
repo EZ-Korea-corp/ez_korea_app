@@ -65,7 +65,7 @@ public class GasStationController {
         List<Map<String, Object>> list = saleService.findInProductList(securityUser.getMember(), id);
         model.addAttribute("list", list);
 
-        return "gasStation/gasStation-inoutDetail";
+        return "gasStation/gasStation-inOutDetail";
     }
 
     @GetMapping("/inOutMemberDetail")
@@ -75,7 +75,7 @@ public class GasStationController {
         List<Map<String, Object>> list = saleService.findInOutProductList(id);
         model.addAttribute("list", list);
 
-        return "gasStation/gasStation-inoutDetail";
+        return "gasStation/gasStation-inOutDetail";
     }
 
 

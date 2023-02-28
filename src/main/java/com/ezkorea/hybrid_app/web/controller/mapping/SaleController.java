@@ -4,6 +4,8 @@ import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
 import com.ezkorea.hybrid_app.domain.sale.SaleStatus;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
+import com.ezkorea.hybrid_app.domain.timetable.PartTime;
+import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,18 +38,21 @@ public class SaleController {
     public String showSalesPage(@AuthenticationPrincipal SecurityUser securityUser,
                                 Model model) {
 
-        Member memeber = memberService.findMemberById(securityUser.getMember().getId());
-        List<DailyTask> DailyList = memeber.getTaskList()
-                                           .stream()
-                                           .filter(p -> p.getTaskDate().equals(LocalDate.now()))
-                                           .toList();
+        List<TimeTable> tableList = saleService.findTableList(LocalDate.now(), securityUser.getMember());
 
-        if (DailyList.size() == 0) return "redirect:/sales/select";
+        if(tableList.size() == 0) return "redirect:/sales/select";
 
-        List<GasStation> stations = new ArrayList<>();
-        memeber.getTaskList().forEach(item ->
-            stations.add(item.getGasStation())
-        );
+        List<Map<String, String>> stations = new ArrayList<>();
+        tableList.forEach(item -> {
+            Map<String, String> map = new HashMap<>();
+            map.put("tableId", String.valueOf(item.getId()));
+            map.put("stationName", item.getGasStation().getStationName());
+            map.put("stationLocation", item.getGasStation().getStationLocation());
+            map.put("part", PartTime.of(item.getPart()));
+
+            stations.add(map);
+        });
+
         model.addAttribute("stations", stations);
         return "sales/sales-selectWork";
     }
@@ -59,17 +65,17 @@ public class SaleController {
     }
 
     @GetMapping("/sales/index/{id}")
-    public String showSellPage(@AuthenticationPrincipal SecurityUser securityUser,
-                               @PathVariable Long id,
-                               Model model) {
-        Map<String, Object> returnMap = saleService.findCurrentTask(securityUser.getMember(), id);
-        model.addAttribute("dailyTask", returnMap);
+    public String showSellIndexPage(@PathVariable Long id, Model model) {
+        Map<String, Object> returnMap = saleService.findTimeTable(id);
+        returnMap.put("tTid", id);
+
+        model.addAttribute("map", returnMap);
         return "sales/sales-detail";
     }
 
     @GetMapping("/sales/sell/{id}")
     public String showSellPage(@PathVariable Long id, Model model) {
-        model.addAttribute("stationId", id);
+        model.addAttribute("tTid", id);
         return "sales/sell-detail";
     }
 
@@ -88,7 +94,7 @@ public class SaleController {
 
     @GetMapping("/sales/close/{id}")
     public String showClosePage(@PathVariable Long id, Model model) {
-        model.addAttribute("stationId", id);
+        model.addAttribute("tTid", id);
         return "sales/close-detail";
     }
 }

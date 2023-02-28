@@ -186,4 +186,112 @@
 				, SUM(A.PRICE) AS PRICE
         FROM    STAT A
     </select>
+
+    <select id="findTablePrice" parameterType="Map" resultType="Map">
+        WITH STAT AS (
+            SELECT    A.PAYMENT AS PAYMENT
+                    , SUM(A.COUNT * B.PRICE) AS PRICE
+            FROM
+            (
+                SELECT    A.SORT
+                        , A.PAYMENT
+                        , SUM(A.COUNT) AS COUNT
+                FROM    SELL_PRODUCT A INNER JOIN
+                (
+                    SELECT  B.ID
+                    FROM    TIME_TABLE A  INNER JOIN TIME_TABLE B
+                    ON      A.PART = B.PART
+                    AND     A.TASK_DATE = B.TASK_DATE
+                    AND     A.GAS_STATION_ID = B.GAS_STATION_ID
+                    WHERE   A.ID = #{tTid}
+                    AND     A.PART <![CDATA[<>]]> 'in'
+                ) B
+                ON A.TIME_TABLE_ID = B.ID
+                WHERE A.STATUS = 'out'
+                GROUP BY A.SORT, A.PAYMENT
+            ) A INNER JOIN
+            (
+                SELECT    A.WIPER_SORT AS SORT
+                        , MAX(A.WIPER_PRICE) AS PRICE
+                FROM    WIPER A
+                GROUP BY A.WIPER_SORT
+            )B
+            ON A.SORT = B.SORT
+            GROUP BY A.PAYMENT
+        )
+        SELECT    A.PAYMENT
+                , A.PRICE
+        FROM    STAT A
+        UNION ALL
+        SELECT  '총계'
+                , SUM(A.PRICE)
+        FROM    STAT A
+    </select>
+
+    <select id="findTableCount" parameterType="Map" resultType="Map">
+        SELECT     A.NAME
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'normal' THEN A.COUNT END), 0) AS normal
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'hybrid' THEN A.COUNT END), 0) AS hybrid
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'mw' THEN A.COUNT END), 0) AS mw
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 's_class' THEN A.COUNT END), 0) AS s_class
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = '700' THEN A.PRICE END), 0) AS s_700
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME THEN A.PRICE END), 0) AS total
+        FROM
+        (
+            SELECT    B.SORT
+                    , A.NAME
+                    , SUM(B.COUNT) AS COUNT
+                    , SUM(B.COUNT) * C.PRICE AS PRICE
+            FROM
+            (
+                SELECT  B.ID, C.NAME
+                FROM    TIME_TABLE A  INNER JOIN TIME_TABLE B
+                ON A.PART = B.PART
+                INNER JOIN MEMBER C
+                ON B.MEMBER_ID = C.ID
+                AND A.TASK_DATE = B.TASK_DATE
+                AND A.GAS_STATION_ID = B.GAS_STATION_ID
+                WHERE A.ID = #{tTid}
+                AND   A.PART <![CDATA[<>]]> 'in'
+            ) A
+            LEFT OUTER JOIN
+            (
+                SELECT    A.TIME_TABLE_ID
+                        , A.SORT
+                        , A.COUNT
+                FROM    SELL_PRODUCT A
+                WHERE   A.STATUS = 'out'
+            ) B
+            ON A.ID = B.TIME_TABLE_ID
+            LEFT OUTER JOIN
+            (
+                SELECT    A.WIPER_SORT AS SORT
+                        , MAX(A.WIPER_PRICE) AS PRICE
+                FROM    WIPER A
+                GROUP BY A.WIPER_SORT
+            ) C
+            ON B.SORT = C.SORT
+            GROUP BY B.SORT, A.NAME
+        ) A
+        GROUP BY A.NAME
+    </select>
+
+    <select id="findTableFix" parameterType="Map" resultType="Map">
+        SELECT    A.SORT AS SORT
+                , A.MEMO AS MEMO
+        FROM    SELL_PRODUCT A INNER JOIN
+        (
+            SELECT  B.ID
+            FROM    TIME_TABLE A  INNER JOIN TIME_TABLE B
+            ON A.PART = B.PART
+            INNER JOIN MEMBER C
+            ON B.MEMBER_ID = C.ID
+            AND A.TASK_DATE = B.TASK_DATE
+            AND A.GAS_STATION_ID = B.GAS_STATION_ID
+            WHERE A.ID = #{tTid}
+            AND   A.PART <![CDATA[<>]]> 'in'
+        ) B
+        ON A.TIME_TABLE_ID = B.ID
+        WHERE A.STATUS = 'fix'
+    </select>
 </mapper>

@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum WiperSize {
 
-    SIZE_300("300"),
     SIZE_350("350"),
     SIZE_400("400"),
     SIZE_450("450"),

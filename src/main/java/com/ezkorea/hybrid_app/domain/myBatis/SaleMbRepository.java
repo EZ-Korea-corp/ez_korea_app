@@ -19,4 +19,8 @@ public interface SaleMbRepository {
     List<Map<String, Object>> findInProductList(Long taskId);
     List<Map<String, Object>> findStatList(Map paramMap);
     List<Map<String, Object>> findTotalStat(Map paramMap);
+
+    List<Map<String, Object>> findTablePrice(Map paramMap);
+    List<Map<String, Object>> findTableCount(Map paramMap);
+    List<Map<String, Object>> findTableFix(Map paramMap);
 }
