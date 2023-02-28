@@ -41,6 +41,23 @@
                 padding: 0;
                 margin: 5px 0;
             }
+            .part-label {
+                background-color: #f2f2f2;
+                padding: 10px;
+                border-radius: 10px;
+                margin: 20px;
+            }
+            input[type=radio] {
+                display:none;
+            }
+            input[type=radio]:checked + label {
+                background: #2563EB;
+                color: #fff;
+            }
+            input[type=radio] + label {
+                background: #cccccc;
+                color: #FFFFFF;
+            }
         </style>
         <div class="lg:space-x-12">
             <form id="selectForm" onsubmit="return false;">
@@ -51,10 +68,21 @@
                         <div class="md:py-8 py-3">
                             <h2 class="text-xl font-bold">
                                 <span th:text="|${member.getName()} ${member.getRole().getViewName()}|"></span>님
-                                <p>오늘 근무할 주유소를 선택해주세요.</p>
+                                <p>오늘의 근무지를 선택해주세요.</p>
                             </h2>
                         </div>
 
+                        <div class="md:py-8 py-3">
+                            <h1 class="block text-lg font-bold mb-4"> 근무 시간 </h1>
+                            <div class="payment-option flex">
+                                <input type="radio" name="part" value="am" id="am" checked>
+                                <label for="am" class="part-label">오전</label>
+                                <input type="radio" name="part" value="pm" id="pm">
+                                <label for="pm" class="part-label">오후</label>
+                                <input type="radio" name="part" value="full" id="full">
+                                <label for="full" class="part-label">풀타임</label>
+                            </div>
+                        </div>
                         <div class="md:py-8 py-3">
                             <h1 class="block text-lg font-bold mb-4"> 주유소 선택  </h1>
                             <div class="md:flex">
@@ -88,15 +116,20 @@
                 let stationId = $("#gasStation option:selected").data("id");
 
                 Swal.fire({
-                    html: stationName + '을 선택하시겠습니까?',
+                    html: '저장하시겠습니까?',
                     showDenyButton: true,
                     confirmButtonText: '선택',
                     denyButtonText: `취소`,
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const url = "/sales/select";
-                        const data = {stationId : stationId};
-                        const fnload = function(data) {$(location).attr('href', '/sales/index/' + data.result);}
+                        const url = "/timeTable/save";
+                        const data = {
+                            stationId : stationId,
+                            part : $("[name='part']:checked").val()
+                        };
+                        const fnload = function(data) {
+                            $(location).attr('href', '/sales/index/' + data.result);
+                        }
 
                         fnCrudJsonAjax(data, url, fnload, "post", "정상적으로 저장되었습니다.");
                     }

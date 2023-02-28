@@ -29,30 +29,98 @@
             <div class="lg:w-full card">
 
                 <div class="p-10 pt-4 divide-y divide-gray-100">
-                    <input type="hidden" id="stationId" th:value="${stationId}">
+                    <input type="hidden" id="tTid" th:value="${tTid}">
                     <div class="md:py-8 py-3">
                         <h2 class="text-xl font-bold">마감하기🌝</h2>
                     </div>
 
                     <div class="md:py-8 py-3">
-                        <div class="md:flex" id="check">
-                            <div name="out" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                                <a class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매 </a>
+                        <div class="grid grid-cols-2 gap-4 mb-4" id="check">
+                            <div name="out" class="text-sm font-medium">
+                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
                             </div>
-                            <div name="stock" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 재고 </a>
-                            </div>
-                            <div name="fix" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 고장 </a>
+                            <div name="stock" class="text-sm font-medium">
+                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 재고 </a>
                             </div>
                         </div>
-                        <form onsubmit="return false" id="dataForm">
 
+                        <div id="sellDiv">
+                            <h1 class="block text-lg font-bold mb-2"> 전체금액  </h1>
+                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        결제
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        금액
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <br>
+
+                            <h1 class="block text-lg font-bold mb-2"> 개별판매  </h1>
                             <div class="relative overflow-x-auto shadow-md">
-                                <table class="w-full text-sm text-left text-gray-500">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            이름
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            일반
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            하브
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            M
+                                            W
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            S클
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            칠백
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            금액
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <br>
+
+                            <div id="fixList">
+                                <h1 class="block text-lg font-bold mb-2"> 고장목록  </h1>
+                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-center">
+                                            종류
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-center">
+                                            메모
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                        </div>
+
+                        <div id="stockDiv">
+                            <form onsubmit="return false" id="dataForm">
+                                <div class="relative overflow-x-auto shadow-md">
+                                    <table class="w-full text-sm text-left text-gray-500">
+                                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                         <tr>
-                                            <th scope="col" class="px-6 py-3">
+                                            <th scope="col" class="px-6 py-3 text-center">
                                                 구분
                                             </th>
                                             <th scope="col" class="px-2 py-3 uk-text-center"
@@ -60,30 +128,30 @@
                                                 th:text="${sort.getName()}">
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr class="bg-white border-b"
-                                        th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}">
-                                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap" th:text="${sort.getViewName()}"></th>
-                                        <td class="px-2 py-4" th:with="item=1"
-                                            th:each="size : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}">
-                                            <th:block th:if="${!sort.getName().equals('size_700') && !size.getName().equals('700')}">
-                                                <span type="text" th:name="${(sortStat.index) * 8 + (sizeStat.count)}"/>
-                                            </th:block>
-                                            <th:block th:if="${sort.getName().equals('size_700') && size.getName().equals('700')}">
-                                                <span type="text" th:name="33"/>
-                                            </th:block>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="bg-white border-b"
+                                            th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}">
+                                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap text-center" th:text="${sort.getInit()}"></th>
+                                            <td class="px-2 py-4 text-center" th:with="item=1"
+                                                th:each="size : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}">
+                                                <th:block th:if="${!sort.getName().equals('size_700') && !size.getName().equals('700')}">
+                                                    <input type="text" th:name="${(sortStat.index) * 7 + (sizeStat.count)}"/>
+                                                </th:block>
+                                                <th:block th:if="${sort.getName().equals('size_700') && size.getName().equals('700')}">
+                                                    <input type="text" th:name="29"/>
+                                                </th:block>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                            <hr class="mt-4">
-                            <button type="submit" id="submit" class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white" disabled="disabled"> 마감등록 </button>
-                            <a th:href="@{|/sales/index/${stationId}|}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
-                        </form>
-                    </div>
+                                <hr class="mt-4">
+                                <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 마감등록 </button>
+                                <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                            </form>
+                        </div>
 
 
                 </div>
@@ -111,11 +179,11 @@
 
                 // 조회 - 판매, 재고, 고장
                 $("#check div").on("click", function() {
-                    let status = $(this).attr("name");
+                    let _status = $(this).attr("name");
 
                     // 상단바
                     $("#check div").each(function() {
-                        if($(this).attr("name") == status) {
+                        if($(this).attr("name") == _status) {
                             $(this).find("a").removeClass("bg-gray-600")
                                              .addClass("bg-blue-600");
                         } else {
@@ -124,67 +192,113 @@
                         }
                     });
 
-                    // 재고 - 마감등록 diable 해제
-                    if(status == "stock") {
-                        $("#submit").attr('disabled', false)
-                                    .removeClass("bg-gray-600")
-                                    .addClass("bg-blue-600");
+                    if(_status === "out") {
+                        $("#sellDiv").show();
+                        $("#stockDiv").hide();
+
+                        fnFindTableStat(_status, fnFindTableStatResult);
                     } else {
-                        $("#submit").attr('disabled', true)
-                                    .removeClass("bg-blue-600")
-                                    .addClass("bg-gray-600");
+                        $("#sellDiv").hide();
+                        $("#stockDiv").show();
+
+                        fnFindTableStat(_status, fnFindStockResult);
                     }
 
-                    fnFindInputProduct(status);
+
                 });
 
-                fnFindInputProduct("out"); //default 판매
+                $("[name='out']").click();
             });
 
-            // 입고조회
-            function fnFindInputProduct(status) {
+            // 마감조회
+            function fnFindTableStat(status, fnCallBack) {
                 const url = "/sales/close";
                 const data = {
-                    "stationId" : $("#stationId").val(),
+                    "tTid" : $("#tTid").val(),
                     "status" : status
                 };
 
-                fnFindJsonAjax(data, url, fnFindInputProductResult);
+                fnFindJsonAjax(data, url, fnCallBack);
             }
 
-            // 테이블 그리기
-            function fnFindInputProductResult(data) {
+            // 판매 테이블 그리기
+            function fnFindTableStatResult(data) {
+
+                // 전체금액목록
+                let tbody0 = $($("#sellDiv tbody").get(0));
+                tbody0.empty();
+                data.priceList.forEach(function(item) {
+                    tbody0.append(
+                        $("<tr>", {class:"border-b border-gray-200 dark:border-gray-700"}).append(
+                            $("<th>", {text:item.NAME||item.PAYMENT, class:"text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"}),
+                            $("<td>", {text:(item.PRICE||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"})
+                        )
+                    )
+                })
+
+                // 개별판매목록
+                let tbody1 = $($("#sellDiv tbody").get(1));
+                tbody1.empty();
+                data.countList.forEach(function(item) {
+                    tbody1.append(
+                        $("<tr>", {class:"border-b border-gray-200 dark:border-gray-700"}).append(
+                            $("<th>", {text:item.NAME||item.PAYMENT, class:"text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"}),
+                            $("<td>", {text:(item.normal||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"}),
+                            $("<td>", {text:(item.hybrid||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"}),
+                            $("<td>", {text:(item.mw||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"}),
+                            $("<td>", {text:(item.s_700||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"}),
+                            $("<td>", {text:(item.s_class||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"}),
+                            $("<td>", {text:(item.total||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"}),
+                        )
+                    )
+                })
+
+                // 고장목록
+                let tbody2 = $($("#sellDiv tbody").get(2));
+                tbody2.empty();
+                if(data.fixList.length > 0) {
+                    $("#fixList").show();
+                    data.fixList.forEach(function(item) {
+                        tbody2.append(
+                            $("<tr>", {class:"border-b border-gray-200 dark:border-gray-700"}).append(
+                                $("<th>", {text:item.NAME, class:"text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"}),
+                                $("<td>", {text:item.MEMO, class:"text-center px-6 py-4"})
+                            )
+                        )
+                    })
+                } else {
+                    $("#fixList").hide();
+                }
+            }
+
+            // 재고 테이블 그리기
+            function fnFindStockResult(data) {
                 const $form = $("#dataForm");
-                $("#dataForm span").text("");
-                data.result.forEach(function(item) {
-                    $form.find("span[name=" + item.wiper + "]").text(item.count);
+                $("#dataForm input").val("");
+                data.stockList.forEach(function(item) {
+                    $form.find("input[name=" + item.wiper + "]").val(item.count);
                 })
             }
 
             // 마감등록
             function fnCloseTask() {
-                if(!fnValidCheck()) return;
+                const url = "/sales/input";
+                const saleDtoList = [];
+                const form = $('#dataForm').serializeArray();
+                const fnload = function() {location.href= "/sales/index/" + $("#tTid").val();}
+                form.forEach(function(item) {
+                    saleDtoList.push({
+                        "wiper" : item.name,
+                        "count" : item.value,
+                        "status" : "stock",
+                    })
+                })
+                const data = {
+                    "id"    : $("#tTid").val(),
+                    "saleDtoList" : saleDtoList
+                }
 
-                const url = "/sales/closeTask";
-                const fnload = function() {location.href= "/sales";}
-
-                fnCrudJsonAjax("", url, fnload, "post", "정상적으로 저장되었습니다.");
-            }
-
-            function fnValidCheck() {
-                let isValid = true;
-                $('#dataForm').find('span').each(function() {
-                    if(Number($(this).text()) < 0) {
-                        Swal.fire({
-                            icon: 'error',
-                            text: '재고에 음수가 존재합니다.',
-                        });
-
-                        isValid = false;
-                        return false;
-                    }
-                });
-                return isValid;
+                fnCrudJsonAjax(data, url, fnload, "post", "정상적으로 저장되었습니다.")
             }
 
         </script>
