@@ -1,26 +1,23 @@
-package com.ezkorea.hybrid_app.web.controller.template;
+package com.ezkorea.hybrid_app.web.template;
 
-import com.ezkorea.hybrid_app.web.template.KakaoMapsApiRestTemplate;
-import com.ezkorea.hybrid_app.web.template.OpinetApiRestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class KakaoMapsApiRestTemplateTest {
 
     @Autowired
     private KakaoMapsApiRestTemplate template;
-
-    @Autowired
-    private OpinetApiRestTemplate opinetApiRestTemplate;
 
     private final String lat = "37.2976181";
     private final String lng = "126.9714921";
@@ -66,12 +63,6 @@ class KakaoMapsApiRestTemplateTest {
         System.out.println("distance = " + distance);
 
         assertThat(distance).isEqualTo("3734");
-    }
-
-    @Test
-    @DisplayName("유류 정보를 확인하는 테스트")
-    void getFuel() {
-        opinetApiRestTemplate.saveTodayFuelCost();
     }
 
 }
