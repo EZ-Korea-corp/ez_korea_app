@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            textarea {
+                resize: none;
+            }
+        </style>
+        <div id="bg" class="lg:space-x-12">
+            <form id="createNoticeForm" onsubmit="return false;">
+                <div class="">
+
+                    <!-- form header -->
+                    <div class="text-center border-b border-gray-100 py-6">
+                        <h3 class="font-bold text-xl"> 공지 글 작성 </h3>
+                    </div>
+
+                    <!-- form body -->
+                    <div class="p-10 space-y-7">
+                        <div>
+                            <label for="title" class="font-semibold text-base"> 제목 </label>
+                            <input id="title" class="with-border" name="title" type="text" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold text-base"> 내용 </label>
+                            <textarea id="content" name="content" rows="8" class="p-4 bg-gray-100"></textarea>
+                        </div>
+
+                    </div>
+
+                    <form id="s3Form" onsubmit="return false;">
+                        <div class="flex items-center justify-center bg-grey-lighter">
+                            <label class="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white">
+                                <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                </svg>
+                                <span class="mt-2 text-base leading-normal">Select a Images</span>
+                                <input type='file' name="files" class="hidden" accept=".png, .jpeg, .jpg" id="multipleFiles" multiple max="5"/>
+                            </label>
+                        </div>
+                        <div id="imageChange" class="grid grid-cols-2 gap-4 p-10"></div>
+                    </form>
+
+                    <!-- form footer -->
+                    <div class="grid grid-cols-2 gap-4 m-4 p-10">
+                        <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
+                        <button id="submit" type="button" class="button w-full">생성하기</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <script>
+
+            $("#submit").on("click", function (){
+                let flag = true;
+                let title = $('#title').val();
+                let content = $('#content').val();
+
+                if (title.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '제목을 입력해주세요.',
+                    });
+                    flag = false;
+                }
+
+                if (content.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '내용을 입력해주세요.',
+                    });
+                    flag = false;
+                }
+                if (flag === true) {
+                    fnResponseCrudJsonAjax($('#createNoticeForm').serializeObject(), '/expenses', 'POST', successHref);
+                }
+            });
+
+            function successHref(data, xhr) {
+                let savedId = xhr.id;
+                imageUpload('notice', savedId, '/image/upload', 'PUT');
+                if (fileCount !== 0) {
+                    showLoadingSpinner(2500, "이미지를 저장하고 있습니다.");
+                    setTimeout(function () {
+                        $(location).attr("href", "/expenses/".concat(xhr.id));
+                    }, 2500);
+                } else {
+                    $(location).attr("href", "/expenses/".concat(xhr.id));
+                }
+            }
+        </script>
+    </main>
+
+</body>
+
+</html>

@@ -1,6 +1,7 @@
 package com.ezkorea.hybrid_app.domain.aws;
 
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
+import com.ezkorea.hybrid_app.domain.expenses.Expenses;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import lombok.*;
@@ -23,6 +24,11 @@ public class S3Image extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToOne
+    @JoinColumn(name = "expenses_id")
+    private Expenses expenses;
+
     private String filePath;
     private String fileName;
     private String fileRepo;
