@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <div class="lg:space-x-12">
+            <form id="selectForm" onsubmit="return false;">
+                <div class="lg:w-full card">
+
+                    <div class="p-10 pt-4 divide-y divide-gray-100">
+
+                        <div class="md:py-8 py-3">
+                            <h2 class="text-xl font-bold"><span class="mr-2">💰</span>경비 관리</h2>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+
+                            <div class="relative overflow-x-auto shadow-md" id="select-div">
+
+                                <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                            신청 번호
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                            비용
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                            구분
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                            유종
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                            날짜
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                            영수증
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="uk-text-center">
+                                    <tr class="bg-white border-b" th:each="expenses : ${expensesList}">
+                                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                            <h3 th:text="${expenses.getId()}">아이디</h3>
+                                        </th>
+                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${#numbers.formatInteger(expenses.getCost(), 3, 'COMMA')}">비용</td>
+                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getExpensesStatus().getViewName()}">구분</td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            <a th:if="${expenses.getExpensesStatus().equals(T(com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus).FUEL)}" th:text="${expenses.getFuelStatus().getViewName()}"></a>
+                                        </td>
+                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getPayDate()}"></td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            <button class="button gray" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|">영수증 확인</button>
+
+                                            <!-- This is the modal with the default close button -->
+                                            <div th:id="|modal${expenses.getId()}|" uk-modal>
+                                                <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
+                                                    <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
+                                                    <h2 class="mb-2 uk-modal-title">영수증</h2>
+                                                    <img th:src="${expenses.getS3Image().getFilePath()}">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <script th:inline="javascript">
+            jQuery(document).ready(function($){
+
+                $('.live-search-table tbody tr').each(function(){
+                    $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
+                });
+
+                $('.table-live-search-box').on('keyup', function(){
+
+                    let searchTerm = $(this).val().toLowerCase();
+
+                    $('.live-search-table tbody tr').each(function(){
+                        if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                });
+
+            });
+
+            let inviteBtn = {
+                doInvite: function (idx) {
+                    fnResponseCrudJsonAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'PUT', refreshPage);
+                }
+            }
+
+            function refreshPage(data) {
+                location.reload();
+            }
+        </script>
+    </main>
+
+</body>
+
+</html>
