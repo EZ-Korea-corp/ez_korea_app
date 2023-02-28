@@ -48,8 +48,7 @@
                                 }).then((result) => {
                                     /* Read more about isConfirmed, isDenied below */
                                     if (result.isConfirmed) {
-                                        let time = fileCount * 1050;
-                                        showLoadingSpinner(time, "이미지를 저장하고 있습니다.");
+                                        let time = showLoadingSpinner("이미지를 저장하고 있습니다.");
                                         imageUpload('member', id, '/image/upload', 'PUT');
                                         setTimeout(function () {
                                             $(location).attr("href", "/profile/".concat(username));

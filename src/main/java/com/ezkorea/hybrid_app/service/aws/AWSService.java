@@ -192,7 +192,7 @@ public class AWSService {
 
         log.info("S3 : 삭제할 이미지의 Key = ({}) {}", isExistObject, deleteObjectRequest.getKey());
 
-        if (isExistObject && deleteObjectRequest.getKey().contains("/images/static/profile-image.jpg")) {
+        if (isExistObject && !deleteObjectRequest.getKey().contains("/images/static/profile-image.jpg")) {
             log.info("S3 : {} 이미지가 삭제되었습니다.", deleteObjectRequest.getKey());
             amazonS3Client.deleteObject(
                     new DeleteObjectRequest(bucketName, deleteObjectRequest.getKey())

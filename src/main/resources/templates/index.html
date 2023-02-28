@@ -95,7 +95,7 @@
                 denyButtonText: `닫기`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    showIndexLoadingSpinner(5000, "위치 정보를 저장하고 있습니다.");
+                    setTimeLoadingSpinner(5000, "위치 정보를 저장하고 있습니다.");
                     setLocation();
                     setTimeout(function() {
                         $('#location').attr('value', locationStr);
@@ -115,7 +115,7 @@
                 denyButtonText: `닫기`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    showIndexLoadingSpinner(5000, "위치 정보를 저장하고 있습니다.");
+                    setTimeLoadingSpinner(5000, "위치 정보를 저장하고 있습니다.");
                     setLocation();
                     setTimeout(function() {
                         $('#location').attr('value', locationStr);

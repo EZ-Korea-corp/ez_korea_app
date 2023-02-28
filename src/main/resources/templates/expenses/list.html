@@ -123,7 +123,27 @@
 
             function removeTask(id) {
 
-                console.log(id);
+                Swal.fire({
+                    title: '내역 삭제',
+                    text: id + '번 내역을 삭제하시겠습니까?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: '삭제하기',
+                    denyButtonText: '취소',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let data = {
+                            id: id
+                        }
+                        fnResponseCrudJsonAjax(data, '/expenses', 'DELETE');
+                        setTimeLoadingSpinner(1100, "내역을 삭제하고 있습니다.");
+                        setTimeout(function () {
+                            $(location).attr("href", "/expenses");
+                        }, 1100);
+                    } else if (result.isDenied) {
+                        Swal.fire('변경되지 않았습니다.')
+                    }
+                })
 
             }
 

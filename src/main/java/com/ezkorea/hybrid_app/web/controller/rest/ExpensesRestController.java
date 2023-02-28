@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -31,6 +28,15 @@ public class ExpensesRestController {
         Expenses savedExpenses = expensesService.saveExpenses(dto, securityUser.getMember());
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", savedExpenses.getId()), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/expenses")
+    public ResponseEntity<Object> deleteExpenses(@RequestBody ExpensesDto dto,
+                                                 @AuthenticationPrincipal SecurityUser securityUser) {
+
+        expensesService.deleteExpenses(dto, securityUser.getMember());
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 
 }

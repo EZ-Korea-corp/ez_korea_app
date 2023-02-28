@@ -246,9 +246,9 @@ function fnCalenderMaker($calender, date) {
     }
 }
 
-function showIndexLoadingSpinner(time, msg) {
+function setTimeLoadingSpinner(time, msg) {
     $('#body_div').hide();
-    let timerInterval
+    let timerInterval;
     Swal.fire({
         title: msg,
         html: '완료될 때까지 <b></b> ms 남았습니다.',
@@ -270,7 +270,6 @@ function showIndexLoadingSpinner(time, msg) {
 
 function showLoadingSpinner(msg) {
     let time = fileCount * 1100;
-    $('#body_div').hide();
     let timerInterval
     Swal.fire({
         title: msg,
