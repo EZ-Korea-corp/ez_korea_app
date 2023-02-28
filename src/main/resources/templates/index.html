@@ -35,7 +35,10 @@
 
             <hr class="my-5">
 
-            <h2 class="text-xl font-semibold mb-2"> 🧾 공지사항 </h2>
+            <div class="flex justify-between">
+                <h2 class="text-xl font-semibold mb-2"> 🧾 공지사항 </h2>
+                <p><a class="text-blue-500" th:href="@{/notice}">더보기️ </a></p>
+            </div>
 
             <div class="card divide-y divide-gray-100 sm:m-0">
 
@@ -112,7 +115,7 @@
                 denyButtonText: `닫기`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    showLoadingSpinner();
+                    showLoadingSpinner(5000, "위치 정보를 저장하고 있습니다.");
                     setLocation();
                     setTimeout(function() {
                         $('#location').attr('value', locationStr);
