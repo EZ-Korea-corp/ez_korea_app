@@ -6,9 +6,10 @@ import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.web.dto.ExpensesDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +30,9 @@ public class ExpensesService {
         return expensesRepository.save(newExpenses);
     }
 
-    public List<Expenses> findExpensesByMember(Member member) {
-        return expensesRepository.findAllByMember(member);
+    public Page<Expenses> findExpensesByMember(Member member, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return expensesRepository.findAllByMemberOrderByPayDateDesc(member, pageable);
     }
 
 }

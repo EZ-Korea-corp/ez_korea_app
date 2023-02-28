@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @Slf4j
@@ -17,10 +18,10 @@ public class ExpensesController {
     private final ExpensesService expensesService;
 
     @GetMapping("/expenses")
-    public String showExpensesListPage(Model model,
+    public String showExpensesListPage(Model model, @RequestParam(value="page", defaultValue="0", required = false) int page,
                                        @AuthenticationPrincipal SecurityUser securityUser) {
 
-        model.addAttribute("expensesList", expensesService.findExpensesByMember(securityUser.getMember()));
+        model.addAttribute("expensesList", expensesService.findExpensesByMember(securityUser.getMember(), page));
 
         return "expenses/list";
     }

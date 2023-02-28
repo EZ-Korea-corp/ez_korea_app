@@ -114,10 +114,10 @@
                 if (fileCount !== 0) {
                     showLoadingSpinner(2500, "이미지를 저장하고 있습니다.");
                     setTimeout(function () {
-                        $(location).attr("href", "/expenses/".concat(xhr.id));
+                        $(location).attr("href", "/expenses");
                     }, 2500);
                 } else {
-                    $(location).attr("href", "/expenses/".concat(xhr.id));
+                    $(location).attr("href", "/expenses");
                 }
             }
         </script>
