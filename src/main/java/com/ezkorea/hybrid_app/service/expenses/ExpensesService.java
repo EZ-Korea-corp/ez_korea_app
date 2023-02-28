@@ -56,7 +56,7 @@ public class ExpensesService {
 
     public Page<Expenses> findAllExpenses(int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        return expensesRepository.findAllByOrderByPayDateDesc(pageable);
+        return expensesRepository.findAllByOrderByPayDateDescManagerCheckAsc(pageable);
     }
 
     @Transactional
