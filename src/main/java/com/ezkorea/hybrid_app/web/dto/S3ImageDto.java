@@ -7,9 +7,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class NoticeDto {
+public class S3ImageDto {
 
     private Long id;
-    private String title;
-    private String content;
+    private String entity;
+
 }

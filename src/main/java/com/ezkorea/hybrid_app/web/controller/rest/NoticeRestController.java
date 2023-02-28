@@ -35,4 +35,25 @@ public class NoticeRestController {
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", savedNotice.getId()), HttpStatus.OK);
     }
+
+    @PutMapping("/notice/{id}")
+    public ResponseEntity<Object> updateNotice(@RequestBody NoticeDto dto, @PathVariable Long id,
+                                               @AuthenticationPrincipal SecurityUser securityUser) {
+
+        Notice savedNotice = noticeService.updateNotice(dto);
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", savedNotice.getId()), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/notice/{id}")
+    public ResponseEntity<Object> DeleteNotice(@PathVariable Long id,
+                                               @AuthenticationPrincipal SecurityUser securityUser) {
+
+        Notice currentNotice = noticeService.findNoticeById(id);
+        if (currentNotice.getWriter().getUsername().equals(securityUser.getMember().getUsername())) {
+            noticeService.deleteNotice(currentNotice);
+        }
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+    }
 }

@@ -1,7 +1,10 @@
 package com.ezkorea.hybrid_app.service.user.manager;
 
+import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
+import com.ezkorea.hybrid_app.domain.notice.Notice;
+import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
@@ -9,6 +12,8 @@ import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
+import com.ezkorea.hybrid_app.service.aws.AWSService;
+import com.ezkorea.hybrid_app.service.notiece.NoticeService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
@@ -33,6 +38,8 @@ public class ManagerService {
     private final MemberService mService;
     private final DivisionService dService;
     private final TeamService tService;
+    private final NoticeService nService;
+    private final AWSService awsService;
 
     private final CommuteMbRepository commuteMbRepository;
     private final DailyTaskRepository dailyTaskRepository;
@@ -179,4 +186,5 @@ public class ManagerService {
     public Object findTotalStat(Map<String, Object> data) {
         return saleMbRepository.findTotalStat(data);
     }
+
 }

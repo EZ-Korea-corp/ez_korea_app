@@ -1,5 +1,7 @@
 package com.ezkorea.hybrid_app.service.user.member;
 
+import com.ezkorea.hybrid_app.domain.aws.S3Image;
+import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
@@ -33,11 +35,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final ModelMapper mapper;
     private final PasswordEncoder passwordEncoder;
 
     private final MemberRepository memberRepository;
     private final CommuteTimeRepository ctRepository;
+    private final S3ImageRepository s3Repository;
     private final SubAuthRepository saRepository;
 
     private final CommuteService commuteService;
@@ -57,12 +59,32 @@ public class MemberService {
             postAuth = true;
             inputAuth = true;
         }
-        Member savedMember = memberRepository.save(mapper.map(dto, Member.class));
+        Member savedMember = memberRepository.save(Member.builder()
+                .username(dto.getUsername())
+                .password(dto.getPassword())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .sex(dto.getSex())
+                .name(dto.getName())
+                .role(dto.getRole())
+                .memberStatus(dto.getMemberStatus())
+                .commuteTimeList(new ArrayList<>())
+                .taskList(new ArrayList<>())
+                .noticeList(new ArrayList<>())
+                .build());
+//        Member savedMember = memberRepository.save(mapper.map(dto, Member.class));
         savedMember.setSubAuth(SubAuth.builder()
                 .member(savedMember)
                 .postAuth(postAuth)
                 .inputAuth(inputAuth)
                 .build());
+
+        savedMember.setS3Image(s3Repository.save(S3Image.builder()
+                .fileName("profile-image.jpg")
+                .member(savedMember)
+                .fileRepo("images/static/")
+                .filePath("https://ezkorea-bucket.s3.ap-northeast-2.amazonaws.com/images/static/profile-image.jpg")
+                .build()));
     }
 
     /**
