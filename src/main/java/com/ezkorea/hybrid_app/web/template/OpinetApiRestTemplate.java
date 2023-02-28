@@ -37,7 +37,7 @@ public class OpinetApiRestTemplate {
      * - *: 해당 필드의 모든 값
      * - ? : 해당 필드를 사용하지 않음
      * */
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 9 2 * * ?")
     public void saveTodayFuelCost() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();

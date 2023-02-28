@@ -49,6 +49,8 @@
                         <div>
                             <label for="cost" class="font-semibold text-lg"> 비용 </label>
                             <input id="cost" class="with-border" name="cost" type="number" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off" required>
+                            <!--<p>금일 평균 유류비(휘발유 : <a th:text="${cost.getGasolinePrice()}"></a>, 경유 : <a th:text="${cost.getDieselPrice()}"></a>)</p>-->
+                            <p>주유 지원비 = (주행거리 / 연비 * 기름값)</p>
                         </div>
 
                         <div class="relative">
