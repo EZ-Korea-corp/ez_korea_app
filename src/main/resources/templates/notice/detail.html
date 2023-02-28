@@ -47,7 +47,7 @@
                             <hr class="pb-2">
                         </th:block>
 
-                        <div th:utext="${notice.getContent()}"></div>
+                        <div id="content" th:utext="${notice.getContent()}"></div>
 
                         <th:block sec:authorize="hasAuthority('ROLE_MANAGER')">
                             <hr>
@@ -81,6 +81,11 @@
         <script>
 
             jQuery(document).ready(function($){
+
+                let content = $('#content').text();
+                console.log(content);
+                let html = content.replace(/\n/g, '<br>');
+                $('#content').html(html);
 
                 /*const Editor = toastui.Editor;*/
 
