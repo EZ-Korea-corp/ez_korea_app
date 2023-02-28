@@ -1,5 +1,8 @@
 package com.ezkorea.hybrid_app.web.template;
 
+import com.ezkorea.hybrid_app.domain.expenses.fuel.FuelCost;
+import com.ezkorea.hybrid_app.domain.expenses.fuel.FuelCostRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class OpinetApiRestTemplate {
 
@@ -22,10 +26,11 @@ public class OpinetApiRestTemplate {
     private String REST_API_KEY;
     private final int GASOLINE_NUM = 1;
     private final int DIESEL_NUM = 2;
+    private final FuelCostRepository fcRepository;
 
     /**
      * 매일 새벽 3시에 실행되는 메소드
-     * "0 0 6 * * ?": 초, 분, 시, 일, 월, 요일 순서로 표현한 cron 표현식
+     * "0 0 3 * * ?": 초, 분, 시, 일, 월, 요일 순서로 표현한 cron 표현식
      * - *: 해당 필드의 모든 값
      * - ? : 해당 필드를 사용하지 않음
      * */
@@ -39,9 +44,12 @@ public class OpinetApiRestTemplate {
         JSONObject jsonObject = convertToJson(response.getBody());
 
         int gasolinePriceAvg = getFuelCost(jsonObject, GASOLINE_NUM);
-        System.out.println(gasolinePriceAvg);
         int dieselPriceAvg = getFuelCost(jsonObject, DIESEL_NUM);
-        System.out.println(dieselPriceAvg);
+
+        fcRepository.save(FuelCost.builder()
+                .gasolinePrice(gasolinePriceAvg)
+                .dieselPrice(dieselPriceAvg)
+                .build());
 
     }
 
