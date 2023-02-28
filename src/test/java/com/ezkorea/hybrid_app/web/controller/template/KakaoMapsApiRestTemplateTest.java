@@ -1,5 +1,7 @@
 package com.ezkorea.hybrid_app.web.controller.template;
 
+import com.ezkorea.hybrid_app.web.template.KakaoMapsApiRestTemplate;
+import com.ezkorea.hybrid_app.web.template.OpinetApiRestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;

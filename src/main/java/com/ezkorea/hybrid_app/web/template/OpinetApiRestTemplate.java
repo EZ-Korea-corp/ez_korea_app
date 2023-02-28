@@ -1,4 +1,4 @@
-package com.ezkorea.hybrid_app.web.controller.template;
+package com.ezkorea.hybrid_app.web.template;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

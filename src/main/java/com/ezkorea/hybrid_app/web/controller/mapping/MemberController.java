@@ -3,7 +3,7 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
-import com.ezkorea.hybrid_app.web.controller.template.KakaoMapsApiRestTemplate;
+import com.ezkorea.hybrid_app.web.template.KakaoMapsApiRestTemplate;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
