@@ -19,12 +19,12 @@
                 <div class="">
 
                     <!-- form header -->
-                    <div class="text-center border-b border-gray-100 py-6">
+                    <div class="text-center border-gray-100 py-6">
                         <h3 class="font-bold text-xl"> 경비 사용 보고서 </h3>
                     </div>
 
                     <!-- form body -->
-                    <div class="p-10 space-y-7">
+                    <div class="p-10 space-y-7 card">
 
                         <div id="expensesDiv">
                             <label for="expensesStatus" class="font-semibold text-lg"> 사용 분류 </label>
@@ -58,20 +58,20 @@
                             </div>
                             <input datepicker datepicker-format="yyyy-mm-dd" type="text" name="payDate" id="payDate" class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="날짜를 선택해주세요.">
                         </div>
-                    </div>
 
-                    <form id="s3Form" onsubmit="return false;">
-                        <div class="flex items-center justify-center bg-grey-lighter">
-                            <label class="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white">
-                                <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
-                                </svg>
-                                <span class="mt-2 text-base leading-normal">Select a Images</span>
-                                <input type='file' name="files" class="hidden" accept=".png, .jpeg, .jpg" id="multipleFiles"/>
-                            </label>
-                        </div>
-                        <div id="imageChange" class="grid grid-cols-2 gap-4 p-10"></div>
-                    </form>
+                        <form id="s3Form" onsubmit="return false;">
+                            <div class="flex items-center justify-center bg-grey-lighter">
+                                <label class="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white">
+                                    <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                    </svg>
+                                    <span class="mt-2 text-base leading-normal">Select a Images</span>
+                                    <input type='file' name="files" class="hidden" accept=".png, .jpeg, .jpg" id="multipleFiles"/>
+                                </label>
+                            </div>
+                            <div id="imageChange" class="flex justify-between p-4"></div>
+                        </form>
+                    </div>
 
                     <!-- form footer -->
                     <div class="grid grid-cols-2 gap-4 m-4 p-10">

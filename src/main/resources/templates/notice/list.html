@@ -19,7 +19,9 @@
                             <h2 class="text-xl font-bold">
                                 <span class="mr-2">📢</span>공지사항 목록
                             </h2>
-                            <button th:if="${member.getSubAuth().isPostAuth()}" class="bg-blue-500 text-white w-1/3 float-right rounded px-4">글 작성</button>
+                            <a th:if="${member.getSubAuth().isPostAuth()}"
+                               th:href="@{/notice/create}"
+                               class="button rounded-lg px-4 hover:text-white">공지 작성</a>
                         </div>
                     </div>
 

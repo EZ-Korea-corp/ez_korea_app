@@ -17,6 +17,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -29,12 +31,13 @@ public class OpinetApiRestTemplate {
     private final FuelCostRepository fcRepository;
 
     /**
-     * 매일 새벽 3시에 실행되는 메소드
-     * "0 0 3 * * ?": 초, 분, 시, 일, 월, 요일 순서로 표현한 cron 표현식
+     * 매일 새벽 00시 00분에 실행되는 메소드
+     * "0 0 0 * * ?":
+     * "초 분 시 일 월 요일" 순서로 표현한 cron 표현식
      * - *: 해당 필드의 모든 값
      * - ? : 해당 필드를 사용하지 않음
      * */
-    @Scheduled(cron = "0 0 3 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void saveTodayFuelCost() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -49,6 +52,7 @@ public class OpinetApiRestTemplate {
         fcRepository.save(FuelCost.builder()
                 .gasolinePrice(gasolinePriceAvg)
                 .dieselPrice(dieselPriceAvg)
+                .baseDate(LocalDate.now())
                 .build());
 
     }
