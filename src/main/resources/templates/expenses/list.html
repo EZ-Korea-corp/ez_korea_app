@@ -50,6 +50,9 @@
                                     <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
                                         영수증
                                     </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                        삭제
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody class="uk-text-center">
@@ -74,6 +77,9 @@
                                                 <img th:src="${expenses.getS3Image().getFilePath()}">
                                             </div>
                                         </div>
+                                    </td>
+                                    <td class="px-2 py-4 whitespace-nowrap">
+                                        <button class="button gray" th:onclick="|removeTask(${expenses.getId()})|" type="button">삭제</button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -114,6 +120,13 @@
             </div>
         </div>
         <script th:inline="javascript">
+
+            function removeTask(id) {
+
+                console.log(id);
+
+            }
+
             jQuery(document).ready(function($){
 
                 $('.live-search-table tbody tr').each(function(){

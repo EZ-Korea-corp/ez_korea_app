@@ -246,7 +246,7 @@ function fnCalenderMaker($calender, date) {
     }
 }
 
-function showLoadingSpinner(time, msg) {
+function showIndexLoadingSpinner(time, msg) {
     $('#body_div').hide();
     let timerInterval
     Swal.fire({
@@ -265,4 +265,28 @@ function showLoadingSpinner(time, msg) {
             clearInterval(timerInterval)
         }
     })
+    return time;
+}
+
+function showLoadingSpinner(msg) {
+    let time = fileCount * 1100;
+    $('#body_div').hide();
+    let timerInterval
+    Swal.fire({
+        title: msg,
+        html: '완료될 때까지 <b></b> ms 남았습니다.',
+        timer: time,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading()
+            const b = Swal.getHtmlContainer().querySelector('b')
+            timerInterval = setInterval(() => {
+                b.textContent = Swal.getTimerLeft()
+            }, 100)
+        },
+        willClose: () => {
+            clearInterval(timerInterval)
+        }
+    })
+    return time;
 }
