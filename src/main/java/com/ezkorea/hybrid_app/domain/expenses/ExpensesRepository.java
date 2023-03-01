@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
+
 
 public interface ExpensesRepository extends JpaRepository<Expenses, Long> {
 
@@ -13,4 +15,7 @@ public interface ExpensesRepository extends JpaRepository<Expenses, Long> {
 
     @Query("SELECT e FROM Expenses e ORDER BY e.payDate DESC, e.isManagerCheck ASC")
     Page<Expenses> findAllByOrderByPayDateDescManagerCheckAsc(Pageable pageable);
+
+    @Query("SELECT e FROM Expenses e WHERE e.payDate = ?1 ORDER BY e.payDate DESC, e.isManagerCheck ASC")
+    Page<Expenses> findAllByPayDateOrderByPayDateDescManagerCheckAsc(LocalDate date, Pageable pageable);
 }

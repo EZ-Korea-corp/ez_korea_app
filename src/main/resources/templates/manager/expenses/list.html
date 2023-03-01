@@ -9,16 +9,33 @@
 <body>
 
     <main layout:fragment="main">
+        <style>
+            #payDate {
+                padding: 0 2.5rem !important;
+            }
+        </style>
         <div class="lg:space-x-12">
             <div class="lg:w-full card">
 
                 <div class="p-10 pt-4 divide-y divide-gray-100">
 
                     <div class="md:py-8 py-3">
-                        <div class="flex justify-between">
+                        <div class="flex justify-between align-items-center">
                             <h2 class="text-xl font-bold">
-                                <span class="mr-2">💰</span>전체 경비 내역 관리
+                                <span class="mr-2">💰</span>경비 내역 관리
                             </h2>
+                            <div class="relative w-1/3">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <form method="get" th:action="@{/manager/expenses}" id="searchForm">
+                                        <input type="text" name="payDate" id="payDate" readonly required class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="날짜를 선택해주세요.">
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -36,13 +53,16 @@
                                         사원 정보
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                        비용
-                                    </th>
-                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                         구분
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                         유종
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        비용
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        근무지
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
                                         날짜
@@ -61,11 +81,12 @@
                                         <h3 th:text="${expenses.getId()}">아이디</h3>
                                     </th>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getMember().getName()}">이름</td>
-                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${#numbers.formatInteger(expenses.getCost(), 3, 'COMMA')}">비용</td>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getExpensesStatus().getViewName()}">구분</td>
                                     <td class="px-2 py-4 whitespace-nowrap">
                                         <a th:if="${expenses.getExpensesStatus().equals(T(com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus).FUEL)}" th:text="${expenses.getFuelStatus().getViewName()}"></a>
                                     </td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${#numbers.formatInteger(expenses.getCost(), 3, 'COMMA')}">비용</td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getGasStation().getStationName()}">근무지</td>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getPayDate()}"></td>
                                     <td class="px-2 py-4 whitespace-nowrap">
                                         <button class="button gray" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|" th:onclick="|checkTask(${expenses.getId()})|" >영수증 확인</button>
@@ -91,8 +112,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="px-10 pb-10 mx-auto">
+                <div class="m-4 px-10 pb-10 mx-auto">
                     <nav th:if="${!expensesList.isEmpty()}">
                         <div class="flex justify-center">
                             <ul class="inline-flex items-center -space-x-px">
@@ -123,6 +143,18 @@
             </div>
         </div>
         <script th:inline="javascript">
+
+            $(document).ready(function() {
+
+                $('#payDate').datepicker({
+                    autoclose: true,
+                    dateFormat: 'yy-mm-dd'
+                }).on('change', function() {
+                    let selectedDate = $(this).val();
+                    console.log(selectedDate);
+                    $('#searchForm').submit();
+                });
+            });
 
             function checkTask(id) {
                 let data = {

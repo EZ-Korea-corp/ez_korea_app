@@ -9,6 +9,8 @@ import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +19,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/manager")
 @PreAuthorize("hasAuthority('ROLE_MANAGER')")
@@ -133,8 +137,15 @@ public class ManagerController {
     }
 
     @GetMapping("/expenses")
-    public String showExpensesPage(Model model, @RequestParam(value="page", defaultValue="0", required = false) int page) {
-        model.addAttribute("expensesList", expensesService.findAllExpenses(page));
+    public String showExpensesPage(Model model, @RequestParam(value="page", defaultValue="0", required = false) int page,
+                                   @RequestParam(value="payDate", defaultValue="", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate payDate) {
+
+        log.info("expensesLocalDate = {}", payDate);
+        if (payDate == null) {
+            model.addAttribute("expensesList", expensesService.findAllExpenses(page));
+        } else {
+            model.addAttribute("expensesList", expensesService.findAllExpensesByPayDate(page, payDate));
+        }
         return "manager/expenses/list";
     }
 

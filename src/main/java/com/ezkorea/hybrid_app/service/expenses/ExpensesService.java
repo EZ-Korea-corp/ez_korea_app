@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class ExpensesService {
@@ -59,6 +61,11 @@ public class ExpensesService {
     public Page<Expenses> findAllExpenses(int page) {
         Pageable pageable = PageRequest.of(page, 10);
         return expensesRepository.findAllByOrderByPayDateDescManagerCheckAsc(pageable);
+    }
+
+    public Page<Expenses> findAllExpensesByPayDate(int page, LocalDate date) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return expensesRepository.findAllByPayDateOrderByPayDateDescManagerCheckAsc(date, pageable);
     }
 
     @Transactional
