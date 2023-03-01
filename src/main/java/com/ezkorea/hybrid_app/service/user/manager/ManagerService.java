@@ -29,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -107,8 +108,11 @@ public class ManagerService {
     }
 
     public Division saveNewDivision(String teamName, String teamGm) {
-        Member currentMember = mService.findByUsername(teamGm);
-        DivisionDto dto = new DivisionDto(teamName, currentMember);
+        DivisionDto dto = DivisionDto.builder()
+                .teamName(teamName)
+                .build();
+        Member currentMember = mService.findByUsername(Objects.requireNonNullElse(teamGm, "master"));
+        dto.setTeamGm(currentMember);
         return dService.saveNewDivision(dto);
     }
 
