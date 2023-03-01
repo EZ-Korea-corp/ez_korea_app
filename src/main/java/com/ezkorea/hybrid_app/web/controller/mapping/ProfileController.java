@@ -42,22 +42,37 @@ public class ProfileController {
 
     @GetMapping("/chart/view")
     public String showMemberChart(Model model) {
+
+        // 전체 사원 수
         List<Member> memberList = memberService.findAllMember();
-        List<Division> divisionList = divisionService.findAllDivision();
-        model.addAttribute("memberList", memberList);
-        model.addAttribute("divisionList", divisionList);
+        model.addAttribute("memberCount", memberList.size());
+
+        // 대표 조회
+        Member master = memberService.findByUsername("master");
+        model.addAttribute("master", master);
+
+        // 이사 조회
         List<Member> directorList = memberService.findByRoleAndStatus(Role.ROLE_DIRECTOR, MemberStatus.FULL_TIME);
         model.addAttribute("directorList", directorList);
-        List<Member> gmList = memberService.findByRoleAndStatus(Role.ROLE_GM, MemberStatus.FULL_TIME);
-        model.addAttribute("gmList", gmList);
+
+        // 경리 조회
         List<Member> managerList = memberService.findByRoleAndStatus(Role.ROLE_MANAGER, MemberStatus.FULL_TIME);
         model.addAttribute("managerList", managerList);
 
+        // 지점 조회 -> 무소속 제외
+        List<Division> divisionList = divisionService.findAllDivision();
+        divisionList.remove(divisionService.findDivisionByLeader(memberService.findByUsername("master")));
+        model.addAttribute("divisionList", divisionList);
+
+        // 무소속 지점 조회 (우선순위가 낮기 때문에 따로 조회)
+        Division nullDivision = divisionService.findDivisionByLeader(memberService.findByUsername("master"));
+        model.addAttribute("nullDivision", nullDivision);
+
+        // 소속이 없는 일반 회원 조회
         List<Member> teamNullMemberList = memberService.findByRoleAndStatusAndTeamIsNull(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME);
         model.addAttribute("teamNullMemberList", teamNullMemberList);
 
-        Member master = memberService.findByUsername("master");
-        model.addAttribute("master", master);
+
         return "profile/chart";
     }
 

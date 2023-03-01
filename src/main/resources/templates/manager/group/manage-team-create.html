@@ -26,7 +26,7 @@
                             <select id="teamGM" name="teamGM"  class="shadow-none selectpicker with-border">
                                 <option th:each="division : ${divisionList}"
                                         th:value="${division.getDivisionName()}"
-                                        th:text="|${division.getDivisionName()}(지점장 : ${division.getLeader().getName()})|">이름</option>
+                                        th:text="|${division.getDivisionName()} (지점장 : ${division.getLeader().getUsername().equals('master') ? '없음' : division.getLeader().getName()})|">이름</option>
                             </select>
                         </div>
 
