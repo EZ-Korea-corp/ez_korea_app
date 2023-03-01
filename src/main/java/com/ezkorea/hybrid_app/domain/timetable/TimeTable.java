@@ -14,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -30,6 +31,8 @@ public class TimeTable extends BaseEntity {
 
     //오전, 오후, 풀타임
     private String part;
+
+    private String memo;
 
     @OneToMany(mappedBy = "timeTable", cascade = CascadeType.ALL)
     private List<SellProduct> sellList = new ArrayList<>();

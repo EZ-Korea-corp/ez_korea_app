@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -79,18 +80,19 @@ public class SaleController {
         return "sales/sell-detail";
     }
 
-    @GetMapping("/sales/input/{id}")
-    public String showInputPage(@PathVariable Long id,
-                                @AuthenticationPrincipal SecurityUser securityUser,
-                                Model model) {
+    @GetMapping("/sales/input/index")
+    public String showInputIndexPage() {
+        return "sales/in-index";
+    }
 
-        List<Map<String, Object>> list = saleService.findInProductList(securityUser.getMember(), id);
-        int maxRn = (list.size() > 0) ? (int)list.get(list.size() - 1).get("RN") : 0;
-        model.addAttribute("stationId", id);
-        model.addAttribute("list", list);
-        model.addAttribute("maxRn", maxRn);
+    @GetMapping("/sales/input/save")
+    public String showInputSavePage(@RequestParam(value="id", required=false)Long id, Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("stations", gasStationService.findAllGasStation());
+        // 본인 입고 조회
         return "sales/in-detail";
     }
+
 
     @GetMapping("/sales/close/{id}")
     public String showClosePage(@PathVariable Long id, Model model) {

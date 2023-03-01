@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.web.controller.rest;
 
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
 import com.ezkorea.hybrid_app.domain.sale.SaleStatus;
+import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
@@ -14,6 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,9 +56,46 @@ public class SalesRestController {
     }
 
     @PostMapping("/sales/input")
-    public HttpStatus saveInputProduct(@RequestBody TimeTableDto timeTableDto) {
+    public HttpStatus saveStockProduct(@RequestBody TimeTableDto timeTableDto) {
 
-        saleService.saveInputProduct(timeTableDto);
+        saleService.saveStockProduct(timeTableDto);
+
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/sales/saveIn")
+    public HttpStatus saveInputProduct(@RequestBody TimeTableDto timeTableDto,
+                                       @AuthenticationPrincipal SecurityUser securityUser) {
+
+        if(timeTableDto.getId() != null && timeTableDto.getId() > 0) {
+            saleService.updateInputProduct(timeTableDto); //수정
+        } else {
+            saleService.saveInputProduct(timeTableDto, securityUser.getMember()); // 등록
+        }
+
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/sales/input/tableList")
+    public Map<String, Object> findInputTableList(@RequestBody Map<String, String> paramMap,
+                                                  @AuthenticationPrincipal SecurityUser securityUser) {
+        Map<String, Object> returnMap = new HashMap<>();
+        List<Map<String, Object>> list = saleService.findInputTableList(paramMap);
+
+        returnMap.put("list", list);
+        return returnMap;
+    }
+
+    @PostMapping("/sales/input/list")
+    public Map<String, Object> findInputList(@RequestBody Map<String, String> paramMap) {
+        Map<String, Object> returnMap = saleService.findInputList(paramMap);
+
+        return returnMap;
+    }
+
+    @PostMapping("/sales/input/delete")
+    public HttpStatus deleteInputTable(@RequestBody Map<String, Long> paramMap) {
+        saleService.deleteInputTable(paramMap.get("id"));
 
         return HttpStatus.OK;
     }
@@ -73,14 +113,6 @@ public class SalesRestController {
         }
 
         return returnMap;
-    }
-
-    @PostMapping("/sales/closeTask")
-    public HttpStatus closeTask(@AuthenticationPrincipal SecurityUser securityUser) {
-
-        //마감처리 - 퇴근처리
-
-        return HttpStatus.OK;
     }
 
     @DeleteMapping("/sales/delete")

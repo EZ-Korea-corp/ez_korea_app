@@ -48,6 +48,9 @@ public class SaleService {
     private final WiperService wiperService;
     private final GasStationService gsService;
 
+    /**
+     * TimeTable 저장
+     * */
     @Transactional
     public Long saveTimeTable(Map<String, Object> pramMap, Member member) {
         String part = (String)pramMap.get("part");
@@ -69,37 +72,85 @@ public class SaleService {
         return 0L;
     }
 
-    public List<TimeTable> findTableList(LocalDate date, Member member) {
-        return ttRepository.findAllByTaskDateAndMemberAndPartNot(date, member, PartTime.IN.getKey());
-    }
-
-
-    public void saveDailyTask(Member member, GasStation gasStation) {
-        DailyTask dt = DailyTask.builder()
-                .member(member)
-                .taskDate(LocalDate.now())
-                .gasStation(gasStation)
-                .build();
-        dtRepository.save(dt);
-    }
-
-    public DailyTask findByMemberAndStation(Member member, Long stationId) {
-        GasStation station = gsService.findStationById(stationId);
-
-        return dtRepository.findByTaskDateAndMemberAndGasStation(LocalDate.now(), member, station)
-                .orElseThrow( () -> new MemberNotFoundException("해당 유저는 오늘 출근하지 않았습니다."));
-    }
-
+    /**
+     * TimeTable 조회
+     * @param tableId TimeTable의 id
+     * */
     public TimeTable findTableById(Long tableId) {
         return ttRepository.findById(tableId)
                 .orElseThrow( () -> new MemberNotFoundException("해당 유저는 오늘 출근하지 않았습니다."));
     }
 
+    /**
+     * 특정일자, 회원의 판매,고장(입고제외) List<TimeTable> 조회
+     * */
+    public List<TimeTable> findTableList(LocalDate date, Member member) {
+        return ttRepository.findAllByTaskDateAndMemberAndPartNot(date, member, PartTime.IN.getKey());
+    }
+
+    /**
+     * 특정일자의 모든입고 List<TimeTable> 조회
+     * */
+    public List<TimeTable> findInputTableList(LocalDate date) {
+        return ttRepository.findAllByTaskDateAndPart(date, PartTime.IN.getKey());
+    }
+
+    /**
+     * 특정일자 입고의 List<TimeTable>를 뷰용 Map으로 매핑조회
+     * */
+    public List<Map<String, Object>> findInputTableList(Map<String, String> paramMap) {
+        List<Map<String, Object>> returnList = new ArrayList<>();
+        List<TimeTable> list = findInputTableList(LocalDate.parse(paramMap.get("date"), DateTimeFormatter.ISO_DATE));
+
+        // 입고 테이블 리스트
+        list.forEach(item -> {
+            Map<String , Object> map = new HashMap<>();
+            map.put("tTid", item.getId());
+            map.put("name", item.getGasStation().getStationName());
+            map.put("memo", item.getMemo());
+
+            returnList.add(map);
+        });
+
+        return returnList;
+    }
+
+    /**
+     * 특정일자 입고의 상세조회
+     * */
+    public Map<String, Object> findInputList(Map<String, String> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        TimeTable table = findTableById(Long.valueOf(paramMap.get("tTid")));
+        
+        // 입고목록
+        List<SaleProductDto> saleDtoList = new ArrayList<>();
+        table.getSaleList().forEach(item ->{
+            SaleProductDto saleDto = new SaleProductDto();
+            saleDto.setWiper(item.getWiper().getId());
+            saleDto.setCount(item.getCount());
+
+            saleDtoList.add(saleDto);
+        });
+        
+        returnMap.put("id", table.getId());
+        returnMap.put("name", table.getGasStation().getStationName());
+        returnMap.put("memo", table.getMemo());
+        returnMap.put("list", saleDtoList);
+        
+        return returnMap;
+    }
+
+    /**
+     * 특정일자 상태의 전체 List<TimeTable> 조회
+     * */
     public List<TimeTable> findAllTableListByStt(Long tTid) {
         TimeTable timeTable = findTableById(tTid);
         return ttRepository.findAllByTaskDateAndGasStationAndPart(timeTable.getTaskDate(), timeTable.getGasStation(), timeTable.getPart());
     }
 
+    /**
+     * 판매, 고장 등록
+     * */
     @Transactional
     public void saveSellProduct(TimeTableDto timeTableDto) {
         TimeTable timeTable = findTableById(timeTableDto.getId());
@@ -143,8 +194,11 @@ public class SaleService {
 
     }
 
+    /**
+     * 재고 등록
+     * */
     @Transactional
-    public void saveInputProduct(TimeTableDto timeTableDto) {
+    public void saveStockProduct(TimeTableDto timeTableDto) {
         TimeTable timeTable = findTableById(timeTableDto.getId());
         
         // 삭제후 재등록
@@ -154,7 +208,7 @@ public class SaleService {
         });
 
         timeTableDto.getSaleDtoList().forEach(item -> {
-            // 입력된 판매만 등록
+            // 입력된 재고만 등록
             if(item.getCount() > 0) {
                 SaleProduct newProduct = SaleProduct.builder()
                         .timeTable(timeTable)
@@ -168,7 +222,64 @@ public class SaleService {
         });
     }
 
+    /**
+     * 입고 등록
+     * */
+    public void saveInputProduct(TimeTableDto timeTableDto, Member member) {
+        // timeTable 생성
+        GasStation station = gsService.findStationById(timeTableDto.getStationId());
+        TimeTable newTimeTable = TimeTable.builder()
+                .gasStation(station)
+                .member(member)
+                .taskDate(LocalDate.now())
+                .part(PartTime.IN.getKey())
+                .memo(timeTableDto.getMemo())
+                .build();
 
+        ttRepository.save(newTimeTable);
+
+        // 입고 등록
+        saveSaleProduct(newTimeTable, timeTableDto);
+    }
+
+    /**
+     * 입고 수정
+     * */
+    @Transactional
+    public void updateInputProduct(TimeTableDto timeTableDto) {
+        TimeTable table = findTableById(timeTableDto.getId());
+        table.setGasStation(gsService.findStationById(timeTableDto.getStationId()));
+        table.setMemo(timeTableDto.getMemo());
+
+        // 입고 재등록
+        spRepository.deleteByTimeTable(table);
+        saveSaleProduct(table, timeTableDto);
+    }
+
+    /**
+     * 입고 와이퍼 등록
+     * */
+    private void saveSaleProduct(TimeTable talble, TimeTableDto dto) {
+        // 입력된 입고만 등록
+        dto.getSaleDtoList().forEach(item -> {
+
+            if(item.getCount() > 0) {
+                SaleProduct newProduct = SaleProduct.builder()
+                        .timeTable(talble)
+                        .status(item.getStatus())
+                        .count(item.getCount())
+                        .wiper(wpRepository.findById(item.getWiper()).get())
+                        .build();
+
+                spRepository.save(newProduct);
+            }
+        });
+
+    }
+
+    /**
+     * 재고리스트 조회
+     * */
     public List<SaleProductDto> findStockProduct(Map<String, String> paramMap) {
         List<TimeTable> tableList = findAllTableListByStt(Long.valueOf(paramMap.get("tTid")));
         
@@ -189,6 +300,37 @@ public class SaleService {
         return list;
     }
 
+    /**
+     * 판매현황 조회
+     * */
+    public Map<String, Object> findTableStat(Map<String, String> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        List<Map<String, Object>> priceList = saleMbRepository.findTablePrice(paramMap);
+        List<Map<String, Object>> countList = saleMbRepository.findTableCount(paramMap);
+        List<Map<String, Object>> fixList   = saleMbRepository.findTableFix(paramMap);
+
+        // 결제수단명 추가
+        priceList.forEach(item -> {
+            item.put("NAME", Payment.of((String)item.get("PAYMENT")));
+        });
+
+        // 결제수단명 추가
+        fixList.forEach(item -> {
+            item.put("NAME", WiperSort.of((String)item.get("SORT")));
+        });
+
+        returnMap.put("priceList", priceList);
+        returnMap.put("countList", countList);
+        returnMap.put("fixList"  , fixList);
+
+
+
+        return returnMap;
+    }
+
+    /**
+     * 판매현황 조회
+     * */
     @Transactional
     public List<SaleProduct> findInputProduct(Member member, Map<String, Long> data) {
         DailyTask currentTask = findByMemberAndStation(member, data.get("stationId"));
@@ -197,6 +339,9 @@ public class SaleService {
         return inputList;
     }
 
+    /**
+     * 판매 INDEX페이지 조회
+     * */
     public Map<String, Object> findTimeTable(Long tableId) {
         Map<String, Object> returnMap = new HashMap<>();
         TimeTable timeTable = findTableById(tableId);
@@ -258,29 +403,19 @@ public class SaleService {
         return returnMap;
     }
 
-    public Map<String, Object> findTableStat(Map<String, String> paramMap) {
-        Map<String, Object> returnMap = new HashMap<>();
-        List<Map<String, Object>> priceList = saleMbRepository.findTablePrice(paramMap);
-        List<Map<String, Object>> countList = saleMbRepository.findTableCount(paramMap);
-        List<Map<String, Object>> fixList   = saleMbRepository.findTableFix(paramMap);
+    /**
+     * TimeTable삭제
+     * @param tTid TimeTable의 id
+     * */
+    public void deleteInputTable(Long tTid) {
+        ttRepository.deleteById(tTid);
+    }
 
-        // 결제수단명 추가
-        priceList.forEach(item -> {
-            item.put("NAME", Payment.of((String)item.get("PAYMENT")));
-        });
+    public DailyTask findByMemberAndStation(Member member, Long stationId) {
+        GasStation station = gsService.findStationById(stationId);
 
-        // 결제수단명 추가
-        fixList.forEach(item -> {
-            item.put("NAME", WiperSort.of((String)item.get("SORT")));
-        });
-                
-        returnMap.put("priceList", priceList);
-        returnMap.put("countList", countList);
-        returnMap.put("fixList"  , fixList);
-
-        
-
-        return returnMap;
+        return dtRepository.findByTaskDateAndMemberAndGasStation(LocalDate.now(), member, station)
+                .orElseThrow( () -> new MemberNotFoundException("해당 유저는 오늘 출근하지 않았습니다."));
     }
 
     public  List<SaleProductDto> findStockHistory(Map<String, Object> paramMap) {
