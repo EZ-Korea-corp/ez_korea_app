@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.domain.user.member;
 
+import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,7 +24,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findAllByMemberStatusNot(MemberStatus status);
 
     // IsNull Opt
-    List<Member> findAllByRoleAndDivisionIsNull(Role role);
+    @Query("SELECT m FROM Member m WHERE m.memberStatus = ?2 and ((m.role = ?1 and m.division = null) or (m.role = ?1 and m.division = ?3))")
+    List<Member> findByRoleAndDivisionAndDivisionAndDivisionNull(Role role, MemberStatus status, Division division);
+    List<Member> findAllByRoleAndMemberStatusAndDivisionIsNull(Role role, MemberStatus status);
     List<Member> findAllByRoleAndTeamIsNull(Role role);
     List<Member> findAllByRoleAndMemberStatusAndTeamIsNull(Role role, MemberStatus status);
 

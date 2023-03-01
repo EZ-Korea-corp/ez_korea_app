@@ -1,11 +1,13 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
+import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.expenses.ExpensesService;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
+import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class ManagerController {
     private final CommuteService commuteService;
     private final MemberService memberService;
     private final ExpensesService expensesService;
+    private final DivisionService divisionService;
 
     @GetMapping("/home")
     public String showManagerPage() {
@@ -59,21 +62,22 @@ public class ManagerController {
 
     @GetMapping("/division/update/{id}")
     public String showDivisionUpdatePage(Model model, @PathVariable Long id) {
-        model.addAttribute("gmList", managerService.findAllMemberByRole(Role.ROLE_GM));
+        Division currentDivision = divisionService.findDivisionById(id);
+        model.addAttribute("gmList", memberService.findByRoleAndDivisionAndDivisionNull(Role.ROLE_GM, MemberStatus.FULL_TIME, currentDivision));
         model.addAttribute("division", managerService.findDivisionById(id));
         return "manager/group/manage-division-update";
     }
 
     @GetMapping("/division/create")
     public String showCreateDivisionPage(Model model) {
-        model.addAttribute("gmList", managerService.findAllMemberByRoleAndDivisionIsNull(Role.ROLE_GM));
+        model.addAttribute("gmList", memberService.findByRoleAndDivisionIsNull(Role.ROLE_GM, MemberStatus.FULL_TIME));
         return "manager/group/manage-division-create";
     }
 
     @GetMapping("/team/create")
     public String showCreateTeamPage(Model model) {
         model.addAttribute("divisionList", managerService.findAllDivision());
-        model.addAttribute("leaderList", managerService.findAllMemberByRoleAndTeamIsNull(Role.ROLE_LEADER));
+        model.addAttribute("leaderList", managerService.findAllMemberByRoleAndStatusAndTeamIsNull(Role.ROLE_LEADER, MemberStatus.FULL_TIME));
         model.addAttribute("employeeList", managerService.findAllMemberByRoleAndStatusAndTeamIsNull(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME));
         return "manager/group/manage-team-create";
     }

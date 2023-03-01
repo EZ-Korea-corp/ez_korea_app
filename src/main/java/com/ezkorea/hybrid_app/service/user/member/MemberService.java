@@ -5,6 +5,7 @@ import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
+import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.*;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
@@ -205,12 +206,8 @@ public class MemberService {
         return memberRepository.findAllByRole(role);
     }
 
-    public List<Member> findByRoleAndDivisionIsNull(Role role) {
-        return memberRepository.findAllByRoleAndDivisionIsNull(role);
-    }
-
-    public List<Member> findByRoleAndTeamIsNull(Role role) {
-        return memberRepository.findAllByRoleAndTeamIsNull(role);
+    public List<Member> findByRoleAndDivisionIsNull(Role role, MemberStatus status) {
+        return memberRepository.findAllByRoleAndMemberStatusAndDivisionIsNull(role, status);
     }
 
     public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team, MemberStatus status) {
@@ -279,5 +276,9 @@ public class MemberService {
         subAuth.setInputAuth(inputAuth);
         subAuth.setPostAuth(postAuth);
 
+    }
+
+    public List<Member> findByRoleAndDivisionAndDivisionNull(Role role, MemberStatus status, Division division) {
+        return memberRepository.findByRoleAndDivisionAndDivisionAndDivisionNull(role, status, division);
     }
 }

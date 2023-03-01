@@ -43,12 +43,8 @@ public class ManagerService {
         return mService.findByRole(role);
     }
 
-    public List<Member> findAllMemberByRoleAndDivisionIsNull(Role role) {
-        return mService.findByRoleAndDivisionIsNull(role);
-    }
-
-    public List<Member> findAllMemberByRoleAndTeamIsNull(Role role) {
-        return mService.findByRoleAndTeamIsNull(role);
+    public List<Member> findAllMemberByRoleAndDivisionIsNull(Role role, MemberStatus status) {
+        return mService.findByRoleAndDivisionIsNull(role, status);
     }
 
     public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team, MemberStatus status) {
@@ -177,5 +173,4 @@ public class ManagerService {
     public Object findTotalStat(Map<String, Object> data) {
         return saleMbRepository.findTotalStat(data);
     }
-
 }
