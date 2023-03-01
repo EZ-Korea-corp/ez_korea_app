@@ -44,7 +44,7 @@ public class ProfileController {
     public String showMemberChart(Model model) {
 
         // 전체 사원 수
-        List<Member> memberList = memberService.findAllMember();
+        List<Member> memberList = memberService.findAllMemberByStatus(MemberStatus.FULL_TIME);
         model.addAttribute("memberCount", memberList.size());
 
         // 대표 조회
