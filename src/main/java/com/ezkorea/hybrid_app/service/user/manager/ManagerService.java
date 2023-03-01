@@ -105,7 +105,9 @@ public class ManagerService {
     public void updateDivision(Long divisionId, String teamName, String teamGm) {
         Division currentDivision = dService.findDivisionById(divisionId);
         currentDivision.setDivisionName(teamName);
-        currentDivision.setLeader(mService.findByUsername(teamGm));
+        if (teamGm != null) {
+            currentDivision.setLeader(mService.findByUsername(teamGm));
+        }
     }
 
     public List<Division> findAllDivision() {
