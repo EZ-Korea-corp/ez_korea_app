@@ -19,6 +19,7 @@
         }
     </style>
     <div style="background-color: #FFFFFF">
+        <input type="text" id="datepicker" name="datepicker" class="w-full" readonly>
         <div class="grid grid-cols-3 gap-8 p-4" id="check">
             <div name="day" class="text-sm font-medium">
                 <a class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg"> 일간 </a>
@@ -34,6 +35,8 @@
     </div>
     <script>
         $(document).ready(function(){
+            //달력생성
+            fnCalenderMaker($('#datepicker'));
 
             $("#check div").on("click", function() {
                 let status = $(this).attr("name");
@@ -57,7 +60,7 @@
 
         function fnFindStat(status) {
             const url = "/stat/graph";
-            const data = {"status" : status};
+            const data = {"status" : status, "date" : $("#datepicker").val()};
 
             fnFindJsonAjax(data, url, fnFindStatResult);
         }

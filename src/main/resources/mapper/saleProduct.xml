@@ -104,40 +104,38 @@
     </select>
 
     <select id="findStatList" parameterType="Map" resultType="Map">
-        SELECT    A.NAME      AS NAME
-                , B.COUNT / 2 AS COUNT
-        FROM    MEMBER A INNER JOIN
+       SELECT     CONCAT(MAX(B.NAME), (CASE WHEN MAX(B.TEAM_NAME) IS NULL THEN "" ELSE CONCAT("(", MAX(B.TEAM_NAME), ")") END)) AS NAME
+                , SUM(A.COUNT) AS COUNT
+        FROM    SELL_PRODUCT A INNER JOIN
         (
-            SELECT  A.MEMBER_ID
-                    , SUM(B.COUNT) AS COUNT
-            FROM    DAILY_TASK A INNER JOIN
-            (
-                SELECT 	  A.TASK_ID
-                        , SUM(A.COUNT) AS COUNT
-                FROM    SALE_PRODUCT A
-                WHERE   A.STATUS = 'out'
-                GROUP BY A.TASK_ID
-            ) B
-            ON      A.ID = B.TASK_ID
+            SELECT    A.ID AS TABLE_ID
+                    , B.ID AS MEMBER_ID
+                    , B.NAME AS NAME
+                    , C.TEAM_NAME AS TEAM_NAME
+            FROM    TIME_TABLE A INNER JOIN MEMBER B
+            ON A.MEMBER_ID = B.ID
+            LEFT JOIN TEAM C
+            ON B.TEAM_ID = C.ID
             <if test="status != null and !''.equals(status)">
                 <choose>
                     <when test="'day'.equals(status)">
-                        WHERE   A.TASK_DATE = DATE_FORMAT(NOW(), '%y-%m-%d')
+                        WHERE   A.TASK_DATE = #{date}
                     </when>
                     <when test="'week'.equals(status)">
-                        WHERE   A.TASK_DATE <![CDATA[>=]]> ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 0 )
-                        AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 6 )
+                        WHERE   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 0 )
+                        AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 6 )
                     </when>
                     <otherwise>
-                        WHERE   A.TASK_DATE <![CDATA[>=]]> LAST_DAY(NOW() - INTERVAL 1 MONTH) + INTERVAL 1 DAY
-                        AND		A.TASK_DATE <![CDATA[<=]]> LAST_DAY(NOW())
+                        WHERE   A.TASK_DATE <![CDATA[>=]]> LAST_DAY(#{date} - INTERVAL 1 MONTH) + INTERVAL 1 DAY
+                        AND		A.TASK_DATE <![CDATA[<=]]> LAST_DAY(#{date})
                     </otherwise>
                 </choose>
             </if>
-            GROUP BY A.MEMBER_ID
         ) B
-        ON A.ID = B.MEMBER_ID
-        ORDER BY B.COUNT DESC
+        ON A.TIME_TABLE_ID = B.TABLE_ID
+        WHERE A.STATUS = 'out'
+        GROUP BY B.MEMBER_ID
+        ORDER BY COUNT DESC
         LIMIT 10
     </select>
 
