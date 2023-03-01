@@ -213,16 +213,12 @@ public class MemberService {
         return memberRepository.findAllByRoleAndTeamIsNull(role);
     }
 
-    public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team) {
-        return memberRepository.findAllByRoleAndTeamIsNullOrTeam(role, team);
+    public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team, MemberStatus status) {
+        return memberRepository.findAllByRoleAndTeamIsNullOrTeam(role, team, status);
     }
 
     public List<Member> findByRoleAndStatus(Role role, MemberStatus status) {
         return memberRepository.findAllByRoleAndMemberStatus(role, status);
-    }
-
-    public List<Member> findByRoleAndStatusAndTeam(Role role, MemberStatus status, Team team) {
-        return memberRepository.findAllByRoleAndMemberStatusOrTeam(role, status, team);
     }
 
     public List<Member> findByRoleAndStatusAndTeamIsNull(Role role, MemberStatus status) {

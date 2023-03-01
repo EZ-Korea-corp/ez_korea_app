@@ -82,9 +82,9 @@ public class ManagerController {
     public String showUpdateTeamPage(Model model, @PathVariable Long id) {
         Team currentTeam = managerService.findTeamById(id);
         model.addAttribute("currentTeam", currentTeam);
-        model.addAttribute("employeeList", managerService.findAllMemberByRoleAndStatusOrTeam(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME, currentTeam));
+        model.addAttribute("employeeList", managerService.findAllByRoleAndTeamIsNullOrTeam(Role.ROLE_EMPLOYEE, currentTeam, MemberStatus.FULL_TIME));
         // 현재 팀의 리더인 사람 + 리더지만 팀이 없는 사람만 조회
-        model.addAttribute("leaderList", managerService.findAllByRoleAndTeamIsNullOrTeam(Role.ROLE_LEADER, currentTeam));
+        model.addAttribute("leaderList", managerService.findAllByRoleAndTeamIsNullOrTeam(Role.ROLE_LEADER, currentTeam, MemberStatus.FULL_TIME));
         model.addAttribute("divisionList", managerService.findAllDivision());
         return "manager/group/manage-team-update";
     }

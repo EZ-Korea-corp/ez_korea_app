@@ -91,11 +91,9 @@ public class ManagerRestController {
 
         // 글쓰기 권한
         String memberPostAuth = (String) datum.get("memberPostAuth");
-        log.info("memberPostAuth={}", memberPostAuth);
 
         // 입고 권한
         String memberInputAuth = (String) datum.get("memberInputAuth");
-        log.info("memberInAuth={}", memberInputAuth);
 
         managerService.updateMemberSubAuth(username, memberPostAuth, memberInputAuth);
         managerService.updateMemberRole(username, Role.valueOf(memberRole), MemberStatus.valueOf(memberStatus));

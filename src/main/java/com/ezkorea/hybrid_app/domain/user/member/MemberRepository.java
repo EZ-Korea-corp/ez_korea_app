@@ -27,9 +27,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findAllByRoleAndTeamIsNull(Role role);
     List<Member> findAllByRoleAndMemberStatusAndTeamIsNull(Role role, MemberStatus status);
 
-    List<Member> findAllByRoleAndMemberStatusOrTeam(Role role, MemberStatus status, Team team);
-
-    @Query("SELECT m FROM Member m WHERE (m.role = ?1 and m.team = null) or (m.role = ?1 and m.team = ?2)")
-    List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team);
+    @Query("SELECT m FROM Member m WHERE m.memberStatus = ?3 and ((m.role = ?1 and m.team = null) or (m.role = ?1 and m.team = ?2))")
+    List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team, MemberStatus memberStatus);
 
 }

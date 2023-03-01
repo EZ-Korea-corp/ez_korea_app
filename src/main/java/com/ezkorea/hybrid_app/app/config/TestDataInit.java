@@ -46,8 +46,8 @@ public class TestDataInit {
             memberService.saveNewMember(makeNewMember("test3", "한문철", Role.ROLE_EMPLOYEE));
         }
 
-        // 아래 주석 해제하면 랜덤 회원 생성 가능
-        // makeRandomMember(15);
+        // 아래 주석 해제하면 랜덤 회원 생성 가능 사용 후 다시 주석처리!
+//         makeRandomMember(10);
     }
 
     public void makeRandomMember(int memberCount) {

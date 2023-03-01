@@ -28,7 +28,12 @@
 
                         <div>
                             <label for="teamGM" class="font-semibold text-base"> 지점장 </label>
-                            <input id="teamGM" class="with-border text-white" name="teamGM" type="text" th:value="|${division.getLeader().getName()}(${division.getLeader().getPhone()})|" autocomplete="off" readonly>
+                            <th:block th:if="!${division.getLeader().getUsername().equals('master')}">
+                                <input id="teamGM" class="with-border text-white" name="teamGM" type="text" th:value="|${division.getLeader().getName()}(${division.getLeader().getPhone()})|" autocomplete="off" readonly>
+                            </th:block>
+                            <th:block th:if="${division.getLeader().getUsername().equals('master')}">
+                                <input class="with-border text-white" name="teamGM" type="text" value="없음" autocomplete="off" readonly>
+                            </th:block>
                         </div>
 
                         <div>
@@ -41,6 +46,9 @@
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                         사원명
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        직급
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                         핸드폰 번호
@@ -56,18 +64,22 @@
                                         <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
                                             <h3 th:text="${team.getTeamName()}"></h3>
                                         </th>
-                                        <td class="px-2 py-4 whitespace-nowrap" th:text="|${team.getLeader().getName()} (팀장)|"></td>
+                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getName()}"></td>
+                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getRole().viewName}"></td>
                                         <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getPhone()}"></td>
                                         <td class="px-2 py-4 whitespace-nowrap">
                                             <a th:href="@{/manager/team/update/{id}(id=${team.getId()})}" class="button w-full">팀 수정</a>
                                         </td>
                                     </tr>
-                                    <tr class="bg-white border-b" th:each="employee, status : ${team.getMemberList()}">
-                                        <th:block th:if="${status.index != 0}">
+                                    <tr class="bg-white border-b"
+                                        th:if="${team.getLeader().getId() != employee.getId()}"
+                                        th:each="employee : ${team.getMemberList()}">
+                                        <th:block>
                                             <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
                                                 <h3>"</h3>
                                             </th>
                                             <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
                                             <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
                                             <td class="px-2 py-4 whitespace-nowrap"></td>
                                         </th:block>
