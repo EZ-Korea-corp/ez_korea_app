@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.service.expenses;
 import com.ezkorea.hybrid_app.domain.expenses.Expenses;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesRepository;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
+import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.service.aws.AWSService;
 import com.ezkorea.hybrid_app.web.dto.ExpensesDto;
@@ -21,11 +22,12 @@ public class ExpensesService {
     private final ExpensesRepository expensesRepository;
     private final AWSService awsService;
 
-    public Expenses saveExpenses(ExpensesDto dto, Member member) {
+    public Expenses saveExpenses(ExpensesDto dto, Member member, GasStation gasStation) {
         Expenses newExpenses = Expenses.builder()
                 .cost(dto.getCost())
                 .expensesStatus(dto.getExpensesStatus())
                 .payDate(dto.getPayDate())
+                .gasStation(gasStation)
                 .member(member)
                 .build();
         if (newExpenses.getExpensesStatus().equals(ExpensesStatus.FUEL)) {

@@ -94,9 +94,13 @@ function fnOnlyCrudJsonAjax(data, url, method, fnCallBack) {
             if(fnCallBack) fnCallBack(data, xhr);
         },
         error: function(xhr, status, error) {
+            let errorMsg = '에러가 발생했습니다.'
+            if (xhr.responseJSON.message !== '') {
+                   errorMsg = xhr.responseJSON.message;
+            }
             Swal.fire({
                 icon: 'error',
-                text: '에러가 발생했습니다.',
+                text: errorMsg,
             });
         }
     });

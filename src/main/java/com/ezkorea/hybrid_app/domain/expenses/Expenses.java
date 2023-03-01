@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.domain.expenses;
 
 import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
+import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import lombok.*;
@@ -36,6 +37,10 @@ public class Expenses extends BaseEntity {
     @ManyToOne
     @Setter
     private S3Image s3Image;
+
+    @ManyToOne
+    @Setter
+    private GasStation gasStation;
 
     @Setter
     private boolean isManagerCheck;
