@@ -25,6 +25,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,16 +37,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SaleService {
 
-    private final ModelMapper modelMapper;
     private final SaleProductRepository spRepository;
     private final SellProductRepository sellRepository;
-    private final GasStationRepository gsRepository;
-    private final DailyTaskRepository dtRepository;
     private final TimeTableRepository ttRepository;
     private final WiperRepository wpRepository;
     private final SaleMbRepository saleMbRepository;
 
-    private final WiperService wiperService;
     private final GasStationService gsService;
 
     /**
@@ -118,9 +115,9 @@ public class SaleService {
     /**
      * 특정일자 입고의 상세조회
      * */
-    public Map<String, Object> findInputList(Map<String, String> paramMap) {
+    public Map<String, Object> findInputList(Map<String, Long> paramMap) {
         Map<String, Object> returnMap = new HashMap<>();
-        TimeTable table = findTableById(Long.valueOf(paramMap.get("tTid")));
+        TimeTable table = findTableById(paramMap.get("tTid"));
         
         // 입고목록
         List<SaleProductDto> saleDtoList = new ArrayList<>();
@@ -132,12 +129,31 @@ public class SaleService {
             saleDtoList.add(saleDto);
         });
         
-        returnMap.put("id", table.getId());
+        returnMap.put("id", table.getGasStation().getId());
         returnMap.put("name", table.getGasStation().getStationName());
         returnMap.put("memo", table.getMemo());
         returnMap.put("list", saleDtoList);
         
         return returnMap;
+    }
+
+    /**
+     * 특정일자 재고의 상세조회
+     * */
+    public List<SaleProductDto> findStockList(Map<String, Long> paramMap) {
+        List<SaleProductDto> stockList = new ArrayList<>();
+        TimeTable table = findTableById(paramMap.get("tTid"));
+        
+        // 재고목록
+        table.getSaleList().forEach(item -> {
+            SaleProductDto dto = new SaleProductDto();
+            dto.setWiper(item.getWiper().getId());
+            dto.setCount(item.getCount());
+
+            stockList.add(dto);
+        });
+
+        return stockList;
     }
 
     /**
@@ -329,17 +345,6 @@ public class SaleService {
     }
 
     /**
-     * 판매현황 조회
-     * */
-    @Transactional
-    public List<SaleProduct> findInputProduct(Member member, Map<String, Long> data) {
-        DailyTask currentTask = findByMemberAndStation(member, data.get("stationId"));
-        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatusAndRn(currentTask, SaleStatus.IN.toString(), data.get("rn").intValue());
-
-        return inputList;
-    }
-
-    /**
      * 판매 INDEX페이지 조회
      * */
     public Map<String, Object> findTimeTable(Long tableId) {
@@ -406,93 +411,78 @@ public class SaleService {
 
     /**
      * TimeTable삭제
-     * @param tTid TimeTable의 id
+     * @param tTid id Of TimeTable
      * */
     public void deleteInputTable(Long tTid) {
         ttRepository.deleteById(tTid);
     }
 
-    public DailyTask findByMemberAndStation(Member member, Long stationId) {
-        GasStation station = gsService.findStationById(stationId);
-
-        return dtRepository.findByTaskDateAndMemberAndGasStation(LocalDate.now(), member, station)
-                .orElseThrow( () -> new MemberNotFoundException("해당 유저는 오늘 출근하지 않았습니다."));
-    }
-
-    public  List<SaleProductDto> findStockHistory(Map<String, Object> paramMap) {
-        return saleMbRepository.findStockHistory(paramMap);
-    }
-
+    /**
+     * sellProduct삭제
+     * @param id id Of SellProduct
+     * */
     public void deleteSale(Long id) {
         sellRepository.deleteById(id);
     }
 
-    public List<DailyTask> findInoutList(Long id, String date) {
-        GasStation station = gsService.findStationById(id);
-        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    /**
+     * 주유소-일자별 List<TimeTable> (statusIN)조회
+     * @param paramMap id of GasStation
+     * */
+    public List<TimeTable> findInList(Map<String, String> paramMap) {
+        GasStation station = gsService.findStationById(Long.valueOf(paramMap.get("id")));
+        LocalDate localDate = LocalDate.parse(paramMap.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        return dtRepository.findAllByTaskDateAndGasStation(localDate, station);
+        return ttRepository.findAllByTaskDateAndGasStationAndPart(localDate, station, SaleStatus.IN.getViewName());
     }
 
-    public List<SaleProductDto> findInOutDetail(Map<String, Object> paramMap) {
-        return saleMbRepository.findInOutDetail(paramMap);
+    /**
+     * 주유소-일자별 List<TimeTable> (statusIN 제외)조회
+     * @param paramMap id of GasStation
+     * */
+    public List<TimeTable> findNotInList(Map<String, String> paramMap) {
+        GasStation station = gsService.findStationById(Long.valueOf(paramMap.get("id")));
+        LocalDate localDate = LocalDate.parse(paramMap.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        return ttRepository.findAllByTaskDateAndGasStationAndPartNot(localDate, station, SaleStatus.IN.getViewName());
     }
 
-    public void saveWithdraw(Map<String, Object> paramMap, Member member) {
-        paramMap.put("status", SaleStatus.STOCK.toString());
-        DailyTask currentTask = findByMemberAndStation(member, Long.valueOf(String.valueOf(paramMap.get("stationId"))));
-
-        // 현재 재고 > 철수
-/*        List<SaleProductDto> saleStat = findSaleStat(member, paramMap);
-        saleStat.forEach(item -> {
-            SaleProduct withdrawProduct = SaleProduct.builder()
-                    .task(currentTask)
-                    .status(SaleStatus.END.toString())
-                    .count(item.getCount())
-                    .wiper(wpRepository.findById(item.getWiper()).get())
-                    .build();
-
-            spRepository.save(withdrawProduct);
-        });*/
+    /**
+     * 주유소-일자별 판매목록
+     * @Param paramMap id(주유소), date(검색일자)
+     * */
+    public List<Map<String, Object>> findSellDetailByStationAndDate(Map paramMap) {
+        List<Map<String, Object>> list = saleMbRepository.findSellDetailByStationAndDate(paramMap);
+        list.forEach(item -> {
+            item.put("part", PartTime.of((String)item.get("PART")));
+        });
+        return list;
     }
 
-    @Transactional
-    public void deleteByTaskAndStatus(Map<String, Object> paramMap) {
-        DailyTask dailyTask = lastEndTask(paramMap);
+    /**
+     * 주유소-일자별 고장목록
+     * @Param paramMap id(주유소), date(검색일자)
+     * */
+    public List<Map<String, String>> findFixDetailByStationAndDate(Map<String, String> paramMap) {
+        List<Map<String, String>> resultList = new ArrayList<>();
+        List<TimeTable> inList = findNotInList(paramMap);
+        
+        // 고장목록조회
+        inList.forEach(item -> {
+            item.getSellList().forEach(_item -> {
+                if(_item.getStatus().equals(SaleStatus.FIX.getViewName())) {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("name", item.getMember().getName());
+                    map.put("part", PartTime.of(item.getPart()));
+                    map.put("sort", WiperSort.of(_item.getSort()));
+                    map.put("memo", _item.getMemo());
 
-        if(dailyTask != null) {
-            spRepository.deleteByTaskAndStatus(dailyTask, SaleStatus.END.toString()); // 재등록
-        }
+                    resultList.add(map);
+                }
+            });
+        });
+
+        return resultList;
     }
 
-    private DailyTask lastEndTask(Map<String, Object> paramMap) {
-        Long lastWithdrawId = saleMbRepository.findLastWithdraw(paramMap);
-        if(lastWithdrawId == null) {
-            return null;
-        }
-
-        return dtRepository.findById(lastWithdrawId).orElseThrow(() -> new IdNotFoundException("데이터를 찾을 수 없습니다."));
-    }
-
-    public void findLastWithdraw(Map<String, Object> paramMap, Map<String, Object> returnMap) {
-        DailyTask dailyTask = lastEndTask(paramMap);
-
-        if(dailyTask != null) {
-            paramMap.put("taskId", dailyTask.getId());
-            List<SaleProductDto> withdrawList = saleMbRepository.findLastWithdrawList(paramMap);
-
-            returnMap.put("taskDate", dailyTask.getTaskDate());
-            returnMap.put("name", dailyTask.getMember().getName());
-            returnMap.put("withdrawList", withdrawList);
-        }
-    }
-
-    public List<Map<String, Object>> findInProductList(Member member, Long id) {
-        DailyTask currentTask = findByMemberAndStation(member, id);
-        return saleMbRepository.findInProductList(currentTask.getId());
-    }
-
-    public List<Map<String, Object>> findInOutProductList(Long id) {
-        return saleMbRepository.findInProductList(id);
-    }
 }
