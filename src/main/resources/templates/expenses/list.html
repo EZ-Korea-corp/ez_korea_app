@@ -39,10 +39,10 @@
                                         구분
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                        유종
+                                        비용
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                        비용
+                                        유종
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                         근무지
@@ -64,11 +64,12 @@
                                         <h3 th:text="${expenses.getId()}">아이디</h3>
                                     </th>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getExpensesStatus().getViewName()}">구분</td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${#numbers.formatInteger(expenses.getCost(), 3, 'COMMA')}">비용</td>
                                     <td class="px-2 py-4 whitespace-nowrap">
                                         <a th:if="${expenses.getExpensesStatus().equals(T(com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus).FUEL)}" th:text="${expenses.getFuelStatus().getViewName()}"></a>
+                                        <a th:if="${!expenses.getExpensesStatus().equals(T(com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus).FUEL)}">-</a>
                                     </td>
-                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${#numbers.formatInteger(expenses.getCost(), 3, 'COMMA')}">비용</td>
-                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getGasStation().getStationName()}">근무지</td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getGasStation() != null ? expenses.getGasStation().getStationName() : '-'}"></td>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getPayDate()}"></td>
                                     <td class="px-2 py-4 whitespace-nowrap">
                                         <button class="button gray" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|">영수증 확인</button>

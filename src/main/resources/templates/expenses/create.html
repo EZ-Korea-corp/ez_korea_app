@@ -50,7 +50,7 @@
                             <div class="my-4">
                                 <label for="gasStation" class="font-semibold text-lg"> 근무지 </label>
                                 <select name="stationId" id="gasStation" class="px-4">
-                                    <option>날짜 지정 후 선택해주세요.</option>
+                                    <option value="0">날짜 지정 후 선택해주세요.</option>
                                 </select>
                             </div>
                         </div>
@@ -148,6 +148,9 @@
 
             $("#submit").on("click", function (){
                 if (fileCount === 1) {
+                    if (selectedValue === 'FOOD') {
+                        $('#stationId').val("");
+                    }
                     fnResponseCrudJsonAjax($('#createExpensesForm').serializeObject(), '/expenses', 'POST', successHref);
                 } else {
                     Swal.fire({

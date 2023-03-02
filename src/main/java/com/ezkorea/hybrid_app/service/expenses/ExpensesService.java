@@ -6,6 +6,7 @@ import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.service.aws.AWSService;
+import com.ezkorea.hybrid_app.service.sales.GasStationService;
 import com.ezkorea.hybrid_app.web.dto.ExpensesDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +24,18 @@ public class ExpensesService {
 
     private final ExpensesRepository expensesRepository;
     private final AWSService awsService;
+    private final GasStationService gsService;
 
-    public Expenses saveExpenses(ExpensesDto dto, Member member, GasStation gasStation) {
+    public Expenses saveExpenses(ExpensesDto dto, Member member) {
         Expenses newExpenses = Expenses.builder()
                 .cost(dto.getCost())
                 .expensesStatus(dto.getExpensesStatus())
                 .payDate(dto.getPayDate())
-                .gasStation(gasStation)
                 .member(member)
                 .build();
         if (newExpenses.getExpensesStatus().equals(ExpensesStatus.FUEL)) {
             newExpenses.setFuelStatus(dto.getFuelStatus());
+            newExpenses.setGasStation(gsService.findStationById(dto.getId()));
         }
         return expensesRepository.save(newExpenses);
     }
