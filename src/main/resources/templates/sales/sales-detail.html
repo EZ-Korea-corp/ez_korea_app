@@ -145,6 +145,9 @@
                                             종류
                                         </th>
                                         <th scope="col" class="px-6 py-3">
+                                            결제
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
                                             개수
                                         </th>
                                         <th scope="col" class="px-6 py-3">
@@ -156,6 +159,7 @@
                                     <tr th:if="${map.sellList.size() > 0}" th:each="sell : ${map.sellList}" class="border-b border-gray-200">
                                         <th scope="row" th:text="${sell.name}" class="px-6 py-4 font-medium whitespace-nowrap bg-gray-50">
                                         </th>
+                                        <td class="px-6 py-4" th:text="${sell.payment}"></td>
                                         <td class="px-6 py-4" th:text="|${sell.count * 0.5}개|"></td>
                                         <td th:if="${sell.name != '총계'}">
                                             <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>

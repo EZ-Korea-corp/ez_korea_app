@@ -346,51 +346,52 @@ public class SaleService {
         Map<String, Object> returnMap = new HashMap<>();
         TimeTable timeTable = findTableById(tableId);
 
-        // 종류별 판매갯수, 결제수단별 갯수
+        // 판매, 고장리스트
         List<Map<String, Object>> sellList = new ArrayList<>();
         List<Map<String, Object>> fixList  = new ArrayList<>();
-        int selTotalCount = 0;
-        int card = 0;
+        int count = 0;
         int cash = 0;
-        for (WiperSort sort : WiperSort.values()) {
-            int selCount = 0;
-
-            for (SellProduct sellProduct : timeTable.getSellList()) {
+        int card = 0;
+        for (SellProduct sellProduct : timeTable.getSellList()) {
+            for (WiperSort sort : WiperSort.values()) {
                 if(sort.getName().toLowerCase().equals(sellProduct.getSort())) {
-                    if(SaleStatus.FIX.toString().equals(sellProduct.getStatus())) {
-                        // 고장
-                        Map<String, Object> fixMap = new HashMap<>();
-                        fixMap.put("id", sellProduct.getId());
-                        fixMap.put("name", sort.getInit());
-                        fixMap.put("count", sellProduct.getCount());
-                        fixMap.put("memo", sellProduct.getMemo());
-                        fixList.add(fixMap);
-                    } else {
-                        selCount += sellProduct.getCount();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", sellProduct.getId());
+                    map.put("name", sort.getViewName());
 
+                    if(SaleStatus.FIX.toString().equals(sellProduct.getStatus())) {
+                        //고장 목록
+                        map.put("memo", sellProduct.getMemo());
+                        fixList.add(map);
+
+                    } else {
+                        // 판매 목록
+                        String payment = "";
+                        int _count = sellProduct.getCount();
+                        count += _count;
+
+                        // 판매수단별 금액
                         if(Payment.CARD.toString().equals(sellProduct.getPayment())) {
-                            card += selCount * sort.getPrice();
+                            card += _count * sort.getPrice();
+                            payment = Payment.CARD.getViewName();
                         } else {
-                            cash += selCount * sort.getPrice();
+                            cash += _count * sort.getPrice();
+                            payment = Payment.CASH.getViewName();
                         }
 
-                        // 판매
-                        Map<String, Object> sellMap = new HashMap<>();
-                        sellMap.put("id", sellProduct.getId());
-                        sellMap.put("name", sort.getInit());
-                        sellMap.put("count", selCount);
-                        sellList.add(sellMap);
+                        map.put("payment", payment);
+                        map.put("count", _count);
+                        sellList.add(map);
                     }
                 }
             }
-
-            selTotalCount += selCount;
         }
 
         // 총계(판매)
         Map<String, Object> sellMap = new HashMap<>();
-        sellMap.put("name" , "총계");
-        sellMap.put("count", selTotalCount);
+        sellMap.put("name", "총계");
+        sellMap.put("payment", "");
+        sellMap.put("count", count);
         sellList.add(sellMap);
 
         // 기타
