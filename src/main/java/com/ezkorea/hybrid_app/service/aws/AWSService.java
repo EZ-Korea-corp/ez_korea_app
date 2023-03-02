@@ -9,6 +9,8 @@ import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
 import com.ezkorea.hybrid_app.domain.expenses.Expenses;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesRepository;
+import com.ezkorea.hybrid_app.domain.gas.GasStation;
+import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
@@ -42,6 +44,7 @@ public class AWSService {
     private final NoticeRepository noticeRepository;
     private final MemberRepository memberRepository;
     private final ExpensesRepository expensesRepository;
+    private final GasStationRepository gsRepository;
     private final MemberService memberService;
 
     /**
@@ -60,6 +63,15 @@ public class AWSService {
                 for (S3Image s3Image : makeNewS3ImageObject(dto, multipartFileList)) {
                     s3Image.setNotice(currentNotice);
                     currentNotice.getImageList().add(s3Image);
+                }
+            }
+            // notice : 다중 파일 업로드
+            case "station" -> {
+                GasStation currentStation = gsRepository.findById(dto.getId())
+                        .orElseThrow( () -> new IdNotFoundException("해당하는 id가 존재하지 않습니다."));
+                for (S3Image s3Image : makeNewS3ImageObject(dto, multipartFileList)) {
+                    s3Image.setGasStation(currentStation);
+                    currentStation.getImageList().add(s3Image);
                 }
             }
             // member : 단일 파일 업로드 + 기존 S3Image 객체 수정 방식
