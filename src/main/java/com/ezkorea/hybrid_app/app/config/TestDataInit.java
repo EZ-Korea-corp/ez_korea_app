@@ -48,14 +48,6 @@ public class TestDataInit {
     @PostConstruct
     @Profile("dev")
     public void testMemberDataInitWhenDev() {
-        log.info("active profile={}", activeProfile);
-        if (!memberRepository.existsByUsername("dev")) {
-            memberService.saveNewMember(makeNewMember("dev", "개발팀", Role.ROLE_MASTER, "01057868993"));
-        }
-        if (!memberRepository.existsByUsername("master")) {
-            memberService.saveNewMember(makeNewMember("master", "남명원", Role.ROLE_MASTER, "01081815587"));
-        }
-        log.info(activeProfile);
         if (activeProfile.equals("dev")) {
             if (!memberRepository.existsByUsername("test1")) {
                 memberService.saveNewMember(makeNewMember("test1", "고봉민", Role.ROLE_EMPLOYEE, "01012341234"));
