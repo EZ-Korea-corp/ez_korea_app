@@ -119,16 +119,19 @@ public class ManagerService {
     }
 
     public Team saveNewTeam(String divisionName, String teamName, String teamLeader, String teamEmployee) {
+        TeamDto teamDto = TeamDto.builder()
+                .division(dService.findDivisionByDivisionName(divisionName))
+                .teamName(teamName)
+                .build();
+        if (teamLeader != null) {
+            teamDto.setLeader(mService.findByUsername(teamLeader));
+        }
         List<Member> memberList = new ArrayList<>();
         for (String employeeUsername : teamEmployee.split(",")) {
             memberList.add(mService.findByUsername(employeeUsername));
         }
-        return tService.saveNewTeam(TeamDto.builder()
-                .division(dService.findDivisionByDivisionName(divisionName))
-                .teamName(teamName)
-                .leader(mService.findByUsername(teamLeader))
-                .memberList(memberList)
-                .build());
+        teamDto.setMemberList(memberList);
+        return tService.saveNewTeam(teamDto);
     }
 
     @Transactional

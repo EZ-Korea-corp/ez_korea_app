@@ -21,17 +21,24 @@ public class TeamService {
         Team savedTeam = teamRepository.save(Team.builder()
                 .division(dto.getDivision())
                 .teamName(dto.getTeamName())
-                .leader(dto.getLeader())
                 .memberList(dto.getMemberList())
                 .build());
-        setMemberTeam(savedTeam);
+        if (dto.getLeader() != null) {
+            savedTeam.setLeader(dto.getLeader());
+            setLeaderTeam(savedTeam);
+        }
+        setMemberListTeam(savedTeam);
         return savedTeam;
     }
 
     @Transactional
-    public void setMemberTeam(Team team) {
+    public void setLeaderTeam(Team team) {
         team.getLeader().setTeam(team);
         team.getLeader().setDivision(team.getDivision());
+    }
+
+    @Transactional
+    public void setMemberListTeam(Team team) {
         for (Member member : team.getMemberList()) {
             member.setTeam(team);
             member.setDivision(team.getDivision());
