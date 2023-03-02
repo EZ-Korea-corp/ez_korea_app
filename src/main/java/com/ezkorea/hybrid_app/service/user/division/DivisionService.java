@@ -21,7 +21,7 @@ public class DivisionService {
 
     @Transactional
     public Division saveNewDivision(DivisionDto dto) {
-        if (divisionRepository.existsByLeader(dto.getTeamGm())) {
+        if (existsDivisionByLeader(dto.getTeamGm())) {
             return findDivisionByLeader(dto.getTeamGm());
         }
         Division savedDivision = divisionRepository.save(Division.builder()
@@ -47,5 +47,9 @@ public class DivisionService {
 
     public Division findDivisionByLeader(Member member) {
         return divisionRepository.findByLeader(member);
+    }
+
+    public boolean existsDivisionByLeader(Member member) {
+        return divisionRepository.existsByLeader(member);
     }
 }

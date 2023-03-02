@@ -89,10 +89,18 @@ public class ManagerService {
     }
 
     public Division saveNewDivision(String teamName, String teamGm) {
+        if (teamGm == null) {
+            Member master = mService.findByUsername("master");
+            if (dService.existsDivisionByLeader(master)) {
+                return dService.findDivisionByLeader(master);
+            } else {
+                teamGm = "master";
+            }
+        }
         DivisionDto dto = DivisionDto.builder()
                 .teamName(teamName)
                 .build();
-        Member currentMember = mService.findByUsername(Objects.requireNonNullElse(teamGm, "master"));
+        Member currentMember = mService.findByUsername(teamGm);
         dto.setTeamGm(currentMember);
         return dService.saveNewDivision(dto);
     }
