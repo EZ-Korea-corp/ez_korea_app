@@ -60,6 +60,11 @@ public class ExpensesService {
         return expensesRepository.findAllByMemberOrderByPayDateDesc(member, pageable);
     }
 
+    public Page<Expenses> findExpensesByMemberAndStatus(Member member, ExpensesStatus status, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return expensesRepository.findAllByMemberAndExpensesStatusOrderByPayDateDesc(member, status, pageable);
+    }
+
     public Page<Expenses> findAllExpenses(int page) {
         Pageable pageable = PageRequest.of(page, 10);
         return expensesRepository.findAllByOrderByPayDateDescManagerCheckAsc(pageable);
