@@ -3,7 +3,6 @@ package com.ezkorea.hybrid_app.service.expenses;
 import com.ezkorea.hybrid_app.domain.expenses.Expenses;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesRepository;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
-import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.service.aws.AWSService;
 import com.ezkorea.hybrid_app.service.sales.GasStationService;
@@ -65,14 +64,14 @@ public class ExpensesService {
         return expensesRepository.findAllByMemberAndExpensesStatusOrderByPayDateDesc(member, status, pageable);
     }
 
-    public Page<Expenses> findAllExpenses(int page) {
+    public Page<Expenses> findAllExpensesByStatus(int page, ExpensesStatus status) {
         Pageable pageable = PageRequest.of(page, 10);
-        return expensesRepository.findAllByOrderByPayDateDescManagerCheckAsc(pageable);
+        return expensesRepository.findAllByStatusOrderByPayDateDescManagerCheckAsc(status, pageable);
     }
 
-    public Page<Expenses> findAllExpensesByPayDate(int page, LocalDate date) {
+    public Page<Expenses> findAllExpensesByPayDate(int page, LocalDate date, ExpensesStatus status) {
         Pageable pageable = PageRequest.of(page, 10);
-        return expensesRepository.findAllByPayDateOrderByPayDateDescManagerCheckAsc(date, pageable);
+        return expensesRepository.findAllByStatusPayDateOrderByPayDateDescManagerCheckAsc(date, status, pageable);
     }
 
     @Transactional

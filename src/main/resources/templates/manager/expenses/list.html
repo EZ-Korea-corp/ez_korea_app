@@ -39,6 +39,15 @@
                         </div>
                     </div>
 
+                    <hr class="mb-8">
+
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <button onclick="window.location.href='/manager/expenses/FUEL'" class="w-full bg-blue-600 py-1 rounded-lg">주유비</button>
+                        <button onclick="window.location.href='/manager/expenses/FOOD'" class="w-full bg-blue-600 py-1 rounded-lg">식비</button>
+                    </div>
+
+                    <hr>
+
                     <div class="md:py-8 py-3">
 
                         <div class="relative overflow-x-auto shadow-md" id="select-div">
@@ -56,10 +65,10 @@
                                         구분
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                        유종
+                                        비용
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                        비용
+                                        유종
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                         근무지
@@ -82,11 +91,12 @@
                                     </th>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getMember().getName()}">이름</td>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getExpensesStatus().getViewName()}">구분</td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${#numbers.formatInteger(expenses.getCost(), 3, 'COMMA')}">비용</td>
                                     <td class="px-2 py-4 whitespace-nowrap">
                                         <a th:if="${expenses.getExpensesStatus().equals(T(com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus).FUEL)}" th:text="${expenses.getFuelStatus().getViewName()}"></a>
+                                        <a th:if="${!expenses.getExpensesStatus().equals(T(com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus).FUEL)}">-</a>
                                     </td>
-                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${#numbers.formatInteger(expenses.getCost(), 3, 'COMMA')}">비용</td>
-                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getGasStation().getStationName()}">근무지</td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getGasStation() != null ? expenses.getGasStation().getStationName() : '-'}">근무지</td>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getPayDate()}"></td>
                                     <td class="px-2 py-4 whitespace-nowrap">
                                         <button class="button gray" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|" th:onclick="|checkTask(${expenses.getId()})|" >영수증 확인</button>

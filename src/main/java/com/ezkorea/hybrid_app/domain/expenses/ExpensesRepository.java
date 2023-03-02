@@ -15,9 +15,9 @@ public interface ExpensesRepository extends JpaRepository<Expenses, Long> {
 
     Page<Expenses> findAllByMemberAndExpensesStatusOrderByPayDateDesc(Member member, ExpensesStatus status, Pageable pageable);
 
-    @Query("SELECT e FROM Expenses e ORDER BY e.payDate DESC, e.isManagerCheck ASC")
-    Page<Expenses> findAllByOrderByPayDateDescManagerCheckAsc(Pageable pageable);
+    @Query("SELECT e FROM Expenses e WHERE e.expensesStatus = ?1 ORDER BY e.payDate DESC, e.isManagerCheck ASC")
+    Page<Expenses> findAllByStatusOrderByPayDateDescManagerCheckAsc(ExpensesStatus status, Pageable pageable);
 
-    @Query("SELECT e FROM Expenses e WHERE e.payDate = ?1 ORDER BY e.payDate DESC, e.isManagerCheck ASC")
-    Page<Expenses> findAllByPayDateOrderByPayDateDescManagerCheckAsc(LocalDate date, Pageable pageable);
+    @Query("SELECT e FROM Expenses e WHERE (e.payDate = ?1 AND e.expensesStatus = ?2) ORDER BY e.payDate DESC, e.isManagerCheck ASC")
+    Page<Expenses> findAllByStatusPayDateOrderByPayDateDescManagerCheckAsc(LocalDate date, ExpensesStatus status ,Pageable pageable);
 }
