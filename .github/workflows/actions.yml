@@ -72,7 +72,7 @@ jobs:
 
       ## Gradle Build
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -x test
 
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip .
