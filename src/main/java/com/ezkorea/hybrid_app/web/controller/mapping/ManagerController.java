@@ -10,6 +10,7 @@ import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
+import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,10 +33,11 @@ import java.util.List;
 public class ManagerController {
 
     private final ManagerService managerService;
-    private final CommuteService commuteService;
-    private final MemberService memberService;
-    private final ExpensesService expensesService;
-    private final DivisionService divisionService;
+    private final CommuteService cService;
+    private final MemberService mService;
+    private final TeamService tService;
+    private final ExpensesService eService;
+    private final DivisionService dService;
 
     @GetMapping("/home")
     public String showManagerPage() {
@@ -50,33 +52,33 @@ public class ManagerController {
 
     @GetMapping("/division")
     public String showDivisionPage(Model model) {
-        model.addAttribute("divisionList", managerService.findAllDivision());
+        model.addAttribute("divisionList", dService.findAllDivision());
         return "manager/group/manage-group-main";
     }
 
     @GetMapping("/division/{id}")
     public String showDivisionDetailPage(Model model, @PathVariable Long id) {
-        model.addAttribute("division", managerService.findDivisionById(id));
+        model.addAttribute("division", dService.findDivisionById(id));
         return "manager/group/manage-division-detail";
     }
 
     @GetMapping("/division/update/{id}")
     public String showDivisionUpdatePage(Model model, @PathVariable Long id) {
-        Division currentDivision = divisionService.findDivisionById(id);
-        model.addAttribute("gmList", memberService.findByRoleAndDivisionAndDivisionNull(Role.ROLE_GM, MemberStatus.FULL_TIME, currentDivision));
-        model.addAttribute("division", managerService.findDivisionById(id));
+        Division currentDivision = dService.findDivisionById(id);
+        model.addAttribute("gmList", mService.findByRoleAndDivisionAndDivisionNull(Role.ROLE_GM, MemberStatus.FULL_TIME, currentDivision));
+        model.addAttribute("division", dService.findDivisionById(id));
         return "manager/group/manage-division-update";
     }
 
     @GetMapping("/division/create")
     public String showCreateDivisionPage(Model model) {
-        model.addAttribute("gmList", memberService.findByRoleAndDivisionIsNull(Role.ROLE_GM, MemberStatus.FULL_TIME));
+        model.addAttribute("gmList", mService.findByRoleAndDivisionIsNull(Role.ROLE_GM, MemberStatus.FULL_TIME));
         return "manager/group/manage-division-create";
     }
 
     @GetMapping("/team/create")
     public String showCreateTeamPage(Model model) {
-        model.addAttribute("divisionList", managerService.findAllDivision());
+        model.addAttribute("divisionList", dService.findAllDivision());
         model.addAttribute("leaderList", managerService.findAllMemberByRoleAndStatusAndTeamIsNull(Role.ROLE_LEADER, MemberStatus.FULL_TIME));
         model.addAttribute("employeeList", managerService.findAllMemberByRoleAndStatusAndTeamIsNull(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME));
         return "manager/group/manage-team-create";
@@ -84,12 +86,12 @@ public class ManagerController {
 
     @GetMapping("/team/update/{id}")
     public String showUpdateTeamPage(Model model, @PathVariable Long id) {
-        Team currentTeam = managerService.findTeamById(id);
+        Team currentTeam = tService.findById(id);
         model.addAttribute("currentTeam", currentTeam);
         model.addAttribute("employeeList", managerService.findAllByRoleAndTeamIsNullOrTeam(Role.ROLE_EMPLOYEE, currentTeam, MemberStatus.FULL_TIME));
         // 현재 팀의 리더인 사람 + 리더지만 팀이 없는 사람만 조회
         model.addAttribute("leaderList", managerService.findAllByRoleAndTeamIsNullOrTeam(Role.ROLE_LEADER, currentTeam, MemberStatus.FULL_TIME));
-        model.addAttribute("divisionList", managerService.findAllDivision());
+        model.addAttribute("divisionList", dService.findAllDivision());
         return "manager/group/manage-team-update";
     }
 
@@ -102,7 +104,7 @@ public class ManagerController {
     @GetMapping("/commute")
     public String showMemberCommutePage(@RequestParam(value="date", required=false)String date, Model model) {
         //model.addAttribute("employeeList", managerService.findAllMemberByStatus(MemberStatus.FULL_TIME));
-        model.addAttribute("commuteList", commuteService.findCommuteTime(date));
+        model.addAttribute("commuteList", cService.findCommuteTime(date));
 
         return "manager/manage-commute";
     }
@@ -146,9 +148,9 @@ public class ManagerController {
 
         log.info("expensesLocalDate = {}", payDate);
         if (payDate == null) {
-            model.addAttribute("expensesList", expensesService.findAllExpenses(page));
+            model.addAttribute("expensesList", eService.findAllExpenses(page));
         } else {
-            model.addAttribute("expensesList", expensesService.findAllExpensesByPayDate(page, payDate));
+            model.addAttribute("expensesList", eService.findAllExpensesByPayDate(page, payDate));
         }
         return "manager/expenses/list";
     }

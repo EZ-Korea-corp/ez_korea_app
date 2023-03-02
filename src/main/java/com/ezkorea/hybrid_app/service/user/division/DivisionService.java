@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.service.user.division;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.division.DivisionRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
+import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import com.ezkorea.hybrid_app.web.exception.DivisionNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.List;
 public class DivisionService {
 
     private final DivisionRepository divisionRepository;
+    private final MemberService mService;
 
     @Transactional
     public Division saveNewDivision(DivisionDto dto) {
@@ -30,6 +32,32 @@ public class DivisionService {
                 .build());
         dto.getTeamGm().setDivision(savedDivision);
         return savedDivision;
+    }
+
+    public DivisionDto createDivisionDto(String teamName, String teamGm) {
+        if (teamGm == null) {
+            Member master = mService.findByUsername("master");
+            if (existsDivisionByLeader(master)) {
+                return null;
+            } else {
+                teamGm = "master";
+            }
+        }
+        DivisionDto dto = DivisionDto.builder()
+                .teamName(teamName)
+                .build();
+        Member currentMember = mService.findByUsername(teamGm);
+        dto.setTeamGm(currentMember);
+        return dto;
+    }
+
+    @Transactional
+    public void updateDivision(Long divisionId, String teamName, String teamGm) {
+        Division currentDivision = findDivisionById(divisionId);
+        currentDivision.setDivisionName(teamName);
+        if (teamGm != null) {
+            currentDivision.setLeader(mService.findByUsername(teamGm));
+        }
     }
 
     public Division findDivisionByDivisionName(String divisionName) {

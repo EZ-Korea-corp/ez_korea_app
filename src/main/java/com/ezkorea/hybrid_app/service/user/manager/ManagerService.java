@@ -33,7 +33,6 @@ import java.util.Map;
 public class ManagerService {
 
     private final MemberService mService;
-    private final DivisionService dService;
     private final TeamService tService;
 
     private final CommuteMbRepository commuteMbRepository;
@@ -42,10 +41,6 @@ public class ManagerService {
 
     public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team, MemberStatus status) {
         return mService.findAllByRoleAndTeamIsNullOrTeam(role, team, status);
-    }
-
-    public Team findTeamById(Long id) {
-        return tService.findById(id);
     }
 
     public List<Member> findAllMemberByRoleAndStatusAndTeamIsNull(Role role, MemberStatus status) {
@@ -79,40 +74,6 @@ public class ManagerService {
     public void updateMemberStatus(Long id, MemberStatus status) {
         Member currentMember = mService.findMemberById(id);
         mService.updateMemberStatus(currentMember, status);
-    }
-
-    public Division saveNewDivision(String teamName, String teamGm) {
-        if (teamGm == null) {
-            Member master = mService.findByUsername("master");
-            if (dService.existsDivisionByLeader(master)) {
-                return dService.findDivisionByLeader(master);
-            } else {
-                teamGm = "master";
-            }
-        }
-        DivisionDto dto = DivisionDto.builder()
-                .teamName(teamName)
-                .build();
-        Member currentMember = mService.findByUsername(teamGm);
-        dto.setTeamGm(currentMember);
-        return dService.saveNewDivision(dto);
-    }
-
-    @Transactional
-    public void updateDivision(Long divisionId, String teamName, String teamGm) {
-        Division currentDivision = dService.findDivisionById(divisionId);
-        currentDivision.setDivisionName(teamName);
-        if (teamGm != null) {
-            currentDivision.setLeader(mService.findByUsername(teamGm));
-        }
-    }
-
-    public List<Division> findAllDivision() {
-        return dService.findAllDivision();
-    }
-
-    public Division findDivisionById(Long id) {
-        return dService.findDivisionById(id);
     }
 
     public List<Map<String, String>> findTaskDateList(Map<String, Object> data) {

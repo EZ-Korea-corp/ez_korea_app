@@ -6,6 +6,7 @@ import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
+import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import com.ezkorea.hybrid_app.web.dto.TeamDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,10 +58,12 @@ public class ManagerRestController {
         String teamName = (String) datum.get("teamName");
         String teamGm = (String) datum.get("teamGM");
 
-        Division division = managerService.saveNewDivision(teamName, teamGm);
-        if (division.getLeader().getUsername().equals("master")) {
+        DivisionDto dto = dService.createDivisionDto(teamName, teamGm);
+        if (dto == null) {
             return new ResponseEntity<>(Map.of("message", "무소속 지점은 1개만 만들 수 있습니다."), HttpStatus.BAD_REQUEST);
         }
+
+        dService.saveNewDivision(dto);
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
@@ -70,7 +73,7 @@ public class ManagerRestController {
 
         String teamName = (String) datum.get("teamName");
         String teamGm = (String) datum.get("teamGM");
-        managerService.updateDivision(id, teamName, teamGm);
+        dService.updateDivision(id, teamName, teamGm);
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
