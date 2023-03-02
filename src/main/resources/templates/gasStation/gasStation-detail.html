@@ -47,7 +47,7 @@
                             <div class="md:w-2/3 space-y-4 -mt-2">
                                 <div class="items-center space-x-3">
                                     <div>
-                                        <div th:text="${station['memo']}">
+                                        <div id="content" th:text="${station['memo']}">
                                         </div>
                                     </div>
                                 </div>
@@ -101,6 +101,14 @@
 
         </div>
         <script>
+            jQuery(document).ready(function($){
+
+                let content = $('#content').text();
+                let html = content.replace(/\n/g, '<br>');
+                $('#content').html(html);
+
+                /*const Editor = toastui.Editor;*/
+            });
             function fnEndStation(id) {
                 Swal.fire({
                     html: '철수하시겠습니까?',

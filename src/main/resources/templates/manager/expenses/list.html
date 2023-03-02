@@ -17,7 +17,7 @@
         <div class="lg:space-x-12">
             <div class="lg:w-full card">
 
-                <div class="p-10 pt-4 divide-y divide-gray-100">
+                <div class="p-10 pt-4">
 
                     <div class="md:py-8 py-3">
                         <div class="flex justify-between align-items-center">
@@ -31,7 +31,7 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <form method="get" th:action="@{/manager/expenses}" id="searchForm">
+                                    <form method="get" th:action id="searchForm">
                                         <input type="text" name="payDate" id="payDate" readonly required class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="날짜를 선택해주세요.">
                                     </form>
                                 </div>
@@ -42,8 +42,8 @@
                     <hr class="mb-8">
 
                     <div class="grid grid-cols-2 gap-4 mb-8">
-                        <button onclick="window.location.href='/manager/expenses/FUEL'" class="w-full bg-blue-600 py-1 rounded-lg">주유비</button>
-                        <button onclick="window.location.href='/manager/expenses/FOOD'" class="w-full bg-blue-600 py-1 rounded-lg">식비</button>
+                        <button onclick="window.location.href='/manager/expenses/FUEL'" class="w-full bg-blue-600 py-1 text-white rounded-lg">주유비</button>
+                        <button onclick="window.location.href='/manager/expenses/FOOD'" class="w-full bg-blue-600 py-1 text-white rounded-lg">식비</button>
                     </div>
 
                     <hr>
@@ -99,7 +99,7 @@
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getGasStation() != null ? expenses.getGasStation().getStationName() : '-'}">근무지</td>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getPayDate()}"></td>
                                     <td class="px-2 py-4 whitespace-nowrap">
-                                        <button class="button gray" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|" th:onclick="|checkTask(${expenses.getId()})|" >영수증 확인</button>
+                                        <button class="button gray" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|">영수증 확인</button>
 
                                         <!-- This is the modal with the default close button -->
                                         <div th:id="|modal${expenses.getId()}|" uk-modal>
@@ -107,12 +107,28 @@
                                                 <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
                                                 <h2 class="mb-2 uk-modal-title">영수증</h2>
                                                 <img th:src="${expenses.getS3Image().getFilePath()}">
+
+                                                <hr class="my-4">
+
+                                                <div class="flex justify-between align-items-center">
+                                                    <div>
+                                                        <select th:id="|checkStatus${expenses.getId()}|" name="checkStatus">
+                                                            <option th:value="${check}"
+                                                                    th:selected="${expenses.getCheckStatus().equals(check)}"
+                                                                    th:text="${check.viewName}"
+                                                                    th:each="check : ${T(com.ezkorea.hybrid_app.domain.expenses.CheckStatus).values()}"></option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <button class="bg-blue-600 rounded-lg px-8 text-white py-1" th:onclick="|checkTask(${expenses.getId()})|">저장</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-2 py-4 whitespace-nowrap" >
                                         <div th:id="|expenses${expenses.getId()}|">
-                                            <input type="checkbox" th:checked="${expenses.isManagerCheck()}" disabled>
+                                            <a th:text="${expenses.getCheckStatus().viewName}"></a>
                                         </div>
                                     </td>
                                 </tr>
@@ -167,7 +183,9 @@
             });
 
             function checkTask(id) {
+                let status = $(`#checkStatus${id} option:selected`).val();
                 let data = {
+                    checkStatus : status,
                     id: id
                 }
                 fnOnlyCrudJsonAjax(data, '/expenses', 'PUT', refreshDiv);
@@ -190,7 +208,10 @@
                         fnResponseCrudJsonAjax(data, '/expenses', 'DELETE', refreshPage);
                         setTimeLoadingSpinner(1100, "내역을 삭제하고 있습니다.");
                         setTimeout(function () {
-                            $(location).attr("href", "/expenses");
+                            let currentURI = window.location.href;
+                            console.log(currentURI);
+                            let status = currentURI.split('/').pop();
+                            $(location).attr("href", "/manager/expenses/".concat(status));
                         }, 1100);
                     } else if (result.isDenied) {
                         Swal.fire('변경되지 않았습니다.')
@@ -219,12 +240,6 @@
                 });
 
             });
-
-            let inviteBtn = {
-                doInvite: function (idx) {
-                    fnResponseCrudJsonAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'PUT', refreshPage);
-                }
-            }
 
             function refreshPage(data) {
                 location.reload();

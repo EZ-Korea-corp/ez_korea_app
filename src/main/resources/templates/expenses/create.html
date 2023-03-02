@@ -99,7 +99,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/datepicker.min.js"></script>
         <script>
 
-            let selectedValue;
+            let selectedValue = 'FOOD';
 
             $(document).ready(function() {
                 $("#expensesStatus").change(function() {
@@ -168,10 +168,10 @@
                 if (fileCount !== 0) {
                     let time = showLoadingSpinner("이미지를 저장하고 있습니다.");
                     setTimeout(function () {
-                        $(location).attr("href", "/expenses");
+                        $(location).attr("href", "/expenses/".concat(selectedValue));
                     }, time);
                 } else {
-                    $(location).attr("href", "/expenses");
+                    $(location).attr("href", "/expenses/".concat(selectedValue));
                 }
             }
         </script>

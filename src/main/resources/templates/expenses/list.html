@@ -60,6 +60,9 @@
                                         날짜
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                        경리 확인
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
                                         영수증
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
@@ -80,6 +83,9 @@
                                     </td>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getGasStation() != null ? expenses.getGasStation().getStationName() : '-'}"></td>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getPayDate()}"></td>
+                                    <td class="px-2 py-4 whitespace-nowrap">
+                                        <a th:text="${expenses.getCheckStatus().viewName}"></a>
+                                    </td>
                                     <td class="px-2 py-4 whitespace-nowrap">
                                         <button class="button gray" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|">영수증 확인</button>
 
@@ -135,6 +141,9 @@
         </div>
         <script th:inline="javascript">
 
+            let currentURI = window.location.href;
+            let status = currentURI.split('/').pop();
+
             function removeTask(id) {
 
                 Swal.fire({
@@ -152,7 +161,7 @@
                         fnResponseCrudJsonAjax(data, '/expenses', 'DELETE');
                         setTimeLoadingSpinner(1100, "내역을 삭제하고 있습니다.");
                         setTimeout(function () {
-                            $(location).attr("href", "/expenses");
+                            $(location).attr("href", "/expenses/".concat(status));
                         }, 1100);
                     } else if (result.isDenied) {
                         Swal.fire('변경되지 않았습니다.')
@@ -181,16 +190,6 @@
                 });
 
             });
-
-            let inviteBtn = {
-                doInvite: function (idx) {
-                    fnResponseCrudJsonAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'PUT', refreshPage);
-                }
-            }
-
-            function refreshPage(data) {
-                location.reload();
-            }
         </script>
     </main>
 

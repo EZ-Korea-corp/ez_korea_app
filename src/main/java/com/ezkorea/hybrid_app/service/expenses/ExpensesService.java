@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.service.expenses;
 
+import com.ezkorea.hybrid_app.domain.expenses.CheckStatus;
 import com.ezkorea.hybrid_app.domain.expenses.Expenses;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesRepository;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
@@ -29,6 +30,7 @@ public class ExpensesService {
         Expenses newExpenses = Expenses.builder()
                 .cost(dto.getCost())
                 .expensesStatus(dto.getExpensesStatus())
+                .checkStatus(CheckStatus.NOT_CHECK)
                 .payDate(dto.getPayDate())
                 .member(member)
                 .build();
@@ -77,7 +79,7 @@ public class ExpensesService {
     @Transactional
     public Expenses checkExpenses(ExpensesDto dto) {
         Expenses currentExpenses = findExpensesById(dto.getId());
-        currentExpenses.setManagerCheck(true);
+        currentExpenses.setCheckStatus(dto.getCheckStatus());
         return currentExpenses;
     }
 }
