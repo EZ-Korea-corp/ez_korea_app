@@ -94,7 +94,9 @@
                                             <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
                                             <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
                                             <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
-                                            <td class="px-2 py-4 whitespace-nowrap"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap">
+                                                <a th:href="@{/manager/team/update/{id}(id=${team.getId()})}" class="button w-full">팀 수정</a>
+                                            </td>
                                         </th:block>
                                         <th:block th:if="${status.index != 0}">
                                             <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">

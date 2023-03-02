@@ -138,11 +138,13 @@ public class ManagerService {
     public void updateTeam(Long teamId, String divisionName, String teamName, String teamLeader, String teamEmployee) {
         Team currentTeam = tService.findById(teamId);
         Division currentDivision = dService.findDivisionByDivisionName(divisionName);
-        Member currentTeamLeader = mService.findByUsername(teamLeader);
 
-        // 리더 설정
-        currentTeamLeader.setDivision(currentDivision);
-        currentTeamLeader.setTeam(currentTeam);
+        if (teamLeader != null) {
+            Member currentTeamLeader = mService.findByUsername(teamLeader);
+            currentTeamLeader.setDivision(currentDivision);
+            currentTeamLeader.setTeam(currentTeam);
+            currentTeam.setLeader(currentTeamLeader);
+        }
 
         // 기존 소속 팀원 설정
         for (Member member : currentTeam.getMemberList()) {
@@ -162,9 +164,7 @@ public class ManagerService {
         // 팀 정보 변경
         currentTeam.setTeamName(teamName);
         currentTeam.setDivision(currentDivision);
-        currentTeam.setLeader(currentTeamLeader);
         currentTeam.setMemberList(memberList);
-
     }
 
     public Division findDivisionById(Long id) {
