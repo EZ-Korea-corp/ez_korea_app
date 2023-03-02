@@ -2,8 +2,6 @@ package com.ezkorea.hybrid_app.service.user.manager;
 
 import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
-import com.ezkorea.hybrid_app.domain.notice.Notice;
-import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
 import com.ezkorea.hybrid_app.domain.sale.Payment;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
@@ -28,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -42,14 +39,6 @@ public class ManagerService {
     private final CommuteMbRepository commuteMbRepository;
     private final DailyTaskRepository dailyTaskRepository;
     private final SaleMbRepository saleMbRepository;
-
-    public List<Member> findAllMemberByRole(Role role) {
-        return mService.findByRole(role);
-    }
-
-    public List<Member> findAllMemberByRoleAndDivisionIsNull(Role role, MemberStatus status) {
-        return mService.findByRoleAndDivisionIsNull(role, status);
-    }
 
     public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team, MemberStatus status) {
         return mService.findAllByRoleAndTeamIsNullOrTeam(role, team, status);
@@ -120,55 +109,6 @@ public class ManagerService {
 
     public List<Division> findAllDivision() {
         return dService.findAllDivision();
-    }
-
-    public Team saveNewTeam(String divisionName, String teamName, String teamLeader, String teamEmployee) {
-        TeamDto teamDto = TeamDto.builder()
-                .division(dService.findDivisionByDivisionName(divisionName))
-                .teamName(teamName)
-                .build();
-        if (teamLeader != null) {
-            teamDto.setLeader(mService.findByUsername(teamLeader));
-        }
-        List<Member> memberList = new ArrayList<>();
-        for (String employeeUsername : teamEmployee.split(",")) {
-            memberList.add(mService.findByUsername(employeeUsername));
-        }
-        teamDto.setMemberList(memberList);
-        return tService.saveNewTeam(teamDto);
-    }
-
-    @Transactional
-    public void updateTeam(Long teamId, String divisionName, String teamName, String teamLeader, String teamEmployee) {
-        Team currentTeam = tService.findById(teamId);
-        Division currentDivision = dService.findDivisionByDivisionName(divisionName);
-
-        if (teamLeader != null) {
-            Member currentTeamLeader = mService.findByUsername(teamLeader);
-            currentTeamLeader.setDivision(currentDivision);
-            currentTeamLeader.setTeam(currentTeam);
-            currentTeam.setLeader(currentTeamLeader);
-        }
-
-        // 기존 소속 팀원 설정
-        for (Member member : currentTeam.getMemberList()) {
-            member.setDivision(null);
-            member.setTeam(null);
-        }
-
-        // 변경된 소속 팀원 설정
-        List<Member> memberList = new ArrayList<>();
-        for (String employeeUsername : teamEmployee.split(",")) {
-            Member currentMember = mService.findByUsername(employeeUsername);
-            memberList.add(currentMember);
-            currentMember.setDivision(currentTeam.getDivision());
-            currentMember.setTeam(currentTeam);
-        }
-
-        // 팀 정보 변경
-        currentTeam.setTeamName(teamName);
-        currentTeam.setDivision(currentDivision);
-        currentTeam.setMemberList(memberList);
     }
 
     public Division findDivisionById(Long id) {
