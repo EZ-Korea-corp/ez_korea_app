@@ -1,6 +1,7 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
+import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
@@ -54,7 +55,10 @@ public class ManagerRestController {
         String teamName = (String) datum.get("teamName");
         String teamGm = (String) datum.get("teamGM");
 
-        managerService.saveNewDivision(teamName, teamGm);
+        Division division = managerService.saveNewDivision(teamName, teamGm);
+        if (division.getLeader().getUsername().equals("master")) {
+            return new ResponseEntity<>(Map.of("message", "무소속 지점은 1개만 만들 수 있습니다."), HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
@@ -91,11 +95,9 @@ public class ManagerRestController {
 
         // 글쓰기 권한
         String memberPostAuth = (String) datum.get("memberPostAuth");
-        log.info("memberPostAuth={}", memberPostAuth);
 
         // 입고 권한
         String memberInputAuth = (String) datum.get("memberInputAuth");
-        log.info("memberInAuth={}", memberInputAuth);
 
         managerService.updateMemberSubAuth(username, memberPostAuth, memberInputAuth);
         managerService.updateMemberRole(username, Role.valueOf(memberRole), MemberStatus.valueOf(memberStatus));

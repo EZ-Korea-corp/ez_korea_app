@@ -49,54 +49,61 @@
 
                         <div id="content" th:utext="${notice.getContent()}"></div>
 
-                        <th:block sec:authorize="hasAuthority('ROLE_MANAGER')">
-                            <hr>
-                            <h3 class="uk-text-center">읽지 않은 사원</h3>
-
-                            <div class="relative overflow-x-auto shadow-md" id="select-div">
-
-                                <table class="w-full text-sm text-left text-gray-500 live-search-table">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                            사진
-                                        </th>
-                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                            이름
-                                        </th>
-                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                            핸드폰 번호
-                                        </th>
-                                        <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
-                                            직급
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="uk-text-center">
-                                    <tr class="bg-white border-b" th:each="user : ${notReadList}">
-                                        <td>
-                                            <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                                                <img th:src="${user.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                                            </div>
-                                        </td>
-                                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                                            <h3 th:text="${user.getName()}"></h3>
-                                        </th>
-                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${user.getPhone()}"></td>
-                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${user.getRole().getViewName()}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </th:block>
-
                     </div>
 
                     <!-- form footer -->
                     <div class="m-4 p-4">
+                        <th:block sec:authorize="hasAuthority('ROLE_MANAGER')">
+                            <button class="button w-full my-4" type="button" th:uk-toggle="|target: #modal${notice.getId()}|">읽지 않은 사원 확인</button>
+
+                            <!-- This is the modal with the default close button -->
+                            <div th:id="|modal${notice.getId()}|" uk-modal>
+                                <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
+                                    <div class="relative overflow-x-auto shadow-md" id="select-div">
+
+                                        <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                            <tr>
+                                                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                                    사진
+                                                </th>
+                                                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                                    이름
+                                                </th>
+                                                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                                    핸드폰 번호
+                                                </th>
+                                                <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                                    직급
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="uk-text-center">
+                                            <tr class="bg-white border-b" th:each="user : ${notReadList}">
+                                                <td>
+                                                    <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
+                                                        <img th:src="${user.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
+                                                    </div>
+                                                </td>
+                                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                                    <h3 th:text="${user.getName()}"></h3>
+                                                </th>
+                                                <td class="px-2 py-4 whitespace-nowrap" th:text="${user.getPhone()}"></td>
+                                                <td class="px-2 py-4 whitespace-nowrap" th:text="${user.getRole().getViewName()}"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
                         <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
-                        <a th:if="${member.getUsername() eq notice.getWriter().getUsername()}" th:href="@{/notice/{id}/update(id=${notice.getId()})}" class="button w-full mt-4">수정하기</a>
-                        <button type="button" id="deleteNotice" class="w-full mt-4 bg-red-600 h-10 rounded">삭제하기</button>
+                        <div class="grid grid-cols-2 gap-4">
+                            <a th:if="${member.getUsername() eq notice.getWriter().getUsername()}"
+                               th:href="@{/notice/{id}/update(id=${notice.getId()})}"
+                               class="button w-full mt-4">수정하기</a>
+                            <button type="button" id="deleteNotice" class="w-full text-white mt-4 bg-red-600 h-10 rounded">삭제하기</button>
+                        </div>
                     </div>
 
                 </div>
@@ -109,7 +116,6 @@
             jQuery(document).ready(function($){
 
                 let content = $('#content').text();
-                console.log(content);
                 let html = content.replace(/\n/g, '<br>');
                 $('#content').html(html);
 

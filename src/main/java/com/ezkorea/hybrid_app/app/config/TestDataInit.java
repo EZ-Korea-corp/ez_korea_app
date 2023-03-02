@@ -45,6 +45,24 @@ public class TestDataInit {
         if (!memberRepository.existsByUsername("test3")) {
             memberService.saveNewMember(makeNewMember("test3", "한문철", Role.ROLE_EMPLOYEE));
         }
+
+        // 아래 주석 해제하면 랜덤 회원 생성 가능 사용 후 다시 주석처리!
+//         makeRandomMember(10);
+    }
+
+    public void makeRandomMember(int memberCount) {
+        StringBuilder sb;
+        for (int i = 0; i < memberCount; i++) {
+            Random random = new Random();
+            sb = new StringBuilder();
+            for (int j = 0; j < 11; j++) {
+                int createNum = random.nextInt(9);
+                sb.append(createNum);
+            }
+            if (!memberRepository.existsByUsername(sb.toString())) {
+                memberService.saveNewMember(makeNewMember(sb.toString(), sb.substring(0, 3), Role.ROLE_EMPLOYEE));
+            }
+        }
     }
 
     public SignUpDto makeNewMember(String username, String name, Role role) {

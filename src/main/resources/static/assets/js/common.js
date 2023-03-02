@@ -77,6 +77,35 @@ function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg) {
     });
 }
 
+function fnOnlyCrudJsonAjax(data, url, method, fnCallBack) {
+
+    $.ajax({
+        type: method,
+        url: url,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        beforeSend: function(jqXHR, settings) {
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var token = $("meta[name='_csrf']").attr("content");
+            jqXHR.setRequestHeader(header, token);
+        },
+        success: function(xhr, data) {
+            if(fnCallBack) fnCallBack(data, xhr);
+        },
+        error: function(xhr, status, error) {
+            let errorMsg = '에러가 발생했습니다.'
+            if (xhr.responseJSON.message !== '') {
+                   errorMsg = xhr.responseJSON.message;
+            }
+            Swal.fire({
+                icon: 'error',
+                text: errorMsg,
+            });
+        }
+    });
+}
+
 function fnResponseCrudJsonAjax(data, url, method, fnCallBack) {
 
     $.ajax({
@@ -246,8 +275,30 @@ function fnCalenderMaker($calender, date) {
     }
 }
 
-function showLoadingSpinner(time, msg) {
+function setTimeLoadingSpinner(time, msg) {
     $('#body_div').hide();
+    let timerInterval;
+    Swal.fire({
+        title: msg,
+        html: '완료될 때까지 <b></b> ms 남았습니다.',
+        timer: time,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading()
+            const b = Swal.getHtmlContainer().querySelector('b')
+            timerInterval = setInterval(() => {
+                b.textContent = Swal.getTimerLeft()
+            }, 100)
+        },
+        willClose: () => {
+            clearInterval(timerInterval)
+        }
+    })
+    return time;
+}
+
+function showLoadingSpinner(msg) {
+    let time = fileCount * 1100;
     let timerInterval
     Swal.fire({
         title: msg,
@@ -265,4 +316,5 @@ function showLoadingSpinner(time, msg) {
             clearInterval(timerInterval)
         }
     })
+    return time;
 }

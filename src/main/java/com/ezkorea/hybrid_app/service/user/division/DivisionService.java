@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.service.user.division;
 
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.division.DivisionRepository;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import com.ezkorea.hybrid_app.web.exception.DivisionNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,9 @@ public class DivisionService {
 
     @Transactional
     public Division saveNewDivision(DivisionDto dto) {
+        if (existsDivisionByLeader(dto.getTeamGm())) {
+            return findDivisionByLeader(dto.getTeamGm());
+        }
         Division savedDivision = divisionRepository.save(Division.builder()
                 .divisionName(dto.getTeamName())
                 .leader(dto.getTeamGm())
@@ -39,5 +43,13 @@ public class DivisionService {
     public Division findDivisionById(Long id) {
         return divisionRepository.findById(id)
                 .orElseThrow( () -> new DivisionNotFoundException("해당 지점을 찾을 수 없습니다."));
+    }
+
+    public Division findDivisionByLeader(Member member) {
+        return divisionRepository.findByLeader(member);
+    }
+
+    public boolean existsDivisionByLeader(Member member) {
+        return divisionRepository.existsByLeader(member);
     }
 }
