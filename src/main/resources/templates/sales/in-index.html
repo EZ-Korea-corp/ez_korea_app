@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .live-search-list {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                padding: 1em;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                font-family: 'Lato', sans-serif;
+                color: #fff;
+            }
+
+            .live-search-box {
+                width: 100%;
+                display: block;
+                padding: 1em;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                border: 1px solid #3498db;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+            }
+
+            .live-search-list li {
+                color: #fff;
+                list-style: none;
+                padding: 0;
+                margin: 5px 0;
+            }
+            .move{
+                color: #FFFFFF;
+                justify-content: center;
+                align-items: center;
+            }
+            .rightBt{
+                width: 4.5em;
+                margin-left: auto;
+                color: #FFFFFF;
+            }
+        </style>
+        <div class="lg:space-x-12">
+            <form id="selectForm" onsubmit="return false;">
+                <div class="lg:w-full card">
+
+                    <div class="p-8">
+
+                        <div class="mb-4 flex">
+                            <h2 class="text-xl font-bold"><span class="mr-2">📋</span>입고조회</h2>
+                            <button type="button" th:onclick="|location.href='/sales/input/save';|" class="rightBt items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 등록 </button>
+                        </div>
+
+                        <div>
+                            <input type="text" id="datepicker" name="datepicker" readonly>
+                        </div>
+
+                        <div class="md:py-8 py-3">
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <table class="w-full uk-text-center text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            주유소
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            메모
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-lg whitespace-nowrap">
+                                            상세보기
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="inputTable">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <script th:inline="javascript">
+            jQuery(document).ready(function($){
+                let url = new URL(window.location.href);
+                let date = url.searchParams.get("date");
+
+                fnCalenderMaker($('#datepicker'), date);
+
+                $('#datepicker').on("change", function() {
+                    fnFindInputTableList($(this).val());
+                }).change();
+
+                function fnFindInputTableList(date) {
+                    const url = "/sales/input/tableList";
+                    const data = {"date" : date};
+
+                    fnFindJsonAjax(data, url, findInputTimeTableResult);
+                }
+
+                function findInputTimeTableResult(data) {
+                    let $inputTable = $("#inputTable");
+                    $inputTable.empty();
+
+                    if(data.list.length === 0) {
+                        $inputTable.append(
+                            $("<tr>", {class:"bg-white border-b"}).append(
+                                $("<td>", {class:"px-6 py-4", colspan:"3", text:"등록된 입고가 없습니다."})
+                            )
+                        )
+                    }
+
+                    data.list.forEach(function(item) {
+                        let $tr = $("<tr>", {class:"bg-white border-b"}).append(
+                            $("<th>", {scope:"row", class:"px-6 py-4 font-medium", text:item.name}),
+                            $("<td>", {class:"px-6 py-4", text:item.memo}),
+                            $("<td>", {class:"move flex"}).append(
+                                $("<button>", {type:"button", text:"조회", class:"bg-blue-600 mt-2 h-9 px-4 rounded-lg border font-semibold"}).on("click", function() {
+                                    location.href= "/sales/input/save?id=" + item.tTid;
+                                })
+                            ),
+                        )
+
+                        $inputTable.append($tr);
+                    })
+                }
+
+                $('.live-search-list li').each(function(){
+                    $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
+                });
+
+                $('.live-search-box').on('keyup', function(){
+
+                    let searchTerm = $(this).val().toLowerCase();
+
+                    $('.live-search-list li').each(function(){
+
+                        if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+
+                    });
+
+                });
+
+            });
+        </script>
+    </main>
+
+</body>
+
+</html>

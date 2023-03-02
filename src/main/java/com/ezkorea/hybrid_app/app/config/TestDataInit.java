@@ -43,7 +43,22 @@ public class TestDataInit {
             memberService.saveNewMember(makeNewMember("test2", "김경자", Role.ROLE_EMPLOYEE));
         }
         if (!memberRepository.existsByUsername("test3")) {
-            memberService.saveNewMember(makeNewMember("test3", "한문철", Role.ROLE_EMPLOYEE));
+            memberService.saveNewMember(makeNewMember("test4", "한문철1", Role.ROLE_EMPLOYEE));
+        }
+        if (!memberRepository.existsByUsername("test4")) {
+            memberService.saveNewMember(makeNewMember("test5", "한문철2", Role.ROLE_EMPLOYEE));
+        }
+        if (!memberRepository.existsByUsername("test5")) {
+            memberService.saveNewMember(makeNewMember("test6", "한문철3", Role.ROLE_EMPLOYEE));
+        }
+        if (!memberRepository.existsByUsername("test6")) {
+            memberService.saveNewMember(makeNewMember("test7", "한문철4", Role.ROLE_EMPLOYEE));
+        }
+        if (!memberRepository.existsByUsername("test7")) {
+            memberService.saveNewMember(makeNewMember("test8", "한문철5", Role.ROLE_EMPLOYEE));
+        }
+        if (!memberRepository.existsByUsername("test8")) {
+            memberService.saveNewMember(makeNewMember("test9", "한문철6", Role.ROLE_EMPLOYEE));
         }
 
         // 아래 주석 해제하면 랜덤 회원 생성 가능 사용 후 다시 주석처리!

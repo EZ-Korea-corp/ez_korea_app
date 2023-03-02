@@ -193,8 +193,9 @@
                     let list = [];
                     $("#sellList tr").each(function() {
                         let sort = $(this).find("[name='sort']").val();
+                        let payment = $(this).find("[name='payment']").val();
                         let count = Number($(this).find("[name='count']").val());
-                        let result = list.find(obj => obj.sort === sort);
+                        let result = list.find(obj => (obj.sort === sort && obj.payment === payment));
 
                         if(result) {
                             result.count = Number(result.count) + count;

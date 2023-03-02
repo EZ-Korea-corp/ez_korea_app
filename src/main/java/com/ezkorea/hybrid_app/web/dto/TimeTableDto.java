@@ -12,6 +12,7 @@ public class TimeTableDto {
     private Long memberId;
     private Long id;
     private String part;
+    private String memo;
 
     List<SellProduct> sellDtoList;
     List<SaleProductDto> saleDtoList;
