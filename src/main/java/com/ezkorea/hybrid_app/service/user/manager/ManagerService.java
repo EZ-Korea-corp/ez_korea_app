@@ -2,6 +2,9 @@ package com.ezkorea.hybrid_app.service.user.manager;
 
 import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
+import com.ezkorea.hybrid_app.domain.notice.Notice;
+import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
+import com.ezkorea.hybrid_app.domain.sale.Payment;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
