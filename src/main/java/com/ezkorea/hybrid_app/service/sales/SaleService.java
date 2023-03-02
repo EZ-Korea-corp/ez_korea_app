@@ -161,7 +161,7 @@ public class SaleService {
                     // 기존 리스트
                     SellProduct sellProduct = timeTable.getSellList()
                             .stream()
-                            .filter(p -> p.getStatus().equals(SaleStatus.OUT.toString()) && p.getSort().equals(item.getSort()))
+                            .filter(p -> p.getStatus().equals(SaleStatus.OUT.toString()) && p.getSort().equals(item.getSort()) && p.getPayment().equals(item.getPayment()))
                             .findFirst()
                             .orElse(null);
 

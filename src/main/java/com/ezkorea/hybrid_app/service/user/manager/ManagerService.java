@@ -5,6 +5,7 @@ import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
+import com.ezkorea.hybrid_app.domain.sale.Payment;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
@@ -27,6 +28,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -183,8 +185,17 @@ public class ManagerService {
         return dailyTaskRepository.findByTaskDateAndMemberId(searchDate, id);
     }
 
-    public Object findTotalStat(Map<String, Object> data) {
-        return saleMbRepository.findTotalStat(data);
+    public Map<String, Object> findTotalStat(Map<String, Object> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        List<Map<String, Object>> priceList = saleMbRepository.findTablePrice(paramMap);
+        // 결제수단명 추가
+        priceList.forEach(item -> {
+            item.put("NAME", Payment.of((String)item.get("PAYMENT")));
+        });
+
+        returnMap.put("countList", saleMbRepository.findTotalStat(paramMap));
+        returnMap.put("priceList", priceList);
+        return returnMap;
     }
 
 }

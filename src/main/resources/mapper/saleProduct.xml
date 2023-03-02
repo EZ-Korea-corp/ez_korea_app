@@ -105,7 +105,7 @@
 
     <select id="findStatList" parameterType="Map" resultType="Map">
        SELECT     CONCAT(MAX(B.NAME), (CASE WHEN MAX(B.TEAM_NAME) IS NULL THEN "" ELSE CONCAT("(", MAX(B.TEAM_NAME), ")") END)) AS NAME
-                , SUM(A.COUNT) AS COUNT
+                , SUM(A.COUNT) / 2 AS COUNT
         FROM    SELL_PRODUCT A INNER JOIN
         (
             SELECT    A.ID AS TABLE_ID
@@ -141,45 +141,46 @@
 
     <select id="findTotalStat" parameterType="Map" resultType="Map">
         WITH STAT AS (
-            SELECT     MAX(B.WIPER_VIEW_NAME) AS NAME
-                     , MAX(B.WIPER_SORT) AS SORT
-                     , SUM(A.COUNT) AS COUNT
-                     , MAX(B.WIPER_PRICE) * SUM(A.COUNT) AS PRICE
+            SELECT    A.SORT AS SORT
+                    , IFNULL(B.COUNT / 2, 0) AS COUNT
+                    , IFNULL(A.PRICE * B.COUNT, 0) AS PRICE
             FROM
             (
-                SELECT	  A.WIPER_ID
-                        , SUM(A.COUNT) AS COUNT
-                FROM    SALE_PRODUCT A INNER JOIN DAILY_TASK B
-                ON      A.TASK_ID = B.ID
-                WHERE   A.STATUS = 'out'
-                <if test="status != null and !''.equals(status)">
+                SELECT    A.WIPER_SORT AS SORT
+                        , MAX(A.WIPER_PRICE) AS PRICE
+                FROM    WIPER A
+                GROUP BY A.WIPER_SORT
+            ) A LEFT JOIN
+            (
+                SELECT    B.SORT
+                        , SUM(B.COUNT) AS COUNT
+                FROM    TIME_TABLE A INNER JOIN SELL_PRODUCT B
+                ON A.ID = B.TIME_TABLE_ID
+                <if test="pStatus != null and !''.equals(pStatus)">
                     <choose>
-                        <when test="'day'.equals(status)">
-                            AND B.TASK_DATE = DATE_FORMAT(NOW(), '%y-%m-%d')
+                        <when test="'day'.equals(pStatus)">
+                            WHERE   A.TASK_DATE = #{date}
                         </when>
-                        <when test="'week'.equals(status)">
-                            AND B.TASK_DATE <![CDATA[>=]]> ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 0 )
-                            AND B.TASK_DATE <![CDATA[<=]]> ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 6 )
+                        <when test="'week'.equals(pStatus)">
+                            WHERE   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 0 )
+                            AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 6 )
                         </when>
                         <otherwise>
-                            AND B.TASK_DATE <![CDATA[>=]]> LAST_DAY(NOW() - INTERVAL 1 MONTH) + INTERVAL 1 DAY
-                            AND B.TASK_DATE <![CDATA[<=]]> LAST_DAY(NOW())
+                            WHERE   A.TASK_DATE <![CDATA[>=]]> LAST_DAY(#{date} - INTERVAL 1 MONTH) + INTERVAL 1 DAY
+                            AND		A.TASK_DATE <![CDATA[<=]]> LAST_DAY(#{date})
                         </otherwise>
                     </choose>
                 </if>
-                GROUP BY A.WIPER_ID
-            ) A INNER JOIN WIPER B
-            ON A.WIPER_ID = B.ID
-            GROUP BY B.WIPER_SORT
+                GROUP BY B.SORT
+            ) B
+            ON A.SORT = B.SORT
         )
-        SELECT    A.NAME AS NAME
-                , A.SORT AS SORT
+        SELECT    A.SORT AS SORT
                 , A.COUNT AS COUNT
                 , A.PRICE AS PRICE
         FROM    STAT A
         UNION ALL
-        SELECT    '합계' AS NAME
-                , 'total' AS SORT
+        SELECT    'total' AS SORT
                 , SUM(A.COUNT) AS COUNT
 				, SUM(A.PRICE) AS PRICE
         FROM    STAT A
@@ -201,8 +202,25 @@
                     ON      A.PART = B.PART
                     AND     A.TASK_DATE = B.TASK_DATE
                     AND     A.GAS_STATION_ID = B.GAS_STATION_ID
-                    WHERE   A.ID = #{tTid}
-                    AND     A.PART <![CDATA[<>]]> 'in'
+                    WHERE   A.PART <![CDATA[<>]]> 'in'
+                    <if test="tTid != null and tTid > 0">
+                    AND     A.ID = #{tTid}
+                    </if>
+                    <if test="pStatus != null and !''.equals(pStatus)">
+                        <choose>
+                            <when test="'day'.equals(pStatus)">
+                                AND   A.TASK_DATE = #{date}
+                            </when>
+                            <when test="'week'.equals(pStatus)">
+                                AND   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 0 )
+                                AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 6 )
+                            </when>
+                            <otherwise>
+                                AND   A.TASK_DATE <![CDATA[>=]]> LAST_DAY(#{date} - INTERVAL 1 MONTH) + INTERVAL 1 DAY
+                                AND		A.TASK_DATE <![CDATA[<=]]> LAST_DAY(#{date})
+                            </otherwise>
+                        </choose>
+                    </if>
                 ) B
                 ON A.TIME_TABLE_ID = B.ID
                 WHERE A.STATUS = 'out'
@@ -228,11 +246,11 @@
 
     <select id="findTableCount" parameterType="Map" resultType="Map">
         SELECT     A.NAME
-                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'normal' THEN A.COUNT END), 0) AS normal
-                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'hybrid' THEN A.COUNT END), 0) AS hybrid
-                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'mw' THEN A.COUNT END), 0) AS mw
-                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 's_class' THEN A.COUNT END), 0) AS s_class
-                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = '700' THEN A.PRICE END), 0) AS s_700
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'normal' THEN A.COUNT / 2 END), 0) AS normal
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'hybrid' THEN A.COUNT / 2 END), 0) AS hybrid
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'mw' THEN A.COUNT / 2 END), 0) AS mw
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 's_class' THEN A.COUNT / 2 END), 0) AS s_class
+                 , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'size_700' THEN A.COUNT / 2 END), 0) AS s_700
                  , IFNULL(SUM(CASE WHEN A.NAME = A.NAME THEN A.PRICE END), 0) AS total
         FROM
         (

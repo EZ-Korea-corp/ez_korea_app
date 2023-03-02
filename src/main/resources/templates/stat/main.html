@@ -34,9 +34,16 @@
         <div id="chartdiv"></div>
     </div>
     <script>
+        let _status;
+
         $(document).ready(function(){
-            //달력생성
+            // 달력생성
             fnCalenderMaker($('#datepicker'));
+
+            // 그래프 일자별 검색
+            $('#datepicker').on("change", function() {
+                fnFindStat(_status);
+            })
 
             $("#check div").on("click", function() {
                 let status = $(this).attr("name");
@@ -60,7 +67,8 @@
 
         function fnFindStat(status) {
             const url = "/stat/graph";
-            const data = {"status" : status, "date" : $("#datepicker").val()};
+            const data = {"pStatus" : status, "date" : $("#datepicker").val()};
+            _status = status;
 
             fnFindJsonAjax(data, url, fnFindStatResult);
         }
