@@ -180,8 +180,8 @@
                 </th:block>
             </tbody>
             <tbody class="uk-text-center">
-            <th:block th:each="team : ${nullDivision.getTeamList()}">
-                <tr class="bg-white border-b">
+            <th:block th:if="${nullDivision != null}">
+                <tr class="bg-white border-b" th:each="team : ${nullDivision.getTeamList()}">
                     <td class="px-2 py-4 whitespace-nowrap">
                         <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
                             <img th:src="${team.getLeader().getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
