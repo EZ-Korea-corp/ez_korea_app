@@ -93,11 +93,11 @@
                         $("#stationLocation").val(data.station.stationLocation);
                         $("#memo").val(data.station.memo);
                     }
-                    if(data.attachList) {
-                        data.attachList.forEach(function(item) {
-                            $("#imgDiv").append(
+                    if(data.s3ImageList) {
+                        data.s3ImageList.forEach(function(item) {
+                            $("#imageChange").append(
                                 $("<div>", {class:"items-center"}).append(
-                                    $("<img>", {src:item.path+"/"+item.fileName}),
+                                    $("<img>", {src:item.filePath}),
                                     $("<button>", {text:"삭제", class:"btn bg-red-600 w-full rounded-md py-1 my-2"}).on("click", function() {
                                         deleteFileList.push(item.id);
                                         $(this).parent("div").remove();

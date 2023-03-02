@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
+import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -64,10 +66,13 @@ public class StationRestController {
     public Map<String, Object> showGasStationDetailPage(@RequestBody Map<String, Object> data) {
         Map<String, Object> returnMap = new HashMap<>();
 
-        GasStation station = gasStationService.findStationById(Long.valueOf((String)data.get("id")));
+        GasStation station = gasStationService.findStationById(Long.valueOf((String) data.get("id")));
+        List<S3Image> s3ImageList = station.getImageList();
+        station.setImageList(null);
 
         returnMap.put("station", station);
         returnMap.put("attachList", attachService.findAttachList("station" + station.getId()));
+        returnMap.put("s3ImageList", s3ImageList);
         return returnMap;
     }
 
