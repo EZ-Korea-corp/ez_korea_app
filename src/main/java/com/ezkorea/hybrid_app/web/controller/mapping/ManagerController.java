@@ -46,7 +46,7 @@ public class ManagerController {
 
     @GetMapping("/approval")
     public String showMemberApprovalPage(Model model) {
-        model.addAttribute("employeeList", managerService.findAllMemberByStatus(MemberStatus.AWAIT));
+        model.addAttribute("employeeList", mService.findAllMemberByStatus(MemberStatus.AWAIT));
         return "manager/manage-approval";
     }
 
@@ -79,8 +79,8 @@ public class ManagerController {
     @GetMapping("/team/create")
     public String showCreateTeamPage(Model model) {
         model.addAttribute("divisionList", dService.findAllDivision());
-        model.addAttribute("leaderList", managerService.findAllMemberByRoleAndStatusAndTeamIsNull(Role.ROLE_LEADER, MemberStatus.FULL_TIME));
-        model.addAttribute("employeeList", managerService.findAllMemberByRoleAndStatusAndTeamIsNull(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME));
+        model.addAttribute("leaderList", mService.findByRoleAndStatusAndTeamIsNull(Role.ROLE_LEADER, MemberStatus.FULL_TIME));
+        model.addAttribute("employeeList", mService.findByRoleAndStatusAndTeamIsNull(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME));
         return "manager/group/manage-team-create";
     }
 
@@ -88,16 +88,16 @@ public class ManagerController {
     public String showUpdateTeamPage(Model model, @PathVariable Long id) {
         Team currentTeam = tService.findById(id);
         model.addAttribute("currentTeam", currentTeam);
-        model.addAttribute("employeeList", managerService.findAllByRoleAndTeamIsNullOrTeam(Role.ROLE_EMPLOYEE, currentTeam, MemberStatus.FULL_TIME));
+        model.addAttribute("employeeList", mService.findAllByRoleAndTeamIsNullOrTeam(Role.ROLE_EMPLOYEE, currentTeam, MemberStatus.FULL_TIME));
         // 현재 팀의 리더인 사람 + 리더지만 팀이 없는 사람만 조회
-        model.addAttribute("leaderList", managerService.findAllByRoleAndTeamIsNullOrTeam(Role.ROLE_LEADER, currentTeam, MemberStatus.FULL_TIME));
+        model.addAttribute("leaderList", mService.findAllByRoleAndTeamIsNullOrTeam(Role.ROLE_LEADER, currentTeam, MemberStatus.FULL_TIME));
         model.addAttribute("divisionList", dService.findAllDivision());
         return "manager/group/manage-team-update";
     }
 
     @GetMapping("/member")
     public String showMemberManagingPage(Model model) {
-        model.addAttribute("employeeList", managerService.findAllMemberExcludeAwait());
+        model.addAttribute("employeeList", mService.findAllMemberExcludeStatus(MemberStatus.AWAIT));
         return "manager/manage-member";
     }
 

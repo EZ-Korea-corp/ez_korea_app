@@ -5,6 +5,7 @@ import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
+import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import com.ezkorea.hybrid_app.web.dto.TeamDto;
@@ -26,13 +27,14 @@ public class ManagerRestController {
 
     private final ManagerService managerService;
     private final TeamService tService;
+    private final MemberService mService;
     private final DivisionService dService;
     private final ModelMapper mapper;
 
     @PutMapping("/approval")
     public ResponseEntity<Object> updateMemberApproval(@RequestBody Map<String, Object> datum) {
         String idStr = (String) datum.get("id");
-        managerService.updateMemberStatus(Long.valueOf(idStr), MemberStatus.FULL_TIME);
+        mService.updateMemberStatus(Long.valueOf(idStr), MemberStatus.FULL_TIME);
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 
@@ -105,8 +107,8 @@ public class ManagerRestController {
         // 입고 권한
         String memberInputAuth = (String) datum.get("memberInputAuth");
 
-        managerService.updateMemberSubAuth(username, memberPostAuth, memberInputAuth);
-        managerService.updateMemberRole(username, Role.valueOf(memberRole), MemberStatus.valueOf(memberStatus));
+        mService.updateMemberSubAuth(username, memberPostAuth, memberInputAuth);
+        mService.updateMemberRole(username, Role.valueOf(memberRole), MemberStatus.valueOf(memberStatus));
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }

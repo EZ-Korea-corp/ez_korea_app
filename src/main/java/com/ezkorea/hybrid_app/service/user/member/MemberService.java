@@ -177,11 +177,12 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberRole(Member member, Role role, MemberStatus status) {
-        member.setRole(role);
-        member.setRoleChanged(true);
-        member.setMemberStatus(status);
-        memberRepository.save(member);
+    public void updateMemberRole(String username, Role role, MemberStatus status) {
+        Member currentMember = findByUsername(username);
+        currentMember.setRole(role);
+        currentMember.setRoleChanged(true);
+        currentMember.setMemberStatus(status);
+        memberRepository.save(currentMember);
     }
 
     /**
@@ -265,17 +266,21 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberStatus(Member currentMember, MemberStatus status) {
+    public void updateMemberStatus(Long id, MemberStatus status) {
+        Member currentMember = findMemberById(id);
         currentMember.setMemberStatus(status);
     }
 
     @Transactional
-    public void updateMemberSubAuth(Member currentMember, boolean postAuth, boolean inputAuth) {
+    public void updateMemberSubAuth(String username, String memberPostAuth, String memberInputAuth) {
+        Member currentMember = findByUsername(username);
+
+        boolean postAuth = memberPostAuth != null;
+        boolean inputAuth = memberInputAuth != null;
 
         SubAuth subAuth = saRepository.findByMember(currentMember);
         subAuth.setInputAuth(inputAuth);
         subAuth.setPostAuth(postAuth);
-
     }
 
     public List<Member> findByRoleAndDivisionAndDivisionNull(Role role, MemberStatus status, Division division) {
