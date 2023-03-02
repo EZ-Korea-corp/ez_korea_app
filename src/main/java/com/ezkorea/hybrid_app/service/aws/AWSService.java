@@ -45,7 +45,6 @@ public class AWSService {
     private final MemberRepository memberRepository;
     private final ExpensesRepository expensesRepository;
     private final GasStationRepository gsRepository;
-    private final MemberService memberService;
 
     /**
      * S3Image를 저장하기 위한 함수
@@ -59,7 +58,7 @@ public class AWSService {
             // notice : 다중 파일 업로드
             case "notice" -> {
                 Notice currentNotice = noticeRepository.findById(dto.getId())
-                        .orElseThrow( () -> new IdNotFoundException("해당하는 id가 존재하지 않습니다."));
+                        .orElseThrow(() -> new IdNotFoundException("해당하는 id가 존재하지 않습니다."));
                 for (S3Image s3Image : makeNewS3ImageObject(dto, multipartFileList)) {
                     s3Image.setNotice(currentNotice);
                     currentNotice.getImageList().add(s3Image);
@@ -68,7 +67,7 @@ public class AWSService {
             // notice : 다중 파일 업로드
             case "station" -> {
                 GasStation currentStation = gsRepository.findById(dto.getId())
-                        .orElseThrow( () -> new IdNotFoundException("해당하는 id가 존재하지 않습니다."));
+                        .orElseThrow(() -> new IdNotFoundException("해당하는 id가 존재하지 않습니다."));
                 for (S3Image s3Image : makeNewS3ImageObject(dto, multipartFileList)) {
                     s3Image.setGasStation(currentStation);
                     currentStation.getImageList().add(s3Image);
@@ -87,7 +86,6 @@ public class AWSService {
                     currentMember.getS3Image().setFilePath(s3Image.getFilePath());
                     currentMember.getS3Image().setFileName(s3Image.getFileName());
                     currentMember.getS3Image().setFileRepo(s3Image.getFileRepo());
-                    memberService.forceAuthentication(currentMember);
                 }
             }
             // expenses : 단일 파일 업로드
@@ -201,6 +199,7 @@ public class AWSService {
      *                 true : S3 + DB 모두 제거
      *                 false : S3 단일 제거
      * */
+    @Transactional
     public void deleteS3Image(S3Image s3Image, boolean isDelete) {
         StringBuilder sb = new StringBuilder();
         sb.append(s3Image.getFileRepo()).append(s3Image.getFileName());
@@ -216,9 +215,10 @@ public class AWSService {
                     new DeleteObjectRequest(bucketName, deleteObjectRequest.getKey())
             );
         } else {
-            log.info("S3 : {} 이미지가 삭제되지 않았습니다.", deleteObjectRequest.getKey());
+            log.warn("S3 : {} 이미지가 삭제되지 않았습니다.", deleteObjectRequest.getKey());
         }
         if (isDelete) {
+            log.info("S3 : {} Repository S3Image 삭제 : {}", isDelete, s3Image.getId());
             s3ImageRepository.delete(s3Image);
         }
     }

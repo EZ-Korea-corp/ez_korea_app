@@ -23,10 +23,11 @@ function checkFileCount(e) {
                 content_files.push(f);
                 $('#imageChange').append(
                     '<div class="mx-1" id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">' +
-                    '<button class="m-auto"> 삭제 </button>' +
-                    `<img src="${e.target.result}" data-file=${f.name} className="article-image" style="height: 150px"/>` +
+                    '<button class="btn bg-red-600 w-full rounded-md py-1 my-2"> 삭제 </button>' +
+                    `<img src="${e.target.result}" data-file=${f.name} className="article-image" style="height: 100px"/>` +
                     '</div>'
                 );
+
                 fileNum++;
                 fileCount++;
             };
@@ -38,6 +39,7 @@ function checkFileCount(e) {
 }
 
 function fileDelete(fileNum){
+    console.log(fileNum);
     var no = fileNum.replace(/[^0-9]/g, "");
     content_files[no].is_delete = true;
     $('#' + fileNum).remove();

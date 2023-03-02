@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+    <body>
+        <main layout:fragment="main">
+            <style>
+                button{
+                    color: #FFFFFF;
+                }
+            </style>
+            <!-- Content-->
+            <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto px-6 space-y-">
+                <form id="saveForm" onsubmit="return false;" class="lg:p-10 p-6 space-y-3 relative bg-white shadow-xl rounded-md">
+                    <h1 class="text-xl font-semibold"> 주유소 등록 </h1>
+                        <div class="py-3">
+                            <div class="form-control">
+                                <h1 class="block text-md font-bold my-2"> 주유소 이름 </h1>
+                                <input type="text" id="stationName" th:value="${station.getStationName()}" name="stationName" placeholder="주유소명 입력">
+                            </div>
+                            <div class="form-control">
+                                <h1 class="block text-md font-bold my-2"> 주유소 주소 </h1>
+                                <input type="hidden" id="id" name="id">
+                                <input type="text" id="stationLocation" th:value="${station.getStationLocation()}" name="stationLocation" placeholder="주소 입력">
+                                <button type="button" class="w-full mt-2 bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold" onclick="loadAddress()">주소 검색</button>
+                            </div>
+                            <hr class="my-4"/>
+                            <div class="form-control">
+                                <h1 class="block text-md font-bold my-2"> 공지사항 </h1>
+                                <textarea id="memo" name="memo" class="p-3" th:text="${station.getMemo()}"></textarea>
+                            </div>
+                            <div class="form-control">
+                                <h1 class="block text-md font-bold my-2"> 참고 사진 </h1>
+                                <form id="s3Form" onsubmit="return false;">
+                                    <div class="mb-4">
+                                        <h3 class="text-lg">기존 이미지 업로드 리스트</h3>
+                                        <p class="text-sm">저장이 필요할 경우 사진 우클릭 후 이미지를 저장해주세요.</p>
+                                    </div>
+                                    <div id="imageOrigin" class="grid grid-cols-4 gap-4 px-10">
+                                        <img th:src="${image.getFilePath()}" th:each="image : ${station.getImageList()}"/>
+                                    </div>
+
+                                    <div class="my-4">
+                                        <h3 class="text-lg">업로드할 업로드 리스트</h3>
+                                        <p class="text-sm">아래 사진 리스트가 게시글에 보여지며, 최대 5장까지 업로드 가능합니다.</p>
+                                    </div>
+                                    <div id="imageChange" class="grid grid-cols-4 gap-4 px-10 mb-4">
+
+                                    </div>
+                                    <div class="flex items-center justify-center bg-grey-lighter">
+                                        <label class="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white">
+                                            <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                            </svg>
+                                            <span class="mt-2 text-base leading-normal">Select a Images</span>
+                                            <input type='file' name="files" class="hidden" accept=".png, .jpeg, .jpg" id="multipleFiles" multiple max="5"/>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" id="submit" class="bg-blue-600 font-semibold p-2 mt-5 rounded-md text-center text-white w-full">
+                                저장하기</button>
+                        </div>
+                </form>
+
+            </div>
+            <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+            <script>
+                /*<![CDATA[*/
+                let id = "[[${station.getId()}]]";
+                /*]]>*/
+
+                let fileList = [];
+                let deleteFileList = [];
+
+                $(document).ready(function(){
+                    let text = $('textarea').val().split('<br/>').join("");
+                    $('textarea').text(text);
+                });
+
+                function successHref(data, xhr) {
+                    let savedId = xhr.id;
+                    imageUpload('station', savedId, '/image/upload', 'PUT');
+                    if (fileCount !== 0) {
+                        let time = showLoadingSpinner("이미지를 저장하고 있습니다.");
+                        setTimeout(function () {
+                            $(location).attr("href", "/station/detail/".concat(xhr.id));
+                        }, time);
+                    } else {
+                        $(location).attr("href", "/station/detail/".concat(xhr.id));
+                    }
+                }
+
+                // 주유소 저장
+                $("#submit").on("click", function() {
+                    if(!fnValidCheck()) return;
+                    let url = '/station/'.concat(id);
+                    fnResponseCrudJsonAjax($('#saveForm').serializeObject(), url, 'PUT', successHref);
+
+                });
+
+                function fnValidCheck() {
+                    let isValid = true;
+                    let validateMsg = "";
+                    let focusObj;
+
+                    let stationName     = $('#stationName');
+                    let stationLocation = $('#stationLocation');
+
+                    if(stationName.val() == "") {
+                        validateMsg += "주유소명을 입력해주세요<br/>";
+                        focusObj = stationName;
+                    }
+                    if(stationLocation.val() == "") {
+                        validateMsg += "주유소 위치를 입력해주세요";
+                        focusObj = stationLocation;
+                    }
+
+                    if(validateMsg) {
+                        isValid = false;
+                        focusObj.focus();
+
+                        Swal.fire({
+                            icon: 'error',
+                            html: validateMsg,
+                        });
+                    }
+
+                    return isValid;
+                }
+
+                // 다음주소 API
+                function loadAddress() {
+                    new daum.Postcode({
+                        oncomplete: function(data) {
+                            let addr = '';
+                            let extraAddr = '';
+                            if (data.userSelectedType === 'R') {
+                                addr = data.roadAddress;
+                            } else {
+                                addr = data.jibunAddress;
+                            }
+                            $("#stationLocation").val(addr);
+                            $("#stationName").focus();
+                        }
+                    }).open();
+                }
+            </script>
+        </main>
+    </body>
+
+</html>

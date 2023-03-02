@@ -36,7 +36,7 @@
 
                     <div class="grid grid-cols-2 gap-4 my-4">
                         <button type="button" th:data-id="${station.getId()}" th:onclick="|fnEndStation(this.getAttribute('data-id'))|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md font-semibold"> 철수 </button>
-                        <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/save?id=${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md font-semibold"> 수정 </button>
+                        <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/update/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md font-semibold"> 수정 </button>
                     </div>
 
                     <hr class="my-4">

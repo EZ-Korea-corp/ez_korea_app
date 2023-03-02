@@ -42,6 +42,14 @@ public class GasStationController {
         return "gasStation/gasStation-detail";
     }
 
+    @GetMapping("/update/{id}")
+    public String showGasStationUpdatePage(@PathVariable Long id, Model model) {
+        GasStation station = gasStationService.findStationById(id);
+
+        model.addAttribute("station", station);
+        return "gasStation/gasStation-update";
+    }
+
     @GetMapping("/save")
     public String saveGasStationPage() {
         return "gasStation/gasStation-save";

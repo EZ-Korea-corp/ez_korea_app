@@ -62,6 +62,13 @@ public class StationRestController {
         return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", stationId), HttpStatus.OK);
     }
 
+    @PutMapping("/station/{id}")
+    public ResponseEntity<Object> updateStation(@PathVariable Long id, @RequestBody GasStationDto dto) {
+        GasStation updateStation = gasStationService.updateGasStation(id, dto);
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", updateStation.getId()), HttpStatus.OK);
+    }
+
     @PostMapping("/station/restDetail")
     public Map<String, Object> showGasStationDetailPage(@RequestBody Map<String, Object> data) {
         Map<String, Object> returnMap = new HashMap<>();
