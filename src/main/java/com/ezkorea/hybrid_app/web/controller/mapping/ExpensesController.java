@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.expenses.fuel.FuelCost;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.expenses.ExpensesService;
 import com.ezkorea.hybrid_app.service.expenses.FuelCostService;
+import com.ezkorea.hybrid_app.service.sales.GasStationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +22,7 @@ public class ExpensesController {
 
     private final ExpensesService expensesService;
     private final FuelCostService fuelCostService;
+    private final GasStationService gsService;
 
     @GetMapping("/expenses")
     public String showExpensesListPage(Model model, @RequestParam(value="page", defaultValue="0", required = false) int page,
@@ -34,6 +36,7 @@ public class ExpensesController {
     @GetMapping("/expenses/create")
     public String showCreateExpensesPage(Model model) {
         FuelCost currentCost = fuelCostService.findFuelCostByLocalDate(LocalDate.now());
+        model.addAttribute("stationList", gsService.findAllGasStation());
         model.addAttribute("cost", currentCost);
         return "expenses/create";
     }

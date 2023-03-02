@@ -35,7 +35,7 @@ public class ExpensesService {
                 .build();
         if (newExpenses.getExpensesStatus().equals(ExpensesStatus.FUEL)) {
             newExpenses.setFuelStatus(dto.getFuelStatus());
-            newExpenses.setGasStation(gsService.findStationById(dto.getId()));
+            newExpenses.setGasStation(gsService.findStationById(dto.getStationId()));
         }
         return expensesRepository.save(newExpenses);
     }
