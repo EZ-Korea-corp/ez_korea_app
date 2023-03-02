@@ -30,6 +30,9 @@ public class AWSRestController {
         S3ImageDto dto = modelMapper.map(params, S3ImageDto.class);
 
         log.info("multipartFile={}", multipartFile.toString());
+        for (MultipartFile file : multipartFile) {
+            log.info("file.originName={}", file.getOriginalFilename());
+        }
 
         awsService.saveImageInCurrentEntity(dto, multipartFile);
 

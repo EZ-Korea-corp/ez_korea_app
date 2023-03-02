@@ -71,7 +71,7 @@ public class AWSService {
                 deleteS3Image(currentMember.getS3Image(), false);
 
                 // Member의 S3Image는 삭제 후 재등록이 아닌 수정하는 방식
-                for (S3Image s3Image : makeNewS3ImageObject(dto, multipartFileList)) {
+                for (S3Image s3Image : makeNewSingleS3ImageObject(dto, multipartFileList)) {
                     currentMember.getS3Image().setFilePath(s3Image.getFilePath());
                     currentMember.getS3Image().setFileName(s3Image.getFileName());
                     currentMember.getS3Image().setFileRepo(s3Image.getFileRepo());
@@ -82,11 +82,17 @@ public class AWSService {
             case "expenses" -> {
                 Expenses currentExpenses = expensesRepository.findById(dto.getId())
                         .orElseThrow(() -> new IdNotFoundException("해당하는 id가 존재하지 않습니다."));
-                S3Image newS3Image = makeNewS3ImageObject(dto, multipartFileList).get(0);
+                S3Image newS3Image = makeNewSingleS3ImageObject(dto, multipartFileList).get(0);
                 newS3Image.setExpenses(currentExpenses);
                 currentExpenses.setS3Image(newS3Image);
             }
         }
+    }
+
+    public List<S3Image> makeNewSingleS3ImageObject(S3ImageDto dto, List<MultipartFile> multipartFileList) {
+        List<MultipartFile> subList = multipartFileList.subList(1, multipartFileList.size());
+        subList.clear();
+        return makeNewS3ImageObject(dto, multipartFileList);
     }
 
     public List<S3Image> makeNewS3ImageObject(S3ImageDto dto, List<MultipartFile> multipartFileList) {
@@ -192,7 +198,7 @@ public class AWSService {
 
         log.info("S3 : 삭제할 이미지의 Key = ({}) {}", isExistObject, deleteObjectRequest.getKey());
 
-        if (isExistObject && !deleteObjectRequest.getKey().contains("/images/static/profile-image.jpg")) {
+        if (isExistObject && !deleteObjectRequest.getKey().contains("static/profile-image.jpg")) {
             log.info("S3 : {} 이미지가 삭제되었습니다.", deleteObjectRequest.getKey());
             amazonS3Client.deleteObject(
                     new DeleteObjectRequest(bucketName, deleteObjectRequest.getKey())

@@ -89,10 +89,26 @@
                             <ion-icon name="call-outline" class="rounded-full bg-gray-200 text-xl p-1 mr-3"></ion-icon>
                             전화. <strong> <a th:href="|tel:${user.getPhone()}|" th:text="${user.getPhone()}">010-1234-1234</a></strong>
                         </li>
-                        <li class="flex items-center space-x-2">
-                            <ion-icon name="globe" class="rounded-full bg-gray-200 text-xl p-1 mr-3"></ion-icon>
-                            소속. <strong th:text="${user.getDivision() eq null ? '없음' : user.getDivision().getTeam().name}"> 소속 </strong>
-                        </li>
+                        <th:block th:if="${user.getDivision() == null}">
+                            <li class="flex items-center space-x-2">
+                                <ion-icon name="globe" class="rounded-full bg-gray-200 text-xl p-1 mr-3"></ion-icon>
+                                소속. <strong> 없음 </strong>
+                            </li>
+                        </th:block>
+                        <th:block th:if="${user.getDivision() != null}">
+                            <th:block th:if="${user.getUsername().equals('master')}">
+                                <li class="flex items-center space-x-2">
+                                    <ion-icon name="globe" class="rounded-full bg-gray-200 text-xl p-1 mr-3"></ion-icon>
+                                    소속. <strong> 경영진 </strong>
+                                </li>
+                            </th:block>
+                            <th:block th:if="${!user.getUsername().equals('master')}">
+                                <li class="flex items-center space-x-2">
+                                    <ion-icon name="globe" class="rounded-full bg-gray-200 text-xl p-1 mr-3"></ion-icon>
+                                    소속. <strong th:text="${user.getDivision().getDivisionName()}"> 소속 </strong>
+                                </li>
+                            </th:block>
+                        </th:block>
                     </ul>
                 </div>
 
