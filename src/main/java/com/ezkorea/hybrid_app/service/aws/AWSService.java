@@ -39,6 +39,8 @@ public class AWSService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
     private final AmazonS3Client amazonS3Client;
     private final S3ImageRepository s3ImageRepository;
     private final NoticeRepository noticeRepository;
@@ -53,7 +55,6 @@ public class AWSService {
      * */
     @Transactional
     public void saveImageInCurrentEntity(S3ImageDto dto, List<MultipartFile> multipartFileList) {
-        StringBuilder sb;
         switch (dto.getEntity()) {
             // notice : 다중 파일 업로드
             case "notice" -> {
@@ -110,7 +111,7 @@ public class AWSService {
         StringBuilder sb;
         for (String url : saveImage(dto, multipartFileList)) {
             sb = new StringBuilder();
-            sb.append("images/").append(dto.getEntity()).append("/").append(dto.getId()).append("/");
+            sb.append("images/").append(activeProfile).append("/").append(dto.getEntity()).append("/").append(dto.getId()).append("/");
             S3Image savedImage = s3ImageRepository.save(S3Image.builder()
                     .filePath(url)
                     .fileName(url.split(sb.toString())[1])
@@ -157,7 +158,7 @@ public class AWSService {
         for(MultipartFile multipartFile: multipartFileList) {
             StringBuilder sb = new StringBuilder();
             String originalName = createFileName(multipartFile.getOriginalFilename()); // 파일 이름
-            sb.append("images/").append(dto.getEntity()).append("/").append(dto.getId()).append("/").append(originalName);
+            sb.append("images/").append(activeProfile).append("/").append(dto.getEntity()).append("/").append(dto.getId()).append("/").append(originalName);
             long size = multipartFile.getSize(); // 파일 크기
 
             ObjectMetadata objectMetaData = new ObjectMetadata();
