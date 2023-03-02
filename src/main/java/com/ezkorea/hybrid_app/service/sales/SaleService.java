@@ -6,11 +6,17 @@ import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
 import com.ezkorea.hybrid_app.domain.sale.*;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
+import com.ezkorea.hybrid_app.domain.timetable.PartTime;
+import com.ezkorea.hybrid_app.domain.timetable.SellProduct;
+import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
+import com.ezkorea.hybrid_app.domain.timetable.TimeTableRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.wiper.Wiper;
 import com.ezkorea.hybrid_app.domain.wiper.WiperRepository;
+import com.ezkorea.hybrid_app.domain.wiper.WiperSort;
 import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
 import com.ezkorea.hybrid_app.web.dto.TaskDto;
+import com.ezkorea.hybrid_app.web.dto.TimeTableDto;
 import com.ezkorea.hybrid_app.web.dto.WiperDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import com.ezkorea.hybrid_app.web.exception.MemberNotFoundException;
@@ -19,6 +25,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -31,22 +38,377 @@ public class SaleService {
 
     private final ModelMapper modelMapper;
     private final SaleProductRepository spRepository;
+    private final SellProductRepository sellRepository;
     private final GasStationRepository gsRepository;
     private final DailyTaskRepository dtRepository;
-
+    private final TimeTableRepository ttRepository;
     private final WiperRepository wpRepository;
-
     private final SaleMbRepository saleMbRepository;
+
     private final WiperService wiperService;
     private final GasStationService gsService;
 
-    public void saveDailyTask(Member member, GasStation gasStation) {
-        DailyTask dt = DailyTask.builder()
+    /**
+     * TimeTable 저장
+     * */
+    @Transactional
+    public Long saveTimeTable(Map<String, Object> pramMap, Member member) {
+        String part = (String)pramMap.get("part");
+        GasStation station = gsService.findStationById(Long.valueOf(String.valueOf(pramMap.get("stationId"))));
+        TimeTable table = ttRepository.findByTaskDateAndPartAndGasStationAndMember(LocalDate.now(), part, station, member);
+
+        if(table == null) {
+            TimeTable newTimeTable = TimeTable.builder()
+                    .gasStation(station)
+                    .member(member)
+                    .taskDate(LocalDate.now())
+                    .part(part)
+                    .build();
+
+            ttRepository.save(newTimeTable);
+            return newTimeTable.getId();
+        }
+
+        return 0L;
+    }
+
+    /**
+     * TimeTable 조회
+     * @param tableId TimeTable의 id
+     * */
+    public TimeTable findTableById(Long tableId) {
+        return ttRepository.findById(tableId)
+                .orElseThrow( () -> new MemberNotFoundException("해당 유저는 오늘 출근하지 않았습니다."));
+    }
+
+    /**
+     * 특정일자, 회원의 판매,고장(입고제외) List<TimeTable> 조회
+     * */
+    public List<TimeTable> findTableList(LocalDate date, Member member) {
+        return ttRepository.findAllByTaskDateAndMemberAndPartNot(date, member, PartTime.IN.getKey());
+    }
+
+    /**
+     * 특정일자의 모든입고 List<TimeTable> 조회
+     * */
+    public List<TimeTable> findInputTableList(LocalDate date) {
+        return ttRepository.findAllByTaskDateAndPart(date, PartTime.IN.getKey());
+    }
+
+    /**
+     * 특정일자 입고의 List<TimeTable>를 뷰용 Map으로 매핑조회
+     * */
+    public List<Map<String, Object>> findInputTableList(Map<String, String> paramMap) {
+        List<Map<String, Object>> returnList = new ArrayList<>();
+        List<TimeTable> list = findInputTableList(LocalDate.parse(paramMap.get("date"), DateTimeFormatter.ISO_DATE));
+
+        // 입고 테이블 리스트
+        list.forEach(item -> {
+            Map<String , Object> map = new HashMap<>();
+            map.put("tTid", item.getId());
+            map.put("name", item.getGasStation().getStationName());
+            map.put("memo", item.getMemo());
+
+            returnList.add(map);
+        });
+
+        return returnList;
+    }
+
+    /**
+     * 특정일자 입고의 상세조회
+     * */
+    public Map<String, Object> findInputList(Map<String, String> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        TimeTable table = findTableById(Long.valueOf(paramMap.get("tTid")));
+        
+        // 입고목록
+        List<SaleProductDto> saleDtoList = new ArrayList<>();
+        table.getSaleList().forEach(item ->{
+            SaleProductDto saleDto = new SaleProductDto();
+            saleDto.setWiper(item.getWiper().getId());
+            saleDto.setCount(item.getCount());
+
+            saleDtoList.add(saleDto);
+        });
+        
+        returnMap.put("id", table.getId());
+        returnMap.put("name", table.getGasStation().getStationName());
+        returnMap.put("memo", table.getMemo());
+        returnMap.put("list", saleDtoList);
+        
+        return returnMap;
+    }
+
+    /**
+     * 특정일자 상태의 전체 List<TimeTable> 조회
+     * */
+    public List<TimeTable> findAllTableListByStt(Long tTid) {
+        TimeTable timeTable = findTableById(tTid);
+        return ttRepository.findAllByTaskDateAndGasStationAndPart(timeTable.getTaskDate(), timeTable.getGasStation(), timeTable.getPart());
+    }
+
+    /**
+     * 판매, 고장 등록
+     * */
+    @Transactional
+    public void saveSellProduct(TimeTableDto timeTableDto) {
+        TimeTable timeTable = findTableById(timeTableDto.getId());
+
+            // 판매, 고장 등록
+            timeTableDto.getSellDtoList().forEach(item -> {
+                if(item.getStatus().equals(SaleStatus.OUT.toString())) {
+                    // 기존 리스트
+                    SellProduct sellProduct = timeTable.getSellList()
+                            .stream()
+                            .filter(p -> p.getStatus().equals(SaleStatus.OUT.toString()) && p.getSort().equals(item.getSort()) && p.getPayment().equals(item.getPayment()))
+                            .findFirst()
+                            .orElse(null);
+
+                    if(sellProduct != null) {
+                        sellProduct.setCount(sellProduct.getCount() + item.getCount());
+                    } else {
+                        sellProduct = SellProduct.builder()
+                                .timeTable(timeTable)
+                                .sort(item.getSort())
+                                .payment(item.getPayment())
+                                .status(SaleStatus.OUT.getViewName())
+                                .count(item.getCount())
+                                .build();
+
+                        sellRepository.save(sellProduct);
+                    }
+                } else {
+                    SellProduct fixProduct = SellProduct.builder()
+                            .timeTable(timeTable)
+                            .sort(item.getSort())
+                            .payment(item.getPayment())
+                            .memo(item.getMemo())
+                            .status(SaleStatus.FIX.getViewName())
+                            .count(item.getCount())
+                            .build();
+
+                    sellRepository.save(fixProduct);
+                }
+            });
+
+    }
+
+    /**
+     * 재고 등록
+     * */
+    @Transactional
+    public void saveStockProduct(TimeTableDto timeTableDto) {
+        TimeTable timeTable = findTableById(timeTableDto.getId());
+        
+        // 삭제후 재등록
+        List<TimeTable> list = findAllTableListByStt(timeTableDto.getId());
+        list.forEach(item -> {
+            spRepository.deleteByTimeTable(item);
+        });
+
+        timeTableDto.getSaleDtoList().forEach(item -> {
+            // 입력된 재고만 등록
+            if(item.getCount() > 0) {
+                SaleProduct newProduct = SaleProduct.builder()
+                        .timeTable(timeTable)
+                        .status(item.getStatus())
+                        .count(item.getCount())
+                        .wiper(wpRepository.findById(item.getWiper()).get())
+                        .build();
+
+                spRepository.save(newProduct);
+            }
+        });
+    }
+
+    /**
+     * 입고 등록
+     * */
+    public void saveInputProduct(TimeTableDto timeTableDto, Member member) {
+        // timeTable 생성
+        GasStation station = gsService.findStationById(timeTableDto.getStationId());
+        TimeTable newTimeTable = TimeTable.builder()
+                .gasStation(station)
                 .member(member)
                 .taskDate(LocalDate.now())
-                .gasStation(gasStation)
+                .part(PartTime.IN.getKey())
+                .memo(timeTableDto.getMemo())
                 .build();
-        dtRepository.save(dt);
+
+        ttRepository.save(newTimeTable);
+
+        // 입고 등록
+        saveSaleProduct(newTimeTable, timeTableDto);
+    }
+
+    /**
+     * 입고 수정
+     * */
+    @Transactional
+    public void updateInputProduct(TimeTableDto timeTableDto) {
+        TimeTable table = findTableById(timeTableDto.getId());
+        table.setGasStation(gsService.findStationById(timeTableDto.getStationId()));
+        table.setMemo(timeTableDto.getMemo());
+
+        // 입고 재등록
+        spRepository.deleteByTimeTable(table);
+        saveSaleProduct(table, timeTableDto);
+    }
+
+    /**
+     * 입고 와이퍼 등록
+     * */
+    private void saveSaleProduct(TimeTable talble, TimeTableDto dto) {
+        // 입력된 입고만 등록
+        dto.getSaleDtoList().forEach(item -> {
+
+            if(item.getCount() > 0) {
+                SaleProduct newProduct = SaleProduct.builder()
+                        .timeTable(talble)
+                        .status(item.getStatus())
+                        .count(item.getCount())
+                        .wiper(wpRepository.findById(item.getWiper()).get())
+                        .build();
+
+                spRepository.save(newProduct);
+            }
+        });
+
+    }
+
+    /**
+     * 재고리스트 조회
+     * */
+    public List<SaleProductDto> findStockProduct(Map<String, String> paramMap) {
+        List<TimeTable> tableList = findAllTableListByStt(Long.valueOf(paramMap.get("tTid")));
+        
+        // 재고리스트
+        List<SaleProductDto> list = new ArrayList<>();
+        tableList.forEach(item -> {
+            item.getSaleList().forEach(_item -> {
+                if(_item.getStatus().equals(SaleStatus.STOCK.toString()) && _item.getCount() > 0) {
+                    SaleProductDto dto = new SaleProductDto();
+                    dto.setWiper(_item.getWiper().getId());
+                    dto.setCount(_item.getCount());
+
+                    list.add(dto);
+                }
+            });
+        });
+
+        return list;
+    }
+
+    /**
+     * 판매현황 조회
+     * */
+    public Map<String, Object> findTableStat(Map<String, String> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        List<Map<String, Object>> priceList = saleMbRepository.findTablePrice(paramMap);
+        List<Map<String, Object>> countList = saleMbRepository.findTableCount(paramMap);
+        List<Map<String, Object>> fixList   = saleMbRepository.findTableFix(paramMap);
+
+        // 결제수단명 추가
+        priceList.forEach(item -> {
+            item.put("NAME", Payment.of((String)item.get("PAYMENT")));
+        });
+
+        // 결제수단명 추가
+        fixList.forEach(item -> {
+            item.put("NAME", WiperSort.of((String)item.get("SORT")));
+        });
+
+        returnMap.put("priceList", priceList);
+        returnMap.put("countList", countList);
+        returnMap.put("fixList"  , fixList);
+
+
+
+        return returnMap;
+    }
+
+    /**
+     * 판매현황 조회
+     * */
+    @Transactional
+    public List<SaleProduct> findInputProduct(Member member, Map<String, Long> data) {
+        DailyTask currentTask = findByMemberAndStation(member, data.get("stationId"));
+        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatusAndRn(currentTask, SaleStatus.IN.toString(), data.get("rn").intValue());
+
+        return inputList;
+    }
+
+    /**
+     * 판매 INDEX페이지 조회
+     * */
+    public Map<String, Object> findTimeTable(Long tableId) {
+        Map<String, Object> returnMap = new HashMap<>();
+        TimeTable timeTable = findTableById(tableId);
+
+        // 종류별 판매갯수, 결제수단별 갯수
+        List<Map<String, Object>> sellList = new ArrayList<>();
+        List<Map<String, Object>> fixList  = new ArrayList<>();
+        int selTotalCount = 0;
+        int card = 0;
+        int cash = 0;
+        for (WiperSort sort : WiperSort.values()) {
+            int selCount = 0;
+
+            for (SellProduct sellProduct : timeTable.getSellList()) {
+                if(sort.getName().toLowerCase().equals(sellProduct.getSort())) {
+                    if(SaleStatus.FIX.toString().equals(sellProduct.getStatus())) {
+                        // 고장
+                        Map<String, Object> fixMap = new HashMap<>();
+                        fixMap.put("id", sellProduct.getId());
+                        fixMap.put("name", sort.getInit());
+                        fixMap.put("count", sellProduct.getCount());
+                        fixMap.put("memo", sellProduct.getMemo());
+                        fixList.add(fixMap);
+                    } else {
+                        selCount += sellProduct.getCount();
+
+                        if(Payment.CARD.toString().equals(sellProduct.getPayment())) {
+                            card += selCount * sort.getPrice();
+                        } else {
+                            cash += selCount * sort.getPrice();
+                        }
+
+                        // 판매
+                        Map<String, Object> sellMap = new HashMap<>();
+                        sellMap.put("id", sellProduct.getId());
+                        sellMap.put("name", sort.getInit());
+                        sellMap.put("count", selCount);
+                        sellList.add(sellMap);
+                    }
+                }
+            }
+
+            selTotalCount += selCount;
+        }
+
+        // 총계(판매)
+        Map<String, Object> sellMap = new HashMap<>();
+        sellMap.put("name" , "총계");
+        sellMap.put("count", selTotalCount);
+        sellList.add(sellMap);
+
+        // 기타
+        returnMap.put("sellList", sellList);
+        returnMap.put("fixList" , fixList);
+        returnMap.put("card", card);
+        returnMap.put("cash", cash);
+        returnMap.put("table", timeTable);
+
+        return returnMap;
+    }
+
+    /**
+     * TimeTable삭제
+     * @param tTid TimeTable의 id
+     * */
+    public void deleteInputTable(Long tTid) {
+        ttRepository.deleteById(tTid);
     }
 
     public DailyTask findByMemberAndStation(Member member, Long stationId) {
@@ -56,123 +418,12 @@ public class SaleService {
                 .orElseThrow( () -> new MemberNotFoundException("해당 유저는 오늘 출근하지 않았습니다."));
     }
 
-    public void saveSaleProduct(List<WiperDto> dto, Member member, Long stationId) {
-        DailyTask currentTask = findByMemberAndStation(member, stationId);
-        
-        // 판매등록
-        dto.forEach(item -> {
-            Wiper currentWiper = wiperService.findWiperBySizeAndSort(item.getWiperSize(), item.getWiperSort());
-            SaleProduct newSaleProduct = SaleProduct.builder()
-                    .task(currentTask)
-                    .status(item.getStatus())
-                    .payment(item.getPayment())
-                    .count(1)
-                    .wiper(currentWiper)
-                    .build();
-            spRepository.save(newSaleProduct);
-        });
-    }
-
-    @Transactional
-    public boolean saveDailyGasStation(Long stationId, Member member) {
-        GasStation station = gsService.findStationById(stationId);
-        DailyTask currentTask = dtRepository.findByTaskDateAndMemberAndGasStation(LocalDate.now(), member, station).orElse(null);
-
-        if(currentTask == null) {
-            saveDailyTask(member, gsService.findStationById(stationId));
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Transactional
-    public void saveInputProduct(Member member, TaskDto taskDto) {
-        DailyTask currentTask = findByMemberAndStation(member, taskDto.getStationId());
-        spRepository.deleteByTaskAndStatusAndRn(currentTask, SaleStatus.IN.toString(), taskDto.getRn()); // 재등록
-
-        taskDto.getSaleDtoList().forEach(item -> {
-            // 입력된 입고만 등록
-            if(item.getCount() > 0) {
-                SaleProduct newInputProduct = SaleProduct.builder()
-                        .task(currentTask)
-                        .status(SaleStatus.IN.toString())
-                        .count(item.getCount())
-                        .rn(taskDto.getRn())
-                        .wiper(wpRepository.findById(item.getWiper()).get())
-                        .build();
-
-                spRepository.save(newInputProduct);
-            }
-        });
-    }
-
-    @Transactional
-    public List<SaleProduct> findInputProduct(Member member, Map<String, Long> data) {
-        DailyTask currentTask = findByMemberAndStation(member, data.get("stationId"));
-        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatusAndRn(currentTask, SaleStatus.IN.toString(), data.get("rn").intValue());
-
-        return inputList;
-    }
-
-    public Map<String, Object> findCurrentTask(Member member, Long stationId) {
-        Map<String, Object> map = new HashMap<>();
-        DailyTask currentTask = findByMemberAndStation(member, stationId);
-
-        if (currentTask.getGasStation() != null) {
-            //총계(판매, 고장)
-            List<SaleProduct> detailList = currentTask.getProductList()
-                    .stream()
-                    .filter( p -> p.getStatus().equals(SaleStatus.OUT.toString()) || p.getStatus().equals(SaleStatus.FIX.toString()))
-                    .toList();
-
-            //판매리스트
-            List<SaleProduct> inputList = currentTask.getProductList()
-                                                     .stream()
-                                                     .filter( p -> p.getStatus().equals(SaleStatus.OUT.toString()))
-                                                     .toList();
-            //판매리스트-카드
-            ArrayList<SaleProduct> cardList = inputList.stream()
-                    .filter(product -> product.getPayment().equals(Payment.CARD.getViewName()))
-                    .collect(Collectors.toCollection(ArrayList::new));
-            //판매리스트-현금
-            ArrayList<SaleProduct> cashList = inputList.stream()
-                    .filter(product -> product.getPayment().equals(Payment.CASH.getViewName()))
-                    .collect(Collectors.toCollection(ArrayList::new));
-
-            map.put("name", currentTask.getMember().getName());
-            map.put("stationNm", currentTask.getGasStation().getStationName());
-            map.put("stationId", currentTask.getGasStation().getId());
-            map.put("location", currentTask.getGasStation().getStationLocation());
-            map.put("count", inputList.size());
-            map.put("list", detailList);
-            map.put("cardList", cardList);
-            map.put("cashList", cashList);
-        }
-
-        return map;
-    }
-
-    public List<SaleProductDto> findSaleStat(Member member, Map<String, Object> paramMap) {
-        List<SaleProductDto> statList = new ArrayList<>();
-        DailyTask currentTask = findByMemberAndStation(member, Long.valueOf(String.valueOf(paramMap.get("stationId"))));
-        paramMap.put("taskId", currentTask.getId());
-
-        if(SaleStatus.STOCK.toString().equals(paramMap.get("status"))) {
-            statList = saleMbRepository.findSaleStock(paramMap);
-        } else {
-            statList = saleMbRepository.findSaleOutFix(paramMap);
-        }
-
-        return statList;
-    }
-
     public  List<SaleProductDto> findStockHistory(Map<String, Object> paramMap) {
         return saleMbRepository.findStockHistory(paramMap);
     }
 
     public void deleteSale(Long id) {
-        spRepository.deleteById(id);
+        sellRepository.deleteById(id);
     }
 
     public List<DailyTask> findInoutList(Long id, String date) {
@@ -191,7 +442,7 @@ public class SaleService {
         DailyTask currentTask = findByMemberAndStation(member, Long.valueOf(String.valueOf(paramMap.get("stationId"))));
 
         // 현재 재고 > 철수
-        List<SaleProductDto> saleStat = findSaleStat(member, paramMap);
+/*        List<SaleProductDto> saleStat = findSaleStat(member, paramMap);
         saleStat.forEach(item -> {
             SaleProduct withdrawProduct = SaleProduct.builder()
                     .task(currentTask)
@@ -201,7 +452,7 @@ public class SaleService {
                     .build();
 
             spRepository.save(withdrawProduct);
-        });
+        });*/
     }
 
     @Transactional

@@ -35,22 +35,32 @@
 
             <hr class="my-5">
 
-            <h2 class="text-xl font-semibold mb-2"> 🧾 공지사항 </h2>
+            <div class="flex justify-between">
+                <h2 class="text-xl font-semibold mb-2"> 🧾 공지사항 </h2>
+                <p><a class="text-blue-500" th:href="@{/notice}">더보기️ </a></p>
+            </div>
 
             <div class="card divide-y divide-gray-100 sm:m-0">
 
-                <!-- job 1 -->
-                <div class="flex items-start flex-wrap p-7 sm:space-x-6">
-                    <a href="#" class="w-14 h-14 relative mt-1 order-1">
-                        <img src="/assets/images/brand/brand-avatar-4.png" alt="" class="rounded-md">
-                    </a>
-                    <div class="flex-1 sm:order-2">
-                        <h4 class="text-base text-gray-500 font-medium mb-2"> 경리팀 </h4>
-                        <a href="#">
-                            <h3 class="text-xl font-medium mb-4"> 공지 제목 </h3>
-                        </a>
+                <th:block th:if="${noticeList.size() != 0}">
+                    <div class="p-7 sm:space-x-6" th:each="notice : ${noticeList}">
+                        <div class="sm:order-2">
+                            <a th:href="@{/notice/{id}(id = ${notice.getId()})}">
+                                <h3 class="text-xl font-medium mb-2" th:text="${notice.getTitle()}"> 공지 제목 </h3>
+                            </a>
+                            <p class="text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일 HH시 mm분')}">작성일</p>
+                        </div>
                     </div>
-                </div>
+                </th:block>
+                <th:block th:if="${noticeList.size() == 0}">
+                    <div class="p-7 sm:space-x-6">
+                        <div class="sm:order-2">
+                            <a>
+                                <h3 class="text-lg font-medium"> 등록된 공지사항이 없습니다. </h3>
+                            </a>
+                        </div>
+                    </div>
+                </th:block>
 
             </div>
 
@@ -85,7 +95,7 @@
                 denyButtonText: `닫기`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    showLoadingSpinner();
+                    setTimeLoadingSpinner(5000, "위치 정보를 저장하고 있습니다.");
                     setLocation();
                     setTimeout(function() {
                         $('#location').attr('value', locationStr);
@@ -97,27 +107,6 @@
             })
         });
 
-        function showLoadingSpinner() {
-            $('#body_div').hide();
-            let timerInterval
-            Swal.fire({
-                title: "요청을 처리하고 있습니다.",
-                html: '완료될 때까지 <b></b> ms 남았습니다.',
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: () => {
-                    Swal.showLoading()
-                    const b = Swal.getHtmlContainer().querySelector('b')
-                    timerInterval = setInterval(() => {
-                        b.textContent = Swal.getTimerLeft()
-                    }, 100)
-                },
-                willClose: () => {
-                    clearInterval(timerInterval)
-                }
-            })
-        }
-
         $("#onTimeBtn").on("click", function (){
             Swal.fire({
                 html: '출근하시겠습니까?',
@@ -126,7 +115,7 @@
                 denyButtonText: `닫기`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    showLoadingSpinner();
+                    setTimeLoadingSpinner(5000, "위치 정보를 저장하고 있습니다.");
                     setLocation();
                     setTimeout(function() {
                         $('#location').attr('value', locationStr);

@@ -31,22 +31,31 @@
                 background: #cccccc;
                 color: #FFFFFF;
             }
+            #check div a{
+                color: #FFFFFF;
+            }
         </style>
         <div class="lg:space-x-12">
 
             <div class="lg:w-full card">
 
                 <div class="p-10 pt-4">
-                    <input type="hidden" id="stationId" th:value="${stationId}">
+                    <input type="hidden" id="tTid" th:value="${tTid}">
                     <div class="md:py-8 py-3">
                         <h2 class="text-xl font-bold">어떤 상품을 판매하셨나요?</h2>
-                    </div>
 
+                        <div class="grid grid-cols-2 gap-4 mb-4" id="check">
+                            <div name="out" class="text-sm font-medium">
+                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
+                            </div>
+                            <div name="fix" class="text-sm font-medium">
+                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 고장 </a>
+                            </div>
+                        </div>
                     <hr class="my-4">
 
-                    <div class="md:py-8 py-3">
 
-                        <div class="mb-4">
+                        <div class="mb-4" name="sellStat">
                             <h1 class="block text-md font-bold mb-2"> 결제 수단 </h1>
                             <div class="payment-option flex">
                                 <input type="radio" name="payment" value="card" id="card" checked>
@@ -55,54 +64,20 @@
                                 <input type="radio" name="payment" value="cash" id="cash">
                                 <label for="cash" class="payment-label">현금</label>
                             </div>
-                        </div>
 
-                        <hr class="my-4">
+                            <hr class="my-4">
 
-                        <div class="mb-4">
-                            <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
-                            <div>
-                                <select id="wiperSort" name="wiperSort" class="shadow-none with-border px-2">
-                                    <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}"
-                                            th:value="${sort.getName()}" th:text="|${sort.getViewName()} / ${#numbers.formatInteger(sort.getPrice(), 3, 'COMMA')}원|"></option>
-                                </select>
-                            </div>
-                        </div>
+                            <div class="mb-4" id="sortDIv">
+                                <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
+                                <div class="flex items-center space-x-4 rounded-md -mx-2 p-2">
+                                <button type="button" th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}"
+                                        th:value="${sort.getName()}" th:text="|${sort.getInit()}|" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"></button>
 
-                        <hr class="my-4">
-
-                        <div class="mb-4">
-                            <h1 class="block text-md font-bold my-2"> 와이퍼 사이즈 </h1>
-
-                            <div class="flex items-center mt-2 align-middle">
-                                <input type="checkbox" id="wiperStatus" name="wiperStatus" class="mr-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="wiperStatus" class="m-0 p-0 text-md font-medium">고장처리</label>
-                            </div>
-
-                            <div id="sizeDIv">
-                                <div id="divDefault">
-                                    <div class="flex items-center space-x-4 rounded-md -mx-2 p-2">
-                                        <button type="button" value="300" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 300 </button>
-                                        <button type="button" value="400" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 400 </button>
-                                        <button type="button" value="500" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 500 </button>
-                                        <button type="button" value="600" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 600 </button>
-                                    </div>
-                                    <div class="flex items-center space-x-4 rounded-md -mx-2 p-2">
-                                        <button type="button" value="350" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 350 </button>
-                                        <button type="button" value="450" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 450 </button>
-                                        <button type="button" value="550" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 550 </button>
-                                        <button type="button" value="650" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 650 </button>
-                                    </div>
-                                </div>
-                                <div id="div700">
-                                    <button type="button" value="700" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 700 </button>
                                 </div>
                             </div>
-                        </div>
 
-                        <hr class="my-4">
+                            <hr class="my-4">
 
-                        <div class="mb-4">
                             <h1 class="block text-md font-bold my-2"> 판매 리스트 </h1>
 
                             <div class="relative overflow-x-auto">
@@ -112,8 +87,7 @@
                                         <tr>
                                             <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">결제 수단</th>
                                             <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">종류</th>
-                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">사이즈</th>
-                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">상태</th>
+                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">쩜오</th>
                                             <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">비고</th>
                                         </tr>
                                         </thead>
@@ -123,11 +97,21 @@
                                 </form>
                             </div>
                         </div>
+                        <div name="fixStat">
+                            <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
+                            <select id="wiperSort" name="wiperSort" class="shadow-none with-border px-2">
+                                <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}"
+                                        th:value="${sort.getName()}" th:text="|${sort.getViewName()}|"></option>
+                            </select>
+
+                            <h1 class="block text-md font-bold my-2"> 메모 입력 </h1>
+                            <input type="input" id="memo" placeholder="메모사항을 입력해주세요">
+                        </div>
 
                         <hr class="mt-8 mb-4">
 
                         <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 등록하기 </button>
-                        <a th:href="@{|/sales/index/${stationId}|}" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                        <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
 
                     </div>
 
@@ -138,68 +122,113 @@
 
         </div>
         <script>
+            let status;
+
+            $(document).ready(function(){
+                // 상단바
+                $("#check div").on("click", function() {
+                    let _status = $(this).attr("name");
+
+                    $("#check div").each(function() {
+                        if($(this).attr("name") == _status) {
+                            $(this).find("a").removeClass("bg-gray-600")
+                                .addClass("bg-blue-600");
+                        } else {
+                            $(this).find("a").removeClass("bg-blue-600")
+                                .addClass("bg-gray-600");
+                        }
+                    });
+
+                    if(_status === "out") {
+                        $("[name='sellStat']").show();
+                        $("[name='fixStat']").hide();
+                    } else {
+                        $("[name='sellStat']").hide();
+                        $("[name='fixStat']").show();
+                    }
+
+                    status = _status;
+                });
+
+                status = "out";
+                $("[name='out']").click();
+            });
+
             // 결제수단
             $("[name='payment']").on("change", function() {
                 $(this).prop("checked", true);
             });
 
             // 판매 리스트
-            $("#sizeDIv button").on("click", function() {
+            $("#sortDIv button").on("click", function() {
                 $("#sellList").append(
                     $("<tr>", {class:"bg-white border-b dark:bg-gray-900 dark:border-gray-700"}).append(
                         $("<td>", {class:"px-2 py-4 whitespace-nowrap", text:$("[name='payment']:checked + label").text()}),
-                        $("<td>", {class:"px-2 py-4 whitespace-nowrap", text:$('#wiperSort option:selected').text().replace(/\/.*/, '')}),
-                        $("<td>", {class:"px-2 py-4 whitespace-nowrap", text:$(this).val()}),
-                        $("<td>", {class:"px-2 py-4 whitespace-nowrap", text:$('#wiperStatus').is(":checked") ? '고장' : '판매'}),
+                        $("<td>", {class:"px-2 py-4 whitespace-nowrap", text:$(this).text()}),
+                        $("<input>", {type:"checkbox", class:"text-blue-600 uk-text-center h-9 px-4 rounded-md border"}).on("change", function() {
+                            if($(this).is(':checked')) {
+                                $(this).parents("tr").find("[name='count']").val(1);
+                            } else {
+                                $(this).parents("tr").find("[name='count']").val(2);
+                            }
+
+                        }),
                         $("<td>").append(
                             $("<button>", {text:"취소", class:"bg-blue-600 text-white py-2.5 text-center font-semibold w-full  block rounded hover:text-white"}).on("click", function() {
                                 $(this).parents("tr").remove();
                             })
                         ),
                         $("<input>", {type:"hidden", name:"payment", value:$("[name='payment']:checked").val()}),
-                        $("<input>", {type:"hidden", name:"wiperSort", value:$("#wiperSort").val()}),
-                        $("<input>", {type:"hidden", name:"wiperSize", value:$(this).val()}),
-                        $("<input>", {type:"hidden", name:"status", value:$('#wiperStatus').is(":checked") ? 'fix' : 'out'})
+                        $("<input>", {type:"hidden", name:"sort", value:$(this).val()}),
+                        $("<input>", {type:"hidden", name:"count", value:2}),
                     )
                 );
             });
 
-            // 종류별 사이즈 버튼 바인딩
-            $("select[name=wiperSort]").change(function(){
-                let currentData = $(this).val();
-                if (currentData === "size_700") {
-                    $("#divDefault").hide();
-                    $("#div700").show();
-                } else {
-                    $("#divDefault").show();
-                    $("#div700").hide();
-                }
-            }).change();
-
             // 판매 등록
-            $("#submit").on("click", function (){
-                if($("#sellList tr").length === 0) return;
+            $("#submit").on("click", function () {
+                if(status === "out") {
+                    if($("#sellList tr").length === 0) return;
 
-                let list = [];
-                $("#sellList tr").each(function() {
-                    let data = {
-                        payment   : $(this).find("[name='payment']").val(),
-                        wiperSort : $(this).find("[name='wiperSort']").val(),
-                        wiperSize : $(this).find("[name='wiperSize']").val(),
-                        status    : $(this).find("[name='status']").val()
-                    }
-                    list.push(data);
-                });
+                    let list = [];
+                    $("#sellList tr").each(function() {
+                        let sort = $(this).find("[name='sort']").val();
+                        let payment = $(this).find("[name='payment']").val();
+                        let count = Number($(this).find("[name='count']").val());
+                        let result = list.find(obj => (obj.sort === sort && obj.payment === payment));
 
-                fnSave(list);
+                        if(result) {
+                            result.count = Number(result.count) + count;
+                        } else {
+                            let data = {
+                                payment   : $(this).find("[name='payment']").val(),
+                                sort : sort,
+                                status : "out",
+                                count : count
+                            }
+                            list.push(data);
+                        }
+                    });
+
+                    fnSave(list);
+                } else {
+                    let list = [{
+                        sort : $("#wiperSort").val(),
+                        status : "fix",
+                        count : 1,
+                        memo : $("#memo").val()
+                    }];
+
+                    fnSave(list);
+                }
             });
 
             function fnSave(list) {
                 const url = "/sales/sell";
-                const fnload = function() {location.href= "/sales/index/" + $("#stationId").val();}
+                const fnload = function() {location.href= "/sales/index/" + $("#tTid").val();}
                 const data = {
-                                "stationId" : $("#stationId").val(),
-                                "wiperDtoList" : list
+                                "id" : $("#tTid").val(),
+                                "sellDtoList" : list
                 }
 
                 fnCrudJsonAjax(data, url, fnload, "post", "정상적으로 저장되었습니다.");

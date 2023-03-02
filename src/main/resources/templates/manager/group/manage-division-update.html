@@ -15,7 +15,7 @@
 
                     <!-- form header -->
                     <div class="text-center border-b border-gray-100 py-6">
-                        <h3 class="font-bold text-xl"> 지점 생성 </h3>
+                        <h3 class="font-bold text-xl"> 지점 수정 </h3>
                     </div>
 
                     <!-- form body -->
@@ -23,7 +23,7 @@
 
                         <div>
                             <label for="teamName" class="font-semibold text-base"> 지점명 </label>
-                            <input id="teamName" class="with-border" name="teamName" type="text" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
+                            <input id="teamName" class="with-border" th:value="${division.getDivisionName()}" name="teamName" type="text" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
                         </div>
 
                         <div>
@@ -31,6 +31,7 @@
                             <select id="teamGM" name="teamGM"  class="shadow-none selectpicker with-border">
                                 <option th:each="gm : ${gmList}"
                                         th:value="${gm.getUsername()}"
+                                        th:selected="${gm.getUsername() eq division.getLeader().getUsername()}"
                                         th:text="|${gm.getName()}(${gm.getPhone()})|">이름</option>
                             </select>
                         </div>
@@ -39,8 +40,8 @@
 
                     <!-- form footer -->
                     <div class="grid grid-cols-2 gap-4 m-4 p-4">
-                        <a th:href="@{/manager/division}" class="button w-full">뒤로가기</a>
-                        <button id="submit" type="button" class="button w-full">생성하기</button>
+                        <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
+                        <button id="submit" type="button" class="button w-full">수정하기</button>
                     </div>
                 </div>
             </form>
@@ -70,10 +71,14 @@
 
             });
 
+            /*<![CDATA[*/
+            let id = "[[${division.getId()}]]";
+            /*]]>*/
+
             $("#submit").on("click", function (){
                 if ($('#teamName').val().length !== 0) {
-                    console.log($('#createTeamForm').serializeObject());
-                    fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), '/manager/division', 'POST', successHref);
+                    const url = '/manager/division/'.concat(id);
+                    fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), url, 'PUT', successHref);
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -83,7 +88,7 @@
             });
 
             function successHref(data) {
-                $(location).attr("href", "/manager/division");
+                $(location).attr("href", "/manager/division/".concat(id));
             }
         </script>
     </main>

@@ -1,9 +1,13 @@
 package com.ezkorea.hybrid_app.service.user.member;
 
+import com.ezkorea.hybrid_app.domain.aws.S3Image;
+import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
+import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.*;
+import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
 import com.ezkorea.hybrid_app.web.dto.ProfileDto;
@@ -32,11 +36,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final ModelMapper mapper;
     private final PasswordEncoder passwordEncoder;
 
     private final MemberRepository memberRepository;
     private final CommuteTimeRepository ctRepository;
+    private final S3ImageRepository s3Repository;
+    private final SubAuthRepository saRepository;
 
     private final CommuteService commuteService;
 
@@ -45,12 +50,42 @@ public class MemberService {
      * 회원가입을 하기 위한 메소드
      * @param dto sign-up.html에서 받아온 정보
      */
-    public Member saveNewMember(SignUpDto dto) {
+    @Transactional
+    public void saveNewMember(SignUpDto dto) {
         dto.setPassword(passwordEncode(dto.getPassword()));
-        if (dto.getUsername().equals("master")) {
+        boolean postAuth = false;
+        boolean inputAuth = false;
+        if (dto.getUsername().equals("master") || dto.getUsername().equals("dev")) {
             dto.setMemberStatus(MemberStatus.FULL_TIME);
+            postAuth = true;
+            inputAuth = true;
         }
-        return memberRepository.save(mapper.map(dto, Member.class));
+        Member savedMember = memberRepository.save(Member.builder()
+                .username(dto.getUsername())
+                .password(dto.getPassword())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .sex(dto.getSex())
+                .name(dto.getName())
+                .role(dto.getRole())
+                .memberStatus(dto.getMemberStatus())
+                .commuteTimeList(new ArrayList<>())
+                .taskList(new ArrayList<>())
+                .noticeList(new ArrayList<>())
+                .build());
+//        Member savedMember = memberRepository.save(mapper.map(dto, Member.class));
+        savedMember.setSubAuth(SubAuth.builder()
+                .member(savedMember)
+                .postAuth(postAuth)
+                .inputAuth(inputAuth)
+                .build());
+
+        savedMember.setS3Image(s3Repository.save(S3Image.builder()
+                .fileName("profile-image.jpg")
+                .member(savedMember)
+                .fileRepo("images/static/")
+                .filePath("https://ezkorea-bucket.s3.ap-northeast-2.amazonaws.com/images/static/profile-image.jpg")
+                .build()));
     }
 
     /**
@@ -142,11 +177,12 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberRole(Member member, Role role, MemberStatus status) {
-        member.setRole(role);
-        member.setRoleChanged(true);
-        member.setMemberStatus(status);
-        memberRepository.save(member);
+    public void updateMemberRole(String username, Role role, MemberStatus status) {
+        Member currentMember = findByUsername(username);
+        currentMember.setRole(role);
+        currentMember.setRoleChanged(true);
+        currentMember.setMemberStatus(status);
+        memberRepository.save(currentMember);
     }
 
     /**
@@ -171,12 +207,12 @@ public class MemberService {
         return memberRepository.findAllByRole(role);
     }
 
-    public List<Member> findByRoleAndDivisionIsNull(Role role) {
-        return memberRepository.findAllByRoleAndDivisionIsNull(role);
+    public List<Member> findByRoleAndDivisionIsNull(Role role, MemberStatus status) {
+        return memberRepository.findAllByRoleAndMemberStatusAndDivisionIsNull(role, status);
     }
 
-    public List<Member> findByRoleAndTeamIsNull(Role role) {
-        return memberRepository.findAllByRoleAndTeamIsNull(role);
+    public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team, MemberStatus status) {
+        return memberRepository.findAllByRoleAndTeamIsNullOrTeam(role, team, status);
     }
 
     public List<Member> findByRoleAndStatus(Role role, MemberStatus status) {
@@ -230,7 +266,24 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberStatus(Member currentMember, MemberStatus status) {
+    public void updateMemberStatus(Long id, MemberStatus status) {
+        Member currentMember = findMemberById(id);
         currentMember.setMemberStatus(status);
+    }
+
+    @Transactional
+    public void updateMemberSubAuth(String username, String memberPostAuth, String memberInputAuth) {
+        Member currentMember = findByUsername(username);
+
+        boolean postAuth = memberPostAuth != null;
+        boolean inputAuth = memberInputAuth != null;
+
+        SubAuth subAuth = saRepository.findByMember(currentMember);
+        subAuth.setInputAuth(inputAuth);
+        subAuth.setPostAuth(postAuth);
+    }
+
+    public List<Member> findByRoleAndDivisionAndDivisionNull(Role role, MemberStatus status, Division division) {
+        return memberRepository.findByRoleAndDivisionAndDivisionAndDivisionNull(role, status, division);
     }
 }

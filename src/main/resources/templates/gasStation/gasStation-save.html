@@ -35,10 +35,18 @@
                             </div>
                             <div class="form-control">
                                 <h1 class="block text-md font-bold my-2"> 참고 사진 </h1>
-                                <div id="imgDiv">
-                                </div>
-                                <button type="button" id="inputBt" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold">파일 선택</button>
-                                <input id="inputfile" type="file" style="display:none;" multiple/>
+                                <form id="s3Form" onsubmit="return false;">
+                                    <div class="flex items-center justify-center bg-grey-lighter">
+                                        <label class="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white">
+                                            <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                            </svg>
+                                            <span class="mt-2 text-base leading-normal">Select a Images</span>
+                                            <input type='file' name="files" class="hidden" accept=".png, .jpeg, .jpg" id="multipleFiles" multiple max="5"/>
+                                        </label>
+                                    </div>
+                                    <div id="imageChange" class="grid grid-cols-2 gap-4 p-10"></div>
+                                </form>
                             </div>
                         </div>
                         <div>
@@ -65,6 +73,19 @@
                     }
                 });
 
+                function successHref(data, xhr) {
+                    let savedId = xhr.id;
+                    imageUpload('station', savedId, '/image/upload', 'PUT');
+                    if (fileCount !== 0) {
+                        let time = showLoadingSpinner("이미지를 저장하고 있습니다.");
+                        setTimeout(function () {
+                            $(location).attr("href", "/station/detail/".concat(xhr.id));
+                        }, time);
+                    } else {
+                        $(location).attr("href", "/station/detail/".concat(xhr.id));
+                    }
+                }
+
                 function fnFindStationDetail(data) {
                     if(data.station) {
                         $("#id").val(data.station.id);
@@ -72,11 +93,11 @@
                         $("#stationLocation").val(data.station.stationLocation);
                         $("#memo").val(data.station.memo);
                     }
-                    if(data.attachList) {
-                        data.attachList.forEach(function(item) {
-                            $("#imgDiv").append(
+                    if(data.s3ImageList) {
+                        data.s3ImageList.forEach(function(item) {
+                            $("#imageChange").append(
                                 $("<div>", {class:"items-center"}).append(
-                                    $("<img>", {src:item.path+"/"+item.fileName}),
+                                    $("<img>", {src:item.filePath}),
                                     $("<button>", {text:"삭제", class:"btn bg-red-600 w-full rounded-md py-1 my-2"}).on("click", function() {
                                         deleteFileList.push(item.id);
                                         $(this).parent("div").remove();
@@ -91,66 +112,8 @@
                 $("#submit").on("click", function() {
                     if(!fnValidCheck()) return;
 
-                    const data = $("#saveForm").serializeObject();
-                    const url = "/station/saveStation"
-                    const fnload = function(callbckData) {
-                        location.href= "/station/detail/" + callbckData.stationId;
-                    }
-                    const formData = new FormData();
-                    formData.append("id", data.id);
-                    formData.append("stationName", data.stationName);
-                    formData.append("stationLocation", data.stationLocation);
-                    formData.append("memo", data.memo);
+                    fnResponseCrudJsonAjax($('#saveForm').serializeObject(), '/station', 'POST', successHref);
 
-                    fileList.forEach(function(item, index) {
-                        formData.append('files['+index+']', item);
-                    });
-
-                    deleteFileList.forEach(function(item, index) {
-                       formData.append('delFiles['+index+']', item);
-                    });
-
-                    fnFormDataAjax(formData, url, fnload);
-                });
-
-                // 파일 선택
-                $("#inputBt").on("click", function() {
-                    $("#inputfile").click();
-                });
-
-                // 파일 미리보기
-                $("#inputfile").on("change", function(event) {
-                    let file = event.target.files[0];
-
-                    if(!isImageFile(file)) {
-                        Swal.fire({
-                            icon: 'error',
-                            text: '이미지 파일이 아닙니다.',
-                        });
-                        return;
-                    }
-                    if(isOverSize(file)) {
-                        Swal.fire({
-                            icon: 'error',
-                            text: '파일의 용량이 너무 큽니다.',
-                        });
-                        return;
-                    }
-
-                    let reader = new FileReader();
-                    reader.onload = function(e) {
-                        $("#imgDiv").append(
-                            $("<div>", {class:"items-center"}).append(
-                                $("<img>", {src:e.target.result}),
-                                $("<button>", {text:"삭제", class:"btn bg-red-600 w-full rounded-md py-1 my-2"}).on("click", function() {
-                                    fileList.splice($(this).parent("div").index(), 1);
-                                    $(this).parent("div").remove();
-                                })
-                            )
-                        )
-                    }
-                    reader.readAsDataURL(file);
-                    fileList.push(file);
                 });
 
                 function fnValidCheck() {
@@ -181,22 +144,6 @@
                     }
 
                     return isValid;
-                }
-
-                // 확장자가 이미지 파일인지 확인
-                function isImageFile(file) {
-
-                    let ext = file.name.split(".").pop().toLowerCase(); // 파일명에서 확장자를 가져온다.
-
-                    return ($.inArray(ext, ["jpg", "jpeg", "gif", "png"]) === -1) ? false : true;
-                }
-
-                // 파일의 최대 사이즈 확인
-                function isOverSize(file) {
-
-                    let maxSize = 10 * 1024 * 1024; // 10MB로 제한
-
-                    return (file.size > maxSize) ? true : false;
                 }
 
                 // 다음주소 API

@@ -64,6 +64,9 @@
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                            사진
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                             이름
                                         </th>
                                         <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
@@ -78,6 +81,12 @@
                                         <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
                                             상태
                                         </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                            글쓰기 권한
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                            입고 권한
+                                        </th>
                                         <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                             변경
                                         </th>
@@ -88,6 +97,11 @@
                                     <tr class="bg-white border-b" th:each="user : ${employeeList}"
                                         th:if="${!user.getRole().toString().equals('ROLE_MASTER')}">
                                         <form th:id="|updateMember${user.getId()}|" onsubmit="return false">
+                                            <td>
+                                                <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
+                                                    <img th:src="${user.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
+                                                </div>
+                                            </td>
                                             <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
                                                 <h3 th:text="${user.getName()}"></h3>
                                             </th>
@@ -113,6 +127,12 @@
                                                             th:text="${status.viewName}">
                                                     </option>
                                                 </select>
+                                            </td>
+                                            <td class="px-2 py-4 whitespace-nowrap">
+                                                <input type="checkbox" th:checked="${user.getSubAuth().isPostAuth()}" name="memberPostAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border"/>
+                                            </td>
+                                            <td class="px-2 py-4 whitespace-nowrap">
+                                                <input type="checkbox" th:checked="${user.getSubAuth().isInputAuth()}" name="memberInputAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border"/>
                                             </td>
                                             <td class="px-2 py-4 whitespace-nowrap">
                                                 <button type="button" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border font-semibold"> 변경하기 </button>

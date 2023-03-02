@@ -11,7 +11,7 @@
     <main layout:fragment="main">
         <div class="lg:space-x-12">
             <form id="createTeamForm" onsubmit="return false;">
-                <div class="max-w-2xl m-auto shadow-md rounded-md bg-white lg:mt-20">
+                <div class="max-w-2xl m-auto shadow-md rounded-md bg-white">
 
                     <!-- form header -->
                     <div class="text-center border-b border-gray-100 py-6">
@@ -28,7 +28,12 @@
 
                         <div>
                             <label for="teamGM" class="font-semibold text-base"> 지점장 </label>
-                            <input id="teamGM" class="with-border text-white" name="teamGM" type="text" th:value="|${division.getLeader().getName()}(${division.getLeader().getPhone()})|" autocomplete="off" readonly>
+                            <th:block th:if="!${division.getLeader().getUsername().equals('master')}">
+                                <input id="teamGM" class="with-border text-white" name="teamGM" type="text" th:value="|${division.getLeader().getName()}(${division.getLeader().getPhone()})|" autocomplete="off" readonly>
+                            </th:block>
+                            <th:block th:if="${division.getLeader().getUsername().equals('master')}">
+                                <input class="with-border text-white" name="teamGM" type="text" value="없음" autocomplete="off" readonly>
+                            </th:block>
                         </div>
 
                         <div>
@@ -43,26 +48,64 @@
                                         사원명
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        직급
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                         핸드폰 번호
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                        수정
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody class="uk-text-center">
                                 <th:block th:each="team : ${division.getTeamList()}">
-                                    <tr class="bg-white border-b">
+                                    <tr class="bg-white border-b" th:if="${team.getLeader() != null}">
                                         <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
                                             <h3 th:text="${team.getTeamName()}"></h3>
                                         </th>
-                                        <td class="px-2 py-4 whitespace-nowrap" th:text="|${team.getLeader().getName()} (팀장)|"></td>
+                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getName()}"></td>
+                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getRole().viewName}"></td>
                                         <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getPhone()}"></td>
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            <a th:href="@{/manager/team/update/{id}(id=${team.getId()})}" class="button w-full">팀 수정</a>
+                                        </td>
                                     </tr>
-                                    <tr class="bg-white border-b" th:each="employee, status : ${team.getMemberList()}">
+                                    <tr class="bg-white border-b"
+                                        th:if="${team.getLeader() != null}"
+                                        th:each="employee : ${team.getMemberList()}">
+                                        <th:block th:if="${team.getLeader().getId() != employee.getId()}">
+                                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                                <h3>"</h3>
+                                            </th>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap"></td>
+                                        </th:block>
+                                    </tr>
+                                    <tr class="bg-white border-b"
+                                        th:if="${team.getLeader() == null}"
+                                        th:each="employee, status : ${team.getMemberList()}">
+                                        <th:block th:if="${status.index == 0}">
+                                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                                <h3 th:text="${team.getTeamName()}"></h3>
+                                            </th>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap">
+                                                <a th:href="@{/manager/team/update/{id}(id=${team.getId()})}" class="button w-full">팀 수정</a>
+                                            </td>
+                                        </th:block>
                                         <th:block th:if="${status.index != 0}">
                                             <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
                                                 <h3>"</h3>
                                             </th>
                                             <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
                                             <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap"></td>
                                         </th:block>
                                     </tr>
                                 </th:block>
@@ -73,8 +116,9 @@
                     </div>
 
                     <!-- form footer -->
-                    <div class="flex justify-center border-gray-100 py-8">
-                        <a th:href="@{/manager/division}" class="button w-full mx-4">뒤로가기</a>
+                    <div class="grid grid-cols-2 gap-4 p-8">
+                        <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
+                        <a th:href="@{/manager/division/update/{id}(id=${division.getId()})}" class="button w-full">지점 수정하기</a>
                     </div>
 
                 </div>

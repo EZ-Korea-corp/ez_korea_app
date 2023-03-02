@@ -21,18 +21,36 @@
         }
     </style>
     <div>
-        <div class="flex" id="check">
-            <div name="day" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+        <input type="text" id="datepicker" name="datepicker" class="w-full" readonly>
+        <div class="grid grid-cols-3 gap-4 my-4" id="check">
+            <div name="day" class="">
                 <a class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 일간 </a>
             </div>
-            <div name="week" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+            <div name="week" class="">
                 <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 주간 </a>
             </div>
-            <div name="month" class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
+            <div name="month" class="">
                 <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 월간 </a>
             </div>
         </div>
-        <div class="relative overflow-x-auto">
+        <div class="relative overflow-x-auto" id="totalStat">
+            <h1 class="block text-lg font-bold mb-2"> 전체금액  </h1>
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-center">
+                        결제
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-center">
+                        금액
+                    </th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br>
+
+            <h1 class="block text-lg font-bold mb-2"> 별도금액  </h1>
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -43,27 +61,32 @@
                 </thead>
                 <tbody>
                     <tr id="normal" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">일반</th>
+                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">일반</th>
                         <td class="px-6 py-4">0</td>
                         <td class="px-6 py-4">0</td>
                     </tr>
                     <tr id="hybrid" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">하이브리드</th>
+                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">하이브리드</th>
                         <td class="px-6 py-4">0</td>
                         <td class="px-6 py-4">0</td>
                     </tr>
                     <tr id="mw" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">엠떠블유(MW)</th>
+                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">엠떠블유(MW)</th>
                         <td class="px-6 py-4">0</td>
                         <td class="px-6 py-4">0</td>
                     </tr>
                     <tr id="s_class" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">S클래스</th>
+                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">S클래스</th>
                         <td class="px-6 py-4">0</td>
                         <td class="px-6 py-4">0</td>
                     </tr>
                     <tr id="size_700" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">칠백사이즈</th>
+                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">칠백사이즈</th>
+                        <td class="px-6 py-4">0</td>
+                        <td class="px-6 py-4">0</td>
+                    </tr>
+                    <tr id="total" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">합계</th>
                         <td class="px-6 py-4">0</td>
                         <td class="px-6 py-4">0</td>
                     </tr>
@@ -72,7 +95,15 @@
         </div>
     </div>
     <script>
+        let _status;
         $(document).ready(function(){
+            //달력생성
+            fnCalenderMaker($('#datepicker'));
+
+            // 일자별 금액조회
+            $('#datepicker').on("change", function() {
+                fnFindStat(_status);
+            })
 
             $("#check div").on("click", function() {
                 let status = $(this).attr("name");
@@ -96,18 +127,32 @@
 
         function fnFindStat(status) {
             const url = "/manager/totalStat";
-            const data = {"status" : status};
+            const data = {"status" : status, "date" : $('#datepicker').val()};
+            _status = status;
 
             fnFindJsonAjax(data, url, fnFindStatResult);
         }
 
         function fnFindStatResult(data) {
-            let $body = $('tbody');
-            $body.find('td').text('0');
-            data.list.forEach(function(item) {
-                let $tr = $body.find("#" + item.SORT);
-                $($tr.find('td').get(0)).text(item.COUNT);
-                $($tr.find('td').get(1)).text(item.PRICE);
+            // 전체금액목록
+            let tbody0 = $($("#totalStat tbody").get(0));
+            tbody0.empty();
+            data.priceList.forEach(function(item) {
+                tbody0.append(
+                    $("<tr>", {class:"border-b border-gray-200 dark:border-gray-700"}).append(
+                        $("<th>", {text:item.NAME||item.PAYMENT, class:"text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"}),
+                        $("<td>", {text:(item.PRICE||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"})
+                    )
+                )
+            })
+
+            // 와이퍼별 금액
+            let tbody1 = $($("#totalStat tbody").get(1));
+            tbody1.find('td').text('0');
+            data.countList.forEach(function(item) {
+                let $tr = tbody1.find("#" + item.SORT);
+                $($tr.find('td').get(0)).text((item.COUNT||0).toLocaleString('ko-KR'));
+                $($tr.find('td').get(1)).text((item.PRICE||0).toLocaleString('ko-KR'));
             });
             console.log(data);
         }

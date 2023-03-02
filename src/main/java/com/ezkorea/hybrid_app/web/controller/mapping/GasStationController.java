@@ -42,6 +42,14 @@ public class GasStationController {
         return "gasStation/gasStation-detail";
     }
 
+    @GetMapping("/update/{id}")
+    public String showGasStationUpdatePage(@PathVariable Long id, Model model) {
+        GasStation station = gasStationService.findStationById(id);
+
+        model.addAttribute("station", station);
+        return "gasStation/gasStation-update";
+    }
+
     @GetMapping("/save")
     public String saveGasStationPage() {
         return "gasStation/gasStation-save";
@@ -65,7 +73,7 @@ public class GasStationController {
         List<Map<String, Object>> list = saleService.findInProductList(securityUser.getMember(), id);
         model.addAttribute("list", list);
 
-        return "gasStation/gasStation-inoutDetail";
+        return "gasStation/gasStation-inOutDetail";
     }
 
     @GetMapping("/inOutMemberDetail")
@@ -75,7 +83,7 @@ public class GasStationController {
         List<Map<String, Object>> list = saleService.findInOutProductList(id);
         model.addAttribute("list", list);
 
-        return "gasStation/gasStation-inoutDetail";
+        return "gasStation/gasStation-inOutDetail";
     }
 
 

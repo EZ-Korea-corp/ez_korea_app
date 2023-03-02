@@ -52,7 +52,14 @@
                                             <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
                                                 <h3 th:text="${division.getDivisionName()}"></h3>
                                             </th>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="|${division.getLeader().getName()} (${division.getLeader().getPhone()})|"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap">
+                                                <th:block th:if="!${division.getLeader().getUsername().equals('master')}">
+                                                    <a th:text="|${division.getLeader().getName()} (${division.getLeader().getPhone()})|"></a>
+                                                </th:block>
+                                                <th:block th:if="${division.getLeader().getUsername().equals('master')}">
+                                                    <a></a>
+                                                </th:block>
+                                            </td>
                                             <td class="px-2 py-4 whitespace-nowrap"> <a th:href="@{|/manager/division/${division.getId()}|}" class="uk-text-center h-9 px-4"> 상세보기 </a> </td>
                                         </tr>
                                     </tbody>

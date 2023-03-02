@@ -30,23 +30,26 @@ public class TestDataInit {
 
     @PostConstruct
     public void testMemberDataInit() {
-        if (!memberRepository.existsByUsername("ez_dev_team_master")) {
-            memberService.saveNewMember(makeNewMember("ez_dev_team_master", "개발팀", Role.ROLE_MASTER));
+        if (!memberRepository.existsByUsername("dev")) {
+            memberService.saveNewMember(makeNewMember("dev", "개발팀", Role.ROLE_MASTER));
         }
         if (!memberRepository.existsByUsername("master")) {
             memberService.saveNewMember(makeNewMember("master", "남명원", Role.ROLE_MASTER));
         }
-        if (!memberRepository.existsByUsername("01011112222")) {
-            memberService.saveNewMember(makeNewMember("01011112222", "고봉민", Role.ROLE_EMPLOYEE));
+        if (!memberRepository.existsByUsername("test1")) {
+            memberService.saveNewMember(makeNewMember("test1", "고봉민", Role.ROLE_EMPLOYEE));
         }
-        if (!memberRepository.existsByUsername("01011113333")) {
-            memberService.saveNewMember(makeNewMember("01011113333", "김경자", Role.ROLE_EMPLOYEE));
+        if (!memberRepository.existsByUsername("test2")) {
+            memberService.saveNewMember(makeNewMember("test2", "김경자", Role.ROLE_EMPLOYEE));
         }
-        if (!memberRepository.existsByUsername("01011114444")) {
-            memberService.saveNewMember(makeNewMember("01011114444", "한문철", Role.ROLE_EMPLOYEE));
-        }
+
+        // 아래 주석 해제하면 랜덤 회원 생성 가능 사용 후 다시 주석처리!
+//         makeRandomMember(10);
+    }
+
+    public void makeRandomMember(int memberCount) {
         StringBuilder sb;
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < memberCount; i++) {
             Random random = new Random();
             sb = new StringBuilder();
             for (int j = 0; j < 11; j++) {
@@ -60,13 +63,12 @@ public class TestDataInit {
     }
 
     public SignUpDto makeNewMember(String username, String name, Role role) {
-        String email = UUID.randomUUID().toString().substring(0, 8);
         SignUpDto newDto = new SignUpDto();
         newDto.setUsername(username);
         newDto.setMemberStatus(MemberStatus.AWAIT);
         newDto.setPassword("1234");
         newDto.setPhone("01012341234");
-        newDto.setEmail(email + "@ezkorea.com");
+        newDto.setEmail(username + "@ezkorea.com");
         newDto.setName(name);
         newDto.setSex("MALE");
         newDto.setRole(role);

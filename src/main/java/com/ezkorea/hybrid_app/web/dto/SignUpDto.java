@@ -13,7 +13,6 @@ public class SignUpDto {
     private String email;
     private String sex;
     private String name;
-    private boolean isLeader;
     private Role role;
     private MemberStatus memberStatus;
 }

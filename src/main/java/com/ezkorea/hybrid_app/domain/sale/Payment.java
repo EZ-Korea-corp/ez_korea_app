@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.domain.sale;
 
+import com.ezkorea.hybrid_app.domain.timetable.PartTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -18,4 +19,13 @@ public enum Payment {
         return super.toString().toLowerCase();
     }
 
+    public static String of(String _payment) {
+        for (Payment payment : Payment.values()) {
+            if (payment.key.toLowerCase().equals(_payment)) {
+                return payment.viewName;
+            }
+        }
+
+        return null;
+    }
 }
