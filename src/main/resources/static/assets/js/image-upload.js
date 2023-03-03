@@ -78,9 +78,6 @@ function imageUpload(entity, id, url, type) {
                 jqXHR.setRequestHeader(header, token);
             },
             error: function (xhr, status, error) {
-                alert(xhr);
-                alert(status);
-                alert(error);
                 Swal.fire({
                     icon: 'error',
                     text: '이미지 업로드에 실패했습니다.',

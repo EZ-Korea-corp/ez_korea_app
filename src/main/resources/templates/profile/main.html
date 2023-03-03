@@ -24,7 +24,7 @@
                             <label for="multipleFiles">
                                 <img th:src="${user.getS3Image().getFilePath()}" alt="">
                             </label>
-                            <input type='file' name="files" class="hidden" accept=".png, .jpeg, .jpg" id="multipleFiles"/>
+                            <input type='file' name="files" class="hidden" accept="image/*" id="multipleFiles"/>
                         </form>
                         <script>
                             /*<![CDATA[*/
