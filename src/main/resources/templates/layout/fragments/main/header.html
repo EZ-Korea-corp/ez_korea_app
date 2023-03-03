@@ -465,9 +465,9 @@
               <img th:src="${member.getS3Image().getFilePath()}" class="is_avatar" alt="">
             </a>
             <div uk-drop="mode: click;offset:5" class="header_dropdown profile_dropdown">
-              <a th:href="@{|/profile/${member.getUsername()}|}" class="user">
+              <a th:href="@{|/profile/${member.getUsername()}|}" class="user align-middle">
                 <div class="user_avatar">
-                  <img th:src="${member.getS3Image().getFilePath()}" alt="">
+                  <img th:src="${member.getS3Image().getFilePath()}" alt="" class="h-12 w-12">
                 </div>
                 <div class="user_name">
                   <div th:text="${member.getName()}">이름</div>
