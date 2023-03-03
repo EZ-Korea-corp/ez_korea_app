@@ -35,7 +35,6 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 my-4">
-                        <button type="button" th:data-id="${station.getId()}" th:onclick="|fnEndStation(this.getAttribute('data-id'))|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md font-semibold"> 철수 </button>
                         <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/update/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md font-semibold"> 수정 </button>
                     </div>
 
@@ -82,9 +81,9 @@
                             </div>
 
                             <div class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                                <a th:href="@{|/station/inoutList?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 입출고기록 </a>
-                                <a th:href="@{|/station/stock?id=${station.id}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 재고기록 </a>
-                                <a th:href="@{|/station/withdraw?id=${station.id}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 철수기록 </a>
+                                <a th:href="@{|/station/inList?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 입고기록 </a>
+                                <a th:href="@{|/station/outDetail?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 출고기록 </a>
+                                <a th:href="@{|/station/stockList?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 재고기록 </a>
                             </div>
                         </div>
                     </div>
@@ -100,33 +99,6 @@
             </div>
 
         </div>
-        <script>
-            jQuery(document).ready(function($){
-
-                let content = $('#content').text();
-                let html = content.replace(/\n/g, '<br>');
-                $('#content').html(html);
-
-                /*const Editor = toastui.Editor;*/
-            });
-            function fnEndStation(id) {
-                Swal.fire({
-                    html: '철수하시겠습니까?',
-                    showDenyButton: true,
-                    confirmButtonText: '철수',
-                    denyButtonText: `취소`,
-                }).then((result) => {
-                    if(result.isConfirmed){
-                        const fnload = function(data) {
-                            location.href= "/station/withdraw?id=" + id;
-                        }
-                        fnCrudJsonAjax({"stationId" : id, "status" : "end"}, "/station/withdraw", fnload, "post", "정상적으로 저장되었습니다.");
-                    }
-                })
-            }
-
-
-        </script>
     </main>
 
 </body>

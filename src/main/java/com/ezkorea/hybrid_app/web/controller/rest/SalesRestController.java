@@ -35,26 +35,6 @@ public class SalesRestController {
         return HttpStatus.OK;
     }
 
-    @PostMapping("/sales/findInput")
-    public Map<String, Object> findInputProduct(@RequestBody Map<String, Long> data,
-                                                @AuthenticationPrincipal SecurityUser securityUser) {
-        Map<String, Object> returnMap = new HashMap<>();
-        List<SaleProductDto> dtolist  = new ArrayList<>();
-        List<SaleProduct> inputList   = saleService.findInputProduct(securityUser.getMember(), data);
-
-        inputList.forEach(item -> {
-            SaleProductDto dto = new SaleProductDto();
-            dto.setWiper(item.getWiper().getId());
-            dto.setCount(item.getCount());
-
-            dtolist.add(dto);
-        });
-
-        returnMap.put("result", dtolist);
-
-        return returnMap;
-    }
-
     @PostMapping("/sales/input")
     public HttpStatus saveStockProduct(@RequestBody TimeTableDto timeTableDto) {
 
@@ -87,8 +67,16 @@ public class SalesRestController {
     }
 
     @PostMapping("/sales/input/list")
-    public Map<String, Object> findInputList(@RequestBody Map<String, String> paramMap) {
+    public Map<String, Object> findInputList(@RequestBody Map<String, Long> paramMap) {
         Map<String, Object> returnMap = saleService.findInputList(paramMap);
+
+        return returnMap;
+    }
+
+    @PostMapping("/sales/stock/list")
+    public Map<String, Object> findStockList(@RequestBody Map<String, Long> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("list", saleService.findStockList(paramMap));
 
         return returnMap;
     }
@@ -120,41 +108,6 @@ public class SalesRestController {
 
         saleService.deleteSale(data.get("id"));
         return HttpStatus.OK;
-    }
-
-    @PostMapping("/stock/hisoty")
-    public Map<String, Object> findStockHistory(@RequestBody Map<String, Object> paramMap) {
-        Map<String, Object> returnMap = new HashMap<>();
-        returnMap.put("result", saleService.findStockHistory(paramMap));
-
-        return returnMap;
-    }
-
-    @PostMapping("/inout/hisoty")
-    public Map<String, Object> findInOutDetail(@RequestBody Map<String, Object> paramMap) {
-        Map<String, Object> returnMap = new HashMap<>();
-        returnMap.put("result", saleService.findInOutDetail(paramMap));
-
-        return returnMap;
-    }
-
-    @PostMapping("/station/withdraw")
-    public Map<String, Object> saveWithdraw(@RequestBody Map<String, Object> paramMap, @AuthenticationPrincipal SecurityUser securityUser) {
-        Map<String, Object> returnMap = new HashMap<>();
-
-        saleService.deleteByTaskAndStatus(paramMap); // 삭제 -Transaction 분리
-        saleService.saveWithdraw(paramMap, securityUser.getMember()); // 저장
-
-        return returnMap;
-    }
-
-    @PostMapping("/station/lastWithdraw")
-    public Map<String, Object> findLastWithdraw(@RequestBody Map<String, Object> paramMap, @AuthenticationPrincipal SecurityUser securityUser) {
-        Map<String, Object> returnMap = new HashMap<>();
-
-        saleService.findLastWithdraw(paramMap, returnMap);
-
-        return returnMap;
     }
 
     @PostMapping("/timeTable/save")

@@ -18,7 +18,7 @@
 
     <select id="findTaskDateList" parameterType="Map" resultType="Map">
         SELECT  DATE_FORMAT(A.TASK_DATE, '%d') AS TASK_DATE
-        FROM    DAILY_TASK A
+        FROM    TIME_TABLE A
         WHERE   A.MEMBER_ID = #{id}
         AND     A.TASK_DATE LIKE CONCAT('%', #{date}, '%')
         GROUP BY A.TASK_DATE

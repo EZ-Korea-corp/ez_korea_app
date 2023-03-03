@@ -23,30 +23,4 @@ import java.util.Map;
 @Slf4j
 public class ManagerService {
 
-    private final CommuteMbRepository commuteMbRepository;
-    private final DailyTaskRepository dailyTaskRepository;
-    private final SaleMbRepository saleMbRepository;
-
-    public List<Map<String, String>> findTaskDateList(Map<String, Object> data) {
-        return commuteMbRepository.findTaskDateList(data);
-    }
-
-
-    public List<DailyTask> findTaskList(String date, Long id) {
-        LocalDate searchDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
-        return dailyTaskRepository.findByTaskDateAndMemberId(searchDate, id);
-    }
-
-    public Map<String, Object> findTotalStat(Map<String, Object> paramMap) {
-        Map<String, Object> returnMap = new HashMap<>();
-        List<Map<String, Object>> priceList = saleMbRepository.findTablePrice(paramMap);
-        // 결제수단명 추가
-        priceList.forEach(item -> {
-            item.put("NAME", Payment.of((String)item.get("PAYMENT")));
-        });
-
-        returnMap.put("countList", saleMbRepository.findTotalStat(paramMap));
-        returnMap.put("priceList", priceList);
-        return returnMap;
-    }
 }

@@ -2,11 +2,15 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
+import com.ezkorea.hybrid_app.domain.timetable.PartTime;
+import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.expenses.ExpensesService;
+import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
@@ -24,7 +28,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -33,12 +41,12 @@ import java.util.List;
 @PreAuthorize("hasAuthority('ROLE_MANAGER')")
 public class ManagerController {
 
-    private final ManagerService managerService;
     private final CommuteService cService;
     private final MemberService mService;
     private final TeamService tService;
     private final ExpensesService eService;
     private final DivisionService dService;
+    private final SaleService saleService;
 
     @GetMapping("/home")
     public String showManagerPage() {
@@ -116,21 +124,34 @@ public class ManagerController {
         return "manager/manage-calender";
     }
 
+    /**
+     * 회원-일자별 판매목록
+     * @Param id 회원
+     * @Param date 검색일자
+     * */
     @GetMapping("/taskList")
-    public String showMemberTaskPage(@RequestParam(value="id", required=false)Long id,
-                                     @RequestParam(value="date", required=false)String date,
-                                     Model model) {
-        List<DailyTask> taskList = managerService.findTaskList(date, id);
+    public String showMemberTablePage(@RequestParam(value="id", required=false)Long id,
+                                      @RequestParam(value="date", required=false)String date,
+                                      Model model) {
+        Member member = mService.findMemberById(id);
+        LocalDate searchDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 
-        if(taskList.size() == 1) {
-            return "redirect:/station/inOutMemberDetail?id=" + taskList.get(0).getId();
-        } else if(taskList.size() > 1) {
-            model.addAttribute("task", taskList.get(0));
-            model.addAttribute("taskList", taskList);
-            return "manager/manage-taskList";
-        }
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        List<TimeTable> tableList = saleService.findTableList(searchDate, member);
+        tableList.forEach(item -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", item.getId());
+            map.put("date", item.getTaskDate());
+            map.put("stationName", item.getGasStation().getStationName());
+            map.put("stationLocation", item.getGasStation().getStationLocation());
+            map.put("part", PartTime.of(item.getPart()));
 
-        return "redirect:/";
+            resultList.add(map);
+        });
+
+        model.addAttribute("tableList", resultList);
+
+        return "manager/manage-tableList";
     }
 
     @GetMapping("/stat")

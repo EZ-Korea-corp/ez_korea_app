@@ -3,106 +3,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository">
 
-    <select id="findSaleStock" parameterType="long" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
-        SELECT    A.WIPER_ID AS WIPER
-                , SUM(
-                       CASE WHEN A.STATUS = 'in' THEN A.CNT
-                            ELSE A.CNT * -1
-                       END
-                  ) AS COUNT
-        FROM
-        (
-            SELECT	  A.WIPER_ID
-                    , A.STATUS
-                    , SUM(A.COUNT) AS CNT
-            FROM	SALE_PRODUCT A INNER JOIN
-            (
-                SELECT	B.ID
-                FROM	DAILY_TASK A INNER JOIN DAILY_TASK B
-                ON		A.GAS_STATION_ID = B.GAS_STATION_ID
-                AND		A.TASK_DATE	     >= B.TASK_DATE
-                WHERE	A.ID = #{taskId}
-            ) B
-            ON	A.TASK_ID = B.ID
-            GROUP BY A.WIPER_ID, A.STATUS
-        ) A
-        GROUP BY A.WIPER_ID
-    </select>
-
-    <select id="findSaleOutFix" parameterType="Map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
-        SELECT	  A.WIPER_ID   AS WIPER
-                , SUM(A.COUNT) AS COUNT
-        FROM    SALE_PRODUCT A RIGHT JOIN DAILY_TASK B
-        ON		A.TASK_ID = B.ID
-        WHERE	B.ID      = #{taskId}
-        AND		A.STATUS  = #{status}
-        GROUP BY A.WIPER_ID
-    </select>
-
-    <select id="findStockHistory" parameterType="map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
-        SELECT    A.WIPER_ID AS WIPER
-                 , SUM(
-                        CASE WHEN A.STATUS = 'in' THEN A.CNT
-                             ELSE A.CNT * -1
-                        END
-                  ) AS COUNT
-        FROM
-            (
-                SELECT	  B.WIPER_ID
-                        , B.STATUS
-                        , SUM(B.COUNT) AS CNT
-                FROM    DAILY_TASK A INNER JOIN SALE_PRODUCT B
-                ON      A.ID = B.TASK_ID
-                WHERE   A.GAS_STATION_ID = #{stationId}
-                AND		A.TASK_DATE <![CDATA[<=]]> IFNULL(#{date}, DATE_FORMAT(NOW(), '%y-%m-%d'))
-                GROUP BY B.WIPER_ID, B.STATUS
-            ) A
-        GROUP BY A.WIPER_ID
-    </select>
-
-    <select id="findInOutDetail" parameterType="map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
-        SELECT	  B.WIPER_ID   AS WIPER
-                , SUM(B.COUNT) AS COUNT
-        FROM    DAILY_TASK A INNER JOIN SALE_PRODUCT B
-        ON      A.ID = B.TASK_ID
-        WHERE   A.ID = #{taskId}
-        AND		B.STATUS = #{status}
-        <if test="rn != null and rn != ''">
-            AND		B.RN = #{rn}
-        </if>
-        GROUP BY B.WIPER_ID
-    </select>
-
-    <select id="findLastWithdraw" parameterType="Map" resultType="Long">
-        SELECT A.ID
-        FROM   DAILY_TASK A INNER JOIN SALE_PRODUCT B
-        ON     A.ID = B.TASK_ID
-        WHERE  A.GAS_STATION_ID = #{stationId}
-        AND    B.STATUS         = #{status}
-        ORDER BY B.CREATE_DATE DESC
-        LIMIT 1
-    </select>
-
-    <select id="findLastWithdrawList" parameterType="Map" resultType="com.ezkorea.hybrid_app.web.dto.SaleProductDto">
-        SELECT    A.WIPER_ID AS WIPER
-                , SUM(A.COUNT) AS COUNT
-                , MAX(A.TASK_ID) AS TASK_ID
-        FROM    SALE_PRODUCT A
-        WHERE   A.TASK_ID = #{taskId}
-        AND     A.STATUS  = #{status}
-        GROUP BY A.WIPER_ID
-    </select>
-
-    <select id="findInProductList" parameterType="long" resultType="Map">
-        SELECT    A.RN AS RN
-                , DATE_FORMAT(MAX(A.CREATE_DATE), '%H:%i') AS CREATE_DATE
-        FROM    sale_product A
-        WHERE   A.TASK_ID = #{taskId}
-        AND     A.STATUS = 'in'
-        GROUP BY A.RN
-        ORDER BY A.RN
-    </select>
-
     <select id="findStatList" parameterType="Map" resultType="Map">
        SELECT     CONCAT(MAX(B.NAME), (CASE WHEN MAX(B.TEAM_NAME) IS NULL THEN "" ELSE CONCAT("(", MAX(B.TEAM_NAME), ")") END)) AS NAME
                 , SUM(A.COUNT) / 2 AS COUNT
@@ -309,5 +209,39 @@
         ) B
         ON A.TIME_TABLE_ID = B.ID
         WHERE A.STATUS = 'fix'
+    </select>
+
+    <select id="findSellDetailByStationAndDate" parameterType="Map" resultType="Map">
+        SELECT 	  MAX(A.NAME) AS NAME
+                , MAX(A.PART) AS PART
+                , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'normal' THEN A.COUNT END), 0) AS normal
+                , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'hybrid' THEN A.COUNT END), 0) AS hybrid
+                , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'mw' THEN A.COUNT END), 0) AS mw
+                , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 's_class' THEN A.COUNT END), 0) AS s_class
+                , IFNULL(SUM(CASE WHEN A.NAME = A.NAME AND A.SORT = 'size_700' THEN A.COUNT END), 0) AS s_700
+                , IFNULL(SUM(CASE WHEN A.NAME = A.NAME THEN A.COUNT END), 0) AS total
+        FROM
+        (
+            SELECT    A.PART
+                    , A.ID
+                    , B.NAME
+                    , C.SORT
+                    , C.COUNT  / 2 AS COUNT
+            FROM    TIME_TABLE A INNER JOIN MEMBER B
+            ON A.MEMBER_ID = B.ID
+            LEFT JOIN
+            (
+                SELECT    A.TIME_TABLE_ID
+                        , A.SORT
+                        , A.COUNT
+                FROM    SELL_PRODUCT A
+                WHERE   A.STATUS = 'out'
+            ) C
+            ON A.ID = C.TIME_TABLE_ID
+            WHERE A.GAS_STATION_ID = #{id}
+            AND	  A.TASK_DATE = #{date}
+            AND	  A.PART <![CDATA[<>]]> "in"
+        ) A
+        GROUP BY A.ID
     </select>
 </mapper>
