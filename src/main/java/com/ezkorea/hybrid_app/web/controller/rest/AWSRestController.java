@@ -28,6 +28,7 @@ public class AWSRestController {
                                          @RequestParam Map<String, Object> params) {
 
         S3ImageDto dto = modelMapper.map(params, S3ImageDto.class);
+        log.info("S3ImageDto={}", dto.toString());
 
         log.info("multipartFile={}", multipartFile.toString());
         for (MultipartFile file : multipartFile) {
