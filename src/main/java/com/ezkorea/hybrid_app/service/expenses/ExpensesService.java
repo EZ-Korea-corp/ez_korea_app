@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class ExpensesService {
     @Transactional(readOnly = true)
     public Expenses findExpensesById(Long id) {
         return expensesRepository.findById(id)
-                .orElseThrow( () -> new IdNotFoundException(id + "번 경비 내역을 찾을 수 없습니다."));
+                .orElseThrow(() -> new IdNotFoundException(id + "번 경비 내역을 찾을 수 없습니다."));
     }
 
     public Page<Expenses> findExpensesByMember(Member member, int page) {
@@ -81,5 +82,10 @@ public class ExpensesService {
         Expenses currentExpenses = findExpensesById(dto.getId());
         currentExpenses.setCheckStatus(dto.getCheckStatus());
         return currentExpenses;
+    }
+
+    @Transactional
+    public List<Expenses> findHasImageExpensesList() {
+        return expensesRepository.findAllByS3ImageIsNotNull();
     }
 }

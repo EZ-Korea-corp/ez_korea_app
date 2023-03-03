@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 public interface ExpensesRepository extends JpaRepository<Expenses, Long> {
@@ -20,4 +21,7 @@ public interface ExpensesRepository extends JpaRepository<Expenses, Long> {
 
     @Query("SELECT e FROM Expenses e WHERE (e.payDate = ?1 AND e.expensesStatus = ?2) ORDER BY e.payDate DESC, e.isManagerCheck ASC")
     Page<Expenses> findAllByStatusPayDateOrderByPayDateDescManagerCheckAsc(LocalDate date, ExpensesStatus status ,Pageable pageable);
+
+    List<Expenses> findAllByS3ImageIsNotNull();
+
 }
