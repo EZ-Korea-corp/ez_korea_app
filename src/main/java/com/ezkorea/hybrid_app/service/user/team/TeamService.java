@@ -56,7 +56,7 @@ public class TeamService {
     public void updateTeam(Long teamId, Division division, String teamName, String teamLeader, String teamEmployee) {
         Team currentTeam = findById(teamId);
 
-        if (teamLeader != null) {
+        if (teamLeader != null && !teamLeader.equals("0")) {
             Member currentTeamLeader = mService.findByUsername(teamLeader);
             currentTeamLeader.setDivision(division);
             currentTeamLeader.setTeam(currentTeam);

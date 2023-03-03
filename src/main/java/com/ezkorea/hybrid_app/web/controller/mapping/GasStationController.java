@@ -80,6 +80,7 @@ public class GasStationController {
                                          @RequestParam(value="date") String date,
                                          Model model) {
         Map<String, String> paramMap = new HashMap<>();
+        log.info("paramMap={}", paramMap);
         paramMap.put("id", id);
         paramMap.put("date", date);
 

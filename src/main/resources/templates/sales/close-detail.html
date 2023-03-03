@@ -46,8 +46,8 @@
 
                         <div id="sellDiv">
                             <h1 class="block text-lg font-bold mb-2"> 전체금액  </h1>
-                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-center">
                                         결제
@@ -63,8 +63,8 @@
 
                             <h1 class="block text-lg font-bold mb-2"> 개별판매  </h1>
                             <div class="relative overflow-x-auto shadow-md">
-                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                         <th scope="col" class="text-center px-6 py-3">
                                             이름
@@ -97,8 +97,8 @@
 
                             <div id="fixList">
                                 <h1 class="block text-lg font-bold mb-2"> 고장목록  </h1>
-                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-center">
                                             종류
@@ -117,7 +117,7 @@
                         <div id="stockDiv">
                             <form onsubmit="return false" id="dataForm">
                                 <div class="relative overflow-x-auto shadow-md">
-                                    <table class="w-full text-sm text-left text-gray-500">
+                                    <table class="w-full text-sm text-left">
                                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                         <tr>
                                             <th scope="col" class="px-6 py-3 text-center">
@@ -230,7 +230,7 @@
                 data.priceList.forEach(function(item) {
                     tbody0.append(
                         $("<tr>", {class:"border-b border-gray-200 dark:border-gray-700"}).append(
-                            $("<th>", {text:item.NAME||item.PAYMENT, class:"text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"}),
+                            $("<th>", {text:item.NAME||item.PAYMENT, class:"text-center px-6 py-4 font-medium whitespace-nowrap"}),
                             $("<td>", {text:(item.PRICE||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"})
                         )
                     )
@@ -242,7 +242,7 @@
                 data.countList.forEach(function(item) {
                     tbody1.append(
                         $("<tr>", {class:"border-b border-gray-200 dark:border-gray-700"}).append(
-                            $("<th>", {text:item.NAME||item.PAYMENT, class:"text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"}),
+                            $("<th>", {text:item.NAME||item.PAYMENT, class:"text-center px-6 py-4 font-medium whitespace-nowrap"}),
                             $("<td>", {text:(item.normal||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"}),
                             $("<td>", {text:(item.hybrid||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"}),
                             $("<td>", {text:(item.mw||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"}),
@@ -261,7 +261,7 @@
                     data.fixList.forEach(function(item) {
                         tbody2.append(
                             $("<tr>", {class:"border-b border-gray-200 dark:border-gray-700"}).append(
-                                $("<th>", {text:item.NAME, class:"text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"}),
+                                $("<th>", {text:item.NAME, class:"text-center px-6 py-4 font-medium whitespace-nowrap"}),
                                 $("<td>", {text:item.MEMO, class:"text-center px-6 py-4"})
                             )
                         )

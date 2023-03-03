@@ -27,8 +27,8 @@
 
                 <div class="p-10 pt-4 divide-y divide-gray-100">
                     <input type="hidden" id="tTid" th:value="${tTid}">
-                    <div class="md:py-8 py-3">
-                        <h2 class="text-xl font-bold">출고상세</h2>
+                    <div class="md:py-8 my-4">
+                        <h2 class="text-xl font-bold my-4">출고상세</h2>
                         <input type="text" id="datepicker" name="datepicker" class="w-full" readonly>
                     </div>
 
@@ -45,7 +45,7 @@
                         <div id="sellDiv">
                             <h1 class="block text-lg font-bold mb-2"> 판매목록  </h1>
                             <div class="relative overflow-x-auto shadow-md">
-                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <table class="w-full text-sm text-left">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="text-center px-6 py-3">
@@ -74,7 +74,7 @@
                                     </thead>
                                     <tbody>
                                         <tr th:if="${outList.size() > 0}" th:each="sell : ${outList}" class="border-b border-gray-200">
-                                            <th scope="row" th:text="|${sell.NAME}(${sell.part})|" class="text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"></th>
+                                            <th scope="row" th:text="|${sell.NAME}(${sell.part})|" class="text-center px-6 py-4 font-medium whitespace-nowrap"></th>
                                             <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.normal, 1, 1)}|"></td>
                                             <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.hybrid, 1, 1)}|"></td>
                                             <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.mw, 1, 1)}|"></td>
@@ -92,8 +92,8 @@
                             <div id="fixDiv">
                                 <div id="fixList">
                                     <h1 class="block text-lg font-bold mb-2"> 고장목록  </h1>
-                                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <table class="w-full text-sm text-left">
+                                        <thead class="text-xs uppercase ">
                                         <tr>
                                             <th scope="col" class="px-6 py-3 text-center">
                                                 이름
@@ -108,7 +108,7 @@
                                         </thead>
                                         <tbody>
                                             <tr th:if="${fixList.size() > 0}" th:each="fix : ${fixList}" class="border-b border-gray-200 dark:border-gray-700">
-                                                <th th:text="|${fix.name}(${fix.part})|" class="text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"></th>
+                                                <th th:text="|${fix.name}(${fix.part})|" class="text-center px-6 py-4 font-medium whitespace-nowrap"></th>
                                                 <td class="text-center px-6 py-4" th:text="|${fix.sort}|"></td>
                                                 <td class="text-center px-6 py-4" th:text="|${fix.memo}|"></td>
                                             </tr>

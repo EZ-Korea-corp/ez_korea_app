@@ -157,7 +157,7 @@
             SELECT    B.SORT
                     , A.NAME
                     , SUM(B.COUNT) AS COUNT
-                    , SUM(B.COUNT) * C.PRICE AS PRICE
+                    , SUM(B.COUNT) * MAX(C.PRICE) AS PRICE
             FROM
             (
                 SELECT  B.ID, C.NAME
