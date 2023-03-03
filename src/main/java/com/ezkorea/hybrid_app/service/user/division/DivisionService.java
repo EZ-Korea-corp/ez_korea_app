@@ -55,9 +55,15 @@ public class DivisionService {
     public void updateDivision(Long divisionId, String teamName, String teamGm) {
         Division currentDivision = findDivisionById(divisionId);
         currentDivision.setDivisionName(teamName);
-        if (teamGm != null) {
+        if (teamGm != null && !teamGm.equals("0")) {
             currentDivision.setLeader(mService.findByUsername(teamGm));
         }
+
+        /*if (teamGm.equals("0")) {
+            if (divisionRepository.existsByLeader(mService.findByUsername("master"))) {
+                divisionRepository.
+            }
+        }*/
     }
 
     public Division findDivisionByDivisionName(String divisionName) {

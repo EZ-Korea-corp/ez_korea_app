@@ -106,16 +106,18 @@ public class AWSService {
         return makeNewS3ImageObject(dto, multipartFileList);
     }
 
+    public String makeS3ImagePath(S3ImageDto dto) {
+        return "images/" + activeProfile + "/" + dto.getEntity() + "/" + dto.getId() + "/";
+    }
+
     public List<S3Image> makeNewS3ImageObject(S3ImageDto dto, List<MultipartFile> multipartFileList) {
         List<S3Image> imageList = new ArrayList<>();
-        StringBuilder sb;
         for (String url : saveImage(dto, multipartFileList)) {
-            sb = new StringBuilder();
-            sb.append("images/").append(activeProfile).append("/").append(dto.getEntity()).append("/").append(dto.getId()).append("/");
+            String path = makeS3ImagePath(dto);
             S3Image savedImage = s3ImageRepository.save(S3Image.builder()
                     .filePath(url)
-                    .fileName(url.split(sb.toString())[1])
-                    .fileRepo(sb.toString())
+                    .fileName(url.split(path)[1])
+                    .fileRepo(path)
                     .build());
             imageList.add(savedImage);
         }
@@ -156,9 +158,8 @@ public class AWSService {
         List<String> imagePathList = new ArrayList<>();
 
         for(MultipartFile multipartFile: multipartFileList) {
-            StringBuilder sb = new StringBuilder();
             String originalName = createFileName(multipartFile.getOriginalFilename()); // 파일 이름
-            sb.append("images/").append(activeProfile).append("/").append(dto.getEntity()).append("/").append(dto.getId()).append("/").append(originalName);
+            String urlPath = makeS3ImagePath(dto) + originalName;
             long size = multipartFile.getSize(); // 파일 크기
 
             ObjectMetadata objectMetaData = new ObjectMetadata();
@@ -168,14 +169,14 @@ public class AWSService {
             // S3에 업로드
             try {
                 amazonS3Client.putObject(
-                        new PutObjectRequest(bucketName, sb.toString(), multipartFile.getInputStream(), objectMetaData)
+                        new PutObjectRequest(bucketName, urlPath, multipartFile.getInputStream(), objectMetaData)
                                 .withCannedAcl(CannedAccessControlList.PublicRead)
                 );
             } catch (IOException e) {
                 log.warn("S3Image Image Upload Fail={}", e.toString());
             }
 
-            String imagePath = amazonS3Client.getUrl(bucketName, sb.toString()).toString(); // 접근가능한 URL 가져오기
+            String imagePath = amazonS3Client.getUrl(bucketName, urlPath).toString(); // 접근가능한 URL 가져오기
             imagePathList.add(imagePath);
         }
 

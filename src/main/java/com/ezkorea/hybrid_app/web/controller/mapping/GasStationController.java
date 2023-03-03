@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,6 @@ import java.util.Map;
 public class GasStationController {
 
     private final SaleService saleService;
-
     private final GasStationService gasStationService;
     private final AttachService attachService;
 
@@ -55,55 +55,59 @@ public class GasStationController {
         return "gasStation/gasStation-save";
     }
 
-    @GetMapping("/inoutList")
-    public String showInoutListPage(@RequestParam(value="id") Long id,
+    @GetMapping("/inList")
+    public String showInListPage(@RequestParam(value="id") String id,
+                                 @RequestParam(value="date") String date,
+                                 Model model) {
+
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("id", id); //주유소아이디
+        paramMap.put("date", date);
+
+        model.addAttribute("inList", saleService.findInList(paramMap));
+
+        return "gasStation/gasStation-inList";
+    }
+
+    @GetMapping("/inDetail")
+    public String showSaleInHistoryPage() {
+
+        return "gasStation/gasStation-inDetail";
+    }
+
+    @GetMapping("/outDetail")
+    public String showSaleOutHistoryPage(@RequestParam(value="id") String id,
+                                         @RequestParam(value="date") String date,
+                                         Model model) {
+        Map<String, String> paramMap = new HashMap<>();
+        log.info("paramMap={}", paramMap);
+        paramMap.put("id", id);
+        paramMap.put("date", date);
+
+        model.addAttribute("outList", saleService.findSellDetailByStationAndDate(paramMap));
+        model.addAttribute("fixList", saleService.findFixDetailByStationAndDate(paramMap));
+
+        return "gasStation/gasStation-outDetail";
+    }
+
+    @GetMapping("/stockList")
+    public String showStockListPage(@RequestParam(value="id") String id,
                                     @RequestParam(value="date") String date,
                                     Model model) {
 
-        model.addAttribute("inoutList", saleService.findInoutList(id, date));
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("id", id); //주유소아이디
+        paramMap.put("date", date);
 
-        return "gasStation/gasStation-inoutList";
+        model.addAttribute("stockList", saleService.findNotInList(paramMap));
+
+        return "gasStation/gasStation-stockList";
     }
 
-    @GetMapping("/inOutDetail")
-    public String showSaleInHistoryPage(@RequestParam(value="id") Long id,
-                                        @AuthenticationPrincipal SecurityUser securityUser,
-                                        Model model) {
+    @GetMapping("/stockDetail")
+    public String showSaleStockHistoryPage() {
 
-        List<Map<String, Object>> list = saleService.findInProductList(securityUser.getMember(), id);
-        model.addAttribute("list", list);
-
-        return "gasStation/gasStation-inOutDetail";
+        return "gasStation/gasStation-stockDetail";
     }
 
-    @GetMapping("/inOutMemberDetail")
-    public String showSaleInOutHistoryPage(@RequestParam(value="id") Long id,
-                                        Model model) {
-
-        List<Map<String, Object>> list = saleService.findInOutProductList(id);
-        model.addAttribute("list", list);
-
-        return "gasStation/gasStation-inOutDetail";
-    }
-
-
-    @GetMapping("/out")
-    public String showSaleOutHistoryPage() {
-        return "gasStation/gasStation-out";
-    }
-
-    @GetMapping("/fix")
-    public String showSaleFixHistoryPage() {
-        return "gasStation/gasStation-fix";
-    }
-
-    @GetMapping("/stock")
-    public String showStockHistoryPage() {
-        return "gasStation/gasStation-stock";
-    }
-
-    @GetMapping("/withdraw")
-    public String showWithdrawHistoryPage() {
-        return "gasStation/gasStation-end";
-    }
 }

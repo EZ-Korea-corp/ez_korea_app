@@ -98,9 +98,8 @@
                             </div>
                         </th:block>
                         <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
-                        <div class="grid grid-cols-2 gap-4">
-                            <a th:if="${member.getUsername() eq notice.getWriter().getUsername()}"
-                               th:href="@{/notice/{id}/update(id=${notice.getId()})}"
+                        <div class="grid grid-cols-2 gap-4" th:if="${member.getUsername() eq notice.getWriter().getUsername()}">
+                            <a th:href="@{/notice/{id}/update(id=${notice.getId()})}"
                                class="button w-full mt-4">수정하기</a>
                             <button type="button" id="deleteNotice" class="w-full text-white mt-4 bg-red-600 h-10 rounded">삭제하기</button>
                         </div>

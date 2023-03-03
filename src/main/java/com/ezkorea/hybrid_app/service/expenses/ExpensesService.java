@@ -1,11 +1,12 @@
 package com.ezkorea.hybrid_app.service.expenses;
 
+import com.ezkorea.hybrid_app.domain.expenses.CheckStatus;
 import com.ezkorea.hybrid_app.domain.expenses.Expenses;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesRepository;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
-import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.service.aws.AWSService;
+import com.ezkorea.hybrid_app.service.sales.GasStationService;
 import com.ezkorea.hybrid_app.web.dto.ExpensesDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +24,19 @@ public class ExpensesService {
 
     private final ExpensesRepository expensesRepository;
     private final AWSService awsService;
+    private final GasStationService gsService;
 
-    public Expenses saveExpenses(ExpensesDto dto, Member member, GasStation gasStation) {
+    public Expenses saveExpenses(ExpensesDto dto, Member member) {
         Expenses newExpenses = Expenses.builder()
                 .cost(dto.getCost())
                 .expensesStatus(dto.getExpensesStatus())
+                .checkStatus(CheckStatus.NOT_CHECK)
                 .payDate(dto.getPayDate())
-                .gasStation(gasStation)
                 .member(member)
                 .build();
         if (newExpenses.getExpensesStatus().equals(ExpensesStatus.FUEL)) {
             newExpenses.setFuelStatus(dto.getFuelStatus());
+            newExpenses.setGasStation(gsService.findStationById(dto.getStationId()));
         }
         return expensesRepository.save(newExpenses);
     }
@@ -58,20 +61,25 @@ public class ExpensesService {
         return expensesRepository.findAllByMemberOrderByPayDateDesc(member, pageable);
     }
 
-    public Page<Expenses> findAllExpenses(int page) {
+    public Page<Expenses> findExpensesByMemberAndStatus(Member member, ExpensesStatus status, int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        return expensesRepository.findAllByOrderByPayDateDescManagerCheckAsc(pageable);
+        return expensesRepository.findAllByMemberAndExpensesStatusOrderByPayDateDesc(member, status, pageable);
     }
 
-    public Page<Expenses> findAllExpensesByPayDate(int page, LocalDate date) {
+    public Page<Expenses> findAllExpensesByStatus(int page, ExpensesStatus status) {
         Pageable pageable = PageRequest.of(page, 10);
-        return expensesRepository.findAllByPayDateOrderByPayDateDescManagerCheckAsc(date, pageable);
+        return expensesRepository.findAllByStatusOrderByPayDateDescManagerCheckAsc(status, pageable);
+    }
+
+    public Page<Expenses> findAllExpensesByPayDate(int page, LocalDate date, ExpensesStatus status) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return expensesRepository.findAllByStatusPayDateOrderByPayDateDescManagerCheckAsc(date, status, pageable);
     }
 
     @Transactional
     public Expenses checkExpenses(ExpensesDto dto) {
         Expenses currentExpenses = findExpensesById(dto.getId());
-        currentExpenses.setManagerCheck(true);
+        currentExpenses.setCheckStatus(dto.getCheckStatus());
         return currentExpenses;
     }
 }

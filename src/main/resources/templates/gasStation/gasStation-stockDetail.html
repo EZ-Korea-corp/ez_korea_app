@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+<main layout:fragment="main">
+    <style>
+        .icon {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        input[type=text]{
+            width: 4.5em;
+        }
+    </style>
+    <div class="lg:space-x-12">
+
+        <div class="lg:w-full card">
+
+            <div class="p-8">
+
+                <div class="py-3">
+                    <h2 class="text-xl font-bold">재고 기록</h2>
+                </div>
+                <hr class="my-4">
+
+                <div>
+                    <div class="relative overflow-x-auto shadow-md">
+                        <table class="w-full uk-text-center text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    구분
+                                </th>
+                                <th scope="col" class="px-2 py-3 uk-text-center"
+                                    th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}"
+                                    th:text="${sort.getName()}">
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="dataBody">
+                            <tr class="bg-white border-b"
+                                th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}">
+                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap" th:text="${sort.getViewName()}"></th>
+                                <td class="px-2 py-4" th:with="item=1"
+                                    th:each="size : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}">
+                                    <th:block th:if="${!sort.getName().equals('size_700') && !size.getName().equals('700')}">
+                                        <span type="text" th:name="${(sortStat.index) * 7 + (sizeStat.count)}"/>
+                                    </th:block>
+                                    <th:block th:if="${sort.getName().equals('size_700') && size.getName().equals('700')}">
+                                        <span type="text" th:name="29"/>
+                                    </th:block>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+    <script>
+
+        $(document).ready(function(){
+            let url = new URL(window.location.href);
+            let id = url.searchParams.get("id");
+
+            fnFindInputProduct("in", id);
+        });
+
+        // 조회
+        function fnFindInputProduct(status, id) {
+            const url = "/sales/stock/list";
+            const data = {"tTid" : id};
+
+            fnFindJsonAjax(data, url, fnFindInputProductResult);
+        }
+
+        // 테이블 그리기
+        function fnFindInputProductResult(data) {
+            const $form = $("#dataBody");
+            $("#dataBody span").text("");
+            data.list.forEach(function(item) {
+                $form.find("span[name=" + item.wiper + "]").text(item.count);
+            })
+        }
+    </script>
+</main>
+</body>
+
+</html>

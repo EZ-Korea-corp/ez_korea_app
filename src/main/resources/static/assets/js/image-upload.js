@@ -23,7 +23,7 @@ function checkFileCount(e) {
                 content_files.push(f);
                 $('#imageChange').append(
                     '<div class="mx-1" id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">' +
-                    '<button class="btn bg-red-600 w-full rounded-md py-1 my-2"> 삭제 </button>' +
+                    '<button class="btn bg-red-600 text-white w-full rounded-md py-1 my-2"> 삭제 </button>' +
                     `<img src="${e.target.result}" data-file=${f.name} className="article-image" style="height: 100px"/>` +
                     '</div>'
                 );

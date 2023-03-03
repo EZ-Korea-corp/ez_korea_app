@@ -12,18 +12,26 @@
         <div class="lg:space-x-12">
             <div class="lg:w-full card">
 
-                <div class="p-10 pt-4 divide-y divide-gray-100">
+                <div class="p-10 pt-4">
 
                     <div class="md:py-8 py-3">
                         <div class="flex justify-between">
                             <h2 class="text-xl font-bold">
                                 <span class="mr-2">💰</span>경비 관리
                             </h2>
-                            <a sec:authorize="hasAuthority('ROLE_LEADER')"
-                                    th:href="@{/expenses/create}"
-                                    class="button rounded-lg px-4 hover:text-white">경비 추가</a>
+                            <a th:href="@{/expenses/create}"
+                               class="button rounded-lg px-4 hover:text-white">경비 추가</a>
                         </div>
                     </div>
+
+                    <hr class="mb-8">
+
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <button onclick="window.location.href='/expenses/FUEL'" class="w-full bg-blue-600 py-1 text-white rounded-lg">주유비</button>
+                        <button onclick="window.location.href='/expenses/FOOD'" class="w-full bg-blue-600 py-1 text-white rounded-lg">식비</button>
+                    </div>
+
+                    <hr>
 
                     <div class="md:py-8 py-3">
 
@@ -39,16 +47,19 @@
                                         구분
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                        유종
+                                        비용
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                        비용
+                                        유종
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                         근무지
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
                                         날짜
+                                    </th>
+                                    <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
+                                        경리 확인
                                     </th>
                                     <th scope="col" class="px-2 py-3 uk-text-center w-50 whitespace-nowrap">
                                         영수증
@@ -64,12 +75,16 @@
                                         <h3 th:text="${expenses.getId()}">아이디</h3>
                                     </th>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getExpensesStatus().getViewName()}">구분</td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${#numbers.formatInteger(expenses.getCost(), 3, 'COMMA')}">비용</td>
                                     <td class="px-2 py-4 whitespace-nowrap">
                                         <a th:if="${expenses.getExpensesStatus().equals(T(com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus).FUEL)}" th:text="${expenses.getFuelStatus().getViewName()}"></a>
+                                        <a th:if="${!expenses.getExpensesStatus().equals(T(com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus).FUEL)}">-</a>
                                     </td>
-                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${#numbers.formatInteger(expenses.getCost(), 3, 'COMMA')}">비용</td>
-                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getGasStation().getStationName()}">근무지</td>
+                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getGasStation() != null ? expenses.getGasStation().getStationName() : '-'}"></td>
                                     <td class="px-2 py-4 whitespace-nowrap" th:text="${expenses.getPayDate()}"></td>
+                                    <td class="px-2 py-4 whitespace-nowrap">
+                                        <a th:text="${expenses.getCheckStatus().viewName}"></a>
+                                    </td>
                                     <td class="px-2 py-4 whitespace-nowrap">
                                         <button class="button gray" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|">영수증 확인</button>
 
@@ -125,6 +140,9 @@
         </div>
         <script th:inline="javascript">
 
+            let currentURI = window.location.href;
+            let status = currentURI.split('/').pop();
+
             function removeTask(id) {
 
                 Swal.fire({
@@ -142,7 +160,7 @@
                         fnResponseCrudJsonAjax(data, '/expenses', 'DELETE');
                         setTimeLoadingSpinner(1100, "내역을 삭제하고 있습니다.");
                         setTimeout(function () {
-                            $(location).attr("href", "/expenses");
+                            $(location).attr("href", "/expenses/".concat(status));
                         }, 1100);
                     } else if (result.isDenied) {
                         Swal.fire('변경되지 않았습니다.')
@@ -171,16 +189,6 @@
                 });
 
             });
-
-            let inviteBtn = {
-                doInvite: function (idx) {
-                    fnResponseCrudJsonAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'PUT', refreshPage);
-                }
-            }
-
-            function refreshPage(data) {
-                location.reload();
-            }
         </script>
     </main>
 

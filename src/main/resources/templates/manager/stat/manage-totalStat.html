@@ -140,7 +140,7 @@
             data.priceList.forEach(function(item) {
                 tbody0.append(
                     $("<tr>", {class:"border-b border-gray-200 dark:border-gray-700"}).append(
-                        $("<th>", {text:item.NAME||item.PAYMENT, class:"text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"}),
+                        $("<th>", {text:item.NAME||item.PAYMENT, class:"text-center px-6 py-4 font-medium whitespace-nowrap bg-gray-50"}),
                         $("<td>", {text:(item.PRICE||0).toLocaleString('ko-KR'), class:"text-center px-6 py-4"})
                     )
                 )

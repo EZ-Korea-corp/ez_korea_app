@@ -6,9 +6,37 @@
 
   <!-- footer-->
   <div th:fragment="footer" class="lg:mb-5 py-3 uk-link-reset">
-    <div class="text-center mb-2">
-      <p class="capitalize"> © copyright 2023 by 가준영, 이학명</p>
-    </div>
+    <footer class="p-4 bg-white rounded-lg shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800">
+      <div>
+        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+          <a class="hover:underline">㈜ 이제트코리아</a><a class="mx-2 hover:underline">(CEO :</a><a class="hover:underline">남명원</a>)
+        </span>
+        <br>
+        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023
+          <a class="hover:underline">EZKOREA™</a>.All Rights Reserved.
+        </span>
+        <br>
+        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">Developed By
+          <a class="hover:underline">가준영</a>, <a class="hover:underline">이학명</a>
+        </span>
+        <br>
+      </div>
+
+      <ul class="flex flex-wrap items-center mt-3 text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
+        <li>
+          <a href="http://ezkorea.kr" target="_blank" class="mr-4 hover:underline md:mr-6 ">공식 홈페이지</a>
+        </li>
+        <li>
+          <a uk-tooltip="title: 699-86-02345; pos: top" class="mr-4 hover:underline md:mr-6">사업자등록번호</a>
+        </li>
+        <li>
+          <a uk-tooltip="title: 2021-수원장안-0713; pos: top" class="mr-4 hover:underline md:mr-6">통신판매신고번호</a>
+        </li>
+        <li>
+          <a uk-tooltip="title: TEL - 031-243-1005  <br>  FAX - 0507-077-5587; pos: top" class="mr-4 hover:underline md:mr-6">연락처</a>
+        </li>
+      </ul>
+    </footer>
   </div>
 
 </html>

@@ -136,13 +136,16 @@
                         </div>
                         <hr class="my-8">
                         <div>
-                            <h1 class="block text-lg font-bold mb-9"> 판매 현황  </h1>
+                            <h1 class="block text-lg font-bold my-4"> 판매 현황  </h1>
                             <div class="flex items-center space-x-3">
                                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
                                             종류
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            결제
                                         </th>
                                         <th scope="col" class="px-6 py-3">
                                             개수
@@ -156,6 +159,7 @@
                                     <tr th:if="${map.sellList.size() > 0}" th:each="sell : ${map.sellList}" class="border-b border-gray-200">
                                         <th scope="row" th:text="${sell.name}" class="px-6 py-4 font-medium whitespace-nowrap bg-gray-50">
                                         </th>
+                                        <td class="px-6 py-4" th:text="${sell.payment}"></td>
                                         <td class="px-6 py-4" th:text="|${sell.count * 0.5}개|"></td>
                                         <td th:if="${sell.name != '총계'}">
                                             <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
@@ -166,7 +170,7 @@
                             </div>
                         </div>
                         <th:block th:if="${map.fixList.size() > 0}">
-                            <h1 class="block text-lg font-bold mb-9"> 고장 현황  </h1>
+                            <h1 class="block text-lg font-bold my-4"> 고장 현황  </h1>
                             <div class="flex items-center space-x-3">
                                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -184,7 +188,7 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="fix : ${map.fixList}" class="border-b border-gray-200 dark:border-gray-700">
-                                        <th scope="row" th:text="${fix.name}" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                                        <th scope="row" th:text="${fix.name}" class="px-6 py-4 font-medium whitespace-nowrap">
                                         </th>
                                         <td class="px-6 py-4" th:text="|${fix.memo}|"></td>
                                         <td>

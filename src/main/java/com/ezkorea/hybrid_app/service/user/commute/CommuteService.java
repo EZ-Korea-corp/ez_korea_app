@@ -22,7 +22,6 @@ public class CommuteService {
 
     private final CommuteTimeRepository ctRepository;
     private final CommuteMbRepository ctMbRepository;
-    private final SaleService saleService;
 
     /**
      * 출근처리를 위한 메소드

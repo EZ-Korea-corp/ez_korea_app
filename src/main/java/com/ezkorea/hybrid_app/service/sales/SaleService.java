@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.service.sales;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
+import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
 import com.ezkorea.hybrid_app.domain.sale.*;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
@@ -14,6 +15,7 @@ import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.wiper.Wiper;
 import com.ezkorea.hybrid_app.domain.wiper.WiperRepository;
 import com.ezkorea.hybrid_app.domain.wiper.WiperSort;
+import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
 import com.ezkorea.hybrid_app.web.dto.TaskDto;
 import com.ezkorea.hybrid_app.web.dto.TimeTableDto;
@@ -25,6 +27,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,17 +39,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SaleService {
 
-    private final ModelMapper modelMapper;
     private final SaleProductRepository spRepository;
     private final SellProductRepository sellRepository;
-    private final GasStationRepository gsRepository;
-    private final DailyTaskRepository dtRepository;
     private final TimeTableRepository ttRepository;
     private final WiperRepository wpRepository;
     private final SaleMbRepository saleMbRepository;
+    private final CommuteMbRepository commuteMbRepository;
 
-    private final WiperService wiperService;
     private final GasStationService gsService;
+    private final MemberService memberService;
 
     /**
      * TimeTable 저장
@@ -118,9 +119,9 @@ public class SaleService {
     /**
      * 특정일자 입고의 상세조회
      * */
-    public Map<String, Object> findInputList(Map<String, String> paramMap) {
+    public Map<String, Object> findInputList(Map<String, Long> paramMap) {
         Map<String, Object> returnMap = new HashMap<>();
-        TimeTable table = findTableById(Long.valueOf(paramMap.get("tTid")));
+        TimeTable table = findTableById(paramMap.get("tTid"));
         
         // 입고목록
         List<SaleProductDto> saleDtoList = new ArrayList<>();
@@ -132,12 +133,31 @@ public class SaleService {
             saleDtoList.add(saleDto);
         });
         
-        returnMap.put("id", table.getId());
+        returnMap.put("id", table.getGasStation().getId());
         returnMap.put("name", table.getGasStation().getStationName());
         returnMap.put("memo", table.getMemo());
         returnMap.put("list", saleDtoList);
         
         return returnMap;
+    }
+
+    /**
+     * 특정일자 재고의 상세조회
+     * */
+    public List<SaleProductDto> findStockList(Map<String, Long> paramMap) {
+        List<SaleProductDto> stockList = new ArrayList<>();
+        TimeTable table = findTableById(paramMap.get("tTid"));
+        
+        // 재고목록
+        table.getSaleList().forEach(item -> {
+            SaleProductDto dto = new SaleProductDto();
+            dto.setWiper(item.getWiper().getId());
+            dto.setCount(item.getCount());
+
+            stockList.add(dto);
+        });
+
+        return stockList;
     }
 
     /**
@@ -329,68 +349,58 @@ public class SaleService {
     }
 
     /**
-     * 판매현황 조회
-     * */
-    @Transactional
-    public List<SaleProduct> findInputProduct(Member member, Map<String, Long> data) {
-        DailyTask currentTask = findByMemberAndStation(member, data.get("stationId"));
-        List<SaleProduct> inputList = spRepository.findAllByTaskAndStatusAndRn(currentTask, SaleStatus.IN.toString(), data.get("rn").intValue());
-
-        return inputList;
-    }
-
-    /**
      * 판매 INDEX페이지 조회
      * */
     public Map<String, Object> findTimeTable(Long tableId) {
         Map<String, Object> returnMap = new HashMap<>();
         TimeTable timeTable = findTableById(tableId);
 
-        // 종류별 판매갯수, 결제수단별 갯수
+        // 판매, 고장리스트
         List<Map<String, Object>> sellList = new ArrayList<>();
         List<Map<String, Object>> fixList  = new ArrayList<>();
-        int selTotalCount = 0;
-        int card = 0;
+        int count = 0;
         int cash = 0;
-        for (WiperSort sort : WiperSort.values()) {
-            int selCount = 0;
-
-            for (SellProduct sellProduct : timeTable.getSellList()) {
+        int card = 0;
+        for (SellProduct sellProduct : timeTable.getSellList()) {
+            for (WiperSort sort : WiperSort.values()) {
                 if(sort.getName().toLowerCase().equals(sellProduct.getSort())) {
-                    if(SaleStatus.FIX.toString().equals(sellProduct.getStatus())) {
-                        // 고장
-                        Map<String, Object> fixMap = new HashMap<>();
-                        fixMap.put("id", sellProduct.getId());
-                        fixMap.put("name", sort.getInit());
-                        fixMap.put("count", sellProduct.getCount());
-                        fixMap.put("memo", sellProduct.getMemo());
-                        fixList.add(fixMap);
-                    } else {
-                        selCount += sellProduct.getCount();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", sellProduct.getId());
+                    map.put("name", sort.getViewName());
 
+                    if(SaleStatus.FIX.toString().equals(sellProduct.getStatus())) {
+                        //고장 목록
+                        map.put("memo", sellProduct.getMemo());
+                        fixList.add(map);
+
+                    } else {
+                        // 판매 목록
+                        String payment = "";
+                        int _count = sellProduct.getCount();
+                        count += _count;
+
+                        // 판매수단별 금액
                         if(Payment.CARD.toString().equals(sellProduct.getPayment())) {
-                            card += selCount * sort.getPrice();
+                            card += _count * sort.getPrice();
+                            payment = Payment.CARD.getViewName();
                         } else {
-                            cash += selCount * sort.getPrice();
+                            cash += _count * sort.getPrice();
+                            payment = Payment.CASH.getViewName();
                         }
 
-                        // 판매
-                        Map<String, Object> sellMap = new HashMap<>();
-                        sellMap.put("id", sellProduct.getId());
-                        sellMap.put("name", sort.getInit());
-                        sellMap.put("count", selCount);
-                        sellList.add(sellMap);
+                        map.put("payment", payment);
+                        map.put("count", _count);
+                        sellList.add(map);
                     }
                 }
             }
-
-            selTotalCount += selCount;
         }
 
         // 총계(판매)
         Map<String, Object> sellMap = new HashMap<>();
-        sellMap.put("name" , "총계");
-        sellMap.put("count", selTotalCount);
+        sellMap.put("name", "총계");
+        sellMap.put("payment", "");
+        sellMap.put("count", count);
         sellList.add(sellMap);
 
         // 기타
@@ -405,93 +415,101 @@ public class SaleService {
 
     /**
      * TimeTable삭제
-     * @param tTid TimeTable의 id
+     * @param tTid id Of TimeTable
      * */
     public void deleteInputTable(Long tTid) {
         ttRepository.deleteById(tTid);
     }
 
-    public DailyTask findByMemberAndStation(Member member, Long stationId) {
-        GasStation station = gsService.findStationById(stationId);
-
-        return dtRepository.findByTaskDateAndMemberAndGasStation(LocalDate.now(), member, station)
-                .orElseThrow( () -> new MemberNotFoundException("해당 유저는 오늘 출근하지 않았습니다."));
-    }
-
-    public  List<SaleProductDto> findStockHistory(Map<String, Object> paramMap) {
-        return saleMbRepository.findStockHistory(paramMap);
-    }
-
+    /**
+     * sellProduct삭제
+     * @param id id Of SellProduct
+     * */
     public void deleteSale(Long id) {
         sellRepository.deleteById(id);
     }
 
-    public List<DailyTask> findInoutList(Long id, String date) {
-        GasStation station = gsService.findStationById(id);
-        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    /**
+     * 주유소-일자별 List<TimeTable> (statusIN)조회
+     * @param paramMap id of GasStation
+     * */
+    public List<TimeTable> findInList(Map<String, String> paramMap) {
+        GasStation station = gsService.findStationById(Long.valueOf(paramMap.get("id")));
+        LocalDate localDate = LocalDate.parse(paramMap.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        return dtRepository.findAllByTaskDateAndGasStation(localDate, station);
+        return ttRepository.findAllByTaskDateAndGasStationAndPart(localDate, station, SaleStatus.IN.getViewName());
     }
 
-    public List<SaleProductDto> findInOutDetail(Map<String, Object> paramMap) {
-        return saleMbRepository.findInOutDetail(paramMap);
+    /**
+     * 주유소-일자별 List<TimeTable> (statusIN 제외)조회
+     * @param paramMap id of GasStation
+     * */
+    public List<TimeTable> findNotInList(Map<String, String> paramMap) {
+        GasStation station = gsService.findStationById(Long.valueOf(paramMap.get("id")));
+        LocalDate localDate = LocalDate.parse(paramMap.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        return ttRepository.findAllByTaskDateAndGasStationAndPartNot(localDate, station, SaleStatus.IN.getViewName());
     }
 
-    public void saveWithdraw(Map<String, Object> paramMap, Member member) {
-        paramMap.put("status", SaleStatus.STOCK.toString());
-        DailyTask currentTask = findByMemberAndStation(member, Long.valueOf(String.valueOf(paramMap.get("stationId"))));
-
-        // 현재 재고 > 철수
-/*        List<SaleProductDto> saleStat = findSaleStat(member, paramMap);
-        saleStat.forEach(item -> {
-            SaleProduct withdrawProduct = SaleProduct.builder()
-                    .task(currentTask)
-                    .status(SaleStatus.END.toString())
-                    .count(item.getCount())
-                    .wiper(wpRepository.findById(item.getWiper()).get())
-                    .build();
-
-            spRepository.save(withdrawProduct);
-        });*/
+    /**
+     * 주유소-일자별 판매목록
+     * @Param paramMap id(주유소), date(검색일자)
+     * */
+    public List<Map<String, Object>> findSellDetailByStationAndDate(Map paramMap) {
+        List<Map<String, Object>> list = saleMbRepository.findSellDetailByStationAndDate(paramMap);
+        list.forEach(item -> {
+            item.put("part", PartTime.of((String)item.get("PART")));
+        });
+        return list;
     }
 
-    @Transactional
-    public void deleteByTaskAndStatus(Map<String, Object> paramMap) {
-        DailyTask dailyTask = lastEndTask(paramMap);
+    /**
+     * 주유소-일자별 고장목록
+     * @Param paramMap id(주유소), date(검색일자)
+     * */
+    public List<Map<String, String>> findFixDetailByStationAndDate(Map<String, String> paramMap) {
+        List<Map<String, String>> resultList = new ArrayList<>();
+        List<TimeTable> inList = findNotInList(paramMap);
+        
+        // 고장목록조회
+        inList.forEach(item -> {
+            item.getSellList().forEach(_item -> {
+                if(_item.getStatus().equals(SaleStatus.FIX.getViewName())) {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("name", item.getMember().getName());
+                    map.put("part", PartTime.of(item.getPart()));
+                    map.put("sort", WiperSort.of(_item.getSort()));
+                    map.put("memo", _item.getMemo());
 
-        if(dailyTask != null) {
-            spRepository.deleteByTaskAndStatus(dailyTask, SaleStatus.END.toString()); // 재등록
-        }
+                    resultList.add(map);
+                }
+            });
+        });
+
+        return resultList;
     }
 
-    private DailyTask lastEndTask(Map<String, Object> paramMap) {
-        Long lastWithdrawId = saleMbRepository.findLastWithdraw(paramMap);
-        if(lastWithdrawId == null) {
-            return null;
-        }
+    /**
+     * 기간별 매출조회
+     * */
+    public Map<String, Object> findTotalStat(Map<String, Object> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        List<Map<String, Object>> priceList = saleMbRepository.findTablePrice(paramMap);
+        // 결제수단명 추가
+        priceList.forEach(item -> {
+            item.put("NAME", Payment.of((String)item.get("PAYMENT")));
+        });
 
-        return dtRepository.findById(lastWithdrawId).orElseThrow(() -> new IdNotFoundException("데이터를 찾을 수 없습니다."));
+        returnMap.put("countList", saleMbRepository.findTotalStat(paramMap));
+        returnMap.put("priceList", priceList);
+        return returnMap;
     }
 
-    public void findLastWithdraw(Map<String, Object> paramMap, Map<String, Object> returnMap) {
-        DailyTask dailyTask = lastEndTask(paramMap);
-
-        if(dailyTask != null) {
-            paramMap.put("taskId", dailyTask.getId());
-            List<SaleProductDto> withdrawList = saleMbRepository.findLastWithdrawList(paramMap);
-
-            returnMap.put("taskDate", dailyTask.getTaskDate());
-            returnMap.put("name", dailyTask.getMember().getName());
-            returnMap.put("withdrawList", withdrawList);
-        }
+    /**
+     * 기간별 매출조회
+     * */
+    public List<Map<String, String>> findTaskDateList(Map<String, Object> data) {
+        return commuteMbRepository.findTaskDateList(data);
     }
 
-    public List<Map<String, Object>> findInProductList(Member member, Long id) {
-        DailyTask currentTask = findByMemberAndStation(member, id);
-        return saleMbRepository.findInProductList(currentTask.getId());
-    }
-
-    public List<Map<String, Object>> findInOutProductList(Long id) {
-        return saleMbRepository.findInProductList(id);
-    }
 }

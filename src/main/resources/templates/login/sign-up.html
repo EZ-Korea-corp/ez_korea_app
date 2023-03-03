@@ -120,7 +120,7 @@
                     let chkUsername = $('#username').val();
                     let url = "/signup/" + chkUsername;
 
-                    fnMethodFindJsonAjax("get", chkUsername, url, existsByData);
+                    fnMethodFindJsonAjax("POST", chkUsername, url, existsByData);
 
                 });
 

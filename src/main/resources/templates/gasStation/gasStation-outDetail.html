@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .icon {
+                display: inline-block;
+                vertical-align: middle;
+            }
+            #check div a{
+                color: #FFFFFF;
+            }
+            td {
+                text-align: center;
+            }
+        </style>
+        <div class="lg:space-x-12">
+
+            <div class="lg:w-full card">
+
+                <div class="p-10 pt-4 divide-y divide-gray-100">
+                    <input type="hidden" id="tTid" th:value="${tTid}">
+                    <div class="md:py-8 my-4">
+                        <h2 class="text-xl font-bold my-4">출고상세</h2>
+                        <input type="text" id="datepicker" name="datepicker" class="w-full" readonly>
+                    </div>
+
+                    <div class="md:py-8 py-3">
+                        <div class="grid grid-cols-2 gap-4 mb-4" id="check">
+                            <div name="out" class="text-sm font-medium">
+                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
+                            </div>
+                            <div name="fix" class="text-sm font-medium">
+                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 고장 </a>
+                            </div>
+                        </div>
+
+                        <div id="sellDiv">
+                            <h1 class="block text-lg font-bold mb-2"> 판매목록  </h1>
+                            <div class="relative overflow-x-auto shadow-md">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            이름
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            일반
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            하브
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            M
+                                            W
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            S클
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            칠백
+                                        </th>
+                                        <th scope="col" class="text-center px-6 py-3">
+                                            금액
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:if="${outList.size() > 0}" th:each="sell : ${outList}" class="border-b border-gray-200">
+                                            <th scope="row" th:text="|${sell.NAME}(${sell.part})|" class="text-center px-6 py-4 font-medium whitespace-nowrap"></th>
+                                            <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.normal, 1, 1)}|"></td>
+                                            <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.hybrid, 1, 1)}|"></td>
+                                            <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.mw, 1, 1)}|"></td>
+                                            <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.s_class, 1, 1)}|"></td>
+                                            <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.s_700, 1, 1)}|"></td>
+                                            <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.total, 1, 1)}|"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+
+                            </div>
+
+                            <div id="fixDiv">
+                                <div id="fixList">
+                                    <h1 class="block text-lg font-bold mb-2"> 고장목록  </h1>
+                                    <table class="w-full text-sm text-left">
+                                        <thead class="text-xs uppercase ">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-center">
+                                                이름
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-center">
+                                                종류
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-center">
+                                                메모
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:if="${fixList.size() > 0}" th:each="fix : ${fixList}" class="border-b border-gray-200 dark:border-gray-700">
+                                                <th th:text="|${fix.name}(${fix.part})|" class="text-center px-6 py-4 font-medium whitespace-nowrap"></th>
+                                                <td class="text-center px-6 py-4" th:text="|${fix.sort}|"></td>
+                                                <td class="text-center px-6 py-4" th:text="|${fix.memo}|"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                        </div>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+
+            $(document).ready(function(){
+                let url = new URL(window.location.href);
+                let id = url.searchParams.get("id");
+                let date = url.searchParams.get("date");
+
+                fnCalenderMaker($('#datepicker'), date);
+
+                // 입고 조회
+                $('#datepicker').on("change", function() {
+                    location.href= "/station/outDetail?id=" + id + "&date=" + $(this).val();
+                });
+
+                // 마감하기 - 재고등록
+                $("#submit").on("click", function() {
+                    Swal.fire({
+                        html: '마감하시겠습니까?',
+                        showDenyButton: true,
+                        confirmButtonText: '마감하기',
+                        denyButtonText: `닫기`,
+                    }).then((result) => {
+                        if(result.isConfirmed){
+                            fnCloseTask();
+                        }
+                    })
+                });
+
+                // 조회 - 판매, 재고, 고장
+                $("#check div").on("click", function() {
+                    let _status = $(this).attr("name");
+
+                    // 상단바
+                    $("#check div").each(function() {
+                        if($(this).attr("name") == _status) {
+                            $(this).find("a").removeClass("bg-gray-600")
+                                             .addClass("bg-blue-600");
+                        } else {
+                            $(this).find("a").removeClass("bg-blue-600")
+                                             .addClass("bg-gray-600");
+                        }
+                    });
+
+                    if(_status === "out") {
+                        $("#sellDiv").show();
+                        $("#fixDiv").hide();
+
+                        fnFindTableStat(_status, fnFindTableStatResult);
+                    } else {
+                        $("#sellDiv").hide();
+                        $("#fixDiv").show();
+
+                        fnFindTableStat(_status, fnFindStockResult);
+                    }
+
+
+                });
+
+                $("[name='out']").click();
+            });
+
+        </script>
+    </main>
+</body>
+
+</html>

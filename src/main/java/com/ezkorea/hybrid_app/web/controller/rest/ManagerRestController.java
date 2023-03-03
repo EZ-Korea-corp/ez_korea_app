@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.web.controller.rest;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
+import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
@@ -29,6 +30,7 @@ public class ManagerRestController {
     private final TeamService tService;
     private final MemberService mService;
     private final DivisionService dService;
+    private final SaleService saleService;
     private final ModelMapper mapper;
 
     @PutMapping("/approval")
@@ -116,14 +118,14 @@ public class ManagerRestController {
     @PostMapping("/taskList")
     public Map<String, Object> findTaskList(@RequestBody Map<String, Object> data) {
         Map<String, Object> returnMap = new HashMap<>();
-        returnMap.put("list", managerService.findTaskDateList(data));
+        returnMap.put("list", saleService.findTaskDateList(data));
 
         return returnMap;
     }
 
     @PostMapping("/totalStat")
     public Map<String, Object> findTotalStat(@RequestBody Map<String, Object> data) {
-        Map<String, Object> returnMap = managerService.findTotalStat(data);
+        Map<String, Object> returnMap = saleService.findTotalStat(data);
         return returnMap;
     }
 }

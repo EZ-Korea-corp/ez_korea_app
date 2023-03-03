@@ -13,7 +13,7 @@ public class MemberRestController {
 
     private final MemberService memberService;
 
-    @GetMapping("/signup/{username}")
+    @PostMapping("/signup/{username}")
     public boolean doFindExistUsername(@PathVariable String username) {
         return memberService.existsMemberByUsername(username);
     }
