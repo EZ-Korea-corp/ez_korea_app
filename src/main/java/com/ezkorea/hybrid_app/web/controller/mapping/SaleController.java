@@ -30,9 +30,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SaleController {
 
-    private final MemberRepository memberRepository;
     private final SaleService saleService;
-    private final MemberService memberService;
     private final GasStationService gasStationService;
 
     @GetMapping("/sales")

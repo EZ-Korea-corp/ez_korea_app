@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.service.sales;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
+import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
 import com.ezkorea.hybrid_app.domain.sale.*;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
@@ -14,6 +15,7 @@ import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.wiper.Wiper;
 import com.ezkorea.hybrid_app.domain.wiper.WiperRepository;
 import com.ezkorea.hybrid_app.domain.wiper.WiperSort;
+import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.SaleProductDto;
 import com.ezkorea.hybrid_app.web.dto.TaskDto;
 import com.ezkorea.hybrid_app.web.dto.TimeTableDto;
@@ -42,8 +44,10 @@ public class SaleService {
     private final TimeTableRepository ttRepository;
     private final WiperRepository wpRepository;
     private final SaleMbRepository saleMbRepository;
+    private final CommuteMbRepository commuteMbRepository;
 
     private final GasStationService gsService;
+    private final MemberService memberService;
 
     /**
      * TimeTable 저장
@@ -483,6 +487,29 @@ public class SaleService {
         });
 
         return resultList;
+    }
+
+    /**
+     * 기간별 매출조회
+     * */
+    public Map<String, Object> findTotalStat(Map<String, Object> paramMap) {
+        Map<String, Object> returnMap = new HashMap<>();
+        List<Map<String, Object>> priceList = saleMbRepository.findTablePrice(paramMap);
+        // 결제수단명 추가
+        priceList.forEach(item -> {
+            item.put("NAME", Payment.of((String)item.get("PAYMENT")));
+        });
+
+        returnMap.put("countList", saleMbRepository.findTotalStat(paramMap));
+        returnMap.put("priceList", priceList);
+        return returnMap;
+    }
+
+    /**
+     * 기간별 매출조회
+     * */
+    public List<Map<String, String>> findTaskDateList(Map<String, Object> data) {
+        return commuteMbRepository.findTaskDateList(data);
     }
 
 }

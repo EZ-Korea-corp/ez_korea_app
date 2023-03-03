@@ -13,10 +13,8 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
 
     List<TimeTable> findAllByTaskDateAndGasStationAndPart(LocalDate date, GasStation station, String part);
     List<TimeTable> findAllByTaskDateAndGasStationAndPartNot(LocalDate date, GasStation station, String part);
-
-    List<TimeTable> findAllByTaskDateAndPart(LocalDate date, String part);
-
     List<TimeTable> findAllByTaskDateAndMemberAndPartNot(LocalDate date, Member member, String part);
+    List<TimeTable> findAllByTaskDateAndPart(LocalDate date, String part);
 
     void deleteById(Long id);
 }
