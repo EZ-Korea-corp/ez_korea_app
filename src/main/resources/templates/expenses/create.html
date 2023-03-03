@@ -50,7 +50,9 @@
                             <div class="my-4">
                                 <label for="gasStation" class="font-semibold text-lg"> 근무지 </label>
                                 <select name="stationId" id="gasStation" class="px-4">
-                                    <option>날짜 지정 후 선택해주세요.</option>
+                                    <option th:each="station : ${stationList}"
+                                            th:value="${station.getId()}"
+                                            th:text="|${station.getStationName()}(${station.getStationLocation()})|"></option>
                                 </select>
                             </div>
                         </div>
@@ -97,7 +99,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/datepicker.min.js"></script>
         <script>
 
-            let selectedValue;
+            let selectedValue = 'FOOD';
 
             $(document).ready(function() {
                 $("#expensesStatus").change(function() {
@@ -115,13 +117,13 @@
                     autoclose: true,
                     dateFormat: 'yy-mm-dd'
                 }).on('change', function() {
-                    if (selectedValue === "FUEL") {
+                    /*if (selectedValue === "FUEL") {
                         let selectedDate = $(this).val();
                         let data = {
                             payDate: selectedDate
                         }
                         fnOnlyCrudJsonAjax(data, '/expenses/station', 'POST', getStationInfo);
-                    }
+                    }*/
                 });
             });
 
@@ -148,6 +150,9 @@
 
             $("#submit").on("click", function (){
                 if (fileCount === 1) {
+                    if (selectedValue === 'FOOD') {
+                        $('#stationId').val("");
+                    }
                     fnResponseCrudJsonAjax($('#createExpensesForm').serializeObject(), '/expenses', 'POST', successHref);
                 } else {
                     Swal.fire({
@@ -163,10 +168,10 @@
                 if (fileCount !== 0) {
                     let time = showLoadingSpinner("이미지를 저장하고 있습니다.");
                     setTimeout(function () {
-                        $(location).attr("href", "/expenses");
+                        $(location).attr("href", "/expenses/".concat(selectedValue));
                     }, time);
                 } else {
-                    $(location).attr("href", "/expenses");
+                    $(location).attr("href", "/expenses/".concat(selectedValue));
                 }
             }
         </script>

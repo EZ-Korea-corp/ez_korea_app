@@ -34,6 +34,11 @@ public class Expenses extends BaseEntity {
     @Setter
     private FuelStatus fuelStatus;
 
+    @Column(name = "check_status")
+    @Enumerated(EnumType.STRING)
+    @Setter
+    private CheckStatus checkStatus;
+
     @ManyToOne
     @Setter
     private S3Image s3Image;

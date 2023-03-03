@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
+import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
 import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.timetable.PartTime;
 import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
@@ -163,15 +164,17 @@ public class ManagerController {
         return "manager/stat/manage-totalStat";
     }
 
-    @GetMapping("/expenses")
+    @GetMapping("/expenses/{status}")
     public String showExpensesPage(Model model, @RequestParam(value="page", defaultValue="0", required = false) int page,
-                                   @RequestParam(value="payDate", defaultValue="", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate payDate) {
+                                   @RequestParam(value="payDate", defaultValue="", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate payDate,
+                                   @PathVariable String status) {
 
-        log.info("expensesLocalDate = {}", payDate);
+        ExpensesStatus currentStatus = ExpensesStatus.valueOf(status);
+
         if (payDate == null) {
-            model.addAttribute("expensesList", eService.findAllExpenses(page));
+            model.addAttribute("expensesList", eService.findAllExpensesByStatus(page, currentStatus));
         } else {
-            model.addAttribute("expensesList", eService.findAllExpensesByPayDate(page, payDate));
+            model.addAttribute("expensesList", eService.findAllExpensesByPayDate(page, payDate, currentStatus));
         }
         return "manager/expenses/list";
     }

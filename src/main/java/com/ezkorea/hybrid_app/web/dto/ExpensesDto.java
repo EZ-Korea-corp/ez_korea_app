@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.web.dto;
 
+import com.ezkorea.hybrid_app.domain.expenses.CheckStatus;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
 import com.ezkorea.hybrid_app.domain.expenses.FuelStatus;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class ExpensesDto {
     private LocalDate payDate;
 
     private ExpensesStatus expensesStatus;
+    private CheckStatus checkStatus;
 
     private FuelStatus fuelStatus;
 }

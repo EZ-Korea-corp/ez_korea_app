@@ -39,9 +39,7 @@ public class ExpensesRestController {
 
         log.info("ExpensesDto dto={}", dto.toString());
 
-        GasStation currentStation = gasStationService.findStationById(dto.getStationId());
-
-        Expenses savedExpenses = expensesService.saveExpenses(dto, securityUser.getMember(), currentStation);
+        Expenses savedExpenses = expensesService.saveExpenses(dto, securityUser.getMember());
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", savedExpenses.getId()), HttpStatus.OK);
     }
