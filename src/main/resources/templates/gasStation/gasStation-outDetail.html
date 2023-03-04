@@ -38,7 +38,7 @@
                                 <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
                             </div>
                             <div name="fix" class="text-sm font-medium">
-                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 고장 </a>
+                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 불량 </a>
                             </div>
                         </div>
 
@@ -91,7 +91,7 @@
 
                             <div id="fixDiv">
                                 <div id="fixList">
-                                    <h1 class="block text-lg font-bold mb-2"> 고장목록  </h1>
+                                    <h1 class="block text-lg font-bold mb-2"> 불량목록  </h1>
                                     <table class="w-full text-sm text-left">
                                         <thead class="text-xs uppercase ">
                                         <tr>
@@ -153,7 +153,7 @@
                     })
                 });
 
-                // 조회 - 판매, 재고, 고장
+                // 조회 - 판매, 재고, 불량
                 $("#check div").on("click", function() {
                     let _status = $(this).attr("name");
 

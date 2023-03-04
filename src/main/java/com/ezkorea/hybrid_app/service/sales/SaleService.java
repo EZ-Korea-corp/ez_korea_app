@@ -83,7 +83,7 @@ public class SaleService {
     }
 
     /**
-     * 특정일자, 회원의 판매,고장(입고제외) List<TimeTable> 조회
+     * 특정일자, 회원의 판매,불량(입고제외) List<TimeTable> 조회
      * */
     public List<TimeTable> findTableList(LocalDate date, Member member) {
         return ttRepository.findAllByTaskDateAndMemberAndPartNot(date, member, PartTime.IN.getKey());
@@ -169,13 +169,13 @@ public class SaleService {
     }
 
     /**
-     * 판매, 고장 등록
+     * 판매, 불량 등록
      * */
     @Transactional
     public void saveSellProduct(TimeTableDto timeTableDto) {
         TimeTable timeTable = findTableById(timeTableDto.getId());
 
-            // 판매, 고장 등록
+            // 판매, 불량 등록
             timeTableDto.getSellDtoList().forEach(item -> {
                 if(item.getStatus().equals(SaleStatus.OUT.toString())) {
                     // 기존 리스트
@@ -355,7 +355,7 @@ public class SaleService {
         Map<String, Object> returnMap = new HashMap<>();
         TimeTable timeTable = findTableById(tableId);
 
-        // 판매, 고장리스트
+        // 판매, 불량리스트
         List<Map<String, Object>> sellList = new ArrayList<>();
         List<Map<String, Object>> fixList  = new ArrayList<>();
         int count = 0;
@@ -369,7 +369,7 @@ public class SaleService {
                     map.put("name", sort.getViewName());
 
                     if(SaleStatus.FIX.toString().equals(sellProduct.getStatus())) {
-                        //고장 목록
+                        //불량 목록
                         map.put("memo", sellProduct.getMemo());
                         fixList.add(map);
 
@@ -464,14 +464,14 @@ public class SaleService {
     }
 
     /**
-     * 주유소-일자별 고장목록
+     * 주유소-일자별 불량목록
      * @Param paramMap id(주유소), date(검색일자)
      * */
     public List<Map<String, String>> findFixDetailByStationAndDate(Map<String, String> paramMap) {
         List<Map<String, String>> resultList = new ArrayList<>();
         List<TimeTable> inList = findNotInList(paramMap);
         
-        // 고장목록조회
+        // 불량목록조회
         inList.forEach(item -> {
             item.getSellList().forEach(_item -> {
                 if(_item.getStatus().equals(SaleStatus.FIX.getViewName())) {

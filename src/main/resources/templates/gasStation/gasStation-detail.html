@@ -87,13 +87,6 @@
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <ul>
-                            <li th:each="attach : ${attachList}">
-                                <img th:src="|${attach.path}/${attach.fileName}|" alt="첨부이미지"/>
-                            </li>
-                        </ul>
-                    </div>
                     <a th:href="@{/station/index}" class="bg-yellow-600 text-sm font-medium text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 뒤로가기 </a>
                 </div>
             </div>
