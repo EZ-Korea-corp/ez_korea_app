@@ -13,7 +13,6 @@ import com.ezkorea.hybrid_app.service.expenses.ExpensesService;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
-import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -112,7 +111,6 @@ public class ManagerController {
 
     @GetMapping("/commute")
     public String showMemberCommutePage(@RequestParam(value="date", required=false)String date, Model model) {
-        //model.addAttribute("employeeList", managerService.findAllMemberByStatus(MemberStatus.FULL_TIME));
         model.addAttribute("commuteList", cService.findCommuteTime(date));
 
         return "manager/manage-commute";
