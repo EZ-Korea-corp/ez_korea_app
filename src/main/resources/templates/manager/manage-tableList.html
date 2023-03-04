@@ -76,9 +76,9 @@
                                                                 <img src="/assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
                                                             </div>
                                                             <div class="flex-1">
-                                                                <h3 class="text-base font-semibold capitalize mb-2" th:text="|${table.stationName}(${table.part}${table.stationLocation})|"> 유저이름 </h3>
+                                                                <h3 class="text-base font-semibold capitalize mb-2" th:text="|[${table.part}]${table.stationName}(${table.stationLocation})|"> 유저이름 </h3>
                                                             </div>
-                                                            <a th:href="@{|/station/outDetail?id=${table.id}&date=${table.date}|}" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 조회 </a>
+                                                            <a th:href="@{|/manager/outDetail?id=${table.id}&date=${table.date}|}" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 조회 </a>
                                                         </div>
                                                     </li>
                                                 </ul>
