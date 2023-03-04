@@ -19,16 +19,8 @@
             <nav class="responsive-nav setting-nav setting-menu"
                  uk-sticky="top:30 ; offset:80 ; media:@m ;bottom:true; animation: uk-animation-slide-top">
                 <ul>
-                    <li class="uk-active"><a href="#"> <i class="uil-cog mr-1"></i> 계정 </a></li>
-                    <!--<li><a href="#"> <i class="uil-user"></i> Profile </a></li>
-                    <li><a href="#"> <i class="uil-usd-circle"></i> Monetization</a></li>
-                    <li><a href="#"> <i class="uil-unlock-alt"></i> Password </a></li>
-                    <li><a href="#"> <i class="uil-dollar-alt"></i> Earning</a></li>
-                    <li><a href="#"> <i class="uil-scenery"></i> Avatar & Cover</a></li>
-                    <li><a href="#"> <i class="uil-shield-check"></i> Security</a></li>
-                    <li><a href="#"> <i class="uil-bolt"></i> Membarship</a></li>
-                    <li><a href="#"> <i class="uil-history"></i> Manage Sessions</a></li>
-                    <li><a href="#"> <i class="uil-trash-alt"></i> Delete account</a></li>-->
+                    <li><a th:href="@{/settings/profile}"> <i class="uil-user"></i> 프로필 </a></li>
+                    <li class="uk-active"><a th:href="@{/settings/account}"> <i class="uil-cog mr-1"></i> 계정 </a></li>
                 </ul>
             </nav>
 
@@ -74,7 +66,7 @@
     <script>
         $("#submit").on("click", function (){
             if ($('#newPassword').val() === $('#newPasswordChk').val()) {
-                fnResponseCrudJsonAjax($('#passwordForm').serializeObject(), '/profile/setting', 'PUT', requestFail);
+                fnResponseCrudJsonAjax($('#passwordForm').serializeObject(), '/settings/account', 'PUT', requestFail);
             } else {
                 Swal.fire({
                     icon: 'error',

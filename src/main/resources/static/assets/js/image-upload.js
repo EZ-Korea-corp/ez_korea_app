@@ -46,7 +46,7 @@ function fileDelete(fileNum){
     fileCount --;
 }
 
-function imageUpload(entity, id, url, type) {
+function imageUpload(entity, id, url, type, fnCallBck) {
     if (fileCount !== 0) {
         const form = $("#s3Form")[0];
         const formData = new FormData(form);
@@ -76,6 +76,9 @@ function imageUpload(entity, id, url, type) {
                 var header = $("meta[name='_csrf_header']").attr("content");
                 var token = $("meta[name='_csrf']").attr("content");
                 jqXHR.setRequestHeader(header, token);
+            },
+            success: function(data) {
+                if(fnCallBck) fnCallBck(data);
             },
             error: function (xhr, status, error) {
                 Swal.fire({
