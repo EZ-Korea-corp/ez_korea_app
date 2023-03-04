@@ -2,8 +2,6 @@ package com.ezkorea.hybrid_app.service.user.member;
 
 import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
-import com.ezkorea.hybrid_app.domain.task.DailyTask;
-import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.*;
@@ -70,7 +68,6 @@ public class MemberService {
                 .role(dto.getRole())
                 .memberStatus(dto.getMemberStatus())
                 .commuteTimeList(new ArrayList<>())
-                .taskList(new ArrayList<>())
                 .noticeList(new ArrayList<>())
                 .build());
 //        Member savedMember = memberRepository.save(mapper.map(dto, Member.class));

@@ -5,8 +5,6 @@ import com.ezkorea.hybrid_app.domain.gas.GasStationRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
 import com.ezkorea.hybrid_app.domain.myBatis.SaleMbRepository;
 import com.ezkorea.hybrid_app.domain.sale.*;
-import com.ezkorea.hybrid_app.domain.task.DailyTask;
-import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.timetable.PartTime;
 import com.ezkorea.hybrid_app.domain.timetable.SellProduct;
 import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
@@ -232,7 +230,6 @@ public class SaleService {
             if(item.getCount() > 0) {
                 SaleProduct newProduct = SaleProduct.builder()
                         .timeTable(timeTable)
-                        .status(item.getStatus())
                         .count(item.getCount())
                         .wiper(wpRepository.findById(item.getWiper()).get())
                         .build();
@@ -286,7 +283,6 @@ public class SaleService {
             if(item.getCount() > 0) {
                 SaleProduct newProduct = SaleProduct.builder()
                         .timeTable(talble)
-                        .status(item.getStatus())
                         .count(item.getCount())
                         .wiper(wpRepository.findById(item.getWiper()).get())
                         .build();
@@ -307,7 +303,7 @@ public class SaleService {
         List<SaleProductDto> list = new ArrayList<>();
         tableList.forEach(item -> {
             item.getSaleList().forEach(_item -> {
-                if(_item.getStatus().equals(SaleStatus.STOCK.toString()) && _item.getCount() > 0) {
+                if(_item.getCount() > 0) {
                     SaleProductDto dto = new SaleProductDto();
                     dto.setWiper(_item.getWiper().getId());
                     dto.setCount(_item.getCount());

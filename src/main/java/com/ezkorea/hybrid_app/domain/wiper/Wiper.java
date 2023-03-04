@@ -1,7 +1,5 @@
 package com.ezkorea.hybrid_app.domain.wiper;
 
-import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
-import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import lombok.*;
 
 import javax.persistence.*;
