@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/profile")
 @RequiredArgsConstructor
 @Slf4j
 public class ProfileController {
@@ -27,20 +26,26 @@ public class ProfileController {
     private final MemberService memberService;
     private final DivisionService divisionService;
 
-    @GetMapping("/{username}")
+    @GetMapping("/profile/{username}")
     public String showMemberProfilePage(@PathVariable String username, Model model) {
         Member currentMember = memberService.findByUsername(username);
         model.addAttribute("user", currentMember);
         return "profile/main";
     }
 
-    @GetMapping("/setting")
+    @GetMapping("/settings/profile")
     public String showMemberProfileSettingPage(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
 
-        return "profile/setting";
+        return "profile/setting-profile";
     }
 
-    @GetMapping("/chart/view")
+    @GetMapping("/settings/account")
+    public String showMemberAccountSettingPage(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
+
+        return "profile/setting-account";
+    }
+
+    @GetMapping("/profile/chart/view")
     public String showMemberChart(Model model) {
 
         // 전체 사원 수

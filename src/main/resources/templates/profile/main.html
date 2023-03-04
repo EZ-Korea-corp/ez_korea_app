@@ -12,60 +12,20 @@
     <!-- Profile cover -->
     <div class="profile user-profile">
 
-        <div class="profiles_banner bg-dark">
+        <div class="profiles_banner bg-dark"  style="height: 12rem !important;">
 
         </div>
         <div class="profiles_content">
 
             <div class="profile_avatar">
                 <div class="profile_avatar_holder">
-                    <th:block th:if="${user.getId() eq member.getId()}">
-                        <form id="s3Form">
-                            <label for="multipleFiles">
-                                <img th:src="${user.getS3Image().getFilePath()}" alt="">
-                            </label>
-                            <input type='file' name="files" class="hidden" accept="image/*" id="multipleFiles"/>
-                        </form>
-                        <script>
-                            /*<![CDATA[*/
-                            let id = "[[${user.getId()}]]";
-                            let username = "[[${user.getUsername()}]]";
-                            /*]]>*/
-                            const fileInput = document.getElementById("multipleFiles");
-                            fileInput.addEventListener("change", function(event) {
-                                const file = event.target.files[0];
-                                const imageURL = URL.createObjectURL(file);
-
-                                Swal.fire({
-                                    imageUrl: imageURL,
-                                    imageWidth: 200,
-                                    imageHeight: 200,
-                                    title: '프로필 사진을 변경하시겠습니까?',
-                                    showDenyButton: true,
-                                    showCancelButton: true,
-                                    confirmButtonText: '변경하기',
-                                    denyButtonText: '취소',
-                                }).then((result) => {
-                                    /* Read more about isConfirmed, isDenied below */
-                                    if (result.isConfirmed) {
-                                        let time = showLoadingSpinner("이미지를 저장하고 있습니다.");
-                                        imageUpload('member', id, '/image/upload', 'PUT');
-                                        setTimeout(function () {
-                                            location.reload();
-                                            // $(location).attr("href", "/profile/".concat(username));
-                                        }, time);
-                                    } else if (result.isDenied) {
-                                        Swal.fire('변경되지 않았습니다.')
-                                    }
-                                })
-                            });
-                        </script>
-                    </th:block>
-                    <th:block th:if="${!user.getUsername().equals(member.getUsername())}">
-                        <img th:src="${user.getS3Image().getFilePath()}" alt="">
-                    </th:block>
+                    <img th:src="${user.getS3Image().getFilePath()}" alt="">
                 </div>
-                <div class="icon_change_photo" hidden> <ion-icon name="camera" class="text-xl"></ion-icon> </div>
+                <div class="icon_change_photo" th:if="${user.getId() eq member.getId()}">
+                    <a th:href="@{/settings/profile}">
+                        <ion-icon name="camera" class="text-xl"></ion-icon>
+                    </a>
+                </div>
             </div>
 
             <div class="profile_info uk-text-center">

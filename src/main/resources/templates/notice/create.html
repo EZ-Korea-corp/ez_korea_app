@@ -89,15 +89,12 @@
 
             function successHref(data, xhr) {
                 let savedId = xhr.id;
-                imageUpload('notice', savedId, '/image/upload', 'PUT');
-                if (fileCount !== 0) {
-                    let time = showLoadingSpinner("이미지를 저장하고 있습니다.");
-                    setTimeout(function () {
-                        $(location).attr("href", "/notice/".concat(xhr.id));
-                    }, time);
-                } else {
+                let fnCallBck = function () {
                     $(location).attr("href", "/notice/".concat(xhr.id));
                 }
+
+                imageUpload('notice', savedId, '/image/upload', 'PUT', fnCallBck);
+                showLoadingSpinner("이미지를 저장하고 있습니다.");
             }
         </script>
     </main>
