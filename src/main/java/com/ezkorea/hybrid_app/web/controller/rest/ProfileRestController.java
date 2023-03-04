@@ -19,13 +19,12 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/profile")
 public class ProfileRestController {
 
     private final MemberService memberService;
     private final ModelMapper mapper;
 
-    @PutMapping("/setting")
+    @PutMapping("/settings/account")
     public ResponseEntity<Object> doProfileSettingUpdate(@AuthenticationPrincipal SecurityUser securityUser,
                                                  @RequestBody Map<String, Object> datum) {
 
