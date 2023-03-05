@@ -119,7 +119,7 @@ public class SalesRestController {
         Long tTid = saleService.saveTimeTable(pramMap, securityUser.getMember());
 
         if(tTid.equals(0L)) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "이미 등록된 주유소입니다.");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return returnMap;
         }
 
