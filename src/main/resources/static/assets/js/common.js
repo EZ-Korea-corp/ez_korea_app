@@ -298,7 +298,7 @@ function setTimeLoadingSpinner(time, msg) {
 }
 
 function showLoadingSpinner(msg) {
-    let time = fileCount * 1100;
+    let time = fileCount * 1500;
     let timerInterval
     Swal.fire({
         title: msg,

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @Slf4j
@@ -32,8 +33,9 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public String doSignUp(SignUpDto dto) {
+    public String doSignUp(SignUpDto dto, RedirectAttributes redirectAttributes) {
         memberService.saveNewMember(dto);
+        redirectAttributes.addFlashAttribute("signUp", "회원가입이 완료되었습니다.");
         return "redirect:/login";
     }
 

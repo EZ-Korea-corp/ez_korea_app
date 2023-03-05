@@ -17,10 +17,22 @@
                     background-color: #9333EA;
                 }
             </style>
+
             <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
 
                 <form th:action method="post" class="lg:p-10 p-6 space-y-3 relative bg-white shadow-xl rounded-md">
+
                     <h1 class="lg:text-2xl text-xl font-semibold mb-6"> 로그인 </h1>
+
+                    <th:block th:if="${signUp}">
+                        <div class="bg-blue-500 border p-4 relative rounded-md uk-alert" uk-alert="">
+                            <button class="uk-alert-close absolute bg-gray-100 bg-opacity-20 m-5 p-0.5 pb-0 right-0 rounded text-gray-200 text-xl top-0">
+                                <i class="icon-feather-x"></i>
+                            </button>
+                            <h3 class="text-lg font-semibold text-white">알림</h3>
+                            <p class="text-white text-opacity-75" th:text="${signUp}"></p>
+                        </div>
+                    </th:block>
 
                     <div>
                         <label class="mb-0"> 아이디 </label>
