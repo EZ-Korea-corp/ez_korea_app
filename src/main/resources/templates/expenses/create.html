@@ -113,23 +113,18 @@
                     }
                 });
 
-                let url = new URL(window.location.href);
-                let date = url.searchParams.get("date");
-
-                fnCalenderMaker($('#payDate'), date);
-
-                /*$('#payDate').datepicker({
+                $('#payDate').datepicker({
                     autoclose: true,
                     dateFormat: 'yy-mm-dd'
                 }).on('change', function() {
-                    if (selectedValue === "FUEL") {
+                    /*if (selectedValue === "FUEL") {
                         let selectedDate = $(this).val();
                         let data = {
                             payDate: selectedDate
                         }
                         fnOnlyCrudJsonAjax(data, '/expenses/station', 'POST', getStationInfo);
-                    }
-                });*/
+                    }*/
+                });
             });
 
             function getStationInfo(data, xhr) {
