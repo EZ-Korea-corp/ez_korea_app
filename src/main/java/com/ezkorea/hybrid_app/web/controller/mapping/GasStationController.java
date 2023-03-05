@@ -2,7 +2,6 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
-import com.ezkorea.hybrid_app.service.etc.AttachService;
 import com.ezkorea.hybrid_app.service.sales.GasStationService;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ public class GasStationController {
 
     private final SaleService saleService;
     private final GasStationService gasStationService;
-    private final AttachService attachService;
 
     @GetMapping("/index")
     public String showGasStationListPage(Model model) {
@@ -38,7 +36,6 @@ public class GasStationController {
         GasStation station = gasStationService.findStationById(id);
 
         model.addAttribute("station", station);
-        model.addAttribute("attachList", attachService.findAttachList("station" + station.getId()));
         return "gasStation/gasStation-detail";
     }
 

@@ -16,14 +16,14 @@
             ON A.MEMBER_ID = B.ID
             LEFT JOIN TEAM C
             ON B.TEAM_ID = C.ID
-            <if test="status != null and !''.equals(status)">
+            <if test="pStatus != null and !''.equals(pStatus)">
                 <choose>
-                    <when test="'day'.equals(status)">
+                    <when test="'day'.equals(pStatus)">
                         WHERE   A.TASK_DATE = #{date}
                     </when>
-                    <when test="'week'.equals(status)">
-                        WHERE   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 0 )
-                        AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 6 )
+                    <when test="'week'.equals(pStatus)">
+                        WHERE   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(#{date}) + 0)
+                        AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(#{date}) + 6)
                     </when>
                     <otherwise>
                         WHERE   A.TASK_DATE <![CDATA[>=]]> LAST_DAY(#{date} - INTERVAL 1 MONTH) + INTERVAL 1 DAY
@@ -62,8 +62,8 @@
                             WHERE   A.TASK_DATE = #{date}
                         </when>
                         <when test="'week'.equals(pStatus)">
-                            WHERE   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 0 )
-                            AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 6 )
+                            WHERE   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(#{date}) + 0)
+                            AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(#{date}) + 6)
                         </when>
                         <otherwise>
                             WHERE   A.TASK_DATE <![CDATA[>=]]> LAST_DAY(#{date} - INTERVAL 1 MONTH) + INTERVAL 1 DAY
@@ -112,12 +112,12 @@
                                 AND   A.TASK_DATE = #{date}
                             </when>
                             <when test="'week'.equals(pStatus)">
-                                AND   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 0 )
-                                AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(CURDATE()) + 6 )
+                                AND   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(#{date}) + 0)
+                                AND	  A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(#{date}) + 6)
                             </when>
                             <otherwise>
                                 AND   A.TASK_DATE <![CDATA[>=]]> LAST_DAY(#{date} - INTERVAL 1 MONTH) + INTERVAL 1 DAY
-                                AND		A.TASK_DATE <![CDATA[<=]]> LAST_DAY(#{date})
+                                AND	  A.TASK_DATE <![CDATA[<=]]> LAST_DAY(#{date})
                             </otherwise>
                         </choose>
                     </if>
@@ -134,6 +134,7 @@
             )B
             ON A.SORT = B.SORT
             GROUP BY A.PAYMENT
+            ORDER BY A.PAYMENT
         )
         SELECT    A.PAYMENT
                 , A.PRICE

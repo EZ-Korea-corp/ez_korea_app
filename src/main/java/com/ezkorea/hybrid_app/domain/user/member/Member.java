@@ -4,8 +4,6 @@ import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.expenses.Expenses;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
-import com.ezkorea.hybrid_app.domain.read.MemberPostRead;
-import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
@@ -70,9 +68,6 @@ public class Member extends BaseEntity {
     public void addCommuteTime(CommuteTime time) {
         commuteTimeList.add(time);
     }
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<DailyTask> taskList = new ArrayList<>();
 
     @ManyToOne
     @Setter

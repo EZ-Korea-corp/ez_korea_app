@@ -5,7 +5,6 @@ import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
-import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import com.ezkorea.hybrid_app.web.dto.DivisionDto;
@@ -26,7 +25,6 @@ import java.util.Map;
 @Slf4j
 public class ManagerRestController {
 
-    private final ManagerService managerService;
     private final TeamService tService;
     private final MemberService mService;
     private final DivisionService dService;

@@ -26,7 +26,6 @@
             <div class="lg:w-full card">
 
                 <div class="p-10 pt-4 divide-y divide-gray-100">
-                    <input type="hidden" id="tTid" th:value="${tTid}">
                     <div class="md:py-8 my-4">
                         <h2 class="text-xl font-bold my-4">출고상세</h2>
                         <input type="text" id="datepicker" name="datepicker" class="w-full" readonly>
@@ -129,15 +128,10 @@
 
             $(document).ready(function(){
                 let url = new URL(window.location.href);
-                let id = url.searchParams.get("id");
                 let date = url.searchParams.get("date");
 
                 fnCalenderMaker($('#datepicker'), date);
-
-                // 판매 조회
-                $('#datepicker').on("change", function() {
-                    location.href= "/station/outDetail?id=" + id + "&date=" + $(this).val();
-                });
+                $('#datepicker').prop("disabled", true);
 
                 // 상단바 css
                 $("#check div").on("click", function() {
@@ -147,10 +141,10 @@
                     $("#check div").each(function() {
                         if($(this).attr("name") == _status) {
                             $(this).find("a").removeClass("bg-gray-600")
-                                .addClass("bg-blue-600");
+                                             .addClass("bg-blue-600");
                         } else {
                             $(this).find("a").removeClass("bg-blue-600")
-                                .addClass("bg-gray-600");
+                                             .addClass("bg-gray-600");
                         }
                     });
 
