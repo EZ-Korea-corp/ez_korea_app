@@ -30,7 +30,12 @@
 
             <div class="profile_info uk-text-center">
                 <h1 th:text="${user.getName()}"> 이름 </h1>
-                <p th:text="${user.getRole().viewName}"></p>
+                <th:block th:if="${user.getUsername().equals('dev')}">
+                    <p>개발팀</p>
+                </th:block>
+                <th:block th:if="${!user.getUsername().equals('dev')}">
+                    <p th:text="${user.getRole().viewName}"></p>
+                </th:block>
             </div>
 
         </div>
