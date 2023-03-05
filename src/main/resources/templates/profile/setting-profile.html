@@ -85,18 +85,27 @@
             }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
-                    let time = showLoadingSpinner("이미지를 저장하고 있습니다.");
-
-                    imageUpload('member', id, '/image/upload', 'PUT');
-                    setTimeout(function () {
-                        // location.reload();
+                    let fnCallBck = function () {
                         $(location).attr("href", "/settings/profile");
-                    }, time);
+                    }
+
+                    imageUpload('member', id, '/image/upload', 'PUT', fnCallBck);
+                    showLoadingSpinner("이미지를 저장하고 있습니다.");
                 } else if (result.isDenied) {
                     Swal.fire('변경되지 않았습니다.')
                 }
             })
         });
+
+        function successHref(data, xhr) {
+            let savedId = xhr.id;
+            let fnCallBck = function () {
+                $(location).attr("href", "/settings/profile");
+            }
+
+            imageUpload('member', savedId, '/image/upload', 'PUT', fnCallBck);
+            showLoadingSpinner("이미지를 저장하고 있습니다.");
+        }
     </script>
     <script>
         $("#submit").on("click", function (){
