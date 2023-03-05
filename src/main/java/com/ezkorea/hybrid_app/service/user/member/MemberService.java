@@ -2,12 +2,11 @@ package com.ezkorea.hybrid_app.service.user.member;
 
 import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
-import com.ezkorea.hybrid_app.domain.task.DailyTask;
-import com.ezkorea.hybrid_app.domain.task.DailyTaskRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.*;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
+import com.ezkorea.hybrid_app.domain.user.team.TeamRepository;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
 import com.ezkorea.hybrid_app.web.dto.ProfileDto;
@@ -39,6 +38,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     private final MemberRepository memberRepository;
+    private final TeamRepository teamRepository;
     private final CommuteTimeRepository ctRepository;
     private final S3ImageRepository s3Repository;
     private final SubAuthRepository saRepository;
@@ -70,7 +70,6 @@ public class MemberService {
                 .role(dto.getRole())
                 .memberStatus(dto.getMemberStatus())
                 .commuteTimeList(new ArrayList<>())
-                .taskList(new ArrayList<>())
                 .noticeList(new ArrayList<>())
                 .build());
 //        Member savedMember = memberRepository.save(mapper.map(dto, Member.class));
@@ -179,11 +178,42 @@ public class MemberService {
     @Transactional
     public void updateMemberRole(String username, Role role, MemberStatus status) {
         Member currentMember = findByUsername(username);
+        /*if (role.equals(Role.ROLE_LEADER) || role.equals(Role.ROLE_EMPLOYEE)) {
+            memberTeamReset(currentMember, role);
+        }*/
         currentMember.setRole(role);
         currentMember.setRoleChanged(true);
         currentMember.setMemberStatus(status);
         memberRepository.save(currentMember);
     }
+
+    /*@Transactional
+    public void memberTeamReset(Member member, Role role) {
+        // 팀이 존재하는지 확인
+        if (member.getTeam() != null) {
+            Team currentTeam = teamRepository.findById(member.getTeam().getId()).get();
+
+            // 변경될 권한이 리더일 경우
+            if (role.equals(Role.ROLE_LEADER)) {
+                // 현재 팀 멤버 리스트에 포함되어 있는지 확인
+                if (currentTeam.getMemberList().contains(member)) {
+                    log.info("꼴에 팀원");
+                    List<Member> memberList = currentTeam.getMemberList();
+                    memberList.remove(member);
+                    currentTeam.setMemberList(memberList);
+                    teamRepository.save(currentTeam);
+                }
+            } else if (role.equals(Role.ROLE_EMPLOYEE)) {
+                // 변경될 권한이 사원일 경우 리더인지 확인
+                if (teamRepository.existsByLeader(member)) {
+                    log.info("꼴에 팀장");
+                    Team memberLeaderTeam = teamRepository.findByLeader(member);
+                    memberLeaderTeam.setLeader(null);
+                    teamRepository.save(memberLeaderTeam);
+                }
+            }
+        }
+    }*/
 
     /**
      * 오늘 출근했는지 확인하는 메소드

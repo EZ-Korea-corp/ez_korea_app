@@ -16,7 +16,7 @@ public class StatRestController {
     private final StatService statService;
 
     @PostMapping("/graph")
-    public Map<String, Object> saveTeam(@RequestBody Map<String, String> data) throws Exception {
+    public Map<String, Object> findStatList(@RequestBody Map<String, String> data) throws Exception {
         Map<String, Object> returnMap = new HashMap<>();
 
         returnMap.put("result", statService.findStatList(data));

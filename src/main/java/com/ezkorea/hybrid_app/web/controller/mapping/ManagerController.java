@@ -1,7 +1,6 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
-import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.timetable.PartTime;
 import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
@@ -13,7 +12,6 @@ import com.ezkorea.hybrid_app.service.expenses.ExpensesService;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
-import com.ezkorea.hybrid_app.service.user.manager.ManagerService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -112,7 +110,6 @@ public class ManagerController {
 
     @GetMapping("/commute")
     public String showMemberCommutePage(@RequestParam(value="date", required=false)String date, Model model) {
-        //model.addAttribute("employeeList", managerService.findAllMemberByStatus(MemberStatus.FULL_TIME));
         model.addAttribute("commuteList", cService.findCommuteTime(date));
 
         return "manager/manage-commute";
@@ -126,21 +123,21 @@ public class ManagerController {
 
     /**
      * 회원-일자별 판매목록
-     * @Param id 회원
+     * @Param id timeTable
      * @Param date 검색일자
      * */
     @GetMapping("/taskList")
     public String showMemberTablePage(@RequestParam(value="id", required=false)Long id,
                                       @RequestParam(value="date", required=false)String date,
                                       Model model) {
-        Member member = mService.findMemberById(id);
+        TimeTable lastTable = saleService.findTableById(id);
         LocalDate searchDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 
         List<Map<String, Object>> resultList = new ArrayList<>();
-        List<TimeTable> tableList = saleService.findTableList(searchDate, member);
+        List<TimeTable> tableList = saleService.findTableList(searchDate, lastTable.getMember());
         tableList.forEach(item -> {
             Map<String, Object> map = new HashMap<>();
-            map.put("id", item.getId());
+            map.put("id", item.getGasStation().getId());
             map.put("date", item.getTaskDate());
             map.put("stationName", item.getGasStation().getStationName());
             map.put("stationLocation", item.getGasStation().getStationLocation());
@@ -152,6 +149,21 @@ public class ManagerController {
         model.addAttribute("tableList", resultList);
 
         return "manager/manage-tableList";
+    }
+
+    @GetMapping("/outDetail")
+    public String showSaleOutHistoryPage(@RequestParam(value="id") String id,
+                                         @RequestParam(value="date") String date,
+                                         Model model) {
+        Map<String, String> paramMap = new HashMap<>();
+        log.info("paramMap={}", paramMap);
+        paramMap.put("id", id);
+        paramMap.put("date", date);
+
+        model.addAttribute("outList", saleService.findSellDetailByStationAndDate(paramMap));
+        model.addAttribute("fixList", saleService.findFixDetailByStationAndDate(paramMap));
+
+        return "manager/manager-outDetail";
     }
 
     @GetMapping("/stat")

@@ -127,7 +127,7 @@
 
         function fnFindStat(status) {
             const url = "/manager/totalStat";
-            const data = {"status" : status, "date" : $('#datepicker').val()};
+            const data = {"pStatus" : status, "date" : $('#datepicker').val()};
             _status = status;
 
             fnFindJsonAjax(data, url, fnFindStatResult);

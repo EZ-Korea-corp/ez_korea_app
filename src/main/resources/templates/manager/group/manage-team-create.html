@@ -38,6 +38,7 @@
                         <div>
                             <label for="teamLeader" class="font-semibold text-base"> 팀장 선택 </label>
                             <select id="teamLeader" name="teamLeader"  class="shadow-none selectpicker with-border">
+                                <option value="0">팀장 미지정</option>
                                 <option th:each="leader : ${leaderList}"
                                         th:value="${leader.getUsername()}"
                                         th:text="|${leader.getName()}(${leader.getPhone()})|">이름</option>

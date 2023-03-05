@@ -34,7 +34,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@ToString(exclude = "amazonS3Client, managerService")
+@ToString(exclude = "amazonS3Client")
 public class AWSService {
 
     @Value("${cloud.aws.s3.bucket}")

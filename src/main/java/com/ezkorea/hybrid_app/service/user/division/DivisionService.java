@@ -35,7 +35,7 @@ public class DivisionService {
     }
 
     public DivisionDto createDivisionDto(String teamName, String teamGm) {
-        if (teamGm == null) {
+        if (teamGm.equals("0")) {
             Member master = mService.findByUsername("master");
             if (existsDivisionByLeader(master)) {
                 return null;

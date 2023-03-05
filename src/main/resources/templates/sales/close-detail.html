@@ -96,7 +96,7 @@
                             <br>
 
                             <div id="fixList">
-                                <h1 class="block text-lg font-bold mb-2"> 고장목록  </h1>
+                                <h1 class="block text-lg font-bold mb-2"> 불량목록  </h1>
                                 <table class="w-full text-sm text-left">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
@@ -177,7 +177,7 @@
                     })
                 });
 
-                // 조회 - 판매, 재고, 고장
+                // 조회 - 판매, 재고, 불량
                 $("#check div").on("click", function() {
                     let _status = $(this).attr("name");
 
@@ -253,7 +253,7 @@
                     )
                 })
 
-                // 고장목록
+                // 불량목록
                 let tbody2 = $($("#sellDiv tbody").get(2));
                 tbody2.empty();
                 if(data.fixList.length > 0) {
@@ -289,8 +289,7 @@
                 form.forEach(function(item) {
                     saleDtoList.push({
                         "wiper" : item.name,
-                        "count" : item.value,
-                        "status" : "stock",
+                        "count" : item.value
                     })
                 })
                 const data = {

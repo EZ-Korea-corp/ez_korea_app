@@ -93,8 +93,12 @@
                     $(location).attr("href", "/notice/".concat(xhr.id));
                 }
 
-                imageUpload('notice', savedId, '/image/upload', 'PUT', fnCallBck);
-                showLoadingSpinner("이미지를 저장하고 있습니다.");
+                if (fileCount !== 0) {
+                    imageUpload('notice', savedId, '/image/upload', 'PUT', fnCallBck);
+                    showLoadingSpinner("이미지를 저장하고 있습니다.");
+                } else {
+                    fnCallBck();
+                }
             }
         </script>
     </main>

@@ -3,7 +3,6 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
 import com.ezkorea.hybrid_app.domain.sale.SaleStatus;
-import com.ezkorea.hybrid_app.domain.task.DailyTask;
 import com.ezkorea.hybrid_app.domain.timetable.PartTime;
 import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
