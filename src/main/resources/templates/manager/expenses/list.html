@@ -172,6 +172,13 @@
 
             $(document).ready(function() {
 
+                const urlParams = new URLSearchParams(window.location.search);
+                const searchDate = urlParams.get('payDate');
+                if (searchDate !== '') {
+                    $('#payDate').val(searchDate);
+                }
+
+
                 $('#payDate').datepicker({
                     autoclose: true,
                     dateFormat: 'yy-mm-dd'
