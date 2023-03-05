@@ -14,7 +14,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"division", "leader", "memberList"})
 public class Team extends BaseEntity {
 
     private String teamName;

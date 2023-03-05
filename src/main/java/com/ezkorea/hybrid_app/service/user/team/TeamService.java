@@ -41,12 +41,16 @@ public class TeamService {
                 .division(division)
                 .teamName(teamName)
                 .build();
-        if (teamLeader != null) {
+        if (!teamLeader.equals("0")) {
             teamDto.setLeader(mService.findByUsername(teamLeader));
+        } else {
+            teamDto.setLeader(null);
         }
         List<Member> memberList = new ArrayList<>();
-        for (String employeeUsername : teamEmployee.split(",")) {
-            memberList.add(mService.findByUsername(employeeUsername));
+        if (teamEmployee != null) {
+            for (String employeeUsername : teamEmployee.split(",")) {
+                memberList.add(mService.findByUsername(employeeUsername));
+            }
         }
         teamDto.setMemberList(memberList);
         return teamDto;

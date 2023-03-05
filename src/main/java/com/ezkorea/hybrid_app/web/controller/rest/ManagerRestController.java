@@ -1,6 +1,7 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
 import com.ezkorea.hybrid_app.domain.user.division.Division;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
@@ -46,6 +47,10 @@ public class ManagerRestController {
         String teamLeader = (String) datum.get("teamLeader");
         String teamEmployee = (String) datum.get("teamEmployee");
 
+        if (divisionName == null) {
+            return new ResponseEntity<>(Map.of("message", "지점장이 없는 지점을 새로 만든 뒤 시도해주세요."), HttpStatus.BAD_REQUEST);
+        }
+
         Division currentDivision = dService.findDivisionByDivisionName(divisionName);
         TeamDto dto = tService.createTeamDto(currentDivision, teamName, teamLeader, teamEmployee);
         tService.saveNewTeam(dto);
@@ -90,6 +95,10 @@ public class ManagerRestController {
         String teamLeader = (String) datum.get("teamLeader");
         String teamEmployee = (String) datum.get("teamEmployee");
 
+        if (teamEmployee == null) {
+            return new ResponseEntity<>(Map.of("message", "팀원을 최소 1명 선택해주세요."), HttpStatus.BAD_REQUEST);
+        }
+
         tService.updateTeam(id, currentDivision, teamName, teamLeader, teamEmployee);
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
@@ -106,6 +115,11 @@ public class ManagerRestController {
 
         // 입고 권한
         String memberInputAuth = (String) datum.get("memberInputAuth");
+
+        Member currentMember = mService.findByUsername(username);
+        if (currentMember.getTeam() != null) {
+            return new ResponseEntity<>(Map.of("message", "소속된 팀에서 제거한 뒤 진행해주세요.(팀명 : %s)".formatted(currentMember.getTeam().getTeamName())), HttpStatus.BAD_REQUEST);
+        }
 
         mService.updateMemberSubAuth(username, memberPostAuth, memberInputAuth);
         mService.updateMemberRole(username, Role.valueOf(memberRole), MemberStatus.valueOf(memberStatus));

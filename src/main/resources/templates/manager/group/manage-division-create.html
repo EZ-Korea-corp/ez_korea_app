@@ -29,7 +29,7 @@
                         <div>
                             <label for="teamGM" class="font-semibold text-base"> 지점장 선택 </label>
                             <select id="teamGM" name="teamGM"  class="shadow-none selectpicker with-border">
-                                <option value="0">지점 선택 안 함</option>
+                                <option value="0">지점장 선택 안 함</option>
                                 <option th:each="gm : ${gmList}"
                                         th:value="${gm.getUsername()}"
                                         th:text="|${gm.getName()}(${gm.getPhone()})|">이름</option>
