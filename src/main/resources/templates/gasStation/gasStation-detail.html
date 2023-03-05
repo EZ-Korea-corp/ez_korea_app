@@ -99,6 +99,13 @@
             </div>
 
         </div>
+        <script>
+            jQuery(document).ready(function($){
+                let content = $('#content').text();
+                let html = content.replace(/\n/g, '<br>');
+                $('#content').html(html);
+            });
+        </script>
     </main>
 
 </body>
