@@ -9,7 +9,6 @@
 
   <body>
     <div id="wrapper" th:with="member = ${#authentication.getPrincipal().getMember()}">
-
       <th:block th:if="${!member.getMemberStatus().getViewName().equals('가입대기')}">
         <th:block th:if="${member.isRoleChanged() eq true}">
           <form th:action="@{/reload}" method="post">
@@ -54,7 +53,7 @@
           </div>
         </form>
       </th:block>
-      <th:block th:if="${member.getMemberStatus().equals(T(com.ezkorea.hybrid_app.domain.user.member.MemberStatus).AWAIT)}">
+      <th:block th:if="${member.getMemberStatus().equals(T(com.ezkorea.hybrid_app.domain.user.member.MemberStatus).AWAIT) && member.getMemberStatus().getViewName().equals('현직')}">
         <form th:action="@{/reload}" method="post">
           <div class="p-10">
             <div class=" md:mb-4 mb-3">

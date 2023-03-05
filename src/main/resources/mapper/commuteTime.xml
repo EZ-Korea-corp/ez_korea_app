@@ -18,7 +18,7 @@
 
     <select id="findTaskDateList" parameterType="Map" resultType="Map">
         SELECT    DATE_FORMAT(A.TASK_DATE, '%d') AS TASK_DATE
-                , MAX(B.ID) AS ID
+                , MAX(A.ID) AS ID
         FROM    TIME_TABLE A INNER JOIN GAS_STATION B
         ON      A.GAS_STATION_ID = B.ID
         WHERE   A.MEMBER_ID = #{id}
