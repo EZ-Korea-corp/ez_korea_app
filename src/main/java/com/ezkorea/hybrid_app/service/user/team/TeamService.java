@@ -56,13 +56,19 @@ public class TeamService {
     public void updateTeam(Long teamId, Division division, String teamName, String teamLeader, String teamEmployee) {
         Team currentTeam = findById(teamId);
 
-        if (teamLeader != null && !teamLeader.equals("0")) {
+        // 팀장이 선택되었을 경우
+        if (!teamLeader.equals("0")) {
             Member currentTeamLeader = mService.findByUsername(teamLeader);
             currentTeamLeader.setDivision(division);
             currentTeamLeader.setTeam(currentTeam);
             currentTeam.setLeader(currentTeamLeader);
+        } else {
+            // 팀장이 선택되지 않았을 경우 기존 팀장이 있는지 확인
+            if (currentTeam.getLeader() != null) {
+                currentTeam.getLeader().setTeam(null);
+                currentTeam.setLeader(null);
+            }
         }
-
         // 기존 소속 팀원 설정
         for (Member member : currentTeam.getMemberList()) {
             member.setDivision(null);
