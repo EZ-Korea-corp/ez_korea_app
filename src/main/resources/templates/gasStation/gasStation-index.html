@@ -63,10 +63,15 @@
                                 <div>
                                     <div id="select-div" class="items-center space-x-3">
                                         <div class="flex-1">
-                                            <div class="grid grid-cols-3 gap-4">
+                                            <th:block sec:authorize="hasAnyAuthority('ROLE_MASTER', 'ROLE_DIRECTOR', 'ROLE_MANAGER', 'ROLE_GM')">
+                                                <div class="grid grid-cols-3 gap-4">
+                                                    <input type="text" class="live-search-box col-span-2" placeholder="주유소 이름을 입력해주세요."/>
+                                                    <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/save';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 h-full rounded-md border font-semibold"> 등록 </button>
+                                                </div>
+                                            </th:block>
+                                            <th:block sec:authorize="!hasAnyAuthority('ROLE_MASTER', 'ROLE_DIRECTOR', 'ROLE_MANAGER', 'ROLE_GM')">
                                                 <input type="text" class="live-search-box col-span-2" placeholder="주유소 이름을 입력해주세요."/>
-                                                <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/save';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 h-full rounded-md border font-semibold"> 등록 </button>
-                                            </div>
+                                            </th:block>
 
                                             <ul id="search-result" class="live-search-list">
                                                 <li style="display: none">
