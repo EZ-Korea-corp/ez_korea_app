@@ -35,7 +35,7 @@ jQuery.fn.serializeObject = function() {
 };
 
 // ajax 메소드:post, put, delete, 파라미터:json
-function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg) {
+function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg, errorMsg) {
 
     $.ajax({
         type: method,
@@ -65,7 +65,7 @@ function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg) {
             } else if(xhr.status === 404 || status === 404) {
                 Swal.fire({
                     icon: 'error',
-                    text: eval("(" + xhr.responseText + ")").message,
+                    text: errorMsg,
                 });
             } else {
                 Swal.fire({
