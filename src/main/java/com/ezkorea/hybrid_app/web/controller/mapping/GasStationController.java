@@ -27,7 +27,14 @@ public class GasStationController {
 
     @GetMapping("/index")
     public String showGasStationListPage(Model model) {
+        model.addAttribute("stationList", gasStationService.findOnGasStation());
+        return "gasStation/gasStation-index";
+    }
+
+    @GetMapping("/indexAll")
+    public String showGasStationAllListPage(Model model) {
         model.addAttribute("stationList", gasStationService.findAllGasStation());
+        model.addAttribute("isAll", true);
         return "gasStation/gasStation-index";
     }
 

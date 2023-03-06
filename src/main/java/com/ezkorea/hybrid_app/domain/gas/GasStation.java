@@ -24,6 +24,7 @@ public class GasStation {
     private String stationLocation;
     private String memo;
     private int distance;
+    private boolean isWork;
 
     public void setBasicInfo(GasStationDto dto) {
         this.stationName = dto.getStationName();
