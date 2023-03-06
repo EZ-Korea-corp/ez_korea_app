@@ -51,8 +51,11 @@
 
                     <div class="p-8">
 
-                        <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
+                        <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2 justify-between">
                             <h2 class="text-xl font-bold"><span class="mr-2">⛽</span>주유소 보기</h2>
+                            <div th:if="${isAll == null}">
+                                <button type="button" th:onclick="|location.href='/station/indexAll';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 전체검색 </button>
+                            </div>
                         </div>
 
                         <hr class="my-4">

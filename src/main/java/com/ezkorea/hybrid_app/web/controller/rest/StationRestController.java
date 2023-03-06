@@ -65,4 +65,11 @@ public class StationRestController {
         return returnMap;
     }
 
+    @PutMapping("/station/isWork")
+    public ResponseEntity<Object> updateStationIsWork(@RequestBody Map<String, Object> paramMap) {
+        GasStation updateStation = gasStationService.updateGasStationIsWork(paramMap);
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", updateStation.getId()), HttpStatus.OK);
+    }
+
 }
