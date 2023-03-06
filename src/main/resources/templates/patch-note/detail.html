@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            #editor {
+                background-color: white;
+            }
+        </style>
+        <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
+        <div id="bg" class="lg:space-x-12">
+            <form id="noticeForm" onsubmit="return false;">
+                <div class="">
+
+                    <!-- form header -->
+                    <div class="text-center border-b border-gray-100 py-6">
+                        <h3 class="font-bold text-xl" th:text="${notice.getTitle()}"> 제목 </h3>
+                        <small th:text="|${#temporals.format(notice.getCreateDate(), 'yy년 MM월 dd일')} 패치 노트|"></small>
+                    </div>
+
+                    <!-- form body -->
+                    <div class="p-10 space-y-7">
+
+                        <div id="content" th:text="${notice.getContent()}"></div>
+
+                    </div>
+
+                    <!-- form footer -->
+                    <div class="m-4 p-4">
+                        <a th:href="|javascript:window.history.back();|" class="button w-full hover:text-white">뒤로가기</a>
+                        <div class="grid grid-cols-2 gap-4" th:if="${member.getUsername().equals('dev')}">
+                            <a th:href="@{/note/{id}/update(id=${notice.getId()})}"
+                               class="button w-full mt-4 hover:text-white">수정하기</a>
+                            <button type="button" id="deleteNotice" class="w-full text-white mt-4 bg-red-600 h-10 rounded">삭제하기</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <script>
+
+            jQuery(document).ready(function($){
+                let content = $('#content').text();
+                let html = content.replace(/\n/g, '<br>');
+                $('#content').html(html);
+
+                /*<![CDATA[*/
+                let id = "[[${notice.getId()}]]";
+                /*]]>*/
+
+                $("#deleteNotice").on("click", function (){
+                    let url = '/note/'.concat(id);
+                    Swal.fire({
+                        title: '삭제하시겠습니까?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '삭제',
+                        cancelButtonText: '취소'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire(
+                                '삭제되었습니다.',
+                                '',
+                                'success'
+                            ).then(() => {
+                                fnOnlyCrudJsonAjax($('#noticeForm').serializeObject(), url, 'DELETE', successHref);
+                            })
+                        }
+                    })
+                });
+            });
+
+            function successHref(data, xhr) {
+                $(location).attr("href", "/note");
+            }
+
+        </script>
+    </main>
+
+</body>
+
+</html>

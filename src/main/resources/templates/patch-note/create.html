@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            textarea {
+                resize: none;
+            }
+        </style>
+        <div id="bg" class="lg:space-x-12">
+            <form id="createNoticeForm" onsubmit="return false;">
+                <div class="">
+
+                    <!-- form header -->
+                    <div class="text-center border-b border-gray-100 py-6">
+                        <h3 class="font-bold text-xl"> 패치 노트 작성 </h3>
+                    </div>
+
+                    <!-- form body -->
+                    <div class="p-10 space-y-7">
+                        <div>
+                            <label for="title" class="font-semibold text-base"> 제목 </label>
+                            <input id="title" class="with-border" name="title" type="text" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold text-base"> 내용 </label>
+                            <textarea id="content" name="content" rows="8" class="p-4 bg-gray-100"></textarea>
+                        </div>
+
+                        <div id="editor"></div>
+
+                    </div>
+
+                    <!-- form footer -->
+                    <div class="grid grid-cols-2 gap-4 m-4 p-10">
+                        <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
+                        <button id="submit" type="button" class="button w-full">생성하기</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <script>
+
+            $("#submit").on("click", function (){
+                let flag = true;
+                let title = $('#title').val();
+                let content = $('#content').val();
+
+                if (title.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '제목을 입력해주세요.',
+                    });
+                    flag = false;
+                }
+
+                if (content.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '내용을 입력해주세요.',
+                    });
+                    flag = false;
+                }
+                if (flag === true) {
+                    fnResponseCrudJsonAjax($('#createNoticeForm').serializeObject(), '/note', 'POST', successHref);
+                }
+            });
+
+            function successHref(data, xhr) {
+                $(location).attr("href", "/note/".concat(xhr.id));
+            }
+        </script>
+    </main>
+
+</body>
+
+</html>
