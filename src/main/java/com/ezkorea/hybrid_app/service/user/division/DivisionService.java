@@ -54,9 +54,12 @@ public class DivisionService {
     @Transactional
     public void updateDivision(Long divisionId, String teamName, String teamGm) {
         Division currentDivision = findDivisionById(divisionId);
+        currentDivision.getLeader().setDivision(null);
         currentDivision.setDivisionName(teamName);
-        if (teamGm != null && !teamGm.equals("0")) {
-            currentDivision.setLeader(mService.findByUsername(teamGm));
+        if (!teamGm.equals("0")) {
+            Member currentMember = mService.findByUsername(teamGm);
+            currentDivision.setLeader(currentMember);
+            currentMember.setDivision(currentDivision);
         }
 
         /*if (teamGm.equals("0")) {
