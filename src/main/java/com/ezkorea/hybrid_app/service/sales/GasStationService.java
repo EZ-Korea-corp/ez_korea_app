@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -33,6 +34,10 @@ public class GasStationService {
 
     public List<GasStation> findAllGasStation() {
         return gsRepository.findAll();
+    }
+
+    public List<GasStation> findOnGasStation() {
+        return gsRepository.findAllByIsWork(true);
     }
 
     @Transactional(readOnly = true)
@@ -71,5 +76,13 @@ public class GasStationService {
     public void deleteGasStation(GasStation station) {
         awsService.deleteImages(station.getImageList());
         gsRepository.delete(station);
+    }
+
+    @Transactional
+    public GasStation updateGasStationIsWork(Map<String, Object> paramMap) {
+        GasStation station = findStationById(Long.valueOf(String.valueOf(paramMap.get("stationId"))));
+        station.setWork(Boolean.valueOf(paramMap.get("isWork").toString()));
+
+        return station;
     }
 }

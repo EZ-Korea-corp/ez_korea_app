@@ -17,13 +17,20 @@
             button{
                 color: #FFFFFF;
             }
+
+            #isWork:not(:checked) + #isWorkBt {
+                background-color: #ccc;
+            }
+            #isWork{
+                display:none;
+            }
         </style>
         <div class="lg:space-x-12">
 
             <div class="lg:w-full card">
 
                 <div class="p-8">
-
+                    <input type="hidden" id="stationId" th:value="${station['id']}">
                     <div class="flex items-center space-x-3">
                         <div class="p-1.5 rounded-full text-2xl">⛽️</div>
                         <div class="flex-1">
@@ -36,6 +43,8 @@
 
                     <div class="grid grid-cols-2 gap-4 my-4">
                         <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/update/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md font-semibold"> 수정 </button>
+                        <input type="checkbox" id="isWork" th:checked="${station['isWork']}" name="memberPostAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border"/>
+                        <label for="isWork" id="isWorkBt" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md font-semibold text-white"> 영업중 </label>
                     </div>
 
                     <hr class="my-4">
@@ -94,6 +103,20 @@
         </div>
         <script>
             jQuery(document).ready(function($){
+                // 영업중
+                $("#isWorkBt").on("click", function(){
+                    // 영업상태 변경
+                    let data = {
+                        "stationId" : $("#stationId").val(),
+                        "isWork"    : $("#isWork").is(':checked') ? "false" : "true"
+                    }
+                    fnResponseCrudJsonAjax(data, '/station/isWork', 'PUT', successHref);
+                });
+
+                function successHref() {
+                    $(location).attr("href", "/station/detail/" + $("#stationId").val());
+                }
+
                 let content = $('#content').text();
                 let html = content.replace(/\n/g, '<br>');
                 $('#content').html(html);

@@ -58,7 +58,7 @@ public class SaleController {
     @GetMapping("/sales/select")
     public String showSalesSelectPage(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
 
-        model.addAttribute("stations", gasStationService.findAllGasStation());
+        model.addAttribute("stations", gasStationService.findOnGasStation());
         return "sales/sales-select";
     }
 
@@ -85,7 +85,7 @@ public class SaleController {
     @GetMapping("/sales/input/save")
     public String showInputSavePage(@RequestParam(value="id", required=false)Long id, Model model) {
         model.addAttribute("id", id);
-        model.addAttribute("stations", gasStationService.findAllGasStation());
+        model.addAttribute("stations", gasStationService.findOnGasStation());
         // 본인 입고 조회
         return "sales/in-detail";
     }
