@@ -125,45 +125,49 @@
                                     </div>
                                 </div>
 
-                                <h1 class="block text-lg font-bold mb-4"> 공지사항  </h1>
-                                <div class="md:w-2/3 space-y-4 -mt-2">
-                                    <div class="md:flex">
-                                    <div class="items-center space-x-3">
-                                        <div>
-                                            <div id="content" th:text="${map.table.getGasStation().getMemo()}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center space-x-3 p-8">
-                                        <th:block th:if="${map.table.getGasStation().getImageList().size() != 0}">
-                                            <div id="imageRefreshForm" class="imageRefreshForm mb-4">
-                                                <div class="uk-container mt-4" uk-slider>
-                                                    <div class="uk-position-relative uk-visible-toggle uk-light">
-                                                        <div uk-lightbox="animation: slide" class="uk-slider-items uk-child-width-1-2 uk-child-width-1-3@s uk-child-width-1-4@m">
-                                                            <div th:each="image : ${map.table.getGasStation().getImageList()}">
-                                                                <a th:href="${image.getFilePath()}" data-fancybox="gallery">
-                                                                    <img class="rounded" style="width: 200px; height: 150px;"
-                                                                         th:src="${image.getFilePath()}"/>
-                                                                </a>
+                                <div class="mt-4">
+                                    <div class="flex justify-content-between">
+                                        <h1 class="block text-lg font-bold mb-4"> 공지사항  </h1>
+                                        <th:block th:if="${map.table.getGasStation().getImageList() != 0}">
+                                            <p uk-toggle="target: #imgModal" class="text-blue-500 underline hover:text-white">공지 사진</p>
+
+                                            <!-- This is the modal with the default close button -->
+                                            <div id="imgModal" uk-modal>
+                                                <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
+                                                    <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
+                                                    <h2 class="mb-2 uk-modal-title">공지 사진</h2>
+                                                    <div id="imageRefreshForm" class="imageRefreshForm mb-4">
+                                                        <div class="uk-container mt-4" uk-slider>
+                                                            <div class="uk-position-relative uk-visible-toggle uk-light">
+                                                                <div uk-lightbox="animation: slide" class="uk-slider-items uk-child-width-1-2 uk-child-width-1-3@s uk-child-width-1-4@m">
+                                                                    <div th:each="image : ${map.table.getGasStation().getImageList()}">
+                                                                        <a th:href="${image.getFilePath()}" data-fancybox="gallery">
+                                                                            <img class="rounded" style="width: 200px; height: 150px;"
+                                                                                 th:src="${image.getFilePath()}"/>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slider-item="previous"></a>
+                                                                <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slider-item="next"></a>
                                                             </div>
                                                         </div>
-                                                        <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slider-item="previous"></a>
-                                                        <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slider-item="next"></a>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!--<hr class="pb-2">
-                                            <div class="uk-child-width-1-3@m" uk-grid uk-lightbox="animation: slide">
-                                                <div th:each="image, status : ${station.getImageList()}">
-                                                    <a class="uk-inline" th:href="${image.getFilePath()}" th:data-caption="|${status.index + 1}번째 사진|">
-                                                        <img th:src="${image.getFilePath()}" alt="">
-                                                    </a>
-                                                </div>
-                                            </div>-->
                                         </th:block>
                                     </div>
+                                    <div class="md:w-2/3 space-y-4 -mt-2">
+                                        <div class="md:flex">
+                                            <div class="items-center space-x-3">
+                                                <div>
+                                                    <div id="content" th:text="${map.table.getGasStation().getMemo()}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                </div>
+
                             </div>
                         </div>
                         <hr class="my-8">
@@ -177,10 +181,14 @@
                                     <div><span class="text-lg font-semibold" th:text="|총계 : ${#numbers.formatInteger(map.card + map.cash, 0, 'COMMA')}원|"></span> </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div>
                             <h1 class="block text-lg font-bold my-4"> 개별 판매수량  </h1>
-                            <div class="flex items-center space-x-3">
-                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <div class="relative overflow-x-auto shadow-md">
+
+                                <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                                    <thead class="whitespace-nowrap uk-text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
                                             종류
@@ -197,12 +205,12 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:if="${map.sellList.size() > 0}" th:each="sell : ${map.sellList}" class="border-b border-gray-200">
+                                    <tr th:if="${map.sellList.size() > 0}" th:each="sell : ${map.sellList}" class="whitespace-nowrap border-b border-gray-200">
                                         <th scope="row" th:text="${sell.name}" class="px-6 py-4 font-medium whitespace-nowrap bg-gray-50">
                                         </th>
                                         <td class="px-6 py-4" th:text="${sell.payment}"></td>
                                         <td class="px-6 py-4" th:text="|${sell.count * 0.5}개|"></td>
-                                        <td th:if="${sell.name != '총계'}">
+                                        <td th:if="${sell.name != '총계'}" class="uk-text-center">
                                             <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
                                         </td>
                                     </tr>
@@ -210,6 +218,7 @@
                                 </table>
                             </div>
                         </div>
+
                         <th:block th:if="${map.fixList.size() > 0}">
                             <h1 class="block text-lg font-bold my-4"> 불량 현황  </h1>
                             <div class="flex items-center space-x-3">

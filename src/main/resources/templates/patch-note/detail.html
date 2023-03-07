@@ -9,9 +9,29 @@
 <body>
 
     <main layout:fragment="main">
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
         <style>
-            #editor {
-                background-color: white;
+            h1 {
+                font-size: 1.6rem !important;
+                margin-bottom: 0.7rem;
+                border-bottom: 1px solid #ccc;
+            }
+            h2 {
+                font-size: 1.4rem !important;
+                margin-bottom: 0.5rem;
+            }
+            h3 {
+                font-size: 1.2rem !important;
+                margin-bottom: 0.5rem;
+            }
+            ol {
+                padding-left: 1.2rem;
+                list-style-type: decimal;
+            }
+            ul {
+                padding-left: 1.2rem;
+                list-style-type: circle;
             }
         </style>
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
@@ -28,7 +48,8 @@
                     <!-- form body -->
                     <div class="p-10 space-y-7">
 
-                        <div id="content" th:text="${notice.getContent()}"></div>
+                        <div id="markdown-text" th:utext="${notice.getContent()}" hidden=""></div>
+                        <div id="html-text"></div>
 
                     </div>
 
@@ -45,6 +66,16 @@
                 </div>
             </form>
         </div>
+        <script>
+            jQuery(document).ready(function($){
+                const markdownText = document.querySelector('#markdown-text').textContent;
+                document.getElementById('html-text').innerHTML =
+                    marked.parse(markdownText);
+            });
+            /*
+            const htmlText = marked(markdownText);
+            document.querySelector('#html-text').innerHTML = htmlText;*/
+        </script>
 
         <script>
 

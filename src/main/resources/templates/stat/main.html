@@ -91,7 +91,8 @@
 
             let series = chart.series.push(new am4charts.ColumnSeries());
             series.dataFields.categoryY = "NAME";
-            series.dataFields.valueX = "COUNT";
+            series.dataFields.valueX = "PRICE";
+            series.dataFields.count = "COUNT";
             series.tooltipText = "{valueX.value}";
             series.columns.template.strokeOpacity = 0;
             series.columns.template.column.cornerRadiusBottomRight = 5;
@@ -101,7 +102,7 @@
             let labelBullet = series.bullets.push(new am4charts.LabelBullet());
             labelBullet.label.horizontalCenter = "left";
             labelBullet.label.dx = 10;
-            labelBullet.label.text = "{values.valueX.workingValue}" + "개";
+            labelBullet.label.text = "{values.valueX.workingValue}" + "원(" + "{count}" + "개)";
             labelBullet.label.truncate = false;
             labelBullet.label.hideOversized = false;
             labelBullet.locationX = 1;

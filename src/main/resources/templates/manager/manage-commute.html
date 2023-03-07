@@ -92,13 +92,13 @@
                                             사원명
                                         </th>
                                         <th:block>
-                                            <td class="px-6 py-4" th:text="${#temporals.format(commute['ON_TIME'], 'HH:DD')}">
+                                            <td class="px-6 py-4" th:text="${#temporals.format(commute['ON_TIME'], 'HH:mm')}">
                                                 출근 시간
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap" th:text="${commute['ON_TIME_LOCATION']}">
                                                 출근 위치
                                             </td>
-                                            <td class="px-6 py-4" th:text="${#temporals.format(commute['OFF_TIME'], 'HH:DD')}">
+                                            <td class="px-6 py-4" th:text="${#temporals.format(commute['OFF_TIME'], 'HH:mm')}">
                                                 퇴근 시간
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap" th:text="${commute['OFF_TIME_LOCATION']}">
