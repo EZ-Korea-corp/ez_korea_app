@@ -6,7 +6,7 @@
     <select id="findStatList" parameterType="Map" resultType="Map">
         SELECT    A.NAME
                 , SUM(A.COUNT) AS COUNT
-                , SUM(A.PRICE) AS PRICE
+                , FORMAT(SUM(A.PRICE), 0) AS PRICE
         FROM
         (
             SELECT    CONCAT(MAX(B.NAME), (CASE WHEN MAX(B.TEAM_NAME) IS NULL THEN "" ELSE CONCAT("(", MAX(B.TEAM_NAME), ")") END)) AS NAME
@@ -51,7 +51,7 @@
             GROUP BY B.MEMBER_ID, A.SORT
         ) A
         GROUP BY A.NAME
-        ORDER BY PRICE DESC, COUNT DESC
+        ORDER BY A.PRICE DESC, COUNT DESC
         LIMIT 10;
     </select>
 
