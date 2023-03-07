@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html">
+
+  <!-- header-->
+  <div th:fragment="profile (selector)">
+    <nav class="responsive-nav setting-nav setting-menu"
+         uk-sticky="top:30 ; offset:80 ; media:@m ;bottom:true; animation: uk-animation-slide-top">
+      <ul>
+        <li th:classappend="${selector eq 'profile' ? 'uk-active' : ''}"><a th:href="@{/settings/profile}"> <i class="uil-user"></i> 프로필 </a></li>
+        <li th:classappend="${selector eq 'password' ? 'uk-active' : ''}"><a th:href="@{/settings/password}"> <i class="uil-cog mr-1"></i> 비밀번호 변경 </a></li>
+        <li th:classappend="${selector eq 'account' ? 'uk-active' : ''}"><a th:href="@{/settings/account}"> <i class="uil-cog mr-1"></i> 개인 정보 변경 </a></li>
+      </ul>
+    </nav>
+  </div>
+
+</html>

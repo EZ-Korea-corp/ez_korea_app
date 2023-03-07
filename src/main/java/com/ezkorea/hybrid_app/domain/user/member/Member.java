@@ -46,6 +46,12 @@ public class Member extends BaseEntity {
     @Setter
     private String name;
 
+    public void setMemberBasicInfo(String name, String email, String phone) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
+
     @Setter
     @Column(name = "member_role")
     @Enumerated(EnumType.STRING)

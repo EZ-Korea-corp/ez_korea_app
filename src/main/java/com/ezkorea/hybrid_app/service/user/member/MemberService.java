@@ -14,7 +14,6 @@ import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -261,7 +260,7 @@ public class MemberService {
         return memberRepository.findAllByMemberStatusNot(status);
     }
 
-    public boolean updateMemberProfile(ProfileDto dto, Member member) {
+    public boolean updateMemberPassword(ProfileDto dto, Member member) {
         if (passwordEncoder.matches(dto.getOriginPassword(), findMemberById(member.getId()).getPassword())) {
             member.setPassword(passwordEncoder.encode(dto.getNewPassword()));
             forceAuthentication(member);
@@ -315,5 +314,13 @@ public class MemberService {
 
     public List<Member> findByRoleAndDivisionAndDivisionNull(Role role, MemberStatus status, Division division) {
         return memberRepository.findByRoleAndDivisionAndDivisionAndDivisionNull(role, status, division);
+    }
+
+    @Transactional
+    public void updateMemberInfo(Member member, ProfileDto dto) {
+        Member contextMember = findByUsername(member.getUsername());
+        contextMember.setMemberBasicInfo(
+                dto.getName(), dto.getEmail(), dto.getPhone()
+        );
     }
 }
