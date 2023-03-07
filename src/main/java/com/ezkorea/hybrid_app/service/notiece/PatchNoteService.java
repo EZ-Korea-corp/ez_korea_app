@@ -22,7 +22,7 @@ public class PatchNoteService {
     @Transactional(readOnly = true)
     public Page<PatchNote> findAllNote(int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        return pnRepository.findAll(pageable);
+        return pnRepository.findAllByOrderByCreateDateDesc(pageable);
     }
 
     public PatchNote saveNewNote(NoticeDto dto) {
