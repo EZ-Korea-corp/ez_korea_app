@@ -58,6 +58,6 @@ public class NoticeService {
 
     public Page<Notice> findAllNotice(int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        return noticeRepository.findAll(pageable);
+        return noticeRepository.findAllByOrderByCreateDateDesc(pageable);
     }
 }
