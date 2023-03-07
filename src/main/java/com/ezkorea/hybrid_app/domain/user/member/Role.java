@@ -12,7 +12,7 @@ public enum Role {
     ROLE_MANAGER("경리"),
     ROLE_GM("지점장"),
     ROLE_LEADER("팀장"),
-    ROLE_EMPLOYEE("직원");
+    ROLE_EMPLOYEE("사원");
 
     private final String viewName;
 
