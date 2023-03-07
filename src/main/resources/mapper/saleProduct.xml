@@ -5,54 +5,60 @@
 
     <select id="findStatList" parameterType="Map" resultType="Map">
         SELECT    A.NAME
-                , SUM(A.COUNT) AS COUNT
-                , FORMAT(SUM(A.PRICE), 0) AS PRICE
+                , A.COUNT AS COUNT
+                , FORMAT(A.PRICE, 0) AS PRICE
         FROM
         (
-            SELECT    CONCAT(MAX(B.NAME), (CASE WHEN MAX(B.TEAM_NAME) IS NULL THEN "" ELSE CONCAT("(", MAX(B.TEAM_NAME), ")") END)) AS NAME
-                    , SUM(A.COUNT) / 2 AS COUNT
-                    , SUM(A.COUNT) * MAX(C.PRICE) AS PRICE
-            FROM    SELL_PRODUCT A INNER JOIN
+            SELECT    A.NAME
+                    , SUM(A.COUNT) AS COUNT
+                    , SUM(A.PRICE) AS PRICE
+            FROM
             (
-                SELECT    A.ID AS TABLE_ID
-                        , B.ID AS MEMBER_ID
-                        , B.NAME AS NAME
-                        , C.TEAM_NAME AS TEAM_NAME
-                FROM    TIME_TABLE A INNER JOIN MEMBER B
-                ON A.MEMBER_ID = B.ID
-                LEFT JOIN TEAM C
-                ON B.TEAM_ID = C.ID
-                <if test="pStatus != null and !''.equals(pStatus)">
-                    <choose>
-                        <when test="'day'.equals(pStatus)">
-                            WHERE   A.TASK_DATE = #{date}
-                        </when>
-                        <when test="'week'.equals(pStatus)">
-                            WHERE   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(#{date}) + 0)
-                            AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(#{date}) + 6)
-                        </when>
-                        <otherwise>
-                            WHERE   A.TASK_DATE <![CDATA[>=]]> LAST_DAY(#{date} - INTERVAL 1 MONTH) + INTERVAL 1 DAY
-                            AND		A.TASK_DATE <![CDATA[<=]]> LAST_DAY(#{date})
-                        </otherwise>
-                    </choose>
-                </if>
-            ) B
-            ON A.TIME_TABLE_ID = B.TABLE_ID
-            INNER JOIN
-            (
-                SELECT    A.WIPER_SORT AS SORT
-                        , MAX(A.WIPER_PRICE) AS PRICE
-                FROM    WIPER A
-                GROUP BY A.WIPER_SORT
-            ) C
-            ON A.SORT = C.SORT
-            WHERE A.STATUS = 'out'
-            GROUP BY B.MEMBER_ID, A.SORT
+                SELECT    CONCAT(MAX(B.NAME), (CASE WHEN MAX(B.TEAM_NAME) IS NULL THEN "" ELSE CONCAT("(", MAX(B.TEAM_NAME), ")") END)) AS NAME
+                        , SUM(A.COUNT) / 2 AS COUNT
+                        , SUM(A.COUNT) * MAX(C.PRICE) AS PRICE
+                FROM    SELL_PRODUCT A INNER JOIN
+                (
+                    SELECT    A.ID AS TABLE_ID
+                            , B.ID AS MEMBER_ID
+                            , B.NAME AS NAME
+                            , C.TEAM_NAME AS TEAM_NAME
+                    FROM    TIME_TABLE A INNER JOIN MEMBER B
+                    ON A.MEMBER_ID = B.ID
+                    LEFT JOIN TEAM C
+                    ON B.TEAM_ID = C.ID
+                    <if test="pStatus != null and !''.equals(pStatus)">
+                        <choose>
+                            <when test="'day'.equals(pStatus)">
+                                WHERE   A.TASK_DATE = #{date}
+                            </when>
+                            <when test="'week'.equals(pStatus)">
+                                WHERE   A.TASK_DATE <![CDATA[>=]]> ADDDATE(#{date}, - WEEKDAY(#{date}) + 0)
+                                AND		A.TASK_DATE <![CDATA[<=]]> ADDDATE(#{date}, - WEEKDAY(#{date}) + 6)
+                            </when>
+                            <otherwise>
+                                WHERE   A.TASK_DATE <![CDATA[>=]]> LAST_DAY(#{date} - INTERVAL 1 MONTH) + INTERVAL 1 DAY
+                                AND		A.TASK_DATE <![CDATA[<=]]> LAST_DAY(#{date})
+                            </otherwise>
+                        </choose>
+                    </if>
+                ) B
+                ON A.TIME_TABLE_ID = B.TABLE_ID
+                INNER JOIN
+                (
+                    SELECT    A.WIPER_SORT AS SORT
+                            , MAX(A.WIPER_PRICE) AS PRICE
+                    FROM    WIPER A
+                    GROUP BY A.WIPER_SORT
+                ) C
+                ON A.SORT = C.SORT
+                WHERE A.STATUS = 'out'
+                GROUP BY B.MEMBER_ID, A.SORT
+            ) A
+            GROUP BY A.NAME
+            ORDER BY PRICE DESC, COUNT DESC
         ) A
-        GROUP BY A.NAME
-        ORDER BY A.PRICE DESC, COUNT DESC
-        LIMIT 10;
+        LIMIT 10
     </select>
 
     <select id="findTotalStat" parameterType="Map" resultType="Map">
