@@ -37,7 +37,7 @@ public class GasStationService {
     }
 
     public List<GasStation> findOnGasStation() {
-        return gsRepository.findAllByIsWork(true);
+        return gsRepository.findAllByIsWorkOrderByStationNameAsc(true);
     }
 
     @Transactional(readOnly = true)

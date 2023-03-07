@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface GasStationRepository extends JpaRepository<GasStation, Long> {
     Optional<GasStation> findByStationName(String name);
     Optional<GasStation> findById(Long id);
-    List<GasStation> findAllByIsWork(boolean isWork);
+    List<GasStation> findAllByIsWorkOrderByStationNameAsc(boolean isWork);
 }
