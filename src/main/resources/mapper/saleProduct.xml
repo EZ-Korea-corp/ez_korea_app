@@ -51,7 +51,7 @@
             GROUP BY B.MEMBER_ID, A.SORT
         ) A
         GROUP BY A.NAME
-        ORDER BY PRICE DESC, COUNT DESC
+        ORDER BY A.PRICE DESC, COUNT DESC
         LIMIT 10;
     </select>
 
