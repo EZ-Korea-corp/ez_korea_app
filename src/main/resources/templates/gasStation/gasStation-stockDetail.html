@@ -32,7 +32,7 @@
                 <div>
                     <div class="relative overflow-x-auto shadow-md">
                         <table class="w-full uk-text-center text-sm text-left text-gray-500">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <thead class="text-xs uppercase bg-gray-50 whitespace-nowrap">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
                                     구분
@@ -43,7 +43,7 @@
                                 </th>
                             </tr>
                             </thead>
-                            <tbody id="dataBody">
+                            <tbody id="dataBody" class="whitespace-nowrap">
                             <tr class="bg-white border-b"
                                 th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}">
                                 <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap" th:text="${sort.getViewName()}"></th>
