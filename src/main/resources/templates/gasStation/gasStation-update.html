@@ -23,6 +23,8 @@
                                 <input type="text" id="stationName" th:value="${station.getStationName()}" name="stationName" placeholder="주유소명 입력">
                             </div>
                             <div class="form-control">
+                                <h1 class="block text-md font-bold my-2"> 왕복거리(km) </h1>
+                                <input type="number" id="distance" th:value="${station.getDistance()}" name="distance" placeholder="왕복거리(km) 입력">
                                 <h1 class="block text-md font-bold my-2"> 주유소 주소 </h1>
                                 <input type="hidden" id="id" name="id">
                                 <input type="text" id="stationLocation" th:value="${station.getStationLocation()}" name="stationLocation" placeholder="주소 입력">
@@ -112,6 +114,7 @@
 
                     let stationName     = $('#stationName');
                     let stationLocation = $('#stationLocation');
+                    let distance        = $('#distance');
 
                     if(stationName.val() == "") {
                         validateMsg += "주유소명을 입력해주세요<br/>";
@@ -119,6 +122,10 @@
                     }
                     if(stationLocation.val() == "") {
                         validateMsg += "주유소 위치를 입력해주세요";
+                        focusObj = stationLocation;
+                    }
+                    if(distance.val() && distance.val() < 0) {
+                        validateMsg += "거리는 음수가 될수 없습니다";
                         focusObj = stationLocation;
                     }
 

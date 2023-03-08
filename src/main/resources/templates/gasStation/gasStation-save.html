@@ -23,7 +23,9 @@
                                 <input type="text" id="stationName" name="stationName" placeholder="주유소명 입력">
                             </div>
                             <div class="form-control">
-                                <h1 class="block text-md font-bold my-2"> 주유소 이름 </h1>
+                                <h1 class="block text-md font-bold my-2"> 왕복거리(km) </h1>
+                                <input type="number" id="distance" name="distance" placeholder="왕복거리(km) 입력">
+                                <h1 class="block text-md font-bold my-2"> 주유소 주소 </h1>
                                 <input type="hidden" id="id" name="id">
                                 <input type="text" id="stationLocation" name="stationLocation" placeholder="주소 입력">
                                 <button type="button" class="w-full mt-2 bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold" onclick="loadAddress()">주소 검색</button>
@@ -123,6 +125,7 @@
 
                     let stationName     = $('#stationName');
                     let stationLocation = $('#stationLocation');
+                    let distance        = $('#distance');
 
                     if(stationName.val() == "") {
                         validateMsg += "주유소명을 입력해주세요<br/>";
@@ -132,6 +135,11 @@
                         validateMsg += "주유소 위치를 입력해주세요";
                         focusObj = stationLocation;
                     }
+                    if(distance.val() && distance.val() < 0) {
+                        validateMsg += "거리는 음수가 될수 없습니다";
+                        focusObj = stationLocation;
+                    }
+
 
                     if(validateMsg) {
                         isValid = false;

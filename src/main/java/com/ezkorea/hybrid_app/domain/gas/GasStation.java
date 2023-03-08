@@ -29,6 +29,7 @@ public class GasStation {
     public void setBasicInfo(GasStationDto dto) {
         this.stationName = dto.getStationName();
         this.stationLocation = dto.getStationLocation();
+        this.distance = dto.getDistance();
         this.memo = dto.getMemo();
         this.imageList.clear();
     }
