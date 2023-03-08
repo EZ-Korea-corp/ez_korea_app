@@ -36,6 +36,9 @@
                             <span class="text-xl font-semibold" th:text="${station['stationName']}"> 주유소 이름 </span>
                         </div>
                         <p th:text="${station['stationLocation']}"></p>
+                        <th:block th:if="${currentCost != null && station['distance'] > 0}" class="flex">
+                            <p th:text="'[유류비] 휘발유:' + ${#numbers.formatInteger(currentCost.getGasolinePrice() * station['distance'] / 10, 3, 'COMMA')} + '원 경유:' + ${#numbers.formatInteger(currentCost.getDieselPrice() * station['distance'] / 10, 3, 'COMMA')} + '원'"></p>
+                        </th:block>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 my-4">

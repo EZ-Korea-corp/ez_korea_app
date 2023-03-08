@@ -106,9 +106,9 @@
 
                 fnCalenderMaker($('#datepicker'), date);
 
-                // 입고 조회
+                // 재고 조회
                 $('#datepicker').on("change", function() {
-                    location.href= "/station/inList?id=" + id + "&date=" + $(this).val();
+                    location.href= "/station/stockList?id=" + id + "&date=" + $(this).val();
                 });
 
                 $('.live-search-list li').each(function(){

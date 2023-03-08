@@ -1,7 +1,10 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
+import com.ezkorea.hybrid_app.domain.expenses.fuel.FuelCost;
 import com.ezkorea.hybrid_app.domain.gas.GasStation;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
+import com.ezkorea.hybrid_app.service.expenses.ExpensesService;
+import com.ezkorea.hybrid_app.service.expenses.FuelCostService;
 import com.ezkorea.hybrid_app.service.sales.GasStationService;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +28,7 @@ public class GasStationController {
 
     private final SaleService saleService;
     private final GasStationService gasStationService;
+    private final FuelCostService fuelCostService;
 
     @GetMapping("/index")
     public String showGasStationListPage(Model model) {
@@ -41,8 +46,10 @@ public class GasStationController {
     @GetMapping("/detail/{id}")
     public String showGasStationDetailPage(@PathVariable Long id, Model model) {
         GasStation station = gasStationService.findStationById(id);
+        FuelCost currentCost = fuelCostService.findFuelCostByLocalDate(LocalDate.now());
 
         model.addAttribute("station", station);
+        if(currentCost != null) model.addAttribute("currentCost", currentCost);
         return "gasStation/gasStation-detail";
     }
 
