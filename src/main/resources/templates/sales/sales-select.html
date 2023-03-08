@@ -87,14 +87,9 @@
                             <h1 class="block text-lg font-bold mb-4"> 주유소 선택  </h1>
                             <div class="md:flex">
                                 <div class="md:w-2/3 space-y-4 -mt-2">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="p-1.5 rounded-full text-xl">⛽️</div>
-                                        <div class="flex-1">
-                                            <select id="gasStation" name="gasStation" class="border border-gray-300 text-sm rounded-lg block w-full p-2.5">
-                                                <option th:each="station : ${stations}" th:text="|${station.getStationName()}(${station.getStationLocation()})|" th:value="${station.getStationName()}" th:data-id="${station.getId()}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                    <select id="gasStation" name="gasStation" class="border border-gray-300 text-sm rounded-lg block w-full p-2.5">
+                                        <option th:each="station : ${stations}" th:text="|${station.getStationName()}(${station.getStationLocation()})|" th:value="${station.getStationName()}" th:data-id="${station.getId()}"></option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
