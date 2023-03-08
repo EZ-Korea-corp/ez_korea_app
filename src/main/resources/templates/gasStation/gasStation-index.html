@@ -52,7 +52,7 @@
                     <div class="p-8">
 
                         <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2 justify-between">
-                            <h2 class="text-xl font-bold"><span class="mr-2">⛽</span>주유소 보기</h2>
+                            <h2 class="text-xl font-bold">주유소 보기</h2>
                             <div th:if="${isAll == null}">
                                 <button type="button" th:onclick="|location.href='/station/indexAll';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 전체검색 </button>
                             </div>
@@ -81,16 +81,14 @@
                                                     <form></form>
                                                 </li>
                                                 <li th:each="station : ${stationList}">
-                                                    <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
-                                                        <div class="w-10 h-10 flex-shrink-0 rounded-md relative">
-                                                            <img src="/assets/images/avatars/avatar-3.jpg" class="absolute w-full h-full inset-0 rounded-full" alt="">
-                                                        </div>
+                                                    <div class="flex items-center space-x-4 hover:bg-gray-100 border-gray-500 rounded-md -mx-2 p-2">
                                                         <div class="flex-1">
                                                             <h3 class="text-base font-semibold capitalize mb-2" th:text="|${station.getStationName()}|"> 주유소이름 </h3>
                                                             <h2 class="text-base font-semibold capitalize mb-3" th:text="|${station.getStationLocation()}|"> 주소 </h2>
                                                         </div>
                                                         <button type="button" th:onclick="|location.href='/station/detail/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 이동 </button>
                                                     </div>
+                                                    <hr>
                                                 </li>
                                             </ul>
                                         </div>

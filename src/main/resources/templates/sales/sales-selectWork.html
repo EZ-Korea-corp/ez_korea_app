@@ -50,26 +50,21 @@
                         <div class="md:py-8 py-3">
                             <h2 class="text-xl font-bold">
                                 <span th:text="|${member.getName()} ${member.getRole().getViewName()}|"></span>님
-                                <p>주유소를 선택해주세요.</p>
+                                <p>근무 중인 주유소를 선택해주세요.</p>
                             </h2>
                         </div>
 
                         <div class="md:py-8 py-3">
                             <h1 class="block text-lg font-bold mb-4"> 주유소 선택  </h1>
-                            <div class="flex items-center space-x-3">
-                                <div class="p-1.5 rounded-full text-xl">⛽️</div>
-                                <div class="w-full">
-                                    <select id="gasStation" name="gasStation" class="w-full border border-gray-300 text-sm rounded-lg block w-full p-2.5">
-                                        <option th:each="station : ${stations}" th:text="|[${station.part}]${station.stationName}(${station.stationLocation})|" th:value="${station.stationName}" th:data-id="${station.tableId}"></option>
-                                    </select>
-                                </div>
-                            </div>
+                            <select id="gasStation" name="gasStation" class="w-full border border-gray-300 text-sm rounded-lg block w-full p-2.5">
+                                <option th:each="station : ${stations}" th:text="|[${station.part}]${station.stationName}(${station.stationLocation})|" th:value="${station.stationName}" th:data-id="${station.tableId}"></option>
+                            </select>
                         </div>
 
                         <div class="md:py-8 py-3">
                             <div class="space-y-3">
                                 <button id="submit" class="btn bg-blue-600 py-2 rounded-lg w-full text-white">이동하기</button>
-                                <button id="add" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white" onclick="location.href='/sales/select'">추가등록</button>
+                                <button id="add" class="bg-purple-600 text-white py-2 text-center font-semibold w-full mt-4 block rounded-lg hover:text-white" onclick="location.href='/sales/select'">추가등록</button>
                             </div>
                         </div>
                     </div>

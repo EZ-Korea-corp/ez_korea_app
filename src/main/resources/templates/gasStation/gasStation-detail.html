@@ -31,19 +31,19 @@
 
                 <div class="p-8">
                     <input type="hidden" id="stationId" th:value="${station['id']}">
-                    <div class="flex items-center space-x-3">
-                        <div class="p-1.5 rounded-full text-2xl">⛽️</div>
-                        <div class="flex-1">
-                            <div>
-                                <span class="text-xl font-semibold" th:text="${station['stationName']}"> 주유소 이름 </span>
-                            </div>
-                            <p th:text="${station['stationLocation']}"></p>
+                    <div class="flex-1">
+                        <div>
+                            <span class="text-xl font-semibold" th:text="${station['stationName']}"> 주유소 이름 </span>
                         </div>
+                        <p th:text="${station['stationLocation']}"></p>
+                        <th:block th:if="${currentCost != null && station['distance'] > 0}" class="flex">
+                            <p th:text="'[유류비] 휘발유:' + ${#numbers.formatInteger(currentCost.getGasolinePrice() * station['distance'] / 10, 3, 'COMMA')} + '원 경유:' + ${#numbers.formatInteger(currentCost.getDieselPrice() * station['distance'] / 10, 3, 'COMMA')} + '원'"></p>
+                        </th:block>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 my-4">
-                        <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/update/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md font-semibold"> 수정 </button>
-                        <input type="checkbox" id="isWork" th:checked="${station['isWork']}" name="memberPostAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border"/>
+                        <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/update/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-lg font-semibold"> 수정 </button>
+                        <input type="checkbox" id="isWork" th:checked="${station['isWork']}" name="memberPostAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-lg border"/>
                         <label for="isWork" id="isWorkBt" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md font-semibold text-white"> 영업중 </label>
                     </div>
 
@@ -90,13 +90,13 @@
                             </div>
 
                             <div class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                                <a th:href="@{|/station/inList?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 입고기록 </a>
-                                <a th:href="@{|/station/outDetail?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 출고기록 </a>
-                                <a th:href="@{|/station/stockList?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 재고기록 </a>
+                                <a th:href="@{|/station/inList?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg hover:text-white"> 입고기록 </a>
+                                <a th:href="@{|/station/outDetail?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg hover:text-white"> 출고기록 </a>
+                                <a th:href="@{|/station/stockList?id=${station.id}&date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg hover:text-white"> 재고기록 </a>
                             </div>
                         </div>
                     </div>
-                    <a th:href="@{/station/index}" class="bg-yellow-600 text-sm font-medium text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 뒤로가기 </a>
+                    <a th:href="@{/station/index}" class="bg-yellow-600 text-sm font-medium text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg hover:text-white"> 뒤로가기 </a>
                 </div>
             </div>
 

@@ -13,6 +13,7 @@ public class GasStationDto {
     private String stationName;
     private String stationLocation;
     private String memo;
+    private int distance ;
     private List<MultipartFile> files;
     private List<Long> delFiles;
 

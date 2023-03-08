@@ -142,6 +142,7 @@ public class ManagerController {
             map.put("stationName", item.getGasStation().getStationName());
             map.put("stationLocation", item.getGasStation().getStationLocation());
             map.put("part", PartTime.of(item.getPart()));
+            map.put("profilePath", item.getMember().getS3Image().getFilePath());
 
             resultList.add(map);
         });
@@ -167,11 +168,13 @@ public class ManagerController {
     }
 
     @GetMapping("/stat")
+    @PreAuthorize("hasAuthority('ROLE_MASTER')")
     public String showStatPage() {
         return "manager/manage-stat";
     }
 
     @GetMapping("/totalStat")
+    @PreAuthorize("hasAuthority('ROLE_MASTER')")
     public String showTotalStatPage() {
         return "manager/stat/manage-totalStat";
     }

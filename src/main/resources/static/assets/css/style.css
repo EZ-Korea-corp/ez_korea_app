@@ -9491,6 +9491,10 @@ html.dark,
           box-shadow: none;
 }
 
+.dark header{
+  background-color: #000000 !important;
+}
+
 /*Level three d*/
 .dark .bg-gray-200,
 .dark .slider-icon,

@@ -31,12 +31,10 @@
                         <h2 class="text-xl font-bold"> <span th:text="${map.table.getMember().getName()}"></span>님의 일일 판매 현황</h2>
                         <p class="font-medium mt-1.5 text-base" th:text="|[${T(com.ezkorea.hybrid_app.domain.timetable.PartTime).of(map.table.getPart())}] ${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}|"></p>
 
-                        <div class="flex-1 space-y-4 md:mt-0 mt-6 text-sm font-medium">
-                            <a th:href="@{|/sales/sell/${map.tTid}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매하기 </a>
-                            <a th:href="@{|/sales/close/${map.tTid}|}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 마감하기 </a>
-                            <button class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white" type="button" uk-toggle="target: #modal">계좌 정보</button>
-
-                            <!-- This is the modal with the default close button -->
+                        <div class="grid grid-cols-3 gap-4 mt-4">
+                            <a th:href="@{|/sales/sell/${map.tTid}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg hover:text-white"> 판매하기 </a>
+                            <a th:href="@{|/sales/close/${map.tTid}|}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg hover:text-white"> 마감하기 </a>
+                            <button class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg hover:text-white" type="button" uk-toggle="target: #modal">계좌 정보</button>
                             <div id="modal" uk-modal>
                                 <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
                                     <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
@@ -111,17 +109,13 @@
 
                     <div class="md:py-8 py-3">
                         <div>
-                            <h1 class="block text-lg font-bold mb-4"> 주유소 정보  </h1>
                             <div class="md:flex">
                                 <div class="md:w-2/3 space-y-4 -mt-2">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="p-1.5 rounded-full text-2xl">⛽️</div>
-                                        <div class="flex-1">
-                                            <div>
-                                                <span class="text-xl font-semibold" th:text="${map.table.getGasStation().getStationName()}"> 주유소 이름 </span>
-                                            </div>
-                                            <p th:text="${map.table.getGasStation().getStationLocation()}"></p>
+                                    <div class="flex-1">
+                                        <div>
+                                            <h1 class="text-xl font-semibold" th:text="${map.table.getGasStation().getStationName()}"> 주유소 이름 </h1>
                                         </div>
+                                        <p th:text="${map.table.getGasStation().getStationLocation()}"></p>
                                     </div>
                                 </div>
 
@@ -173,16 +167,11 @@
                         <hr class="my-8">
                         <div>
                             <h1 class="block text-lg font-bold my-4"> 개별 판매금액  </h1>
-                            <div class="flex items-center space-x-3">
-                                <div class="p-1.5 rounded-full text-2xl">💵</div>
-                                <div class="flex-1">
-                                    <div><span class="text-lg font-semibold" th:text="|카드 : ${#numbers.formatInteger(map.card, 0, 'COMMA')}원|"></span> </div>
-                                    <div><span class="text-lg font-semibold" th:text="|현금 : ${#numbers.formatInteger(map.cash, 0, 'COMMA')}원|"></span> </div>
-                                    <div><span class="text-lg font-semibold" th:text="|총계 : ${#numbers.formatInteger(map.card + map.cash, 0, 'COMMA')}원|"></span> </div>
-                                </div>
-                            </div>
+                            <div><span class="text-lg font-semibold" th:text="|카드 : ${#numbers.formatInteger(map.card, 0, 'COMMA')}원|"></span> </div>
+                            <div><span class="text-lg font-semibold" th:text="|현금 : ${#numbers.formatInteger(map.cash, 0, 'COMMA')}원|"></span> </div>
+                            <div><span class="text-lg font-semibold" th:text="|총계 : ${#numbers.formatInteger(map.card + map.cash, 0, 'COMMA')}원|"></span> </div>
                         </div>
-
+                        <hr class="my-8">
                         <div>
                             <h1 class="block text-lg font-bold my-4"> 개별 판매수량  </h1>
                             <div class="relative overflow-x-auto shadow-md">
