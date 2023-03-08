@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-@PreAuthorize("hasAuthority('ROLE_MASTER')")
+@PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_DIRECTOR')")
 public class PatchNoteController {
 
     private final PatchNoteService pnService;
