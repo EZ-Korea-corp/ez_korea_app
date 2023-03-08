@@ -16,9 +16,7 @@
 
                     <div class="md:py-8 py-3">
                         <div class="flex justify-between">
-                            <h2 class="text-xl font-bold">
-                                <span class="mr-2">📢</span>공지사항 목록
-                            </h2>
+                            <h2 class="text-xl font-bold">공지사항 목록</h2>
                             <a th:if="${member.getSubAuth().isPostAuth()}"
                                th:href="@{/notice/create}"
                                class="button rounded-lg px-4 hover:text-white">공지 작성</a>
@@ -29,7 +27,7 @@
                         <div class="p-7 sm:space-x-6 bg-gray-200 rounded-lg mb-4" th:each="notice : ${noticeList}">
                             <div class="sm:order-2">
                                 <a th:href="@{/notice/{id}(id = ${notice.getId()})}">
-                                    <h3 class="text-xl font-medium mb-2" th:text="${notice.getTitle()}"> 공지 제목 </h3>
+                                    <h3 class="text-lg font-medium mb-2" th:text="${notice.getTitle()}"> 공지 제목 </h3>
                                 </a>
                                 <p class="text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일 HH시 mm분')}">작성일</p>
                             </div>
