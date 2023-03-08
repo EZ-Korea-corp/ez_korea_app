@@ -167,11 +167,13 @@ public class ManagerController {
     }
 
     @GetMapping("/stat")
+    @PreAuthorize("hasAuthority('ROLE_MASTER')")
     public String showStatPage() {
         return "manager/manage-stat";
     }
 
     @GetMapping("/totalStat")
+    @PreAuthorize("hasAuthority('ROLE_MASTER')")
     public String showTotalStatPage() {
         return "manager/stat/manage-totalStat";
     }
