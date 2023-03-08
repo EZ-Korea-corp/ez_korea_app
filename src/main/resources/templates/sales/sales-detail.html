@@ -31,10 +31,10 @@
                         <h2 class="text-xl font-bold"> <span th:text="${map.table.getMember().getName()}"></span>님의 일일 판매 현황</h2>
                         <p class="font-medium mt-1.5 text-base" th:text="|[${T(com.ezkorea.hybrid_app.domain.timetable.PartTime).of(map.table.getPart())}] ${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}|"></p>
 
-                        <div class="grid grid-cols-3 gap-4">
-                            <a th:href="@{|/sales/sell/${map.tTid}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 판매하기 </a>
-                            <a th:href="@{|/sales/close/${map.tTid}|}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 마감하기 </a>
-                            <button class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white" type="button" uk-toggle="target: #modal">계좌 정보</button>
+                        <div class="grid grid-cols-3 gap-4 mt-4">
+                            <a th:href="@{|/sales/sell/${map.tTid}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg hover:text-white"> 판매하기 </a>
+                            <a th:href="@{|/sales/close/${map.tTid}|}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg hover:text-white"> 마감하기 </a>
+                            <button class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg hover:text-white" type="button" uk-toggle="target: #modal">계좌 정보</button>
                             <div id="modal" uk-modal>
                                 <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
                                     <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>

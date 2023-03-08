@@ -28,21 +28,22 @@
 
             <div class="lg:w-full card">
 
-                <div class="p-10 pt-4 divide-y divide-gray-100">
+                <div class="p-10 pt-4">
                     <input type="hidden" id="tTid" th:value="${tTid}">
-                    <div class="md:py-8 py-3">
-                        <h2 class="text-xl font-bold">마감하기🌝</h2>
+                    <div class="mt-4">
+                        <h2 class="text-xl font-bold">마감하기</h2>
+                    </div>
+                    <hr class="my-4">
+                    <div class="grid grid-cols-2 gap-4 mb-4" id="check">
+                        <div name="out" class="text-sm font-medium">
+                            <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
+                        </div>
+                        <div name="stock" class="text-sm font-medium">
+                            <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 재고 </a>
+                        </div>
                     </div>
 
                     <div class="md:py-8 py-3">
-                        <div class="grid grid-cols-2 gap-4 mb-4" id="check">
-                            <div name="out" class="text-sm font-medium">
-                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
-                            </div>
-                            <div name="stock" class="text-sm font-medium">
-                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 재고 </a>
-                            </div>
-                        </div>
 
                         <div id="sellDiv">
                             <h1 class="block text-lg font-bold mb-2"> 전체금액  </h1>
@@ -64,7 +65,7 @@
                             <h1 class="block text-lg font-bold mb-2"> 개별판매  </h1>
                             <div class="relative overflow-x-auto shadow-md">
                                 <table class="w-full text-sm text-left">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 whitespace-nowrap">
                                     <tr>
                                         <th scope="col" class="text-center px-6 py-3">
                                             이름
@@ -76,8 +77,7 @@
                                             하브
                                         </th>
                                         <th scope="col" class="text-center px-6 py-3">
-                                            M
-                                            W
+                                            M W
                                         </th>
                                         <th scope="col" class="text-center px-6 py-3">
                                             S클
@@ -97,7 +97,7 @@
 
                             <div id="fixList">
                                 <h1 class="block text-lg font-bold mb-2"> 불량목록  </h1>
-                                <table class="w-full text-sm text-left">
+                                <table class="w-full text-sm text-left ">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-center">
@@ -117,7 +117,7 @@
                         <div id="stockDiv">
                             <form onsubmit="return false" id="dataForm">
                                 <div class="relative overflow-x-auto shadow-md">
-                                    <table class="w-full text-sm text-left">
+                                    <table class="w-full text-sm text-left whitespace-nowrap">
                                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                         <tr>
                                             <th scope="col" class="px-6 py-3 text-center">
@@ -153,7 +153,7 @@
                             </form>
                         </div>
 
-
+                    </div>
                 </div>
 
             </div>
