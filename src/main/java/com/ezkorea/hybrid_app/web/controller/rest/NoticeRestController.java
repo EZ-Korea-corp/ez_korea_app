@@ -50,7 +50,7 @@ public class NoticeRestController {
                                                @AuthenticationPrincipal SecurityUser securityUser) {
 
         Notice currentNotice = noticeService.findNoticeById(id);
-        if (currentNotice.getWriter().getUsername().equals(securityUser.getMember().getUsername())) {
+        if (securityUser.getMember().getSubAuth().isPostAuth()) {
             noticeService.deleteNotice(currentNotice);
         }
 
