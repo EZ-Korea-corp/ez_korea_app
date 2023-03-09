@@ -78,7 +78,7 @@ public class ManagerController {
     @GetMapping("/division/update/{id}")
     public String showDivisionUpdatePage(Model model, @PathVariable Long id) {
         Division currentDivision = dService.findDivisionById(id);
-        model.addAttribute("gmList", mService.findByRoleAndDivisionAndDivisionNull(Role.ROLE_GM, MemberStatus.FULL_TIME, currentDivision));
+        model.addAttribute("gmList", mService.findAllByRoleAndMemberStatus(Role.ROLE_GM, MemberStatus.FULL_TIME));
         model.addAttribute("division", dService.findDivisionById(id));
         return "manager/group/manage-division-update";
     }

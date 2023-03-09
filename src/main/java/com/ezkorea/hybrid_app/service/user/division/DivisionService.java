@@ -33,35 +33,25 @@ public class DivisionService {
         DivisionDto dto = DivisionDto.builder()
                 .teamName(teamName)
                 .build();
-        if (teamGm.equals("0")) {
-            Member master = mService.findByUsername("master");
-            if (existsDivisionByLeader(master)) {
-                return null;
-            } else {
-                teamGm = "master";
-            }
+        if (mService.existsMemberByUsername(teamGm)) {
+            Member currentMember = mService.findByUsername(teamGm);
+            dto.setTeamGm(currentMember);
+        } else {
+            dto.setTeamGm(null);
         }
-        Member currentMember = mService.findByUsername(teamGm);
-        dto.setTeamGm(currentMember);
         return dto;
     }
 
     @Transactional
     public void updateDivision(Long divisionId, String teamName, String teamGm) {
         Division currentDivision = findDivisionById(divisionId);
-        currentDivision.getLeader().setDivision(null);
-        currentDivision.setDivisionName(teamName);
-        if (!teamGm.equals("0")) {
+        if (mService.existsMemberByUsername(teamGm)) {
             Member currentMember = mService.findByUsername(teamGm);
             currentDivision.setLeader(currentMember);
-            currentMember.setDivision(currentDivision);
+        } else {
+            currentDivision.setLeader(null);
         }
-
-        /*if (teamGm.equals("0")) {
-            if (divisionRepository.existsByLeader(mService.findByUsername("master"))) {
-                divisionRepository.
-            }
-        }*/
+        currentDivision.setDivisionName(teamName);
     }
 
     public Division findDivisionByDivisionName(String divisionName) {

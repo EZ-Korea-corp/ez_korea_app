@@ -26,8 +26,14 @@
                             <select id="teamGM" name="teamGM"  class="shadow-none selectpicker with-border">
                                 <option th:each="division : ${divisionList}"
                                         th:value="${division.getDivisionName()}"
-                                        th:selected="${division.getId() eq currentTeam.getDivision().getId()}"
-                                        th:text="|${division.getDivisionName()} (지점장 : ${division.getLeader().getUsername().equals('master') ? '없음' : division.getLeader().getName()})|">이름</option>
+                                        th:selected="${division.getId() eq currentTeam.getDivision().getId()}">
+                                    <th:block th:if="${division.getLeader() != null}">
+                                        <a th:text="|${division.getDivisionName()} (지점장 : ${division.getLeader().getName()})|"></a>
+                                    </th:block>
+                                    <th:block th:if="${division.getLeader() == null}">
+                                        <a th:text="|${division.getDivisionName()} (지점장 : 없음)|"></a>
+                                    </th:block>
+                                </option>
                             </select>
                         </div>
 
