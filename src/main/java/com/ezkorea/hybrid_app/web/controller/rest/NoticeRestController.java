@@ -40,7 +40,7 @@ public class NoticeRestController {
     public ResponseEntity<Object> updateNotice(@RequestBody NoticeDto dto, @PathVariable Long id,
                                                @AuthenticationPrincipal SecurityUser securityUser) {
 
-        Notice savedNotice = noticeService.updateNotice(dto);
+        Notice savedNotice = noticeService.updateNotice(dto, securityUser.getMember());
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", savedNotice.getId()), HttpStatus.OK);
     }
