@@ -236,6 +236,12 @@ public class MemberService {
         return memberRepository.findAllByRole(role);
     }
 
+    /* 권한에 맞는 회원 찾기 */
+
+    public List<Member> findAllByRoleAndMemberStatus(Role role, MemberStatus status) {
+        return memberRepository.findAllByRoleAndMemberStatus(role, status);
+    }
+
     public List<Member> findByRoleAndDivisionIsNull(Role role, MemberStatus status) {
         return memberRepository.findAllByRoleAndMemberStatusAndDivisionIsNull(role, status);
     }

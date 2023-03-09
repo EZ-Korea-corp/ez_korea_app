@@ -23,18 +23,16 @@ public class DivisionService {
 
     @Transactional
     public Division saveNewDivision(DivisionDto dto) {
-        if (existsDivisionByLeader(dto.getTeamGm())) {
-            return findDivisionByLeader(dto.getTeamGm());
-        }
-        Division savedDivision = divisionRepository.save(Division.builder()
+        return divisionRepository.save(Division.builder()
                 .divisionName(dto.getTeamName())
                 .leader(dto.getTeamGm())
                 .build());
-        dto.getTeamGm().setDivision(savedDivision);
-        return savedDivision;
     }
 
     public DivisionDto createDivisionDto(String teamName, String teamGm) {
+        DivisionDto dto = DivisionDto.builder()
+                .teamName(teamName)
+                .build();
         if (teamGm.equals("0")) {
             Member master = mService.findByUsername("master");
             if (existsDivisionByLeader(master)) {
@@ -43,9 +41,6 @@ public class DivisionService {
                 teamGm = "master";
             }
         }
-        DivisionDto dto = DivisionDto.builder()
-                .teamName(teamName)
-                .build();
         Member currentMember = mService.findByUsername(teamGm);
         dto.setTeamGm(currentMember);
         return dto;
