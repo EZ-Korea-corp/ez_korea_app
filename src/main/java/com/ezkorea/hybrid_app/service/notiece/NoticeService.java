@@ -33,12 +33,12 @@ public class NoticeService {
     }
 
     @Transactional
-    public Notice updateNotice(NoticeDto dto) {
+    public Notice updateNotice(NoticeDto dto, Member member) {
         Notice currentNotice = findNoticeById(dto.getId());
         // 기존 이미지들을 모두 삭제 후 View 단에서 다시 업로드 요청
         awsService.deleteImages(currentNotice.getImageList());
         // 이미지를 다시 등록할 수 있게 List를 비워줌
-        currentNotice.setBasicInfo(dto);
+        currentNotice.setBasicInfo(dto, member);
         return noticeRepository.save(currentNotice);
     }
 

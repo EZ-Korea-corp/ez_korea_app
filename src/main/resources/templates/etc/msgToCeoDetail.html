@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            textarea {
+                resize: none;
+            }
+        </style>
+        <div id="bg" class="lg:space-x-12">
+            <form id="createMsgForm" onsubmit="return false;">
+                <div class="">
+                    <input type="hidden" id="id" th:value="${model.id}">
+                    <!-- form header -->
+                    <div class="text-center border-b border-gray-100 py-6">
+                        <h3 class="font-bold text-xl"> 대표에게 전하는 메세지 </h3>
+                    </div>
+
+                    <!-- form body -->
+                    <div class="p-10 space-y-7">
+                        <div>
+
+                            <th:block th:if="${model.isAnonymous == true}">
+                                <label for="name1" class="font-semibold text-base"> 작성자 </label>
+                                <input id="name1" class="with-border" type="text" value="익명" disabled>
+                            </th:block>
+                            <th:block th:if="${model.isAnonymous == false}">
+                                <label for="name2" class="font-semibold text-base"> 작성자 </label>
+                                <input id="name2" class="with-border" type="text" th:value="${model.getMember().getName()}" disabled>
+                            </th:block>
+
+                        </div>
+
+                        <div>
+                            <label for="title" class="font-semibold text-base"> 제목 </label>
+                            <input id="title" class="with-border" type="text" th:value="${model.title}" disabled>
+                        </div>
+
+                        <div>
+                            <label class="font-semibold text-base"> 내용 </label>
+                            <textarea id="content" rows="8" th:text="${model.content}" class="p-4 bg-gray-100" disabled></textarea>
+                        </div>
+                    </div>
+
+                    <!-- form footer -->
+                    <div class="grid grid-cols-2 gap-4 m-4 p-10">
+
+                        <button id="deleteMsg" type="button" class="text-white bg-red-600 w-full h-10 rounded">삭제하기</button>
+                        <a th:href="|javascript:window.history.back();|" class="button w-full hover:text-white">뒤로가기</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            jQuery(document).ready(function($) {
+                $("#deleteMsg").on("click", function () {
+                    let id = $("#id").val();
+
+                    let url = '/etc/msgToCeo/delete';
+                    let data = {"id" : id};
+                    function successHref() {
+                        window.history.back();
+                    }
+
+                    Swal.fire({
+                        title: '삭제하시겠습니까?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '삭제',
+                        cancelButtonText: '취소'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire(
+                                '삭제되었습니다.',
+                                '',
+                                'success'
+                            ).then(() => {
+                                fnOnlyCrudJsonAjax(data, url, 'DELETE', successHref);
+                            })
+                        }
+                    })
+                });
+            });
+
+        </script>
+    </main>
+
+</body>
+
+</html>

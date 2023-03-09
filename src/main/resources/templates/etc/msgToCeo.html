@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            textarea {
+                resize: none;
+            }
+        </style>
+        <div id="bg" class="lg:space-x-12">
+            <form id="createMsgForm" onsubmit="return false;">
+                <div class="">
+
+                    <!-- form header -->
+                    <div class="text-center border-b border-gray-100 py-6">
+                        <h3 class="font-bold text-xl"> 대표에게 전하는 메세지 </h3>
+                        (해당 메시지는 대표에게만 전달됩니다)
+                    </div>
+
+                    <!-- form body -->
+                    <div class="p-10 space-y-7">
+                        <div>
+                            <label for="title" class="font-semibold text-base"> 제목 </label>
+                            <input id="title" class="with-border" name="title" type="text" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold text-base"> 내용 </label>
+                            <textarea id="content" name="content" rows="8" class="p-4 bg-gray-100"></textarea>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" id="chekcbox1" name="isAnonymous">
+                            <label for="chekcbox1"><span class="checkbox-icon"></span> 익명 전송</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- form footer -->
+                    <div class="grid grid-cols-2 gap-4 m-4 p-10">
+                        <button id="submit" type="button" class="button w-full">전송</button>
+                        <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script>
+
+            $("#submit").on("click", function (){
+                let flag = true;
+                let title = $('#title').val();
+                let content = $('#content').val();
+
+                if (title.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '제목을 입력해주세요.',
+                    });
+                    flag = false;
+                }
+
+                if (content.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: '내용을 입력해주세요.',
+                    });
+                    flag = false;
+                }
+                if (flag === true) {
+                    Swal.fire({
+                        html: '전송하시겠습니까?',
+                        showDenyButton: true,
+                        confirmButtonText: '선택',
+                        denyButtonText: `취소`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            let data = $('#createMsgForm').serializeObject();
+                            data.isAnonymous = $("[name='isAnonymous']").is(":checked");
+
+                            let url = '/etc/msgToCeo/save';
+                            function fnload(data, xhr) {
+                                $(location).attr("href", "/");
+                            }
+
+                            fnCrudJsonAjax(data, url, fnload, "post", "정상적으로 저장되었습니다.");
+                        }
+                    })
+                }
+            });
+
+
+        </script>
+    </main>
+
+</body>
+
+</html>
