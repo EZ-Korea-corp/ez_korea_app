@@ -54,6 +54,36 @@ public class TestDataInit {
             if (!memberRepository.existsByUsername("test2")) {
                 memberService.saveNewMember(makeNewMember("test2", "김경자", Role.ROLE_EMPLOYEE, "01012341234"));
             }
+            if (!memberRepository.existsByUsername("test3")) {
+                memberService.saveNewMember(makeNewMember("test3", "김경자1", Role.ROLE_EMPLOYEE, "01012341234"));
+            }
+            if (!memberRepository.existsByUsername("test12")) {
+                memberService.saveNewMember(makeNewMember("test12", "김경자2", Role.ROLE_EMPLOYEE, "01012341234"));
+            }
+            if (!memberRepository.existsByUsername("test3")) {
+                memberService.saveNewMember(makeNewMember("test3", "김경자3", Role.ROLE_EMPLOYEE, "01012341234"));
+            }
+            if (!memberRepository.existsByUsername("test4")) {
+                memberService.saveNewMember(makeNewMember("test4", "김경자4", Role.ROLE_EMPLOYEE, "01012341234"));
+            }
+            if (!memberRepository.existsByUsername("test5")) {
+                memberService.saveNewMember(makeNewMember("test5", "김경자5", Role.ROLE_EMPLOYEE, "01012341234"));
+            }
+            if (!memberRepository.existsByUsername("test6")) {
+                memberService.saveNewMember(makeNewMember("test6", "김경자6", Role.ROLE_EMPLOYEE, "01012341234"));
+            }
+            if (!memberRepository.existsByUsername("test7")) {
+                memberService.saveNewMember(makeNewMember("test7", "김경자7", Role.ROLE_EMPLOYEE, "01012341234"));
+            }
+            if (!memberRepository.existsByUsername("test8")) {
+                memberService.saveNewMember(makeNewMember("test8", "김경자8", Role.ROLE_EMPLOYEE, "01012341234"));
+            }
+            if (!memberRepository.existsByUsername("test9")) {
+                memberService.saveNewMember(makeNewMember("test9", "김경자9", Role.ROLE_EMPLOYEE, "01012341234"));
+            }
+            if (!memberRepository.existsByUsername("test10")) {
+                memberService.saveNewMember(makeNewMember("test10", "김경자10", Role.ROLE_EMPLOYEE, "01012341234"));
+            }
         }
 //         아래 주석 해제하면 랜덤 회원 생성 가능 사용 후 다시 주석처리!
 //         makeRandomMember(10);

@@ -85,7 +85,13 @@ public class SaleController {
     @GetMapping("/sales/input/save")
     public String showInputSavePage(@RequestParam(value="id", required=false)Long id, Model model) {
         model.addAttribute("id", id);
-        model.addAttribute("stations", gasStationService.findOnGasStation());
+
+        if(id == null) {
+            model.addAttribute("stations", gasStationService.findOnGasStation());
+        } else {
+            model.addAttribute("stations", gasStationService.findAllGasStation());
+        }
+
         // 본인 입고 조회
         return "sales/in-detail";
     }

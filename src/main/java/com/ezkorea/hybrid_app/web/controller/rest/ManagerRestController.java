@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
+import com.ezkorea.hybrid_app.domain.user.member.SubAuthRepository;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
@@ -36,6 +37,12 @@ public class ManagerRestController {
     public ResponseEntity<Object> updateMemberApproval(@RequestBody Map<String, Object> datum) {
         String idStr = (String) datum.get("id");
         mService.updateMemberStatus(Long.valueOf(idStr), MemberStatus.FULL_TIME);
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/reject")
+    public ResponseEntity<Object> deleteMember(@RequestBody Map<String, Long> datum) {
+        mService.deleteMember(datum.get("id"));
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 
