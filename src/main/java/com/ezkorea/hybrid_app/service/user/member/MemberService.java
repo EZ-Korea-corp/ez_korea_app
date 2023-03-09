@@ -335,42 +335,4 @@ public class MemberService {
         saRepository.delete(member.getSubAuth());
         memberRepository.delete(member);
     }
-
-    public String makeDivisionName(Member currentMember) {
-        StringBuilder name = new StringBuilder();
-        switch (currentMember.getRole()) {
-            case ROLE_MASTER, ROLE_DIRECTOR -> {
-                name.append("경영진");
-            }
-            case ROLE_MANAGER -> {
-                name.append("경리팀");
-            }
-            case ROLE_GM -> {
-                List<Division> divisionList = divisionRepository.findAllByLeader(currentMember);
-                for (Division division : divisionList) {
-                    name.append(division.getDivisionName()).append(", ");
-                }
-                name.delete(name.length() - 2, name.length());
-            }
-            case ROLE_LEADER -> {
-                if (teamRepository.existsByLeader(currentMember)) {
-                    name.append(teamRepository.findByLeader(currentMember).getTeamName());
-                } else {
-                    name.append("소속 없음");
-                }
-            }
-            case ROLE_EMPLOYEE -> {
-                for (Team team : teamRepository.findAll()) {
-                    if (team.getMemberList().contains(currentMember)) {
-                        name.append(team.getTeamName());
-                    }
-                }
-            }
-        };
-        return name.toString();
-    }
-
-    public List<Member> findAllByRoleAndMemberStatus(Role role, MemberStatus status) {
-        return memberRepository.findAllByRoleAndMemberStatus(role, status);
-    }
 }
