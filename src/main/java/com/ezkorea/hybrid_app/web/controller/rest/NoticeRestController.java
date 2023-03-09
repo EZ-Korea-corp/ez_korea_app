@@ -40,7 +40,7 @@ public class NoticeRestController {
     public ResponseEntity<Object> updateNotice(@RequestBody NoticeDto dto, @PathVariable Long id,
                                                @AuthenticationPrincipal SecurityUser securityUser) {
 
-        Notice savedNotice = noticeService.updateNotice(dto);
+        Notice savedNotice = noticeService.updateNotice(dto, securityUser.getMember());
 
         return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", savedNotice.getId()), HttpStatus.OK);
     }
@@ -50,7 +50,7 @@ public class NoticeRestController {
                                                @AuthenticationPrincipal SecurityUser securityUser) {
 
         Notice currentNotice = noticeService.findNoticeById(id);
-        if (currentNotice.getWriter().getUsername().equals(securityUser.getMember().getUsername())) {
+        if (securityUser.getMember().getSubAuth().isPostAuth()) {
             noticeService.deleteNotice(currentNotice);
         }
 

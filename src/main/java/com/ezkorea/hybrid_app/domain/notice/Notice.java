@@ -32,10 +32,11 @@ public class Notice extends BaseEntity {
     @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<S3Image> imageList = new ArrayList<>();
 
-    public void setBasicInfo(NoticeDto dto) {
+    public void setBasicInfo(NoticeDto dto, Member member) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
         this.imageList.clear();
+        this.writer = member;
     }
 
 }
