@@ -9,7 +9,6 @@ import com.ezkorea.hybrid_app.domain.user.member.*;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.domain.user.team.TeamRepository;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
-import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
 import com.ezkorea.hybrid_app.web.dto.ProfileDto;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
@@ -43,9 +42,11 @@ public class MemberService {
     private final CommuteTimeRepository ctRepository;
     private final S3ImageRepository s3Repository;
     private final SubAuthRepository saRepository;
-    private final DivisionRepository divisionRepository;
 
+    private final DivisionRepository divisionRepository;
     private final CommuteService commuteService;
+
+
 
     /**
      * 회원가입을 하기 위한 메소드
@@ -238,12 +239,6 @@ public class MemberService {
         return memberRepository.findAllByRole(role);
     }
 
-    /* 권한에 맞는 회원 찾기 */
-
-    public List<Member> findAllByRoleAndMemberStatus(Role role, MemberStatus status) {
-        return memberRepository.findAllByRoleAndMemberStatus(role, status);
-    }
-
     public List<Member> findByRoleAndDivisionIsNull(Role role, MemberStatus status) {
         return memberRepository.findAllByRoleAndMemberStatusAndDivisionIsNull(role, status);
     }
@@ -332,6 +327,15 @@ public class MemberService {
         );
     }
 
+    @Transactional
+    public void deleteMember(Long id) {
+        Member member = findMemberById(id);
+
+        s3Repository.delete(member.getS3Image());
+        saRepository.delete(member.getSubAuth());
+        memberRepository.delete(member);
+    }
+
     public String makeDivisionName(Member currentMember) {
         StringBuilder name = new StringBuilder();
         switch (currentMember.getRole()) {
@@ -364,5 +368,9 @@ public class MemberService {
             }
         };
         return name.toString();
+    }
+
+    public List<Member> findAllByRoleAndMemberStatus(Role role, MemberStatus status) {
+        return memberRepository.findAllByRoleAndMemberStatus(role, status);
     }
 }
