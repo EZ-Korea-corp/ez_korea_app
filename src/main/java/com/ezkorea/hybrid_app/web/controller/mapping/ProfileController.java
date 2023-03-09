@@ -32,7 +32,9 @@ public class ProfileController {
     @GetMapping("/profile/{username}")
     public String showMemberProfilePage(@PathVariable String username, Model model) {
         Member currentMember = memberService.findByUsername(username);
+        String divisionName = memberService.makeDivisionName(currentMember);
         model.addAttribute("user", currentMember);
+        model.addAttribute("divisionName", divisionName);
         return "profile/main";
     }
 

@@ -74,4 +74,8 @@ public class DivisionService {
     public boolean existsDivisionByLeader(Member member) {
         return divisionRepository.existsByLeader(member);
     }
+
+    public List<Division> findAllByLeader(Member currentMember) {
+        return divisionRepository.findAllByLeader(currentMember);
+    }
 }

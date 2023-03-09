@@ -4,10 +4,12 @@ import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
+import com.ezkorea.hybrid_app.domain.user.division.DivisionRepository;
 import com.ezkorea.hybrid_app.domain.user.member.*;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.domain.user.team.TeamRepository;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
+import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
 import com.ezkorea.hybrid_app.web.dto.ProfileDto;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
@@ -41,9 +43,9 @@ public class MemberService {
     private final CommuteTimeRepository ctRepository;
     private final S3ImageRepository s3Repository;
     private final SubAuthRepository saRepository;
+    private final DivisionRepository divisionRepository;
 
     private final CommuteService commuteService;
-
 
     /**
      * 회원가입을 하기 위한 메소드
@@ -328,5 +330,39 @@ public class MemberService {
         contextMember.setMemberBasicInfo(
                 dto.getName(), dto.getEmail(), dto.getPhone()
         );
+    }
+
+    public String makeDivisionName(Member currentMember) {
+        StringBuilder name = new StringBuilder();
+        switch (currentMember.getRole()) {
+            case ROLE_MASTER, ROLE_DIRECTOR -> {
+                name.append("경영진");
+            }
+            case ROLE_MANAGER -> {
+                name.append("경리팀");
+            }
+            case ROLE_GM -> {
+                List<Division> divisionList = divisionRepository.findAllByLeader(currentMember);
+                for (Division division : divisionList) {
+                    name.append(division.getDivisionName()).append(", ");
+                }
+                name.delete(name.length() - 2, name.length());
+            }
+            case ROLE_LEADER -> {
+                if (teamRepository.existsByLeader(currentMember)) {
+                    name.append(teamRepository.findByLeader(currentMember).getTeamName());
+                } else {
+                    name.append("소속 없음");
+                }
+            }
+            case ROLE_EMPLOYEE -> {
+                for (Team team : teamRepository.findAll()) {
+                    if (team.getMemberList().contains(currentMember)) {
+                        name.append(team.getTeamName());
+                    }
+                }
+            }
+        };
+        return name.toString();
     }
 }
