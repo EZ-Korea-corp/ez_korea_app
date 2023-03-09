@@ -44,6 +44,9 @@
                                             <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                                 가입 승인
                                             </th>
+                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                                가입 거절
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody class="uk-text-center">
@@ -54,6 +57,7 @@
                                             <td class="px-2 py-4 whitespace-nowrap" th:text="${user.getPhone()}"></td>
                                             <td class="px-2 py-4 whitespace-nowrap" th:text="${user.getEmail()}"></td>
                                             <td class="px-2 py-4 whitespace-nowrap"> <button type="button" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doInvite(this.getAttribute('data-value'))|" class="text-blue-600 uk-text-center h-9 px-4 rounded-md border font-semibold"> 승인하기 </button> </td>
+                                            <td class="px-2 py-4 whitespace-nowrap"> <button type="button" th:data-value="${user.getId()}" th:onclick="|inviteBtn.doDelete(this.getAttribute('data-value'))|" class="text-red-600 uk-text-center h-9 px-4 rounded-md border font-semibold"> 거절하기 </button> </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -93,8 +97,17 @@
                     }
                     console.log(obj);
                     fnCrudRefreshAjax(obj, '/manager/approval', 'select-div', 'PUT');
+                },
+
+                doDelete: function (idx) {
+                    const obj = {
+                        id : idx
+                    }
+                    console.log(obj);
+                    fnCrudRefreshAjax(obj, '/manager/reject', 'select-div', 'DELETE');
                 }
             }
+
         </script>
     </main>
 

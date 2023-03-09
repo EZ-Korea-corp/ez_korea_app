@@ -45,6 +45,7 @@ public class MemberService {
     private final CommuteService commuteService;
 
 
+
     /**
      * 회원가입을 하기 위한 메소드
      * @param dto sign-up.html에서 받아온 정보
@@ -322,5 +323,14 @@ public class MemberService {
         contextMember.setMemberBasicInfo(
                 dto.getName(), dto.getEmail(), dto.getPhone()
         );
+    }
+
+    @Transactional
+    public void deleteMember(Long id) {
+        Member member = findMemberById(id);
+
+        s3Repository.delete(member.getS3Image());
+        saRepository.delete(member.getSubAuth());
+        memberRepository.delete(member);
     }
 }
