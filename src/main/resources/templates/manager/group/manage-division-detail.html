@@ -28,10 +28,10 @@
 
                         <div>
                             <label for="teamGM" class="font-semibold text-base"> 지점장 </label>
-                            <th:block th:if="!${division.getLeader().getUsername().equals('master')}">
+                            <th:block th:if="${division.getLeader() != null}">
                                 <input id="teamGM" class="with-border text-white" name="teamGM" type="text" th:value="|${division.getLeader().getName()}(${division.getLeader().getPhone()})|" autocomplete="off" readonly>
                             </th:block>
-                            <th:block th:if="${division.getLeader().getUsername().equals('master')}">
+                            <th:block th:if="${division.getLeader() == null}">
                                 <input class="with-border text-white" name="teamGM" type="text" value="없음" autocomplete="off" readonly>
                             </th:block>
                         </div>

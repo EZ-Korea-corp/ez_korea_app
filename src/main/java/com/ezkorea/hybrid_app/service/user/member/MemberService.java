@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
+import com.ezkorea.hybrid_app.domain.user.division.DivisionRepository;
 import com.ezkorea.hybrid_app.domain.user.member.*;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.domain.user.team.TeamRepository;
@@ -42,6 +43,7 @@ public class MemberService {
     private final S3ImageRepository s3Repository;
     private final SubAuthRepository saRepository;
 
+    private final DivisionRepository divisionRepository;
     private final CommuteService commuteService;
 
 

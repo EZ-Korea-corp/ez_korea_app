@@ -14,7 +14,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByUsername(String username);
 
     List<Member> findAllByRole(Role role);
-    List<Member> findAllByRoleAndMemberStatus(Role role, MemberStatus status);
 
     boolean existsByEmailAndPhone(String email, String phone);
 
@@ -33,4 +32,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m FROM Member m WHERE m.memberStatus = ?3 and ((m.role = ?1 and m.team = null) or (m.role = ?1 and m.team = ?2))")
     List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team, MemberStatus memberStatus);
 
+    // QA
+    List<Member> findAllByRoleAndMemberStatus(Role role, MemberStatus status);
 }

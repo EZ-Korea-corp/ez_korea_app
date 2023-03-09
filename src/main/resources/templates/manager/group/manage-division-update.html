@@ -29,11 +29,19 @@
                         <div>
                             <label for="teamGM" class="font-semibold text-base"> 지점장 선택 </label>
                             <select id="teamGM" name="teamGM"  class="shadow-none selectpicker with-border">
-                                <option th:each="gm : ${gmList}"
-                                        th:value="${gm.getUsername()}"
-                                        th:selected="${gm.getUsername() eq division.getLeader().getUsername()}"
-                                        th:text="|${gm.getName()}(${gm.getPhone()})|">이름</option>
-                                <option value="0">지점장 선택 안 함</option>
+                                <th:block th:if="${division.getLeader() != null}">
+                                    <option th:each="gm : ${gmList}"
+                                            th:value="${gm.getUsername()}"
+                                            th:selected="${gm.getUsername() eq division.getLeader().getUsername()}"
+                                            th:text="|${gm.getName()}(${gm.getPhone()})|">이름</option>
+                                    <option value="0">지점장 선택 안 함</option>
+                                </th:block>
+                                <th:block th:if="${division.getLeader() == null}">
+                                    <option th:each="gm : ${gmList}"
+                                            th:value="${gm.getUsername()}"
+                                            th:text="|${gm.getName()}(${gm.getPhone()})|">이름</option>
+                                    <option selected value="0">지점장 선택 안 함</option>
+                                </th:block>
                             </select>
                         </div>
 
@@ -77,23 +85,14 @@
             /*]]>*/
 
             $("#submit").on("click", function (){
-                if ($('#teamGM').val() === "0") {
+                if ($('#teamName').val().length !== 0) {
+                    const url = '/manager/division/'.concat(id);
+                    fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), url, 'PUT', successHref);
+                } else {
                     Swal.fire({
                         icon: 'error',
-                        title: '지점장을 정해주세요.',
-                        text: '현재 지점장은 필수로 지정해야합니다.',
-                        footer: '이용에 불편을 드려 죄송합니다.'
+                        text: '팀 이름을 입력해주세요.',
                     });
-                } else {
-                    if ($('#teamName').val().length !== 0) {
-                        const url = '/manager/division/'.concat(id);
-                        fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), url, 'PUT', successHref);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            text: '팀 이름을 입력해주세요.',
-                        });
-                    }
                 }
             });
 

@@ -23,50 +23,35 @@ public class DivisionService {
 
     @Transactional
     public Division saveNewDivision(DivisionDto dto) {
-        if (existsDivisionByLeader(dto.getTeamGm())) {
-            return findDivisionByLeader(dto.getTeamGm());
-        }
-        Division savedDivision = divisionRepository.save(Division.builder()
+        return divisionRepository.save(Division.builder()
                 .divisionName(dto.getTeamName())
                 .leader(dto.getTeamGm())
                 .build());
-        dto.getTeamGm().setDivision(savedDivision);
-        return savedDivision;
     }
 
     public DivisionDto createDivisionDto(String teamName, String teamGm) {
-        if (teamGm.equals("0")) {
-            Member master = mService.findByUsername("master");
-            if (existsDivisionByLeader(master)) {
-                return null;
-            } else {
-                teamGm = "master";
-            }
-        }
         DivisionDto dto = DivisionDto.builder()
                 .teamName(teamName)
                 .build();
-        Member currentMember = mService.findByUsername(teamGm);
-        dto.setTeamGm(currentMember);
+        if (mService.existsMemberByUsername(teamGm)) {
+            Member currentMember = mService.findByUsername(teamGm);
+            dto.setTeamGm(currentMember);
+        } else {
+            dto.setTeamGm(null);
+        }
         return dto;
     }
 
     @Transactional
     public void updateDivision(Long divisionId, String teamName, String teamGm) {
         Division currentDivision = findDivisionById(divisionId);
-        currentDivision.getLeader().setDivision(null);
-        currentDivision.setDivisionName(teamName);
-        if (!teamGm.equals("0")) {
+        if (mService.existsMemberByUsername(teamGm)) {
             Member currentMember = mService.findByUsername(teamGm);
             currentDivision.setLeader(currentMember);
-            currentMember.setDivision(currentDivision);
+        } else {
+            currentDivision.setLeader(null);
         }
-
-        /*if (teamGm.equals("0")) {
-            if (divisionRepository.existsByLeader(mService.findByUsername("master"))) {
-                divisionRepository.
-            }
-        }*/
+        currentDivision.setDivisionName(teamName);
     }
 
     public Division findDivisionByDivisionName(String divisionName) {
@@ -88,5 +73,9 @@ public class DivisionService {
 
     public boolean existsDivisionByLeader(Member member) {
         return divisionRepository.existsByLeader(member);
+    }
+
+    public List<Division> findAllByLeader(Member currentMember) {
+        return divisionRepository.findAllByLeader(currentMember);
     }
 }
