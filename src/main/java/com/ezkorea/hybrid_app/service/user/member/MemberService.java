@@ -46,8 +46,6 @@ public class MemberService {
     private final DivisionRepository divisionRepository;
     private final CommuteService commuteService;
 
-
-
     /**
      * 회원가입을 하기 위한 메소드
      * @param dto sign-up.html에서 받아온 정보
@@ -189,34 +187,6 @@ public class MemberService {
         memberRepository.save(currentMember);
     }
 
-    /*@Transactional
-    public void memberTeamReset(Member member, Role role) {
-        // 팀이 존재하는지 확인
-        if (member.getTeam() != null) {
-            Team currentTeam = teamRepository.findById(member.getTeam().getId()).get();
-
-            // 변경될 권한이 리더일 경우
-            if (role.equals(Role.ROLE_LEADER)) {
-                // 현재 팀 멤버 리스트에 포함되어 있는지 확인
-                if (currentTeam.getMemberList().contains(member)) {
-                    log.info("꼴에 팀원");
-                    List<Member> memberList = currentTeam.getMemberList();
-                    memberList.remove(member);
-                    currentTeam.setMemberList(memberList);
-                    teamRepository.save(currentTeam);
-                }
-            } else if (role.equals(Role.ROLE_EMPLOYEE)) {
-                // 변경될 권한이 사원일 경우 리더인지 확인
-                if (teamRepository.existsByLeader(member)) {
-                    log.info("꼴에 팀장");
-                    Team memberLeaderTeam = teamRepository.findByLeader(member);
-                    memberLeaderTeam.setLeader(null);
-                    teamRepository.save(memberLeaderTeam);
-                }
-            }
-        }
-    }*/
-
     /**
      * 오늘 출근했는지 확인하는 메소드
      * @param member 현재 로그인한 멤버
@@ -239,10 +209,6 @@ public class MemberService {
         return memberRepository.findAllByRole(role);
     }
 
-    public List<Member> findByRoleAndDivisionIsNull(Role role, MemberStatus status) {
-        return memberRepository.findAllByRoleAndMemberStatusAndDivisionIsNull(role, status);
-    }
-
     public List<Member> findAllByRoleAndTeamIsNullOrTeam(Role role, Team team, MemberStatus status) {
         return memberRepository.findAllByRoleAndTeamIsNullOrTeam(role, team, status);
     }
@@ -253,10 +219,6 @@ public class MemberService {
 
     public List<Member> findByRoleAndStatusAndTeamIsNull(Role role, MemberStatus status) {
         return memberRepository.findAllByRoleAndMemberStatusAndTeamIsNull(role, status);
-    }
-
-    public List<Member> findAllMember() {
-        return memberRepository.findAll();
     }
 
     public List<Member> findAllMemberExcludeStatus(MemberStatus status) {
@@ -313,10 +275,6 @@ public class MemberService {
         SubAuth subAuth = saRepository.findByMember(currentMember);
         subAuth.setInputAuth(inputAuth);
         subAuth.setPostAuth(postAuth);
-    }
-
-    public List<Member> findByRoleAndDivisionAndDivisionNull(Role role, MemberStatus status, Division division) {
-        return memberRepository.findByRoleAndDivisionAndDivisionAndDivisionNull(role, status, division);
     }
 
     @Transactional
