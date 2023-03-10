@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 import com.ezkorea.hybrid_app.service.etc.EtcService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +22,14 @@ public class EtcController {
     }
 
     @GetMapping("/msgToCeo/{id}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public String showMsgToCeoDetailPage(Model model, @PathVariable Long id) {
         model.addAttribute("model", etcService.findMsgToCeoReg(id));
         return "etc/msgToCeoDetail";
     }
 
     @GetMapping("/msgToCeo/list")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public String showMsgToCeoListPage(@RequestParam(value="page", defaultValue="0", required = false) int page,
                                        Model model) {
         model.addAttribute("msgList", etcService.msgToCeoList(page));
