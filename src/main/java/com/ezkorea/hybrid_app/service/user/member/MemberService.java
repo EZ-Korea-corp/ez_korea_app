@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.service.user.member;
 
 import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.aws.S3ImageRepository;
+import com.ezkorea.hybrid_app.domain.read.MemberPostReadRepository;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.division.DivisionRepository;
@@ -44,6 +45,7 @@ public class MemberService {
     private final SubAuthRepository saRepository;
 
     private final DivisionRepository divisionRepository;
+    private final MemberPostReadRepository mprRepository;
     private final CommuteService commuteService;
 
     /**
@@ -289,6 +291,7 @@ public class MemberService {
     public void deleteMember(Long id) {
         Member member = findMemberById(id);
 
+        mprRepository.deleteAllByMember(member);
         s3Repository.delete(member.getS3Image());
         saRepository.delete(member.getSubAuth());
         memberRepository.delete(member);

@@ -11,4 +11,7 @@ public interface MemberPostReadRepository extends JpaRepository<MemberPostRead, 
     boolean existsByNoticeAndMember(Notice notice, Member member);
 
     List<MemberPostRead> findAllByNotice(Notice notice);
+
+    void deleteAllByMember(Member member);
+
 }
