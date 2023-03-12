@@ -81,10 +81,11 @@ public class DivisionService {
 
     @Transactional
     public void removeDivisionLeader(Member currentMember) {
-        if (divisionRepository.existsByLeader(currentMember)) {
-            Division currentDivision = divisionRepository.findByLeader(currentMember);
-            currentDivision.setLeader(null);
-            currentMember.setDivision(null);
+        if (existsDivisionByLeader(currentMember)) {
+            for (Division division : findAllByLeader(currentMember)) {
+                division.setLeader(null);
+            }
         }
+        currentMember.setDivision(null);
     }
 }
