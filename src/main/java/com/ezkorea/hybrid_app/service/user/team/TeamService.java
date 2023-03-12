@@ -136,14 +136,21 @@ public class TeamService {
     @Transactional
     public void removeTeam(Long id) {
         Team currentTeam = findById(id);
+        log.info("currentTeam.getMemberList()={}", currentTeam.getMemberList().size());
+        if (currentTeam.getLeader() != null) {
+            currentTeam.getLeader().setTeam(null);
+            currentTeam.setLeader(null);
+        }
         for (Member member : currentTeam.getMemberList()) {
+            log.info("member.getUsername()={}", member.getUsername());
+            member.setDivision(null);
             member.setTeam(null);
         }
         if (currentTeam.getDivision() != null) {
+            log.info("member.getUsername()={}", currentTeam.getDivision().getDivisionName());
             Division currentDivision = currentTeam.getDivision();
             currentDivision.getTeamList().remove(currentTeam);
         }
         teamRepository.delete(currentTeam);
-        log.info("currentTeam.getDivision().getDivisionName()={}", currentTeam.getDivision().getDivisionName());
     }
 }

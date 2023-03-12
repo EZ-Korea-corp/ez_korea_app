@@ -56,4 +56,12 @@ public class ManagerDivisionRestController {
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 
+    @DeleteMapping("/division/{id}")
+    public ResponseEntity<Object> deleteTeam(@PathVariable Long id) {
+
+        dService.removeDivision(id);
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+    }
+
 }

@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,4 +29,8 @@ public class Division extends BaseEntity {
 
     @OneToMany(mappedBy = "division")
     private List<Team> teamList;
+
+    public void makeTeamListInitialization() {
+        teamList = new ArrayList<>();
+    }
 }

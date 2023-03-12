@@ -148,22 +148,6 @@
                 });
 
             });
-
-            $("#submit").on("click", function (){
-                if ($('#teamName').val().length !== 0) {
-                    console.log($('#createTeamForm').serializeObject());
-                    fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), '/manager/division', 'POST', successHref);
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        text: '팀 이름을 입력해주세요.',
-                    });
-                }
-            });
-
-            function successHref(data) {
-                // 받아온 데이터의 id로 리다리렉트
-            }
         </script>
     </main>
 
