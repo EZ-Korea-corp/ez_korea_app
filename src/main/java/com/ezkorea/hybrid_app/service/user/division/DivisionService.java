@@ -78,4 +78,13 @@ public class DivisionService {
     public List<Division> findAllByLeader(Member currentMember) {
         return divisionRepository.findAllByLeader(currentMember);
     }
+
+    @Transactional
+    public void removeDivisionLeader(Member currentMember) {
+        if (divisionRepository.existsByLeader(currentMember)) {
+            Division currentDivision = divisionRepository.findByLeader(currentMember);
+            currentDivision.setLeader(null);
+            currentMember.setDivision(null);
+        }
+    }
 }

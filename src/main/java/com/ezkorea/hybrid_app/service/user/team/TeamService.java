@@ -112,4 +112,22 @@ public class TeamService {
         return teamRepository.findById(id)
                 .orElseThrow( () -> new TeamNotFoundException("팀이 존재하지 않습니다."));
     }
+
+    @Transactional
+    public void removeTeamMember(Member currentMember) {
+        List<Team> allTeam = teamRepository.findAll();
+        for (Team team : allTeam) {
+            team.getMemberList().remove(currentMember);
+            currentMember.setTeam(null);
+        }
+    }
+
+    @Transactional
+    public void removeTeamLeader(Member currentMember) {
+        if (teamRepository.existsByLeader(currentMember)) {
+            Team currentTeam = teamRepository.findByLeader(currentMember);
+            currentTeam.setLeader(null);
+            currentMember.setTeam(null);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.web.controller.rest.manager;
 
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
+import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
@@ -42,8 +43,19 @@ public class ManagerMemberRestController {
     @PutMapping("/member")
     public ResponseEntity<Object> updateMemberRole(@RequestBody Map<String, Object> datum) {
         MemberUpdateDto dto = mapper.map(datum, MemberUpdateDto.class);
-        log.info(dto.toString());
+
         Member currentMember = mService.findByUsername(dto.getUsername());
+
+        // 회원 직급이 바뀔 경우 팀, 소속 제거
+        if (!currentMember.getRole().equals(dto.getMemberRole())) {
+            if (currentMember.getRole().equals(Role.ROLE_EMPLOYEE)) {
+                tService.removeTeamMember(currentMember);
+            } else if (currentMember.getRole().equals(Role.ROLE_LEADER)) {
+                tService.removeTeamLeader(currentMember);
+            } else if (currentMember.getRole().equals(Role.ROLE_GM)) {
+                dService.removeDivisionLeader(currentMember);
+            }
+        }
 
         mService.updateMemberSubAuth(dto.getUsername(), dto);
         mService.updateMemberRole(dto.getUsername(), dto);
