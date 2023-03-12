@@ -118,8 +118,8 @@ public class TeamService {
         List<Team> allTeam = teamRepository.findAll();
         for (Team team : allTeam) {
             team.getMemberList().remove(currentMember);
-            currentMember.setTeam(null);
         }
+        currentMember.setTeam(null);
     }
 
     @Transactional

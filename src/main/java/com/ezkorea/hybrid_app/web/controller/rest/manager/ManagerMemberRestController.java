@@ -47,7 +47,7 @@ public class ManagerMemberRestController {
         Member currentMember = mService.findByUsername(dto.getUsername());
 
         // 회원 직급이 바뀔 경우 팀, 소속 제거
-        if (!currentMember.getRole().equals(dto.getMemberRole())) {
+        if (!currentMember.getRole().equals(dto.getMemberRole()) || dto.getMemberStatus().equals(MemberStatus.AWAY)) {
             if (currentMember.getRole().equals(Role.ROLE_EMPLOYEE)) {
                 tService.removeTeamMember(currentMember);
             } else if (currentMember.getRole().equals(Role.ROLE_LEADER)) {
