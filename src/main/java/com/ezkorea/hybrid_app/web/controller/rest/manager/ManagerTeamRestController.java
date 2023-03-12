@@ -66,4 +66,12 @@ public class ManagerTeamRestController {
         return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
     }
 
+    @DeleteMapping("/team/{id}")
+    public ResponseEntity<Object> deleteTeam(@PathVariable Long id) {
+
+        tService.removeTeam(id);
+
+        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+    }
+
 }

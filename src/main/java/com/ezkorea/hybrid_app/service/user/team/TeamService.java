@@ -8,6 +8,7 @@ import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.TeamDto;
 import com.ezkorea.hybrid_app.web.exception.TeamNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TeamService {
 
@@ -129,5 +131,19 @@ public class TeamService {
             currentTeam.setLeader(null);
             currentMember.setTeam(null);
         }
+    }
+
+    @Transactional
+    public void removeTeam(Long id) {
+        Team currentTeam = findById(id);
+        for (Member member : currentTeam.getMemberList()) {
+            member.setTeam(null);
+        }
+        if (currentTeam.getDivision() != null) {
+            Division currentDivision = currentTeam.getDivision();
+            currentDivision.getTeamList().remove(currentTeam);
+        }
+        teamRepository.delete(currentTeam);
+        log.info("currentTeam.getDivision().getDivisionName()={}", currentTeam.getDivision().getDivisionName());
     }
 }
