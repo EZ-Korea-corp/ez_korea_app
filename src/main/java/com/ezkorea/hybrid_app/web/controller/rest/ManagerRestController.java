@@ -57,6 +57,9 @@ public class ManagerRestController {
         if (divisionName == null) {
             return new ResponseEntity<>(Map.of("message", "지점장이 없는 지점을 새로 만든 뒤 시도해주세요."), HttpStatus.BAD_REQUEST);
         }
+        if (teamEmployee == null) {
+            return new ResponseEntity<>(Map.of("message", "팀원을 최소 1명 선택해주세요."), HttpStatus.BAD_REQUEST);
+        }
 
         Division currentDivision = dService.findDivisionByDivisionName(divisionName);
         TeamDto dto = tService.createTeamDto(currentDivision, teamName, teamLeader, teamEmployee);
