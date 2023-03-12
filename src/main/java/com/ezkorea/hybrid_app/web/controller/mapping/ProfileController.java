@@ -5,6 +5,7 @@ import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
+import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.ProfileDto;
@@ -26,7 +27,7 @@ import java.util.List;
 public class ProfileController {
 
     private final MemberService memberService;
-    private final DivisionService divisionService;
+    private final CommuteService commuteService;
     private final ModelMapper mapper;
 
     @GetMapping("/profile/{username}")
@@ -60,32 +61,8 @@ public class ProfileController {
 
     @GetMapping("/profile/chart/view")
     public String showMemberChart(Model model) {
-
-        // 전체 사원 수
-        List<Member> memberList = memberService.findAllMemberByStatus(MemberStatus.FULL_TIME);
-        model.addAttribute("memberCount", memberList.size());
-
-        // 대표 조회
-        Member master = memberService.findByUsername("master");
-        model.addAttribute("master", master);
-
-        // 이사 조회
-        List<Member> directorList = memberService.findByRoleAndStatus(Role.ROLE_DIRECTOR, MemberStatus.FULL_TIME);
-        model.addAttribute("directorList", directorList);
-
-        // 경리 조회
-        List<Member> managerList = memberService.findByRoleAndStatus(Role.ROLE_MANAGER, MemberStatus.FULL_TIME);
-        model.addAttribute("managerList", managerList);
-
-        // 지점 조회
-        List<Division> divisionList = divisionService.findAllDivision();
-        model.addAttribute("divisionList", divisionList);
-
-        // 소속이 없는 일반 회원 조회
-        List<Member> teamNullMemberList = memberService.findByRoleAndStatusAndTeamIsNull(Role.ROLE_EMPLOYEE, MemberStatus.FULL_TIME);
-        model.addAttribute("teamNullMemberList", teamNullMemberList);
-
-
+        // 조직도 조회
+        model.addAttribute("profileList", commuteService.findMemberChart());
         return "profile/chart";
     }
 
