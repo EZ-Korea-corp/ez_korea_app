@@ -181,9 +181,6 @@ public class MemberService {
     @Transactional
     public void updateMemberRole(String username, MemberUpdateDto dto) {
         Member currentMember = findByUsername(username);
-        /*if (role.equals(Role.ROLE_LEADER) || role.equals(Role.ROLE_EMPLOYEE)) {
-            memberTeamReset(currentMember, role);
-        }*/
         currentMember.setRole(dto.getMemberRole());
         currentMember.setRoleChanged(true);
         currentMember.setMemberStatus(dto.getMemberStatus());
