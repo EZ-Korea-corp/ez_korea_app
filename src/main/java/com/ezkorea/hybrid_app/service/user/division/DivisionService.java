@@ -99,7 +99,7 @@ public class DivisionService {
         Division currentDivision = findDivisionById(id);
 
         for (Team team : currentDivision.getTeamList()) {
-            tService.removeAllTeam(team);
+            tService.removeOnlyTeam(team);
         }
         currentDivision.setLeader(null);
 

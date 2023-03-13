@@ -152,7 +152,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void removeAllTeam(Team team) {
+    public void removeOnlyTeam(Team team) {
         if (team.getLeader() != null) {
             team.getLeader().setTeam(null);
             team.setLeader(null);
