@@ -6,6 +6,7 @@ import com.ezkorea.hybrid_app.domain.user.team.Team;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -27,7 +28,7 @@ public class Division extends BaseEntity {
     @Setter
     private Member leader;
 
-    @OneToMany(mappedBy = "division")
+    @OneToMany(mappedBy = "division", cascade = CascadeType.ALL)
     private List<Team> teamList;
 
     public void makeTeamListInitialization() {

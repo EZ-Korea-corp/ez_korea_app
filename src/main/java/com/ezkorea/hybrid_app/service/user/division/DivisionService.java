@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.division.DivisionRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
+import com.ezkorea.hybrid_app.domain.user.team.TeamRepository;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import com.ezkorea.hybrid_app.web.dto.DivisionDto;
@@ -21,6 +22,7 @@ import java.util.List;
 public class DivisionService {
 
     private final DivisionRepository divisionRepository;
+    private final TeamRepository teamRepository;
     private final MemberService mService;
     private final TeamService tService;
 
@@ -97,11 +99,9 @@ public class DivisionService {
         Division currentDivision = findDivisionById(id);
 
         for (Team team : currentDivision.getTeamList()) {
-            tService.removeTeam(team.getId());
+            tService.removeAllTeam(team);
         }
-
         currentDivision.setLeader(null);
-        currentDivision.makeTeamListInitialization();
 
         divisionRepository.delete(currentDivision);
     }
