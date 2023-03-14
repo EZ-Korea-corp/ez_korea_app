@@ -9,6 +9,11 @@
 <body>
 
 <main layout:fragment="main">
+    <style>
+        #accountInfo {
+            transform-origin: center center;
+        }
+    </style>
     <section class="text-gray-700 body-font">
         <div class="container px-5 py-24 mx-auto">
             <div class="-m-4 text-center">
@@ -26,6 +31,22 @@
             </div>
         </div>
     </section>
+
+    <div id="modal" class="uk-open">
+        <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
+            <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
+            <!-- component -->
+            <div class="min-h-screen flex justify-center items-center">
+                <div id="accountInfo" class="space-y-16">
+                    <div class="profile_avatar">
+                        <div class="profile_avatar_holder">
+                            <img src="" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- component -->
     <input type="text" class="table-live-search-box" placeholder="사원이름을 입력해주세요."/>
@@ -54,11 +75,11 @@
                 </th>
             </tr>
             </thead>
-            <tbody class="uk-text-center" th:each="profile : ${profileList}">
+            <tbody class="uk-text-center" th:each="profile : ${profileList}" id="profile">
                 <tr class="bg-white border-b">
                     <td class="px-2 py-4 whitespace-nowrap">
                         <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                            <img th:src="${profile['FILE_PATH']}" class="absolute w-full h-full inset-0 rounded-full" >
+                            <img th:src="${profile['FILE_PATH']}" th:data-value="${profile['FILE_PATH']}" class="absolute w-full h-full inset-0 rounded-full" >
                         </div>
                     </td>
                     <td class="px-2 py-4 whitespace-nowrap">
@@ -74,6 +95,13 @@
     </div>
     <script>
         jQuery(document).ready(function($){
+
+            const modal = UIkit.modal('#modal');
+            // 프로필 이미지
+            $("#profile img").on("click", function() {
+                $("#accountInfo img").attr("src", $(this).data("value"));
+                modal.show();
+            });
 
             $('.live-search-table tbody tr').each(function(){
                 $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
