@@ -26,4 +26,39 @@
         GROUP BY A.TASK_DATE
     </select>
 
+    <select id="findMemberChart" resultType="Map">
+        SELECT	  A.ID AS ID
+                , A.NAME AS NAME
+                , B.FILE_PATH AS FILE_PATH
+                , A.MEMBER_ROLE AS MEMBER_ROLE
+                , A.PHONE AS PHONE
+                , IFNULL(C.TEAM_NAME, '-') AS TEAM_NAME
+                , IFNULL(IFNULL(C.DIVISION_NAME, D.DIVISION_NAME), '-') AS DIVISION_NAME
+        FROM    MEMBER A INNER JOIN S3IMAGE B
+        ON      A.ID = B.MEMBER_ID
+        LEFT JOIN
+        (
+            SELECT    A.TEAM_NAME
+                    , B.DIVISION_NAME
+                    , A.ID
+            FROM    TEAM A LEFT JOIN DIVISION B
+            ON      A.DIVISION_ID = B.ID
+        ) C
+        ON A.TEAM_ID = C.ID
+        LEFT JOIN
+        (
+            SELECT	  A.LEADER_ID
+                    , GROUP_CONCAT(A.DIVISION_NAME) AS DIVISION_NAME
+            FROM	DIVISION A
+            GROUP BY A.LEADER_ID
+            UNION ALL
+            SELECT 	  A.ID AS LEADER_ID
+                    , '경영진' AS DIVISION_NAME
+            FROM    MEMBER A
+            WHERE   A.MEMBER_ROLE IN ('ROLE_MASTER', 'ROLE_DIRECTOR')
+        ) D
+        ON A.ID = D.LEADER_ID
+        WHERE A.USERNAME <![CDATA[<>]]> 'dev'
+    </select>
+
 </mapper>

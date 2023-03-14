@@ -1,9 +1,11 @@
 package com.ezkorea.hybrid_app.service.user.commute;
 
 import com.ezkorea.hybrid_app.domain.myBatis.CommuteMbRepository;
+import com.ezkorea.hybrid_app.domain.sale.Payment;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTimeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
+import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -59,5 +61,14 @@ public class CommuteService {
 
     public List<Map<String, String>> findCommuteTime(String date) {
         return ctMbRepository.findCommuteTime(date);
+    }
+
+    public List<Map<String, String>> findMemberChart() {
+        List<Map<String, String>> profileList = ctMbRepository.findMemberChart();
+        // 직급명 추가
+        profileList.forEach(item -> {
+            item.put("ROLE_NM", Role.of(item.get("MEMBER_ROLE")));
+        });
+        return profileList;
     }
 }

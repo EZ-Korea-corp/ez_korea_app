@@ -12,4 +12,6 @@ public interface CommuteMbRepository {
     List<Map<String, String>> findCommuteTime(String date);
 
     List<Map<String, String>> findTaskDateList(Map map);
+
+    List<Map<String, String>> findMemberChart();
 }
