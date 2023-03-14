@@ -60,54 +60,72 @@
                                 </thead>
                                 <tbody class="uk-text-center">
                                 <th:block th:each="team : ${division.getTeamList()}">
-                                    <tr class="bg-white border-b" th:if="${team.getLeader() != null}">
-                                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                                            <h3 th:text="${team.getTeamName()}"></h3>
-                                        </th>
-                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getName()}"></td>
-                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getRole().viewName}"></td>
-                                        <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getPhone()}"></td>
-                                        <td class="px-2 py-4 whitespace-nowrap">
-                                            <a th:href="@{/manager/team/update/{id}(id=${team.getId()})}" class="button w-full">팀 수정</a>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b"
-                                        th:if="${team.getLeader() != null}"
-                                        th:each="employee : ${team.getMemberList()}">
-                                        <th:block th:if="${team.getLeader().getId() != employee.getId()}">
-                                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                                                <h3>"</h3>
-                                            </th>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
-                                            <td class="px-2 py-4 whitespace-nowrap"></td>
-                                        </th:block>
-                                    </tr>
-                                    <tr class="bg-white border-b"
-                                        th:if="${team.getLeader() == null}"
-                                        th:each="employee, status : ${team.getMemberList()}">
-                                        <th:block th:if="${status.index == 0}">
+
+                                    <th:block th:if="${team.getLeader() != null}">
+                                        <tr class="bg-white border-b">
                                             <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
                                                 <h3 th:text="${team.getTeamName()}"></h3>
                                             </th>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getName()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getRole().viewName}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getPhone()}"></td>
                                             <td class="px-2 py-4 whitespace-nowrap">
                                                 <a th:href="@{/manager/team/update/{id}(id=${team.getId()})}" class="button w-full">팀 수정</a>
                                             </td>
+                                        </tr>
+                                        <tr class="bg-white border-b"
+                                            th:each="employee : ${team.getMemberList()}">
+                                            <th:block th:if="${team.getLeader().getId() != employee.getId()}">
+                                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                                    <h3>"</h3>
+                                                </th>
+                                                <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
+                                                <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
+                                                <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
+                                                <td class="px-2 py-4 whitespace-nowrap"></td>
+                                            </th:block>
+                                        </tr>
+                                    </th:block>
+                                    <th:block th:if="${team.getLeader() == null}">
+                                        <th:block th:if="${team.getMemberList().size() != 0}">
+                                            <tr class="bg-white border-b"
+                                                th:each="employee, status : ${team.getMemberList()}">
+                                                <th:block th:if="${status.index == 0}">
+                                                    <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                                        <h3 th:text="${team.getTeamName()}"></h3>
+                                                    </th>
+                                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
+                                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
+                                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
+                                                    <td class="px-2 py-4 whitespace-nowrap">
+                                                        <a th:href="@{/manager/team/update/{id}(id=${team.getId()})}" class="button w-full">팀 수정</a>
+                                                    </td>
+                                                </th:block>
+                                                <th:block th:if="${status.index != 0}">
+                                                    <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                                        <h3>"</h3>
+                                                    </th>
+                                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
+                                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
+                                                    <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
+                                                    <td class="px-2 py-4 whitespace-nowrap"></td>
+                                                </th:block>
+                                            </tr>
                                         </th:block>
-                                        <th:block th:if="${status.index != 0}">
-                                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                                                <h3>"</h3>
-                                            </th>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getName()}"></td>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().viewName}"></td>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
-                                            <td class="px-2 py-4 whitespace-nowrap"></td>
+                                        <th:block th:if="${team.getMemberList().size() == 0}">
+                                            <tr class="bg-white border-b">
+                                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                                    <h3 th:text="${team.getTeamName()}"></h3>
+                                                </th>
+                                                <td class="px-2 py-4 whitespace-nowrap">-</td>
+                                                <td class="px-2 py-4 whitespace-nowrap">-</td>
+                                                <td class="px-2 py-4 whitespace-nowrap">-</td>
+                                                <td class="px-2 py-4 whitespace-nowrap">
+                                                    <a th:href="@{/manager/team/update/{id}(id=${team.getId()})}" class="button w-full">팀 수정</a>
+                                                </td>
+                                            </tr>
                                         </th:block>
-                                    </tr>
+                                    </th:block>
                                 </th:block>
                                 </tbody>
                             </table>
@@ -148,22 +166,6 @@
                 });
 
             });
-
-            $("#submit").on("click", function (){
-                if ($('#teamName').val().length !== 0) {
-                    console.log($('#createTeamForm').serializeObject());
-                    fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), '/manager/division', 'POST', successHref);
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        text: '팀 이름을 입력해주세요.',
-                    });
-                }
-            });
-
-            function successHref(data) {
-                // 받아온 데이터의 id로 리다리렉트
-            }
         </script>
     </main>
 

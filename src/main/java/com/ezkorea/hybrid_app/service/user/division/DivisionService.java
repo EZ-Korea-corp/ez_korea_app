@@ -3,7 +3,10 @@ package com.ezkorea.hybrid_app.service.user.division;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.division.DivisionRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
+import com.ezkorea.hybrid_app.domain.user.team.Team;
+import com.ezkorea.hybrid_app.domain.user.team.TeamRepository;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
+import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import com.ezkorea.hybrid_app.web.exception.DivisionNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +22,9 @@ import java.util.List;
 public class DivisionService {
 
     private final DivisionRepository divisionRepository;
+    private final TeamRepository teamRepository;
     private final MemberService mService;
+    private final TeamService tService;
 
     @Transactional
     public Division saveNewDivision(DivisionDto dto) {
@@ -77,5 +82,27 @@ public class DivisionService {
 
     public List<Division> findAllByLeader(Member currentMember) {
         return divisionRepository.findAllByLeader(currentMember);
+    }
+
+    @Transactional
+    public void removeDivisionLeader(Member currentMember) {
+        if (existsDivisionByLeader(currentMember)) {
+            for (Division division : findAllByLeader(currentMember)) {
+                division.setLeader(null);
+            }
+        }
+        currentMember.setDivision(null);
+    }
+
+    @Transactional
+    public void removeDivision(Long id) {
+        Division currentDivision = findDivisionById(id);
+
+        for (Team team : currentDivision.getTeamList()) {
+            tService.removeOnlyTeam(team);
+        }
+        currentDivision.setLeader(null);
+
+        divisionRepository.delete(currentDivision);
     }
 }

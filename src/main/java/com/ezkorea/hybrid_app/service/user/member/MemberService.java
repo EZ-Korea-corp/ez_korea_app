@@ -11,6 +11,7 @@ import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.domain.user.team.TeamRepository;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.web.dto.FindPasswordDto;
+import com.ezkorea.hybrid_app.web.dto.MemberUpdateDto;
 import com.ezkorea.hybrid_app.web.dto.ProfileDto;
 import com.ezkorea.hybrid_app.web.dto.SignUpDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
@@ -178,14 +179,11 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberRole(String username, Role role, MemberStatus status) {
+    public void updateMemberRole(String username, MemberUpdateDto dto) {
         Member currentMember = findByUsername(username);
-        /*if (role.equals(Role.ROLE_LEADER) || role.equals(Role.ROLE_EMPLOYEE)) {
-            memberTeamReset(currentMember, role);
-        }*/
-        currentMember.setRole(role);
+        currentMember.setRole(dto.getMemberRole());
         currentMember.setRoleChanged(true);
-        currentMember.setMemberStatus(status);
+        currentMember.setMemberStatus(dto.getMemberStatus());
         memberRepository.save(currentMember);
     }
 
@@ -268,11 +266,11 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberSubAuth(String username, String memberPostAuth, String memberInputAuth) {
+    public void updateMemberSubAuth(String username, MemberUpdateDto dto) {
         Member currentMember = findByUsername(username);
 
-        boolean postAuth = memberPostAuth != null;
-        boolean inputAuth = memberInputAuth != null;
+        boolean postAuth = dto.getMemberPostAuth() != null;
+        boolean inputAuth = dto.getMemberInputAuth() != null;
 
         SubAuth subAuth = saRepository.findByMember(currentMember);
         subAuth.setInputAuth(inputAuth);

@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -86,6 +88,15 @@ public class ExpensesService {
 
     @Transactional
     public List<Expenses> findHasImageExpensesList() {
-        return expensesRepository.findAllByS3ImageIsNotNull();
+        List<Expenses> hasImageExpensesList = expensesRepository.findAllByS3ImageIsNotNull();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime twoMonthsAgo = now.minusMonths(2);
+        List<Expenses> deleteList = new ArrayList<>();
+        for (Expenses expenses : hasImageExpensesList) {
+            if (expenses.getCreateDate().isAfter(twoMonthsAgo)) {
+                deleteList.add(expenses);
+            }
+        }
+        return deleteList;
     }
 }

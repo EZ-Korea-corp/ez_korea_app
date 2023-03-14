@@ -48,7 +48,10 @@
                     </div>
 
                     <!-- form footer -->
-                    <div class="grid grid-cols-2 gap-4 m-4 p-4">
+                    <div class="mx-4 px-4">
+                        <button id="delete" type="button" class="bg-red-500 rounded-lg text-white py-2 w-full">삭제하기</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mx-4 px-4 mt-4 pb-4">
                         <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
                         <button id="submit" type="button" class="button w-full">수정하기</button>
                     </div>
@@ -98,6 +101,28 @@
 
             function successHref(data) {
                 $(location).attr("href", "/manager/division/".concat(id));
+            }
+
+            $("#delete").on("click", function (){
+                Swal.fire({
+                    title: '지점을 삭제하시겠습니까?',
+                    html: "지점을 삭제할 시 소속된 팀 모두 삭제되며, <br> 삭제된 데이터는 복원할 수 없습니다.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '삭제',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const url = '/manager/division/'.concat(id);
+                        fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), url, 'DELETE', deleteHref);
+                    }
+                })
+            });
+
+            function deleteHref(data) {
+                $(location).attr("href", "/manager/division");
             }
         </script>
     </main>
