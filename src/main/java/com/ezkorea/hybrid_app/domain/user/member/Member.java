@@ -75,11 +75,11 @@ public class Member extends BaseEntity {
         commuteTimeList.add(time);
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @Setter
     private Division division;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @Setter
     private Team team;
 

@@ -47,8 +47,9 @@
                     <div class="p-10 pt-4 divide-y divide-gray-100">
 
                         <div class="md:py-8 py-3">
-                            <h2 class="text-xl font-bold">사원 관리</h2>
+                            <h2 class="text-xl font-bold mb-2">사원 관리</h2>
                             <p>PC 버전 혹은 핸드폰 가로 모드로 확인해주세요.</p>
+                            <p>기존 직급이 팀원, 팀장, 지점장일 경우 소속 팀 및 지점에서 제거됩니다.</p>
                         </div>
 
                         <div class="md:py-8 py-3">
@@ -98,7 +99,7 @@
                                         th:if="${!user.getRole().toString().equals('ROLE_MASTER')}">
                                         <form th:id="|updateMember${user.getId()}|" onsubmit="return false">
                                             <td>
-                                                <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
+                                                <div class="w-10 ml-2 h-10 flex-shrink-0 rounded-md relative mx-auto">
                                                     <img th:src="${user.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
                                                 </div>
                                             </td>
@@ -173,7 +174,8 @@
 
             let inviteBtn = {
                 doInvite: function (idx) {
-                    fnResponseCrudJsonAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'PUT', refreshPage);
+                    const form = $(`#updateMember${idx}`);
+                    fnResponseCrudJsonAjax(form.serializeObject(), '/manager/member', 'PUT', refreshPage);
                 }
             }
 

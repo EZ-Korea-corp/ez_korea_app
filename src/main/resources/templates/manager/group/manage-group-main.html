@@ -40,7 +40,7 @@
                                                 명칭
                                             </th>
                                             <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                                                리더
+                                                지점장
                                             </th>
                                             <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                                                 상세 페이지
@@ -53,11 +53,11 @@
                                                 <h3 th:text="${division.getDivisionName()}"></h3>
                                             </th>
                                             <td class="px-2 py-4 whitespace-nowrap">
-                                                <th:block th:if="!${division.getLeader().getUsername().equals('master')}">
+                                                <th:block th:if="${division.getLeader() != null}">
                                                     <a th:text="|${division.getLeader().getName()} (${division.getLeader().getPhone()})|"></a>
                                                 </th:block>
-                                                <th:block th:if="${division.getLeader().getUsername().equals('master')}">
-                                                    <a></a>
+                                                <th:block th:if="${division.getLeader() == null}">
+                                                    <a>지점장 없음</a>
                                                 </th:block>
                                             </td>
                                             <td class="px-2 py-4 whitespace-nowrap"> <a th:href="@{|/manager/division/${division.getId()}|}" class="uk-text-center h-9 px-4"> 상세보기 </a> </td>

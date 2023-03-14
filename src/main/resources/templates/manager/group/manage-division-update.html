@@ -29,18 +29,29 @@
                         <div>
                             <label for="teamGM" class="font-semibold text-base"> 지점장 선택 </label>
                             <select id="teamGM" name="teamGM"  class="shadow-none selectpicker with-border">
-                                <option th:each="gm : ${gmList}"
-                                        th:value="${gm.getUsername()}"
-                                        th:selected="${gm.getUsername() eq division.getLeader().getUsername()}"
-                                        th:text="|${gm.getName()}(${gm.getPhone()})|">이름</option>
-                                <option value="0">지점장 선택 안 함</option>
+                                <th:block th:if="${division.getLeader() != null}">
+                                    <option th:each="gm : ${gmList}"
+                                            th:value="${gm.getUsername()}"
+                                            th:selected="${gm.getUsername() eq division.getLeader().getUsername()}"
+                                            th:text="|${gm.getName()}(${gm.getPhone()})|">이름</option>
+                                    <option value="0">지점장 선택 안 함</option>
+                                </th:block>
+                                <th:block th:if="${division.getLeader() == null}">
+                                    <option th:each="gm : ${gmList}"
+                                            th:value="${gm.getUsername()}"
+                                            th:text="|${gm.getName()}(${gm.getPhone()})|">이름</option>
+                                    <option selected value="0">지점장 선택 안 함</option>
+                                </th:block>
                             </select>
                         </div>
 
                     </div>
 
                     <!-- form footer -->
-                    <div class="grid grid-cols-2 gap-4 m-4 p-4">
+                    <div class="mx-4 px-4">
+                        <button id="delete" type="button" class="bg-red-500 rounded-lg text-white py-2 w-full">삭제하기</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mx-4 px-4 mt-4 pb-4">
                         <a th:href="|javascript:window.history.back();|" class="button w-full">뒤로가기</a>
                         <button id="submit" type="button" class="button w-full">수정하기</button>
                     </div>
@@ -77,28 +88,41 @@
             /*]]>*/
 
             $("#submit").on("click", function (){
-                if ($('#teamGM').val() === "0") {
+                if ($('#teamName').val().length !== 0) {
+                    const url = '/manager/division/'.concat(id);
+                    fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), url, 'PUT', successHref);
+                } else {
                     Swal.fire({
                         icon: 'error',
-                        title: '지점장을 정해주세요.',
-                        text: '현재 지점장은 필수로 지정해야합니다.',
-                        footer: '이용에 불편을 드려 죄송합니다.'
+                        text: '팀 이름을 입력해주세요.',
                     });
-                } else {
-                    if ($('#teamName').val().length !== 0) {
-                        const url = '/manager/division/'.concat(id);
-                        fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), url, 'PUT', successHref);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            text: '팀 이름을 입력해주세요.',
-                        });
-                    }
                 }
             });
 
             function successHref(data) {
                 $(location).attr("href", "/manager/division/".concat(id));
+            }
+
+            $("#delete").on("click", function (){
+                Swal.fire({
+                    title: '지점을 삭제하시겠습니까?',
+                    html: "지점을 삭제할 시 소속된 팀 모두 삭제되며, <br> 삭제된 데이터는 복원할 수 없습니다.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '삭제',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const url = '/manager/division/'.concat(id);
+                        fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), url, 'DELETE', deleteHref);
+                    }
+                })
+            });
+
+            function deleteHref(data) {
+                $(location).attr("href", "/manager/division");
             }
         </script>
     </main>

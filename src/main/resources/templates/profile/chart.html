@@ -9,6 +9,11 @@
 <body>
 
 <main layout:fragment="main">
+    <style>
+        #accountInfo {
+            transform-origin: center center;
+        }
+    </style>
     <section class="text-gray-700 body-font">
         <div class="container px-5 py-24 mx-auto">
             <div class="-m-4 text-center">
@@ -19,7 +24,7 @@
                             <circle cx="9" cy="7" r="4"></circle>
                             <path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"></path>
                         </svg>
-                        <h2 class="title-font font-medium text-3xl text-gray-900"><span th:text="${memberCount - 1}"></span>명</h2>
+                        <h2 class="title-font font-medium text-3xl text-gray-900"><span th:text="${profileList.size()}"></span>명</h2>
                         <p class="leading-relaxed">사원수</p>
                     </div>
                 </div>
@@ -44,194 +49,45 @@
                     직급
                 </th>
                 <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                    소속
+                    지점
+                </th>
+                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                    팀
                 </th>
                 <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
                     핸드폰 번호
                 </th>
             </tr>
             </thead>
-            <tbody class="uk-text-center">
+            <tbody class="uk-text-center" th:each="profile : ${profileList}" id="profile">
                 <tr class="bg-white border-b">
                     <td class="px-2 py-4 whitespace-nowrap">
-                        <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                            <img th:src="${master.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
+                        <div uk-lightbox class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
+                            <a th:href="${profile['FILE_PATH']}">
+                                <img th:src="${profile['FILE_PATH']}" th:data-value="${profile['FILE_PATH']}" class="absolute w-full h-full inset-0 rounded-full" >
+                            </a>
                         </div>
                     </td>
                     <td class="px-2 py-4 whitespace-nowrap">
-                        <h3 th:text="${master.getName()}"></h3>
+                        <h3 th:text="${profile['NAME']}"></h3>
                     </td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${master.getRole().getViewName()}"></td>
-                    <td class="px-2 py-4 whitespace-nowrap">경영진</td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${master.getPhone()}"></td>
+                    <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['ROLE_NM']}"></td>
+                    <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['DIVISION_NAME']}"></td>
+                    <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['TEAM_NAME']}">></td>
+                    <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['PHONE']}"></td>
                 </tr>
-            </tbody>
-            <tbody class="uk-text-center" th:each="director : ${directorList}">
-                <tr class="bg-white border-b">
-                    <td class="px-2 py-4 whitespace-nowrap">
-                        <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                            <img th:src="${director.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                        </div>
-                    </td>
-                    <td class="px-2 py-4 whitespace-nowrap">
-                        <h3 th:text="${director.getName()}"></h3>
-                    </td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${director.getRole().getViewName()}"></td>
-                    <td class="px-2 py-4 whitespace-nowrap">경영진</td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${director.getPhone()}"></td>
-                </tr>
-            </tbody>
-            <tbody class="uk-text-center" th:each="manager : ${managerList}">
-                <tr class="bg-white border-b">
-                    <td class="px-2 py-4 whitespace-nowrap">
-                        <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                            <img th:src="${manager.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                        </div>
-                    </td>
-                    <td class="px-2 py-4 whitespace-nowrap">
-                        <h3 th:text="${manager.getName()}"></h3>
-                    </td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${manager.getRole().getViewName()}"></td>
-                    <td class="px-2 py-4 whitespace-nowrap">경리팀</td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${manager.getPhone()}"></td>
-                </tr>
-            </tbody>
-            <tbody class="uk-text-center" th:each="division : ${divisionList}" >
-                <tr class="bg-white border-b">
-                    <td class="px-2 py-4 whitespace-nowrap">
-                        <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                            <img th:src="${division.getLeader().getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                        </div>
-                    </td>
-                    <td class="px-2 py-4 whitespace-nowrap">
-                        <h3 th:text="${division.getLeader().getName()}"></h3>
-                    </td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${division.getLeader().getRole().getViewName()}"></td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${division.getDivisionName()}"></td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${division.getLeader().getPhone()}"></td>
-                </tr>
-                <th:block th:each="team : ${division.getTeamList()}">
-                    <th:block th:if="${team.getLeader() != null}">
-                        <tr class="bg-white border-b">
-                            <td class="px-2 py-4 whitespace-nowrap">
-                                <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                                    <img th:src="${team.getLeader().getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                                </div>
-                            </td>
-                            <td class="px-2 py-4 whitespace-nowrap">
-                                <h3 th:text="${team.getLeader().getName()}"></h3>
-                            </td>
-                            <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getRole().getViewName()}"></td>
-                            <td class="px-2 py-4 whitespace-nowrap" th:text="|${team.getTeamName()}|"></td>
-                            <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getPhone()}"></td>
-                        </tr>
-                        <tr class="bg-white border-b" th:each="employee, status : ${team.getMemberList()}">
-                            <th:block th:if="${status.index != 0}">
-                                <td class="px-2 py-4 whitespace-nowrap">
-                                    <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                                        <img th:src="${employee.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                                    </div>
-                                </td>
-                                <td class="px-2 py-4 whitespace-nowrap">
-                                    <h3 th:text="${employee.getName()}"></h3>
-                                </td>
-                                <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().getViewName()}"></td>
-                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                                    <h3>"</h3>
-                                </th>
-                                <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
-                            </th:block>
-                        </tr>
-                    </th:block>
-                    <th:block th:if="${team.getLeader() == null}">
-                        <tr class="bg-white border-b" th:each="employee, status : ${team.getMemberList()}">
-                            <th:block th:if="${status.index == 0}">
-                                <td class="px-2 py-4 whitespace-nowrap">
-                                    <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                                        <img th:src="${employee.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                                    </div>
-                                </td>
-                                <td class="px-2 py-4 whitespace-nowrap">
-                                    <h3 th:text="${employee.getName()}"></h3>
-                                </td>
-                                <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().getViewName()}"></td>
-                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                                    <h3 th:text="${team.getTeamName()}"></h3>
-                                </th>
-                                <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
-                            </th:block>
-                            <th:block th:if="${status.index != 0}">
-                                <td class="px-2 py-4 whitespace-nowrap">
-                                    <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                                        <img th:src="${employee.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                                    </div>
-                                </td>
-                                <td class="px-2 py-4 whitespace-nowrap">
-                                    <h3 th:text="${employee.getName()}"></h3>
-                                </td>
-                                <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().getViewName()}"></td>
-                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                                    <h3>"</h3>
-                                </th>
-                                <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
-                            </th:block>
-                        </tr>
-                    </th:block>
-                </th:block>
-            </tbody>
-            <tbody class="uk-text-center">
-            <th:block th:if="${nullDivision != null}">
-                <tr class="bg-white border-b" th:each="team : ${nullDivision.getTeamList()}">
-                    <td class="px-2 py-4 whitespace-nowrap">
-                        <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                            <img th:src="${team.getLeader().getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                        </div>
-                    </td>
-                    <td class="px-2 py-4 whitespace-nowrap">
-                        <h3 th:text="${team.getLeader().getName()}"></h3>
-                    </td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getRole().getViewName()}"></td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="|${team.getTeamName()}|"></td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${team.getLeader().getPhone()}"></td>
-                </tr>
-                <tr class="bg-white border-b" th:each="employee, status : ${team.getMemberList()}">
-                    <th:block th:if="${status.index != 0}">
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                                <img th:src="${employee.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                            </div>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <h3 th:text="${employee.getName()}"></h3>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getRole().getViewName()}"></td>
-                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                            <h3>"</h3>
-                        </th>
-                        <td class="px-2 py-4 whitespace-nowrap" th:text="${employee.getPhone()}"></td>
-                    </th:block>
-                </tr>
-            </th:block>
-            </tbody>
-            <tbody class="uk-text-center" th:each="teamNull : ${teamNullMemberList}">
-            <tr class="bg-white border-b">
-                <td class="px-2 py-4 whitespace-nowrap">
-                    <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                        <img th:src="${teamNull.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
-                    </div>
-                </td>
-                <td class="px-2 py-4 whitespace-nowrap">
-                    <h3 th:text="${teamNull.getName()}"></h3>
-                </td>
-                <td class="px-2 py-4 whitespace-nowrap" th:text="${teamNull.getRole().getViewName()}"></td>
-                <td class="px-2 py-4 whitespace-nowrap">소속 없음</td>
-                <td class="px-2 py-4 whitespace-nowrap" th:text="${teamNull.getPhone()}"></td>
-            </tr>
             </tbody>
         </table>
     </div>
     <script>
         jQuery(document).ready(function($){
+
+            /*const modal = UIkit.modal('#modal');
+            // 프로필 이미지
+            $("#profile img").on("click", function() {
+                $("#accountInfo img").attr("src", $(this).data("value"));
+                modal.show();
+            });*/
 
             $('.live-search-table tbody tr').each(function(){
                 $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());

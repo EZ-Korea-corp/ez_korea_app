@@ -26,8 +26,14 @@
                             <select id="teamGM" name="teamGM"  class="shadow-none selectpicker with-border">
                                 <option th:each="division : ${divisionList}"
                                         th:value="${division.getDivisionName()}"
-                                        th:selected="${division.getId() eq currentTeam.getDivision().getId()}"
-                                        th:text="|${division.getDivisionName()} (지점장 : ${division.getLeader().getUsername().equals('master') ? '없음' : division.getLeader().getName()})|">이름</option>
+                                        th:selected="${division.getId() eq currentTeam.getDivision().getId()}">
+                                    <th:block th:if="${division.getLeader() != null}">
+                                        <a th:text="|${division.getDivisionName()} (지점장 : ${division.getLeader().getName()})|"></a>
+                                    </th:block>
+                                    <th:block th:if="${division.getLeader() == null}">
+                                        <a th:text="|${division.getDivisionName()} (지점장 : 없음)|"></a>
+                                    </th:block>
+                                </option>
                             </select>
                         </div>
 
@@ -102,7 +108,10 @@
                     </div>
 
                     <!-- form footer -->
-                    <div class="grid grid-cols-2 gap-4 m-4 p-4">
+                    <div class="mx-4 px-4">
+                        <button id="delete" type="button" class="bg-red-500 rounded-lg text-white py-2 w-full">삭제하기</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mx-4 px-4 mt-4 pb-4">
                         <a th:href="@{/manager/division}" class="button w-full">뒤로가기</a>
                         <button id="submit" type="button" class="button w-full">수정하기</button>
                     </div>
@@ -150,6 +159,24 @@
                         text: '팀 이름을 입력해주세요.',
                     });
                 }
+            });
+
+            $("#delete").on("click", function (){
+                Swal.fire({
+                    title: '팀을 삭제하시겠습니까?',
+                    text: "팀을 삭제한 뒤, 복원할 수 없습니다.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '삭제',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const url = '/manager/team/'.concat(id);
+                        fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), url, 'DELETE', successHref);
+                    }
+                })
             });
 
             function successHref(data) {

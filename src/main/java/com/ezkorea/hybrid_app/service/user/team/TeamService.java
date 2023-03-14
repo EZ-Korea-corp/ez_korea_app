@@ -8,6 +8,7 @@ import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.web.dto.TeamDto;
 import com.ezkorea.hybrid_app.web.exception.TeamNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TeamService {
 
@@ -111,5 +113,54 @@ public class TeamService {
     public Team findById(Long id) {
         return teamRepository.findById(id)
                 .orElseThrow( () -> new TeamNotFoundException("팀이 존재하지 않습니다."));
+    }
+
+    @Transactional
+    public void removeTeamMember(Member currentMember) {
+        List<Team> allTeam = teamRepository.findAll();
+        for (Team team : allTeam) {
+            team.getMemberList().remove(currentMember);
+        }
+        currentMember.setTeam(null);
+    }
+
+    @Transactional
+    public void removeTeamLeader(Member currentMember) {
+        if (teamRepository.existsByLeader(currentMember)) {
+            Team currentTeam = teamRepository.findByLeader(currentMember);
+            currentTeam.setLeader(null);
+            currentMember.setTeam(null);
+        }
+    }
+
+    @Transactional
+    public void removeTeam(Long id) {
+        Team currentTeam = findById(id);
+        if (currentTeam.getLeader() != null) {
+            currentTeam.getLeader().setTeam(null);
+            currentTeam.setLeader(null);
+        }
+        for (Member member : currentTeam.getMemberList()) {
+            member.setDivision(null);
+            member.setTeam(null);
+        }
+        if (currentTeam.getDivision() != null) {
+            Division currentDivision = currentTeam.getDivision();
+            currentDivision.getTeamList().remove(currentTeam);
+        }
+        teamRepository.delete(currentTeam);
+    }
+
+    @Transactional
+    public void removeOnlyTeam(Team team) {
+        if (team.getLeader() != null) {
+            team.getLeader().setTeam(null);
+            team.setLeader(null);
+        }
+        for (Member member : team.getMemberList()) {
+            member.setDivision(null);
+            member.setTeam(null);
+        }
+        teamRepository.delete(team);
     }
 }
