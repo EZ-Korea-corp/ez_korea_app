@@ -37,9 +37,6 @@ public class ManagerDivisionRestController {
         String teamGm = (String) datum.get("teamGM");
 
         DivisionDto dto = dService.createDivisionDto(teamName, teamGm);
-        if (dto == null) {
-            return new ResponseEntity<>(Map.of("message", "무소속 지점은 1개만 만들 수 있습니다."), HttpStatus.BAD_REQUEST);
-        }
 
         dService.saveNewDivision(dto);
 
