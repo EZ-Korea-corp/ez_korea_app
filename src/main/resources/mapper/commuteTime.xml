@@ -14,6 +14,7 @@
         ON      A.ID = B.MEMBER_ID
         AND     B.DATE = DATE_FORMAT(IFNULL(#{date}, NOW()), '%y-%m-%d')
         WHERE   A.MEMBER_STATUS = 'FULL_TIME'
+        AND     A.USERNAME <![CDATA[<>]]> 'dev'
     </select>
 
     <select id="findTaskDateList" parameterType="Map" resultType="Map">
@@ -59,6 +60,7 @@
         ) D
         ON A.ID = D.LEADER_ID
         WHERE A.USERNAME <![CDATA[<>]]> 'dev'
+        AND   A.MEMBER_STATUS = 'FULL_TIME'
     </select>
 
 </mapper>

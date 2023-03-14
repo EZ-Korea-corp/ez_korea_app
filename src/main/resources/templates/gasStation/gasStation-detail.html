@@ -42,7 +42,9 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 my-4">
-                        <button sec:authorize="hasAuthority('ROLE_MASTER')" type="button" th:onclick="|location.href='/station/update/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-lg font-semibold"> 수정 </button>
+                        <th:block sec:authorize="hasAnyAuthority('ROLE_MASTER', 'ROLE_DIRECTOR', 'ROLE_MANAGER')">
+                            <button type="button" th:onclick="|location.href='/station/update/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-lg font-semibold"> 수정 </button>
+                        </th:block>
                         <input type="checkbox" id="isWork" th:checked="${station['isWork']}" name="memberPostAuth" class="text-blue-600 uk-text-center h-9 px-4 rounded-lg border"/>
                         <label for="isWork" id="isWorkBt" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md font-semibold text-white"> 영업중 </label>
                     </div>
