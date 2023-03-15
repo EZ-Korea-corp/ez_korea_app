@@ -508,4 +508,11 @@ public class SaleService {
         return commuteMbRepository.findTaskDateList(data);
     }
 
+    /**
+     * 일자별 모든 판매목록
+     * */
+    public List<Map<String, Object>> findDayStatList(Map<String, String> paramMap) {
+        return saleMbRepository.findDayStatList(paramMap);
+    }
+
 }

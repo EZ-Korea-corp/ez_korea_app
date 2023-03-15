@@ -43,4 +43,10 @@ public interface SaleMbRepository {
      * @Param paramMap id(주유소), date(검색일자)
      * */
     List<Map<String, Object>>findSellDetailByStationAndDate(Map paramMap);
+
+    /**
+     * 일자별 모든 판매목록
+     * @Param paramMap date(검색일자)
+     * */
+    List<Map<String, Object>>findDayStatList(Map paramMap);
 }

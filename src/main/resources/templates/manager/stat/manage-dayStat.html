@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            #check div a{
+                color: #FFFFFF;
+            }
+            td {
+                text-align: center;
+            }
+        </style>
+        <div class="lg:space-x-12">
+
+            <div class="lg:w-full card">
+
+                <div class="p-2 pt-4">
+                    <div class="mt-4 flex justify-between">
+                        <input type="text" id="datepicker" name="datepicker">
+                    </div>
+                    <hr class="my-4">
+
+                    <div class="md:py-8 py-3 pt-0">
+                        <div class="relative overflow-x-auto shadow-md">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 whitespace-nowrap">
+                                <tr>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        이름
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        일반
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        하브
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        M W
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        S클
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        칠백
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        금액
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody th:each="stat : ${statList}">
+                                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                                        <th class="text-center px-6 py-4 font-medium whitespace-nowrap" th:text="${stat['NAME']}"></th>
+                                        <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(stat.normal, 1, 1)}|"></td>
+                                        <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(stat.hybrid, 1, 1)}|"></td>
+                                        <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(stat.mw, 1, 1)}|"></td>
+                                        <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(stat.s_class, 1, 1)}|"></td>
+                                        <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(stat.s_700, 1, 1)}|"></td>
+                                        <td class="text-center px-6 py-4" th:text="|${#numbers.formatInteger(stat.total, 0, 'COMMA')}|"></td>
+                                    </tr>
+                                </tbody>
+                                <th:block th:if="${statList.size() == 0}">
+                                    <tr class="border-b border-gray-200 dark:border-gray-700 p-2">
+                                        <td colspan="7"><span class="font-semibold">데이터가 없습니다</span></td>
+                                    </tr>
+                                </th:block>
+                            </table>
+                        </div>
+                        <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+            $(document).ready(function() {
+                let url  = new URL(window.location.href);
+                let date = url.searchParams.get("date");
+
+                fnCalenderMaker($('#datepicker'), date);
+
+                $('#datepicker').on("change", function() {
+                    location.href= "/manager/dayStatList?date=" + $(this).val();
+                });
+            });
+
+        </script>
+    </main>
+</body>
+
+</html>
