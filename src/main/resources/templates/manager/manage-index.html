@@ -64,7 +64,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="items-start p-7 sm:space-x-6" sec:authorize="hasAuthority('ROLE_MASTER')">
+                <div class="items-start p-7 sm:space-x-6" sec:authorize="hasAnyAuthority('ROLE_MASTER', 'ROLE_DIRECTOR', 'ROLE_MANAGER')">
                     <div class="sm:order-2">
                         <a th:href="@{/manager/stat}">
                             <h3 class="text-xl font-medium"> 금일 매출 조회 </h3>

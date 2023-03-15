@@ -168,7 +168,6 @@ public class ManagerController {
     }
 
     @GetMapping("/stat")
-    @PreAuthorize("hasAuthority('ROLE_MASTER')")
     public String showStatPage() {
         return "manager/manage-stat";
     }
@@ -192,6 +191,17 @@ public class ManagerController {
             model.addAttribute("expensesList", eService.findAllExpensesByPayDate(page, payDate, currentStatus));
         }
         return "manager/expenses/list";
+    }
+
+    @GetMapping("/dayStatList")
+    public String showFindTotalStat(@RequestParam(value="date") String date, Model model) {
+
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("date", date);
+
+        model.addAttribute("statList", saleService.findDayStatList(paramMap));
+
+        return "manager/stat/manage-dayStat";
     }
 
 }

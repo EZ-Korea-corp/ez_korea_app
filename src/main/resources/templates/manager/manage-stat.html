@@ -13,13 +13,24 @@
 
         <div class="">
 
-            <h2 class="text-xl font-semibold mb-4"> 📈 매출 관리 </h2>
+            <h2 class="text-xl font-semibold mb-4"> 매출 관리 </h2>
+
+            <div class="card divide-y divide-gray-100 sm:m-0" sec:authorize="hasAuthority('ROLE_MASTER')">
+                <div class="items-start p-7 sm:space-x-6">
+                    <div class="sm:order-2">
+                        <a th:href="@{/manager/totalStat}">
+                            <h3 class="text-xl font-medium"> <span class="mr-2"></span> 전체 매출통계 </h3>
+                        </a>
+                    </div>
+                </div>
+            </div>
 
             <div class="card divide-y divide-gray-100 sm:m-0">
                 <div class="items-start p-7 sm:space-x-6">
                     <div class="sm:order-2">
-                        <a th:href="@{/manager/totalStat}">
-                            <h3 class="text-xl font-medium"> <span class="mr-2"></span> 전체통계 </h3>
+                        <a th:href="@{/manager/dayStatList}">
+                        <a th:href="@{|/manager/dayStatList?date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}">
+                            <h3 class="text-xl font-medium"> <span class="mr-2"></span> 일일 판매통계 </h3>
                         </a>
                     </div>
                 </div>
