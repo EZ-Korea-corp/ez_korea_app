@@ -35,31 +35,32 @@
     <!-- component -->
     <input type="text" class="table-live-search-box" placeholder="사원이름을 입력해주세요."/>
 
-    <div class="m-4">
-        <table class="w-full text-sm text-left text-gray-500 live-search-table">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-            <tr>
-                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                    사진
-                </th>
-                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                    사원명
-                </th>
-                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                    직급
-                </th>
-                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                    지점
-                </th>
-                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                    팀
-                </th>
-                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                    핸드폰 번호
-                </th>
-            </tr>
-            </thead>
-            <tbody class="uk-text-center" th:each="profile : ${profileList}" id="profile">
+    <div class="relative overflow-x-auto shadow-md" id="select-div">
+        <div class="m-4">
+            <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                        사진
+                    </th>
+                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                        사원명
+                    </th>
+                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                        직급
+                    </th>
+                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                        지점
+                    </th>
+                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                        팀
+                    </th>
+                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                        핸드폰 번호
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="uk-text-center" th:each="profile : ${profileList}" id="profile">
                 <tr class="bg-white border-b">
                     <td class="px-2 py-4 whitespace-nowrap">
                         <div uk-lightbox class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
@@ -76,8 +77,9 @@
                     <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['TEAM_NAME']}">></td>
                     <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['PHONE']}"></td>
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
     <script>
         jQuery(document).ready(function($){
