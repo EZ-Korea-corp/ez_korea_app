@@ -7,13 +7,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PartTime {
 
-    AM("am", "오전"),
-    PM("pm", "오후"),
-    FULL("full", "풀타임"),
-    IN("in", "입고");
+    AM("am", "오전", 200000),
+    PM("pm", "오후", 300000),
+    FULL("full", "풀타임", 500000),
+    IN("in", "입고", 0);
 
     private final String key;
     private final String viewName;
+    private final long minPrice;
 
     public static String of(String part) {
         for (PartTime partTime : PartTime.values()) {

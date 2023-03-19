@@ -512,7 +512,22 @@ public class SaleService {
      * 일자별 모든 판매목록
      * */
     public List<Map<String, Object>> findDayStatList(Map<String, String> paramMap) {
-        return saleMbRepository.findDayStatList(paramMap);
+        List<Map<String, Object>> list = saleMbRepository.findDayStatList(paramMap);
+
+        // 파트타임, 타임별 최소금액
+        list.forEach(item -> {
+            PartTime part = PartTime.valueOf(((String)item.get("PART")).toUpperCase());
+            item.put("PART", part.getViewName());
+
+            BigDecimal result = new BigDecimal(String.valueOf(item.get("total")));
+            long total = result.longValue();
+            if(total < part.getMinPrice()) {
+                item.put("COLOR", "skyblue");
+            }
+
+        });
+
+        return list;
     }
 
 }

@@ -36,6 +36,9 @@
                                         이름
                                     </th>
                                     <th scope="col" class="text-center px-6 py-3">
+                                        파트
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
                                         일반
                                     </th>
                                     <th scope="col" class="text-center px-6 py-3">
@@ -56,8 +59,9 @@
                                 </tr>
                                 </thead>
                                 <tbody th:each="stat : ${statList}">
-                                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <tr class="border-b border-gray-200 dark:border-gray-700" th:style="'background-color: ' + ${stat['COLOR']}">
                                         <th class="text-center px-6 py-4 font-medium whitespace-nowrap" th:text="${stat['NAME']}"></th>
+                                        <th class="text-center px-6 py-4 font-medium whitespace-nowrap" th:text="${stat['PART']}"></th>
                                         <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(stat.normal, 1, 1)}|"></td>
                                         <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(stat.hybrid, 1, 1)}|"></td>
                                         <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(stat.mw, 1, 1)}|"></td>

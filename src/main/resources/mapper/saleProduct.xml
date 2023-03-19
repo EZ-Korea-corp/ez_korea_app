@@ -270,22 +270,25 @@
 
     <select id="findDayStatList" parameterType="Map" resultType="Map">
         SELECT 	   MAX(A.NAME) AS NAME
-                 , IFNULL(SUM(CASE WHEN A.MEMBER_ID = A.MEMBER_ID AND A.SORT = 'normal' THEN A.COUNT END), 0) AS normal
-                 , IFNULL(SUM(CASE WHEN A.MEMBER_ID = A.MEMBER_ID AND A.SORT = 'hybrid' THEN A.COUNT END), 0) AS hybrid
-                 , IFNULL(SUM(CASE WHEN A.MEMBER_ID = A.MEMBER_ID AND A.SORT = 'mw' THEN A.COUNT END), 0) AS mw
-                 , IFNULL(SUM(CASE WHEN A.MEMBER_ID = A.MEMBER_ID AND A.SORT = 's_class' THEN A.COUNT END), 0) AS s_class
-                 , IFNULL(SUM(CASE WHEN A.MEMBER_ID = A.MEMBER_ID AND A.SORT = 'size_700' THEN A.COUNT END), 0) AS s_700
-                 , IFNULL(SUM(CASE WHEN A.MEMBER_ID = A.MEMBER_ID THEN A.PRICE END), 0) AS total
+                 , MAX(A.PART) AS PART
+                 , IFNULL(SUM(CASE WHEN A.TABLE_ID = A.TABLE_ID AND A.SORT = 'normal' THEN A.COUNT END), 0) AS normal
+                 , IFNULL(SUM(CASE WHEN A.TABLE_ID = A.TABLE_ID AND A.SORT = 'hybrid' THEN A.COUNT END), 0) AS hybrid
+                 , IFNULL(SUM(CASE WHEN A.TABLE_ID = A.TABLE_ID AND A.SORT = 'mw' THEN A.COUNT END), 0) AS mw
+                 , IFNULL(SUM(CASE WHEN A.TABLE_ID = A.TABLE_ID AND A.SORT = 's_class' THEN A.COUNT END), 0) AS s_class
+                 , IFNULL(SUM(CASE WHEN A.TABLE_ID = A.TABLE_ID AND A.SORT = 'size_700' THEN A.COUNT END), 0) AS s_700
+                 , IFNULL(SUM(CASE WHEN A.TABLE_ID = A.TABLE_ID THEN A.PRICE END), 0) AS total
         FROM
         (
             SELECT    CONCAT(MAX(B.NAME), (CASE WHEN MAX(B.TEAM_NAME) IS NULL THEN "" ELSE CONCAT("(", MAX(B.TEAM_NAME), ")") END)) AS NAME
                     , SUM(A.COUNT) / 2 AS COUNT
                     , SUM(A.COUNT) * MAX(C.PRICE) AS PRICE
                     , A.SORT
-                    , B.MEMBER_ID
+                    , MAX(B.PART) AS PART
+                    , B.TABLE_ID
             FROM    SELL_PRODUCT A INNER JOIN
             (
                 SELECT    A.ID AS TABLE_ID
+                        , A.PART
                         , B.ID AS MEMBER_ID
                         , B.NAME AS NAME
                         , C.TEAM_NAME AS TEAM_NAME
@@ -305,9 +308,10 @@
             ) C
             ON A.SORT = C.SORT
             WHERE A.STATUS = 'out'
-            GROUP BY B.MEMBER_ID, A.SORT
+            GROUP BY B.TABLE_ID, A.SORT
         ) A
-        GROUP BY A.MEMBER_ID
+        GROUP BY A.TABLE_ID
+        ORDER BY TOTAL DESC
     </select>
 
 </mapper>
