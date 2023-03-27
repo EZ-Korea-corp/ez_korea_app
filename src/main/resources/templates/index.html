@@ -11,59 +11,176 @@
 <main layout:fragment="main">
     <div class="lg:space-x-12">
         <div class="" id="body_div">
-            <form th:action="@{/commute}" method="post" id="commuteForm">
-                <input type="hidden" id="location" name="location" value=""/>
-                <div class=" md:mb-4 mb-3" th:if="${!isOnTime}">
-                    <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 환영합니다</h2>
-                    <p class="my-2">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요</p>
-                    <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('ON_TIME').getKey()}"/>
-                    <button type="button" id="onTimeBtn" class="text-white bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">출근 체크</button>
-                </div>
-                <div class=" md:mb-4 mb-3" th:if="${isOnTime}">
-                    <th:block th:if="${commute.getStatus().equals('onTime')}">
-                        <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 오늘도 힘내세요</h2>
-                        <p class="my-2">출근 시간 : <span th:text="${#temporals.format(commute.getOnTime(), 'HH시 mm분')}"></span></p>
-                        <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('OFF_TIME').getKey()}"/>
-                        <button type="button" id="offTimeBtn" class="text-white bg-yellow-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">퇴근 체크</button>
-                    </th:block>
-                    <th:block th:if="${commute.getStatus().equals('offTime')}">
-                        <h2 class="text-2xl font-semibold"> <span th:text="${member.getName()}"></span>님 오늘도 수고하셨습니다</h2>
-                        <p class="my-2">퇴근 시간 : <span th:text="${#temporals.format(commute.getOffTime(), 'HH시 mm분')}"></span></p>
-                    </th:block>
-                </div>
-            </form>
+            <div class="card py-6 px-4">
+                <form th:action="@{/commute}" method="post" id="commuteForm">
+                    <input type="hidden" id="location" name="location" value=""/>
+                    <div th:if="${!isOnTime}">
+                        <a class="text-lg text-base font-semibold"><span th:text="${member.getName()}"></span>님 환영합니다.</a>
+                        <p class="my-2 text-sm">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요</p>
+                        <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('ON_TIME').getKey()}"/>
+                        <button type="button" id="onTimeBtn" class="mt-2 text-white bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">출근 체크</button>
+                    </div>
+                    <div th:if="${isOnTime}">
+                        <th:block th:if="${commute.getStatus().equals('onTime')}">
+                            <a class="text-lg text-base font-semibold"><span th:text="${member.getName()}"></span>님 오늘도 힘내세요.</a>
+                            <p class="my-2">출근 시간 : <span th:text="${#temporals.format(commute.getOnTime(), 'HH시 mm분')}"></span></p>
+                            <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('OFF_TIME').getKey()}"/>
+                            <button type="button" id="offTimeBtn" class="mt-2 text-white bg-yellow-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">퇴근 체크</button>
+                        </th:block>
+                        <th:block th:if="${commute.getStatus().equals('offTime')}">
+                            <a class="text-lg text-base font-semibold"><span th:text="${member.getName()}"></span>님 오늘도 수고하셨습니다.</a>
+                            <p class="my-2">퇴근 시간 : <span th:text="${#temporals.format(commute.getOffTime(), 'HH시 mm분')}"></span></p>
+                            <button type="button" disabled class="mt-2 text-white bg-gray-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">퇴근 완료</button>
+                        </th:block>
+                    </div>
+                </form>
+            </div>
 
             <hr class="my-5">
 
-            <div class="flex justify-between">
-                <h2 class="text-xl font-semibold mb-2"> 공지사항 </h2>
-                <p><a class="text-blue-500" th:href="@{/notice}">더보기️ </a></p>
+            <div class="card py-6 px-4">
+                <div class="flex justify-between mb-4">
+                    <h2 class="text-xl font-semibold mb-2"> 공지사항 </h2>
+                    <p><a class="text-blue-500" th:href="@{/notice}">더보기️ </a></p>
+                </div>
+                <div class="grid grid-cols-3 text-center mb-4">
+                    <div class="border-r">
+                        <a class="text-bold text-lg">2</a><br>
+                        <a class="text-sm">전체</a>
+                    </div>
+                    <div class="border-r">
+                        <a class="text-bold text-lg">1</a><br>
+                        <a class="text-sm">읽지 않음</a>
+                    </div>
+                    <div>
+                        <a class="text-bold text-lg">1</a><br>
+                        <a class="text-sm">읽음</a>
+                    </div>
+                </div>
+
+                <div class="relative" uk-slider="finite: true">
+                    <div class="uk-slider-container px-3 py-3">
+                        <ul class="uk-slider-items uk-grid-small uk-grid">
+                            <li th:each="notice : ${noticeList}">
+                                <a class="uk-link-reset hover:text-black" th:href="@{/notice/{id}(id = ${notice.getId()})}">
+                                    <div class="card w-56 h-32">
+                                        <div class="p-4">
+                                            <h4 class="text-base font-semibold mb-1" th:text="${notice.getTitle()}">공지 제목</h4>
+                                            <p class="font-medium text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일')}">2023년 3월 15일</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!--<a class="absolute bg-white bottom-1/2 flex items-center justify-center p-2 -left-4 rounded-full shadow-md text-xl w-9 z-10 dark:bg-gray-800 dark:text-white"
+                           href="#" uk-slider-item="previous"> <i class="icon-feather-chevron-left"></i></a>
+                        <a class="absolute bg-white bottom-1/2 flex items-center justify-center p-2 -right-4 rounded-full shadow-md text-xl w-9 z-10 dark:bg-gray-800 dark:text-white"
+                           href="#" uk-slider-item="next"> <i class="icon-feather-chevron-right"></i></a>-->
+
+                    </div>
+                </div>
             </div>
 
-            <div class="card divide-y divide-gray-100 sm:m-0">
+            <hr class="my-5">
 
-                <th:block th:if="${noticeList.size() != 0}">
-                    <div class="p-7 sm:space-x-6" th:each="notice : ${noticeList}">
-                        <div class="sm:order-2">
-                            <a th:href="@{/notice/{id}(id = ${notice.getId()})}">
-                                <h3 class="text-lg font-medium mb-2" th:text="${notice.getTitle()}"> 공지 제목 </h3>
-                            </a>
-                            <p class="text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일 HH시 mm분')}">작성일</p>
+            <div class="card py-6 px-4">
+                <div class="grid grid-cols-5 gap-4 text-center">
+                    <a th:href="@{/sales}" class="hover:text-black">
+                        <div class="card p-1 mb-2 mx-auto w-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-blue-500">
+                                <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z" clip-rule="evenodd"></path>
+                            </svg>
                         </div>
-                    </div>
-                </th:block>
-                <th:block th:if="${noticeList.size() == 0}">
-                    <div class="p-7 sm:space-x-6">
-                        <div class="sm:order-2">
-                            <a>
-                                <h3 class="text-lg font-medium"> 등록된 공지사항이 없습니다. </h3>
-                            </a>
+                        <span class="text-sm"> 판매 </span>
+                    </a>
+                    <a th:href="@{/station/index}" class="hover:text-black">
+                        <div class="card p-1 mb-2 mx-auto w-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-blue-500">
+                                <path fill-rule="evenodd" d="M10.496 2.132a1 1 0 00-.992 0l-7 4A1 1 0 003 8v7a1 1 0 100 2h14a1 1 0 100-2V8a1 1 0 00.496-1.868l-7-4zM6 9a1 1 0 00-1 1v3a1 1 0 102 0v-3a1 1 0 00-1-1zm3 1a1 1 0 012 0v3a1 1 0 11-2 0v-3zm5-1a1 1 0 00-1 1v3a1 1 0 102 0v-3a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
                         </div>
-                    </div>
-                </th:block>
-
+                        <span class="text-sm"> 주유소 </span>
+                    </a>
+                    <a th:href="@{/expenses/FUEL}" class="hover:text-black">
+                        <div class="card p-1 mb-2 mx-auto w-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-blue-500">
+                                <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13zM9 9a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM7 8a1 1 0 000 2h.01a1 1 0 000-2H7z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm"> 경비 </span>
+                    </a>
+                    <a th:href="@{/stat/main}" class="hover:text-black">
+                        <div class="card p-1 mb-2 mx-auto w-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-blue-500">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm"> MVP </span>
+                    </a>
+                    <a th:href="@{/profile/chart/view}" class="hover:text-black">
+                        <div class="card p-1 mb-2 mx-auto w-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-blue-500">
+                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                            </svg>
+                        </div>
+                        <span class="text-sm"> 조직도 </span>
+                    </a>
+                    <a th:href="@{/etc/msgToCeo}" class="hover:text-black">
+                        <div class="card p-1 mb-2 mx-auto w-12">
+                            <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="text-blue-500">
+                                <path fill-rule="evenodd" d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" clip-rule="evenodd"></path>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm"> 건의 </span>
+                    </a>
+                    <a th:href="@{/}" class="hover:text-black">
+                        <div class="card p-1 mb-2 mx-auto w-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-blue-500">
+                                <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm"> 와이퍼 </span>
+                    </a>
+                    <a th:href="@{/stat/main}" class="hover:text-black" th:if="|${member.getSubAuth().isInputAuth() eq true}|">
+                        <div class="card p-1 mb-2 mx-auto w-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-yellow-500">
+                                <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm"> 입고 </span>
+                    </a>
+                    <a th:href="@{/manager/home}" class="hover:text-black" sec:authorize="hasAuthority('ROLE_MANAGER')">
+                        <div class="card p-1 mb-2 mx-auto w-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-red-500">
+                                <path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm"> 매니징 </span>
+                    </a>
+                    <a th:href="@{/note}" class="hover:text-black" sec:authorize="hasAnyAuthority('ROLE_MASTER', 'ROLE_DIRECTOR')">
+                        <div class="card p-1 mb-2 mx-auto w-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-red-500">
+                                <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-sm"> 패치 </span>
+                    </a>
+                </div>
             </div>
 
+            <hr class="my-5">
+
+            <div class="card py-6 px-4">
+                <div class="flex justify-between mb-4">
+                    <h2 class="text-xl font-semibold mb-2"> MVP </h2>
+                    <p><a class="text-blue-500" th:href="@{/stat/main}">더보기️ </a></p>
+                </div>
+                <div>
+
+                </div>
+            </div>
 
         </div>
     </div>
