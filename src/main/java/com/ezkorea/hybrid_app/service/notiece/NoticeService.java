@@ -60,4 +60,8 @@ public class NoticeService {
         Pageable pageable = PageRequest.of(page, 10);
         return noticeRepository.findAllByOrderByCreateDateDesc(pageable);
     }
+
+    public Integer countAllNotice() {
+        return noticeRepository.findAll().size();
+    }
 }

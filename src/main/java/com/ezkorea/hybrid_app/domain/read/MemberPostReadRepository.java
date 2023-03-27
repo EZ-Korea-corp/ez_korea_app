@@ -14,4 +14,6 @@ public interface MemberPostReadRepository extends JpaRepository<MemberPostRead, 
 
     void deleteAllByMember(Member member);
 
+    List<MemberPostRead> findByMember(Member member);
+
 }

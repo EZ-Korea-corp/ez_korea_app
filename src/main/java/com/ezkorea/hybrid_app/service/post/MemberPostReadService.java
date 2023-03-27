@@ -1,10 +1,12 @@
 package com.ezkorea.hybrid_app.service.post;
 
 import com.ezkorea.hybrid_app.domain.notice.Notice;
+import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
 import com.ezkorea.hybrid_app.domain.read.MemberPostRead;
 import com.ezkorea.hybrid_app.domain.read.MemberPostReadRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
+import com.ezkorea.hybrid_app.service.notiece.NoticeService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ public class MemberPostReadService {
 
     private final MemberPostReadRepository mprRepository;
     private final MemberService memberService;
+    private final NoticeRepository noticeRepository;
 
     @Transactional
     public void saveReadInfo(Notice currentNotice, Member currentMember) {
@@ -48,5 +51,15 @@ public class MemberPostReadService {
         }
         memberList.remove(memberService.findByUsername("dev"));
         return memberList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Notice> findNotReadListByMember(Member member) {
+        List<MemberPostRead> mprList = mprRepository.findByMember(member);
+        List<Notice> findAllNotice = noticeRepository.findAll();
+        for (MemberPostRead memberPostRead : mprList) {
+            findAllNotice.remove(memberPostRead.getNotice());
+        }
+        return findAllNotice;
     }
 }
