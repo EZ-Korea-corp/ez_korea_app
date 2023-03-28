@@ -196,7 +196,7 @@
                     <p><a class="text-blue-500" th:href="@{/stat/main}">더보기️ </a></p>
                 </div>
                 <div>
-                    <div id="chartdiv"></div>
+                    <div id="chartdiv" class="h-72"></div>
                 </div>
             </div>
 
@@ -266,35 +266,35 @@
     <script>
         am4core.ready(function() {
 
-// Themes begin
+            // Themes begin
             am4core.useTheme(am4themes_animated);
-// Themes end
+            // Themes end
 
-// Create chart instance
+            // Create chart instance
             var chart = am4core.create("chartdiv", am4charts.XYChart);
             if(chart.logo) {
                 chart.logo.disabled = true;
             }
-// Add data
+
+            // Add data
             chart.data = [{
                 "country": "홍길동",
-                "visits": 102
+                "visits": 154000
             }, {
                 "country": "김길수",
-                "visits": 80
+                "visits": 150000
             }, {
                 "country": "이진태",
-                "visits": 74
+                "visits": 134000
             }, {
                 "country": "진시연",
-                "visits": 60
+                "visits": 124000
             }, {
                 "country": "박기제",
-                "visits": 59
+                "visits": 112000
             }];
 
-// Create axes
-
+            // Create axes
             var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
             categoryAxis.dataFields.category = "country";
             categoryAxis.renderer.grid.template.location = 0;
@@ -305,7 +305,8 @@
 
             var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
             valueAxis.renderer.opposite = true;
-// Create series
+
+            // Create series
             var series = chart.series.push(new am4charts.ColumnSeries());
             series.dataFields.valueY = "visits";
             series.dataFields.categoryX = "country";
