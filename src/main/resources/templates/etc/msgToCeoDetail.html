@@ -16,26 +16,23 @@
         </style>
         <div id="bg" class="lg:space-x-12">
             <form id="createMsgForm" onsubmit="return false;">
-                <div class="">
+                <div class="card p-4">
                     <input type="hidden" id="id" th:value="${model.id}">
                     <!-- form header -->
-                    <div class="text-center border-b border-gray-100 py-6">
+                    <div class="text-center border-b border-gray-100 py-3">
                         <h3 class="font-bold text-xl"> 대표에게 전하는 메세지 </h3>
                     </div>
 
                     <!-- form body -->
-                    <div class="p-10 space-y-7">
+                    <div class="p-10 space-y-4">
                         <div>
-
-                            <th:block th:if="${model.isAnonymous == true}">
-                                <label for="name1" class="font-semibold text-base"> 작성자 </label>
-                                <input id="name1" class="with-border" type="text" value="익명" disabled>
-                            </th:block>
-                            <th:block th:if="${model.isAnonymous == false}">
-                                <label for="name2" class="font-semibold text-base"> 작성자 </label>
-                                <input id="name2" class="with-border" type="text" th:value="${model.getMember().getName()}" disabled>
-                            </th:block>
-
+                            <label for="name2" class="font-semibold text-base"> 작성자 </label>
+                            <input id="name2" class="with-border mb-2" type="text" th:value="${model.getMember().getName()}" disabled>
+                            <div class="checkbox">
+                                <input type="checkbox" id="chekcbox1" th:checked="${model.isAnonymous == true}" disabled>
+                                <label for="chekcbox1"><span class="checkbox-icon"></span> 익명 체크
+                                </label>
+                            </div>
                         </div>
 
                         <div>
@@ -51,9 +48,8 @@
 
                     <!-- form footer -->
                     <div class="grid grid-cols-2 gap-4 m-4 p-10">
-
                         <button id="deleteMsg" type="button" class="text-white bg-red-600 w-full h-10 rounded">삭제하기</button>
-                        <a th:href="|javascript:window.history.back();|" class="button w-full hover:text-white">뒤로가기</a>
+                        <button onclick="window.history.back()" id="backBtn" type="button" class="text-white bg-blue-600 w-full h-10 rounded">뒤로가기</button>
                     </div>
                 </div>
             </form>
