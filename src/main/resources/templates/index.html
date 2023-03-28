@@ -47,30 +47,30 @@
                     <div class="border-r">
                         <a th:href="@{/notice}">
                             <div class="text-bold text-lg">
-                                <a th:text="${noticeCount}"></a>
+                                <span th:text="${noticeCount}"></span>
                             </div>
                             <div class="text-sm">
-                                <a>전체</a>
+                                <span>전체</span>
                             </div>
                         </a>
                     </div>
                     <div class="border-r">
                         <a th:href="@{/notice}">
                             <div class="text-bold text-lg">
-                                <a th:text="${noticeNotReadCount}"></a>
+                                <span th:text="${noticeNotReadCount}"></span>
                             </div>
                             <div class="text-sm">
-                                <a>읽지 않음</a>
+                                <span>읽지 않음</span>
                             </div>
                         </a>
                     </div>
                     <div>
                         <a th:href="@{/notice}">
                             <div class="text-bold text-lg">
-                                <a th:text="${noticeCount - noticeNotReadCount}"></a>
+                                <span th:text="${noticeCount - noticeNotReadCount}"></span>
                             </div>
                             <div class="text-sm">
-                                <a>읽음</a>
+                                <span>읽음</span>
                             </div>
                         </a>
                     </div>
