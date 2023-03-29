@@ -84,7 +84,7 @@
                                     <tbody>
                                         <tr th:if="${outList.size() > 0}" th:each="sell : ${outList}" class="border-b border-gray-200">
                                             <th scope="row" th:text="|${sell.NAME}(${sell.part})|" class="text-center px-6 py-4 font-medium whitespace-nowrap"></th>
-                                            <td class="text-center px-6 py-4" th:text="|${#numbers.formatInteger(100000, 3, 'COMMA') + '원'}|"></td>
+                                            <td class="text-center px-6 py-4" th:text="|${#numbers.formatInteger(sell.price, 3, 'COMMA') + '원'}|"></td>
                                             <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.normal, 1, 1)}|"></td>
                                             <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.hybrid, 1, 1)}|"></td>
                                             <td class="text-center px-6 py-4" th:text="|${#numbers.formatDecimal(sell.mw, 1, 1)}|"></td>

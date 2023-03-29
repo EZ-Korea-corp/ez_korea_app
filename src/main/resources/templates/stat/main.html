@@ -77,6 +77,9 @@
             am4core.useTheme(am4themes_animated);
 
             let chart = am4core.create("chartdiv", am4charts.XYChart);
+            if(chart.logo) {
+                chart.logo.disabled = true;
+            }
             chart.data = data.result;
 
             let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
