@@ -75,27 +75,20 @@
                         </a>
                     </div>
                 </div>
-
                 <div class="relative" uk-slider="finite: true">
                     <div class="uk-slider-container px-3 py-3">
                         <ul class="uk-slider-items uk-grid-small uk-grid">
                             <li th:each="notice : ${noticeList}">
                                 <a class="uk-link-reset hover:text-black" th:href="@{/notice/{id}(id = ${notice.getId()})}">
                                     <div class="card w-56 h-32">
-                                        <div class="p-4 flex flex-col">
-                                            <h4 class="text-base align-top font-semibold mb-1" th:text="${notice.getTitle()}">공지 제목</h4>
-                                            <p class="font-medium align-bottom text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일')}">2023년 3월 15일</p>
+                                        <div class="flex-cols p-4">
+                                            <div class="h-20 text-md font-semibold" th:text="${notice.getTitle()}">공지 제목</div>
+                                            <div class="border-t-2 pt-0.5 pb-1 border-gray-200 font-medium text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일')}">2023년 3월 15일</div>
                                         </div>
                                     </div>
                                 </a>
                             </li>
                         </ul>
-
-                        <!--<a class="absolute bg-white bottom-1/2 flex items-center justify-center p-2 -left-4 rounded-full shadow-md text-xl w-9 z-10 dark:bg-gray-800 dark:text-white"
-                           href="#" uk-slider-item="previous"> <i class="icon-feather-chevron-left"></i></a>
-                        <a class="absolute bg-white bottom-1/2 flex items-center justify-center p-2 -right-4 rounded-full shadow-md text-xl w-9 z-10 dark:bg-gray-800 dark:text-white"
-                           href="#" uk-slider-item="next"> <i class="icon-feather-chevron-right"></i></a>-->
-
                     </div>
                 </div>
             </div>
@@ -161,7 +154,7 @@
                         </div>
                         <span class="text-sm"> 와이퍼 </span>
                     </a>
-                    <a th:href="@{/stat/main}" class="hover:text-black" th:if="|${member.getSubAuth().isInputAuth() eq true}|">
+                    <a th:href="@{/sales/input/index}" class="hover:text-black" th:if="|${member.getSubAuth().isInputAuth() eq true}|">
                         <div class="card p-1 mb-2 mx-auto w-12">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-yellow-500">
                                 <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"></path>
