@@ -44,57 +44,48 @@
         </style>
         <div class="lg:space-x-12">
             <form id="selectForm" onsubmit="return false;">
-                <div class="lg:w-full card">
+                <div class="lg:w-full">
 
-                    <div class="p-10 pt-4 divide-gray-100">
+                    <div class="card py-4 px-5 mb-4">
+                        <h2 class="text-lg font-bold mb-4">입고 개별 조회</h2>
+                        <input type="text" id="datepicker" name="datepicker" class="w-full" readonly>
+                        <small class="pl-2 mt-1">조회할 날짜를 선택해주세요.</small>
+                    </div>
 
-                        <div>
-                            <h2 class="text-xl font-bold mt-2">입고 개별 조회</h2>
-                        </div>
-
-                        <hr class="my-4">
-
-                        <div class="py-3">
-                            <div>
-                                <h1 class="block text-lg font-bold mb-4"> 날짜 선택 </h1>
-                                <div>
-                                    <input type="text" id="datepicker" name="datepicker" class="w-full" readonly>
-                                </div>
-                            </div>
-                            <div class="my-4">
-                                <h1 class="block text-lg font-bold mb-4"> 근무자 선택 </h1>
-                                <div class="w-full">
-                                    <input type="text" class="live-search-box" placeholder="근무자 이름을 입력해주세요."/>
-                                </div>
-                            </div>
+                    <div class="card py-4 px-5 mb-4">
+                        <div class="mb-2">
+                            <h1 class="block text-lg font-semibold mb-4"> 근무자 선택 </h1>
                             <div class="w-full">
-                                <div>
-                                    <div id="select-div" class="items-center space-x-3">
-                                        <th:block th:if="${inList != null}">
-                                            <ul id="search-result" class="live-search-list">
-                                                <li style="display: none">
-                                                    <form></form>
-                                                </li>
-                                                <li th:each="table : ${inList}">
-                                                    <div class="flex items-center space-x-4 hover:bg-gray-100 rounded-md -mx-2 p-2">
-                                                        <div class="flex-1">
-                                                            <h3 class="text-base font-semibold capitalize mb-2" th:text="|${table.getMemo()}(${table.getMember().getName()}${#strings.substring(table.getMember().getPhone(), 7, 11)})|"> 유저이름 </h3>
-                                                        </div>
-                                                        <button type="submit" th:onclick="|location.href='/station/inDetail?id=${table.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 조회 </button>
+                                <input type="text" class="live-search-box" placeholder="근무자 이름을 입력해주세요."/>
+                            </div>
+                        </div>
+                        <div class="w-full">
+                            <div>
+                                <div id="select-div" class="items-center">
+                                    <th:block th:if="${inList != null}">
+                                        <ul id="search-result" class="live-search-list">
+                                            <li style="display: none">
+                                                <form></form>
+                                            </li>
+                                            <li th:each="table : ${inList}">
+                                                <div class="card p-4 flex items-center hover:bg-gray-100">
+                                                    <div class="flex-1">
+                                                        <h3 class="text-base font-semibold capitalize mb-2" th:text="|${table.getMemo()}(${table.getMember().getName()}${#strings.substring(table.getMember().getPhone(), 7, 11)})|"> 유저이름 </h3>
                                                     </div>
-                                                </li>
-                                            </ul>
-                                        </th:block>
-                                        <th:block th:if="${inList.size() == 0}">
-                                            해당 일자에 근무자가 없습니다
-                                        </th:block>
-                                    </div>
-                                    <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                                                    <button type="submit" th:onclick="|location.href='/station/inDetail?id=${table.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 조회 </button>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </th:block>
+                                    <th:block th:if="${inList.size() == 0}">
+                                        해당 일자에 근무자가 없습니다
+                                    </th:block>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 뒤로가기 </a>
                 </div>
             </form>
         </div>
