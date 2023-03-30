@@ -16,8 +16,8 @@
 
                     <div class="md:py-8 py-3">
                         <div class="flex justify-between">
-                            <h2 class="text-xl font-bold">
-                                <span class="mr-2">🛠️</span>패치노트 목록
+                            <h2 class="text-lg font-bold">
+                                패치노트 목록
                             </h2>
                             <a th:if="${member.getUsername().equals('dev')}"
                                th:href="@{/note/create}"
@@ -26,10 +26,10 @@
                     </div>
 
                     <div class="md:py-8 py-3">
-                        <div class="p-7 sm:space-x-6 bg-gray-200 rounded-lg mb-4" th:each="note : ${noteList}">
+                        <div class="card p-7 sm:space-x-6 rounded-lg mb-4" th:each="note : ${noteList}">
                             <div class="sm:order-2">
                                 <a th:href="@{/note/{id}(id = ${note.getId()})}">
-                                    <h3 class="text-xl font-medium" th:text="|${#temporals.format(note.getCreateDate(), 'yy년 MM월 dd일')} 패치 노트|"> 기준 날짜 </h3>
+                                    <h3 class="text-lg font-medium" th:text="|${#temporals.format(note.getCreateDate(), 'yy년 MM월 dd일')} 패치 노트|"> 기준 날짜 </h3>
                                 </a>
                                 <div class="mt-4">
                                     <p class="text-sm" th:text="|작성 : ${#temporals.format(note.getCreateDate(), 'HH시 mm분')}|">제목</p>

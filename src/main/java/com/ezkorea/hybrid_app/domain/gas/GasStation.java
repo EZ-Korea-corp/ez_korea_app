@@ -22,6 +22,11 @@ public class GasStation {
 
     private String stationName;
     private String stationLocation;
+
+    public String getMemo() {
+        return memo != null ? memo : "";
+    }
+
     private String memo;
     private int distance;
     private boolean isWork;
