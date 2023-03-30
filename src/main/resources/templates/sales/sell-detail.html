@@ -57,12 +57,17 @@
                 <div name="sellStat">
                     <div class="card py-4 px-5 mb-4">
                         <h1 class="block text-md font-bold mb-2"> 결제 수단 </h1>
-                        <div class="payment-option flex">
-                            <input type="radio" name="payment" value="card" id="card" checked>
-                            <label for="card" class="payment-label">카드</label>
-
-                            <input type="radio" name="payment" value="cash" id="cash">
-                            <label for="cash" class="payment-label">현금</label>
+                        <div class="payment-option">
+                            <div class="grid grid-cols-2 gap-4 text-center">
+                                <div>
+                                    <input type="radio" name="payment" value="card" id="card" checked>
+                                    <label for="card" class="payment-label w-1/2">카드</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="payment" value="cash" id="cash">
+                                    <label for="cash" class="payment-label w-1/2">현금</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -71,7 +76,7 @@
                             <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
                             <div class="flex items-center space-x-4 rounded-md -mx-2 p-2">
                                 <button type="button" th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}"
-                                        th:value="${sort.getName()}" th:text="|${sort.getInit()}|" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"></button>
+                                        th:value="${sort.getName()}" th:text="|${sort.getInit()}|" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg hover:text-white"></button>
 
                             </div>
                         </div>
@@ -114,8 +119,8 @@
 
                 <hr class="mt-8 mb-4">
 
-                <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 등록하기 </button>
-                <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
+                <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg hover:text-white"> 등록하기 </button>
+                <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 뒤로가기 </a>
 
             </div>
 

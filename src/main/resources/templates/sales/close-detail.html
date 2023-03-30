@@ -26,15 +26,13 @@
         </style>
         <div class="lg:space-x-12">
 
-            <div class="lg:w-full card">
+            <div class="lg:w-full">
 
-                <div class="p-10 pt-4">
-                    <input type="hidden" id="tTid" th:value="${tTid}">
-                    <div class="mt-4">
-                        <h2 class="text-xl font-bold">마감하기</h2>
-                    </div>
-                    <hr class="my-4">
-                    <div class="grid grid-cols-2 gap-4 mb-4" id="check">
+                <input type="hidden" id="tTid" th:value="${tTid}">
+
+                <div class="card py-4 px-5 mb-4">
+                    <h2 class="text-xl font-bold">마감하기</h2>
+                    <div class="grid grid-cols-2 gap-4" id="check">
                         <div name="out" class="text-sm font-medium">
                             <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
                         </div>
@@ -42,120 +40,121 @@
                             <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 재고 </a>
                         </div>
                     </div>
+                </div>
 
-                    <div class="md:py-8 py-3">
+                <div id="sellDiv">
+                    <div class="card py-4 px-5 mb-4">
+                        <h1 class="block text-lg font-bold mb-2"> 전체금액  </h1>
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-center">
+                                    결제
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-center">
+                                    금액
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
 
-                        <div id="sellDiv">
-                            <h1 class="block text-lg font-bold mb-2"> 전체금액  </h1>
+                    <div class="card py-4 px-5 mb-4">
+                        <h1 class="block text-lg font-bold mb-2"> 개별판매  </h1>
+                        <div class="relative overflow-x-auto shadow-md">
                             <table class="w-full text-sm text-left">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 whitespace-nowrap">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-center">
-                                        결제
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        이름
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-center">
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        일반
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        하브
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        M W
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        S클
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
+                                        칠백
+                                    </th>
+                                    <th scope="col" class="text-center px-6 py-3">
                                         금액
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
-                            <br>
-
-                            <h1 class="block text-lg font-bold mb-2"> 개별판매  </h1>
-                            <div class="relative overflow-x-auto shadow-md">
-                                <table class="w-full text-sm text-left">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 whitespace-nowrap">
-                                    <tr>
-                                        <th scope="col" class="text-center px-6 py-3">
-                                            이름
-                                        </th>
-                                        <th scope="col" class="text-center px-6 py-3">
-                                            일반
-                                        </th>
-                                        <th scope="col" class="text-center px-6 py-3">
-                                            하브
-                                        </th>
-                                        <th scope="col" class="text-center px-6 py-3">
-                                            M W
-                                        </th>
-                                        <th scope="col" class="text-center px-6 py-3">
-                                            S클
-                                        </th>
-                                        <th scope="col" class="text-center px-6 py-3">
-                                            칠백
-                                        </th>
-                                        <th scope="col" class="text-center px-6 py-3">
-                                            금액
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                            <br>
-
-                            <div id="fixList">
-                                <h1 class="block text-lg font-bold mb-2"> 불량목록  </h1>
-                                <table class="w-full text-sm text-left ">
-                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-center">
-                                            종류
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-center">
-                                            메모
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                            <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
                         </div>
+                    </div>
 
-                        <div id="stockDiv">
-                            <form onsubmit="return false" id="dataForm">
-                                <div class="relative overflow-x-auto shadow-md">
-                                    <table class="w-full text-sm text-left whitespace-nowrap">
-                                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-center">
-                                                구분
-                                            </th>
-                                            <th scope="col" class="px-2 py-3 uk-text-center"
-                                                th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}"
-                                                th:text="${sort.getName()}">
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="bg-white border-b"
-                                            th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}">
-                                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap text-center" th:text="${sort.getInit()}"></th>
-                                            <td class="px-2 py-4 text-center" th:with="item=1"
-                                                th:each="size : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}">
-                                                <th:block th:if="${!sort.getName().equals('size_700') && !size.getName().equals('700')}">
-                                                    <input type="text" th:name="${(sortStat.index) * 7 + (sizeStat.count)}"/>
-                                                </th:block>
-                                                <th:block th:if="${sort.getName().equals('size_700') && size.getName().equals('700')}">
-                                                    <input type="text" th:name="29"/>
-                                                </th:block>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <hr class="mt-4">
-                                <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 마감등록 </button>
-                                <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
-                            </form>
+                    <div id="fixList">
+                        <div class="card py-4 px-5 mb-4">
+                            <h1 class="block text-lg font-bold mb-2"> 불량목록  </h1>
+                            <table class="w-full text-sm text-left ">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        종류
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        메모
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
-
                     </div>
                 </div>
 
+                <div id="stockDiv">
+                    <div class="card py-4 px-5 mb-4">
+                        <form onsubmit="return false" id="dataForm">
+                            <div class="relative overflow-x-auto shadow-md">
+                                <table class="w-full text-sm text-left whitespace-nowrap">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-center">
+                                            구분
+                                        </th>
+                                        <th scope="col" class="px-2 py-3 uk-text-center"
+                                            th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}"
+                                            th:text="${sort.getName()}">
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="bg-white border-b"
+                                        th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}">
+                                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap text-center" th:text="${sort.getInit()}"></th>
+                                        <td class="px-2 py-4 text-center" th:with="item=1"
+                                            th:each="size : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSize).values()}">
+                                            <th:block th:if="${!sort.getName().equals('size_700') && !size.getName().equals('700')}">
+                                                <input type="text" th:name="${(sortStat.index) * 7 + (sizeStat.count)}"/>
+                                            </th:block>
+                                            <th:block th:if="${sort.getName().equals('size_700') && size.getName().equals('700')}">
+                                                <input type="text" th:name="29"/>
+                                            </th:block>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <hr class="mt-4">
+                            <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg hover:text-white"> 마감등록 </button>
+                        </form>
+                    </div>
+                </div>
+
+                <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg hover:text-white"> 뒤로가기 </a>
             </div>
 
         </div>

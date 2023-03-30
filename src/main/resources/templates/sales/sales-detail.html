@@ -26,13 +26,13 @@
 
             <div class="lg:w-full" id="select-div">
 
-                <div class="card py-3 px-5 mb-4">
+                <div class="card py-6 px-5 mb-4">
                     <h2 class="text-lg font-bold"> <span th:text="${map.table.getMember().getName()}"></span>님의 일일 판매 현황</h2>
                     <p class="font-medium mt-1.5 text-base" th:text="|[${T(com.ezkorea.hybrid_app.domain.timetable.PartTime).of(map.table.getPart())}] ${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}|"></p>
 
                     <div class="grid grid-cols-3 gap-4 mt-4">
-                        <a th:href="@{|/sales/sell/${map.tTid}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg"> 판매하기 </a>
-                        <a th:href="@{|/sales/close/${map.tTid}|}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg"> 마감하기 </a>
+                        <a th:href="@{|/sales/sell/${map.tTid}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg hover:text-white"> 판매하기 </a>
+                        <a th:href="@{|/sales/close/${map.tTid}|}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg hover:text-white"> 마감하기 </a>
                         <button class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg" type="button" uk-toggle="target: #modal">계좌 정보</button>
                         <div id="modal" uk-modal>
                             <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
@@ -75,14 +75,16 @@
                     </div>
                 </div>
 
-                <div class="card py-3 px-5 mb-4">
+                <hr class="my-4 px-4">
+
+                <div class="card py-4 px-5 mb-4">
                     <div>
                         <div>
                             <h1 class="text-lg font-semibold" th:text="${map.table.getGasStation().getStationName()}"> 주유소 이름 </h1>
                         </div>
                         <p th:text="${map.table.getGasStation().getStationLocation()}"></p>
                     </div>
-                    <hr class="my-2 px-4">
+                    <hr class="my-4 px-4">
                     <div>
                         <div class="flex justify-content-between">
                             <h1 class="block text-lg font-semibold mb-4"> 공지사항  </h1>
@@ -130,9 +132,9 @@
                     </div>
                 </div>
 
-                <div class="card py-3 px-5 mb-4">
+                <div class="card py-4 px-5 mb-4">
                     <div>
-                        <h1 class="block text-lg font-semibold mb-3"> 개별 판매금액  </h1>
+                        <h1 class="block text-lg font-semibold mb-4"> 판매 금액  </h1>
                         <div class="grid grid-cols-3 gap-4 text-center">
                             <div>
                                 <p class="font-semibold">카드</p>
@@ -150,9 +152,9 @@
                     </div>
                 </div>
 
-                <div class="card py-3 px-5">
+                <div class="card py-4 px-5">
                     <div>
-                        <h1 class="block text-lg font-semibold mb-4"> 개별 판매수량  </h1>
+                        <h1 class="block text-lg font-semibold mb-4"> 판매 현황  </h1>
                         <div class="relative overflow-x-auto shadow-md">
 
                             <table class="w-full text-sm text-left text-gray-500 live-search-table">
@@ -162,10 +164,10 @@
                                         종류
                                     </th>
                                     <th scope="col" class="px-3 py-3">
-                                        결제
+                                        개수
                                     </th>
                                     <th scope="col" class="px-3 py-3">
-                                        개수
+                                        결제
                                     </th>
                                     <th scope="col" class="px-3 py-3">
                                         비고
@@ -173,15 +175,15 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:if="${map.sellList.size() > 0}" th:each="sell : ${map.sellList}" class="whitespace-nowrap border-b border-gray-200">
-                                    <th scope="row" th:text="${sell.name}" class="px-3 py-4 font-medium whitespace-nowrap bg-gray-50">
-                                    </th>
-                                    <td class="px-3 py-4" th:text="${sell.payment}"></td>
-                                    <td class="px-3 py-4" th:text="|${sell.count * 0.5}개|"></td>
-                                    <td th:if="${sell.name != '총계'}" class="uk-text-center">
-                                        <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
-                                    </td>
-                                </tr>
+                                    <tr th:if="${map.sellList.size() > 0}" th:each="sell : ${map.sellList}" class="whitespace-nowrap border-b border-gray-200 text-center">
+                                        <th scope="row" th:text="${sell.name}" class="px-3 py-4 font-medium whitespace-nowrap bg-gray-50">
+                                        </th>
+                                        <td th:text="|${sell.count * 0.5}개|"></td>
+                                        <td th:text="${sell.payment}"></td>
+                                        <td th:if="${sell.name != '총계'}">
+                                            <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

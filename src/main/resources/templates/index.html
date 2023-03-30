@@ -15,20 +15,20 @@
                 <form th:action="@{/commute}" method="post" id="commuteForm">
                     <input type="hidden" id="location" name="location" value=""/>
                     <div th:if="${!isOnTime}">
-                        <a class="text-lg font-semibold"><span th:text="${member.getName()}"></span>님 환영합니다.</a>
+                        <a class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 환영합니다.</a>
                         <p class="my-2 text-sm">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요</p>
                         <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('ON_TIME').getKey()}"/>
                         <button type="button" id="onTimeBtn" class="mt-2 text-white bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">출근 체크</button>
                     </div>
                     <div th:if="${isOnTime}">
                         <th:block th:if="${commute.getStatus().equals('onTime')}">
-                            <a class="text-lg font-semibold"><span th:text="${member.getName()}"></span>님 오늘도 힘내세요.</a>
+                            <a class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 오늘도 힘내세요.</a>
                             <p class="my-2">출근 시간 : <span th:text="${#temporals.format(commute.getOnTime(), 'HH시 mm분')}"></span></p>
                             <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('OFF_TIME').getKey()}"/>
                             <button type="button" id="offTimeBtn" class="mt-2 text-white bg-yellow-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">퇴근 체크</button>
                         </th:block>
                         <th:block th:if="${commute.getStatus().equals('offTime')}">
-                            <a class="text-lg font-semibold"><span th:text="${member.getName()}"></span>님 오늘도 수고하셨습니다.</a>
+                            <a class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 오늘도 수고하셨습니다.</a>
                             <p class="my-2">퇴근 시간 : <span th:text="${#temporals.format(commute.getOffTime(), 'HH시 mm분')}"></span></p>
                             <button type="button" disabled class="mt-2 text-white bg-gray-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">퇴근 완료</button>
                         </th:block>
@@ -309,7 +309,7 @@
                     columnTemplate.strokeOpacity = 1;
                 }
                 else{
-                    $('#chartdiv').append("<div class='text-center'>데이터가 존재하지 않습니다.</div>").removeClass('h-72');
+                    $('#chartdiv').append("<div class='text-center'>판매 데이터가 존재하지 않습니다.</div>").removeClass('h-72');
                 }
             }
         });
