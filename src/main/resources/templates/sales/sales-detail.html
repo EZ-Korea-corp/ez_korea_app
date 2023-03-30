@@ -24,10 +24,10 @@
         </style>
         <div class="lg:space-x-12">
 
-            <div class="lg:w-full card" id="select-div">
+            <div class="lg:w-full" id="select-div">
 
-                <div class="p-10 pt-4">
-                    <div class="md:py-8 py-3">
+                <div class="card p-5 pt-3">
+                    <div class="py-3">
                         <h2 class="text-xl font-bold"> <span th:text="${map.table.getMember().getName()}"></span>님의 일일 판매 현황</h2>
                         <p class="font-medium mt-1.5 text-base" th:text="|[${T(com.ezkorea.hybrid_app.domain.timetable.PartTime).of(map.table.getPart())}] ${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}|"></p>
 

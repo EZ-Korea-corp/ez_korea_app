@@ -17,11 +17,11 @@
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
         <div id="bg" class="lg:space-x-12">
             <form id="noticeForm" onsubmit="return false;">
-                <div class="">
+                <div class="card px-2 py-4">
 
                     <!-- form header -->
-                    <div class="text-center border-b border-gray-100 py-6">
-                        <h3 class="font-bold text-xl" th:text="${notice.getTitle()}"> 제목 </h3>
+                    <div class="text-center border-b border-gray-100 py-3 px-10">
+                        <h3 class="font-bold text-lg" th:text="${notice.getTitle()}"> 제목 </h3>
                     </div>
 
                     <!-- form body -->
@@ -50,6 +50,8 @@
                         <div id="content" th:utext="${notice.getContent()}"></div>
 
                     </div>
+
+                    <hr>
 
                     <!-- form footer -->
                     <div class="m-4 p-4">
@@ -149,7 +151,7 @@
             });
 
             function successHref(data, xhr) {
-                window.history.back();
+                $(location).attr("href", "/notice");
             }
 
         </script>

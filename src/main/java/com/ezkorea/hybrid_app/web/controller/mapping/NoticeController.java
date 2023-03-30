@@ -32,10 +32,19 @@ public class NoticeController {
     }
 
     @GetMapping("/notice")
-    public String showExpensesListPage(Model model, @RequestParam(value="page", defaultValue="0", required = false) int page,
+    public String showNoticeListPage(Model model, @RequestParam(value="page", defaultValue="0", required = false) int page,
                                        @AuthenticationPrincipal SecurityUser securityUser) {
 
         model.addAttribute("noticeList", noticeService.findAllNotice(page));
+
+        return "notice/list";
+    }
+
+    @GetMapping("/notice/not-read")
+    public String showNotReadNoticeListPage(Model model, @RequestParam(value="page", defaultValue="0", required = false) int page,
+                                       @AuthenticationPrincipal SecurityUser securityUser) {
+
+        model.addAttribute("noticeList", noticeService.findAllNotReadNotice(page, securityUser.getMember()));
 
         return "notice/list";
     }
