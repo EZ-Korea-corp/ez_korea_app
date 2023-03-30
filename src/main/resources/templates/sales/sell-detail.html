@@ -37,86 +37,85 @@
         </style>
         <div class="lg:space-x-12">
 
-            <div class="lg:w-full card">
+            <div class="lg:w-full">
 
-                <div class="p-10 pt-4">
-                    <input type="hidden" id="tTid" th:value="${tTid}">
-                    <div class="md:py-8 py-3">
-                        <h2 class="text-xl font-bold">어떤 상품을 판매하셨나요?</h2>
+                <input type="hidden" id="tTid" th:value="${tTid}">
 
-                        <div class="grid grid-cols-2 gap-4 mb-4" id="check">
-                            <div name="out" class="text-sm font-medium">
-                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
-                            </div>
-                            <div name="fix" class="text-sm font-medium">
-                                <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 불량 </a>
-                            </div>
+                <div class="card py-4 px-5 mb-4">
+                    <h2 class="text-lg font-bold">어떤 상품을 판매하셨나요?</h2>
+
+                    <div class="grid grid-cols-2 gap-4" id="check">
+                        <div name="out" class="text-sm font-medium">
+                            <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
                         </div>
-                    <hr class="my-4">
+                        <div name="fix" class="text-sm font-medium">
+                            <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 불량 </a>
+                        </div>
+                    </div>
+                </div>
 
+                <div name="sellStat">
+                    <div class="card py-4 px-5 mb-4">
+                        <h1 class="block text-md font-bold mb-2"> 결제 수단 </h1>
+                        <div class="payment-option flex">
+                            <input type="radio" name="payment" value="card" id="card" checked>
+                            <label for="card" class="payment-label">카드</label>
 
-                        <div class="mb-4" name="sellStat">
-                            <h1 class="block text-md font-bold mb-2"> 결제 수단 </h1>
-                            <div class="payment-option flex">
-                                <input type="radio" name="payment" value="card" id="card" checked>
-                                <label for="card" class="payment-label">카드</label>
+                            <input type="radio" name="payment" value="cash" id="cash">
+                            <label for="cash" class="payment-label">현금</label>
+                        </div>
+                    </div>
 
-                                <input type="radio" name="payment" value="cash" id="cash">
-                                <label for="cash" class="payment-label">현금</label>
-                            </div>
-
-                            <hr class="my-4">
-
-                            <div class="mb-4" id="sortDIv">
-                                <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
-                                <div class="flex items-center space-x-4 rounded-md -mx-2 p-2">
+                    <div class="card py-4 px-5 mb-4">
+                        <div class="mb-4" id="sortDIv">
+                            <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
+                            <div class="flex items-center space-x-4 rounded-md -mx-2 p-2">
                                 <button type="button" th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}"
                                         th:value="${sort.getName()}" th:text="|${sort.getInit()}|" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"></button>
 
-                                </div>
-                            </div>
-
-                            <hr class="my-4">
-
-                            <h1 class="block text-md font-bold my-2"> 판매 리스트 </h1>
-
-                            <div class="relative overflow-x-auto">
-                                <form onsubmit="return false" id="dataForm">
-                                    <table class="w-full text-sm text-left">
-                                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">결제 수단</th>
-                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">종류</th>
-                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">쩜오</th>
-                                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">비고</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="sellList" class="uk-text-center">
-                                        </tbody>
-                                    </table>
-                                </form>
                             </div>
                         </div>
-                        <div name="fixStat">
-                            <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
-                            <select id="wiperSort" name="wiperSort" class="shadow-none with-border px-2">
-                                <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}"
-                                        th:value="${sort.getName()}" th:text="|${sort.getViewName()}|"></option>
-                            </select>
-
-                            <h1 class="block text-md font-bold my-2"> 메모 입력 </h1>
-                            <input type="input" id="memo" placeholder="메모사항을 입력해주세요">
-                        </div>
-
-                        <hr class="mt-8 mb-4">
-
-                        <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 등록하기 </button>
-                        <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
-
                     </div>
 
-
+                    <div class="card py-4 px-5 mb-4">
+                        <h1 class="block text-md font-bold"> 판매 리스트 </h1>
+                        <div class="relative overflow-x-auto">
+                            <form onsubmit="return false" id="dataForm">
+                                <table class="w-full text-sm text-left whitespace-nowrap text-center">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-2 py-3">결제 수단</th>
+                                            <th scope="col" class="px-2 py-3">종류</th>
+                                            <th scope="col" class="px-2 py-3">쩜오</th>
+                                            <th scope="col" class="px-2 py-3">비고</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sellList" class="uk-text-center">
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+
+                <div name="fixStat">
+                    <div class="card py-4 px-5 mb-4">
+                        <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
+                        <select id="wiperSort" name="wiperSort" class="shadow-none with-border px-2">
+                            <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}"
+                                    th:value="${sort.getName()}" th:text="|${sort.getViewName()}|"></option>
+                        </select>
+                    </div>
+                    <div class="card py-4 px-5 mb-4">
+                        <h1 class="block text-md font-bold mb-2"> 메모 입력 </h1>
+                        <input type="input" id="memo" class="px-2 border" placeholder="메모사항을 입력해주세요">
+                    </div>
+                </div>
+
+                <hr class="mt-8 mb-4">
+
+                <button type="submit" id="submit" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded hover:text-white"> 등록하기 </button>
+                <a th:href="|javascript:window.history.back();|" class="bg-yellow-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded"> 뒤로가기 </a>
 
             </div>
 
@@ -162,10 +161,10 @@
             // 판매 리스트
             $("#sortDIv button").on("click", function() {
                 $("#sellList").append(
-                    $("<tr>", {class:"bg-white border-b dark:bg-gray-900 dark:border-gray-700"}).append(
-                        $("<td>", {class:"px-2 py-4 whitespace-nowrap", text:$("[name='payment']:checked + label").text()}),
-                        $("<td>", {class:"px-2 py-4 whitespace-nowrap", text:$(this).text()}),
-                        $("<input>", {type:"checkbox", class:"text-blue-600 uk-text-center h-9 px-4 rounded-md border"}).on("change", function() {
+                    $("<tr>", {class:"border-b"}).append(
+                        $("<td>", {class:"px-2 py-4", text:$("[name='payment']:checked + label").text()}),
+                        $("<td>", {class:"px-2 py-4", text:$(this).text()}),
+                        $("<input>", {type:"checkbox", class:"text-blue-600 rounded-md border"}).on("change", function() {
                             if($(this).is(':checked')) {
                                 $(this).parents("tr").find("[name='count']").val(1);
                             } else {
@@ -174,7 +173,7 @@
 
                         }),
                         $("<td>").append(
-                            $("<button>", {text:"취소", class:"bg-blue-600 text-white py-2.5 text-center font-semibold w-full  block rounded hover:text-white"}).on("click", function() {
+                            $("<button>", {text:"취소", class:"bg-blue-600 text-white py-2 text-center font-semibold w-full  block rounded hover:text-white"}).on("click", function() {
                                 $(this).parents("tr").remove();
                             })
                         ),
