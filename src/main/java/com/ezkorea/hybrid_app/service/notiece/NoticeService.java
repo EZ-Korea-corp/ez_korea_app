@@ -3,11 +3,14 @@ package com.ezkorea.hybrid_app.service.notiece;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.notice.NoticeRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
+import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.aws.AWSService;
+import com.ezkorea.hybrid_app.service.post.MemberPostReadService;
 import com.ezkorea.hybrid_app.web.dto.NoticeDto;
 import com.ezkorea.hybrid_app.web.exception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import java.util.List;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
+    private final MemberPostReadService mprService;
     private final AWSService awsService;
 
     public Notice saveNewNotice(Member member, NoticeDto dto) {
@@ -63,5 +67,11 @@ public class NoticeService {
 
     public Integer countAllNotice() {
         return noticeRepository.findAll().size();
+    }
+
+    public Page<Notice> findAllNotReadNotice(int page, Member member) {
+        Pageable pageable = PageRequest.of(page, 10);
+        List<Notice> notReadList = mprService.findNotReadListByMember(member);
+        return new PageImpl<>(notReadList, pageable, notReadList.size());
     }
 }
