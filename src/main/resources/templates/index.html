@@ -9,6 +9,20 @@
 <body>
 
 <main layout:fragment="main">
+    <div id="loading-bar" class="fixed top-full bottom-0 left-0 right-0 w-full h-screen z-50 overflow-hidden bg-black flex flex-col items-center justify-center">
+        <img src="/assets/images/keyimage.png" alt="">
+    </div>
+    <script>
+        $('#loading-bar').animate({
+            top:'0%'
+        }, 300, 'linear');
+        setTimeout(function (){
+            $('#loading-bar').animate({
+                top:'-100%'
+            }, 300, 'linear').fadeOut(0, 'swing');
+        }, 1000);
+    </script>
+
     <div class="lg:space-x-12">
         <div class="" id="body_div">
             <div class="card py-6 px-4">
