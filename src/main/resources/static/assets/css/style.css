@@ -9310,7 +9310,7 @@ body.story-active header .header_widgets .is_link {
 
 @media (min-width: 1200px) {
   .main_content {
-    margin-left: 300px;
+    /*margin-left: 300px;*/
   }
   .container,
   .mcontainer {

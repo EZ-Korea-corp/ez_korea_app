@@ -9,9 +9,9 @@
     <div class="header_wrap" th:with="member = ${#authentication.getPrincipal().getMember()}">
       <div class="header_inner mcontainer">
         <div class="left_side">
-          <span class="slide_menu" uk-toggle="target: #wrapper ; cls: is-collapse is-active">
+          <!--<span class="slide_menu" uk-toggle="target: #wrapper ; cls: is-collapse is-active">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M3 4h18v2H3V4zm0 7h12v2H3v-2zm0 7h18v2H3v-2z" fill="currentColor"></path></svg>
-          </span>
+          </span>-->
           <div id="logo">
             <a href="/">
               <img src="/assets/images/logo.png" alt="">
@@ -501,6 +501,24 @@
           </div>
 
         </div>
+      </div>
+    </div>
+    <div class="w-full h-10 bg-gray-100">
+      <div class="grid grid-cols-5 gap-4 px-4 leading-10 text-center">
+        <th:block th:if="${currentPage}">
+          <a th:href="@{/}" th:classappend="${currentPage.equals('main')} ? 'text-white'" class="dark:text-gray-500">메인</a>
+          <a th:href="@{/sales}" th:classappend="${currentPage.equals('sales')} ? 'text-white'" class="dark:text-gray-500">판매</a>
+          <a th:href="@{/station/index}" th:classappend="${currentPage.equals('station')} ? 'text-white'" class="dark:text-gray-500">주유소</a>
+          <a th:href="@{/chart/view}" th:classappend="${currentPage.equals('chart')} ? 'text-white'" class="dark:text-gray-500">조직도</a>
+          <a th:href="@{/expenses/FUEL}" th:classappend="${currentPage.equals('expenses')} ? 'text-white'" class="dark:text-gray-500">경비처리</a>
+        </th:block>
+        <th:block th:if="${currentPage == null}">
+          <a th:href="@{/}" class="dark:text-gray-500">메인</a>
+          <a th:href="@{/sales}" class="dark:text-gray-500">판매</a>
+          <a th:href="@{/station/index}" class="dark:text-gray-500">주유소</a>
+          <a th:href="@{/profile/chart/view}" class="dark:text-gray-500">조직도</a>
+          <a th:href="@{/expenses/FUEL}" class="dark:text-gray-500">경비처리</a>
+        </th:block>
       </div>
     </div>
   </header>
