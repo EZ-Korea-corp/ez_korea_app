@@ -63,8 +63,8 @@
                             <div class="text-bold text-lg">
                                 <span th:text="${noticeCount}"></span>
                             </div>
-                            <div class="text-sm">
-                                <span>전체</span>
+                            <div>
+                                <h1 class="text-sm" >전체</h1>
                             </div>
                         </a>
                     </div>
@@ -73,8 +73,8 @@
                             <div class="text-bold text-lg">
                                 <span th:text="${noticeNotReadCount}"></span>
                             </div>
-                            <div class="text-sm">
-                                <span>읽지 않음</span>
+                            <div>
+                                <h1 class="text-sm">읽지 않음</h1>
                             </div>
                         </a>
                     </div>
@@ -83,8 +83,8 @@
                             <div class="text-bold text-lg">
                                 <span th:text="${noticeCount - noticeNotReadCount}"></span>
                             </div>
-                            <div class="text-sm">
-                                <span>읽음</span>
+                            <div>
+                                <h1 class="text-sm">읽음</h1>
                             </div>
                         </a>
                     </div>
@@ -96,8 +96,10 @@
                                 <a class="uk-link-reset hover:text-black" th:href="@{/notice/{id}(id = ${notice.getId()})}">
                                     <div class="card w-56 h-32">
                                         <div class="flex-cols p-4">
-                                            <div class="h-20 text-md font-semibold" th:text="${notice.getTitle()}">공지 제목</div>
-                                            <div class="border-t-2 pt-0.5 pb-1 border-gray-200 font-medium text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일')}">2023년 3월 15일</div>
+                                            <div class="h-20">
+                                                <h1 class="text-md font-semibold" th:text="${notice.getTitle()}">공지 제목</h1>
+                                            </div>
+                                            <div class="border-t pt-0.5 pb-1 border-black font-medium text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일')}">2023년 3월 15일</div>
                                         </div>
                                     </div>
                                 </a>
@@ -135,7 +137,7 @@
                         </div>
                         <span class="text-sm"> MVP </span>
                     </a>
-                    <a th:href="@{/profile/chart/view}" class="hover:text-black">
+                    <a th:href="@{/chart/view}" class="hover:text-black">
                         <div class="card p-1 mb-2 mx-auto w-12 h-12 bg-gray-100 text-black leading-10">
                             ORG
                         </div>

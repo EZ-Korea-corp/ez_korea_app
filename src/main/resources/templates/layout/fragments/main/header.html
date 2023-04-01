@@ -6,6 +6,12 @@
 
   <!-- header-->
   <header th:fragment="header">
+    <style>
+      a:hover {
+        text-decoration: none !important;
+        color: inherit !important;
+      }
+    </style>
     <div class="header_wrap" th:with="member = ${#authentication.getPrincipal().getMember()}">
       <div class="header_inner mcontainer">
         <div class="left_side">
