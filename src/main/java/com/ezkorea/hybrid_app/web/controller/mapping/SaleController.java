@@ -1,16 +1,10 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
-import com.ezkorea.hybrid_app.domain.gas.GasStation;
-import com.ezkorea.hybrid_app.domain.sale.SaleProduct;
-import com.ezkorea.hybrid_app.domain.sale.SaleStatus;
 import com.ezkorea.hybrid_app.domain.timetable.PartTime;
 import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
-import com.ezkorea.hybrid_app.domain.user.member.Member;
-import com.ezkorea.hybrid_app.domain.user.member.MemberRepository;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.sales.GasStationService;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
-import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
