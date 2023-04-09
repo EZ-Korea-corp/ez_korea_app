@@ -28,10 +28,6 @@
     </tr>
 </table>
 
-### 배포 구성
-
-<img src="https://user-images.githubusercontent.com/82663161/219400565-595097ea-3d05-408a-be21-b9fcb6b7af3e.png">
-
 ### 기술 스택
 
 <table>
@@ -105,3 +101,7 @@
         </tr>
     </tbody>
 </table>
+
+### 배포 구성
+
+<img src="https://user-images.githubusercontent.com/82663161/219400565-595097ea-3d05-408a-be21-b9fcb6b7af3e.png">
