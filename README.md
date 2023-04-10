@@ -30,7 +30,7 @@
 
 ### 기술 스택
 
-<table>
+<table style="margin: 0 auto">
     <thead>
         <th>범위</th>
         <th colspan="5">스택</th>
