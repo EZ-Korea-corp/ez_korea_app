@@ -38,7 +38,7 @@
     <tbody style="text-align: center">
         <tr>
             <th>FRONT END</th>
-            <td style="padding: 1rem 1rem 0 1rem">
+            <td style="padding: 1rem 1rem 0 1rem; width:100%">
                 <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258328-93c4b37c-f1b8-4c4a-a591-ca17cdb0e2e5.png" alt="" height="50"/>
                     <p>Thymeleaf</p>
@@ -55,7 +55,7 @@
         </tr>
         <tr>
             <th>BACK END</th>
-            <td style="padding: 1rem 1rem 0 1rem; width: auto">
+            <td style="padding: 1rem 1rem 0 1rem; width: 100%">
                 <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229259604-a1a46934-64fe-4433-a728-a823509306ee.png" alt="" height="50"/>
                     <p>JAVA</p>
@@ -80,7 +80,7 @@
         </tr>
         <tr>
             <th>DevOps</th>
-            <td style="padding: 1rem 1rem 0 1rem; width: auto">
+            <td style="padding: 1rem 1rem 0 1rem; width: 100%">
                 <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258788-6dbb9e25-05dc-4f60-856d-4fb7d8ac206a.png" alt="" height="50"/>
                     <p>Github Actions</p>
