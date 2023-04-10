@@ -93,26 +93,26 @@
         </tr>
         <tr>
             <th>DevOps</th>
-            <td style="margin: 0 auto;">
-                <div>
+            <td>
+                <div style="margin: 0 auto;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258788-6dbb9e25-05dc-4f60-856d-4fb7d8ac206a.png" alt="" height="50"/>
                     <p>Github Actions</p>
                 </div>
             </td>
-            <td style="margin: 0 auto;">
-                <div>
+            <td>
+                <div style="margin: 0 auto;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258716-b06d6d99-bb61-416b-acd0-6352371b2db5.png" alt="" height="50"/>
                     <p>AWS EC2</p>
                 </div>
             </td>
-            <td style="margin: 0 auto;">
-                <div>
+            <td>
+                <div style="margin: 0 auto;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258738-472f58ef-cbe8-469b-8540-d2e05effe551.png" alt="" height="50"/>
                     <p>AWS S3</p>
                 </div>
             </td>
-            <td style="margin: 0 auto;" colspan="2">
-                <div>
+            <td colspan="2">
+                <div style="margin: 0 auto;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258752-1c47b4fd-e03a-4572-b269-9799c367d020.png" alt="" height="50"/>
                     <p>AWS CodeDeploy</p>
                 </div>
