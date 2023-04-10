@@ -50,7 +50,7 @@
                     <p>jQuery</p>
                 </div>
             </td>
-            <td style="width: 100px">
+            <td style="width: 100px" colspan="3">
                 <div>
                     <img src="https://user-images.githubusercontent.com/82663161/229259517-8af38264-35ea-4b56-9269-e3bf32e0b7fb.png" alt="" height="50"/>
                     <p>Kakao Maps API</p>
@@ -111,7 +111,7 @@
                     <p>AWS S3</p>
                 </div>
             </td>
-            <td style="width: 100px">
+            <td style="width: 100px" colspan="2">
                 <div>
                     <img src="https://user-images.githubusercontent.com/82663161/229258752-1c47b4fd-e03a-4572-b269-9799c367d020.png" alt="" height="50"/>
                     <p>AWS CodeDeploy</p>
