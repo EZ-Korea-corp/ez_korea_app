@@ -1,1 +1,4 @@
 src/main/resources/templates/* linguist-vendored
+*.html linguist-vendored
+*.css linguist-vendored
+*.scss linguist-vendored
