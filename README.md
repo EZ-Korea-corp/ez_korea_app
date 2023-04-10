@@ -30,25 +30,25 @@
 
 ### 기술 스택
 
-<table style="text-align: center">
+<table>
     <thead>
         <th>범위</th>
-        <th style="width: 100%">스택</th>
+        <th>스택</th>
     </thead>
     <tbody style="text-align: center">
         <tr>
             <th>FRONT END</th>
             <td style="padding: 1rem 1rem 0 1rem;">
                 <div style="width:100%">
-                    <div style="display: inline-block; margin-right: 1rem;">
+                    <div style="display: inline; margin-right: 1rem;">
                         <img src="https://user-images.githubusercontent.com/82663161/229258328-93c4b37c-f1b8-4c4a-a591-ca17cdb0e2e5.png" alt="" height="50"/>
                         <p>Thymeleaf</p>
                     </div>
-                    <div style="display: inline-block; margin-right: 1rem;">
+                    <div style="display: inline; margin-right: 1rem;">
                         <img src="https://user-images.githubusercontent.com/82663161/229259146-a9bec1a2-dbb4-4f74-bba3-56abee23db4b.png" alt="" height="50"/>
                         <p>jQuery</p>
                     </div>
-                    <div style="display: inline-block; margin-right: 1rem;">
+                    <div style="display: inline; margin-right: 1rem;">
                         <img src="https://user-images.githubusercontent.com/82663161/229259517-8af38264-35ea-4b56-9269-e3bf32e0b7fb.png" alt="" height="50"/>
                         <p>Kakao Maps API</p>
                     </div>
