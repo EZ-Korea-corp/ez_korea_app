@@ -30,10 +30,10 @@
 
 ### 기술 스택
 
-<table>
+<table style="text-align: center">
     <thead>
         <th>범위</th>
-        <th>스택</th>
+        <th style="width: 100%">스택</th>
     </thead>
     <tbody style="text-align: center">
         <tr>
