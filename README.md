@@ -33,61 +33,52 @@
 <table style="margin: 0 auto;">
     <thead>
         <th>범위</th>
-        <th colspan="5">스택</th>
+        <th>스택</th>
     </thead>
     <tbody style="text-align: center">
         <tr>
             <th>FRONT END</th>
-            <td style="margin: 0 auto;">
-                <div>
-                    <img src="https://user-images.githubusercontent.com/82663161/229258328-93c4b37c-f1b8-4c4a-a591-ca17cdb0e2e5.png" alt="" height="50"/>
-                    <p>Thymeleaf</p>
-                </div>
-            </td>
-            <td style="margin: 0 auto;">
-                <div>
-                    <img src="https://user-images.githubusercontent.com/82663161/229259146-a9bec1a2-dbb4-4f74-bba3-56abee23db4b.png" alt="" height="50"/>
-                    <p>jQuery</p>
-                </div>
-            </td>
-            <td style="margin: 0 auto;" colspan="3">
-                <div>
-                    <img src="https://user-images.githubusercontent.com/82663161/229259517-8af38264-35ea-4b56-9269-e3bf32e0b7fb.png" alt="" height="50"/>
-                    <p>Kakao Maps API</p>
+            <td>
+                <div style="margin: 0 auto;">
+                    <div>
+                        <img src="https://user-images.githubusercontent.com/82663161/229258328-93c4b37c-f1b8-4c4a-a591-ca17cdb0e2e5.png" alt="" height="50"/>
+                        <p>Thymeleaf</p>
+                    </div>
+                    <div>
+                        <img src="https://user-images.githubusercontent.com/82663161/229259146-a9bec1a2-dbb4-4f74-bba3-56abee23db4b.png" alt="" height="50"/>
+                        <p>jQuery</p>
+                    </div>
+                    <div>
+                        <img src="https://user-images.githubusercontent.com/82663161/229259517-8af38264-35ea-4b56-9269-e3bf32e0b7fb.png" alt="" height="50"/>
+                        <p>Kakao Maps API</p>
+                    </div>
                 </div>
             </td>
         </tr>
         <tr>
             <th>BACK END</th>
-            <td style="margin: 0 auto;">
-                <div>
-                    <img src="https://user-images.githubusercontent.com/82663161/229259604-a1a46934-64fe-4433-a728-a823509306ee.png" alt="" height="50"/>
-                    <p>JAVA</p>
-                </div>
-            </td>
-            <td style="margin: 0 auto;">
-                <div>
-                    <img src="https://user-images.githubusercontent.com/82663161/229259272-b3112639-0e93-4a86-a190-cdd67fecf044.png" alt="" height="50"/>
-                    <p>Spring Boot</p>
-                </div>
-            </td>
-            <td style="margin: 0 auto;">
-                <div>
-                    <img src="https://user-images.githubusercontent.com/82663161/229258479-38163607-939a-4999-826c-7c27fcc38373.png" alt="" height="50"/>
-                    <p>MySQL</p>
-                </div>
-                </div>
-            </td>
-            <td style="margin: 0 auto;">
-                <div>
-                    <img src="https://user-images.githubusercontent.com/82663161/229258574-c646c37a-590c-40e7-bdce-cdb11aa6db04.png" alt="" height="50"/>
-                    <p>Spring Data JPA</p>
-                </div>
-            </td>
-            <td style="margin: 0 auto;">
-                <div>
-                    <img src="https://user-images.githubusercontent.com/82663161/229258612-01da892d-be28-477b-9eb0-a579d3d3a38b.png" alt="" height="50"/>
-                    <p>MyBatis</p>
+            <td>
+                <div style="margin: 0 auto;">
+                    <span>
+                        <img src="https://user-images.githubusercontent.com/82663161/229259604-a1a46934-64fe-4433-a728-a823509306ee.png" alt="" height="50"/>
+                        <p>JAVA</p>
+                    </span>
+                    <span>
+                        <img src="https://user-images.githubusercontent.com/82663161/229259272-b3112639-0e93-4a86-a190-cdd67fecf044.png" alt="" height="50"/>
+                        <p>Spring Boot</p>
+                    </span>
+                    <span>
+                        <img src="https://user-images.githubusercontent.com/82663161/229258479-38163607-939a-4999-826c-7c27fcc38373.png" alt="" height="50"/>
+                        <p>MySQL</p>
+                    </span>
+                    <span>
+                        <img src="https://user-images.githubusercontent.com/82663161/229258574-c646c37a-590c-40e7-bdce-cdb11aa6db04.png" alt="" height="50"/>
+                        <p>Spring Data JPA</p>
+                    </span>
+                    <span>
+                        <img src="https://user-images.githubusercontent.com/82663161/229258612-01da892d-be28-477b-9eb0-a579d3d3a38b.png" alt="" height="50"/>
+                        <p>MyBatis</p>
+                    </span>
                 </div>
             </td>
         </tr>
@@ -95,26 +86,22 @@
             <th>DevOps</th>
             <td>
                 <div style="margin: 0 auto;">
-                    <img src="https://user-images.githubusercontent.com/82663161/229258788-6dbb9e25-05dc-4f60-856d-4fb7d8ac206a.png" alt="" height="50"/>
-                    <p>Github Actions</p>
-                </div>
-            </td>
-            <td>
-                <div style="margin: 0 auto;">
-                    <img src="https://user-images.githubusercontent.com/82663161/229258716-b06d6d99-bb61-416b-acd0-6352371b2db5.png" alt="" height="50"/>
-                    <p>AWS EC2</p>
-                </div>
-            </td>
-            <td>
-                <div style="margin: 0 auto;">
-                    <img src="https://user-images.githubusercontent.com/82663161/229258738-472f58ef-cbe8-469b-8540-d2e05effe551.png" alt="" height="50"/>
-                    <p>AWS S3</p>
-                </div>
-            </td>
-            <td colspan="2">
-                <div style="margin: 0 auto;">
-                    <img src="https://user-images.githubusercontent.com/82663161/229258752-1c47b4fd-e03a-4572-b269-9799c367d020.png" alt="" height="50"/>
-                    <p>AWS CodeDeploy</p>
+                    <div>
+                        <img src="https://user-images.githubusercontent.com/82663161/229258788-6dbb9e25-05dc-4f60-856d-4fb7d8ac206a.png" alt="" height="50"/>
+                        <p>Github Actions</p>
+                    </div>
+                    <div>
+                        <img src="https://user-images.githubusercontent.com/82663161/229258716-b06d6d99-bb61-416b-acd0-6352371b2db5.png" alt="" height="50"/>
+                        <p>AWS EC2</p>
+                    </div>
+                    <div>
+                        <img src="https://user-images.githubusercontent.com/82663161/229258738-472f58ef-cbe8-469b-8540-d2e05effe551.png" alt="" height="50"/>
+                        <p>AWS S3</p>
+                    </div>
+                    <div>
+                        <img src="https://user-images.githubusercontent.com/82663161/229258752-1c47b4fd-e03a-4572-b269-9799c367d020.png" alt="" height="50"/>
+                        <p>AWS CodeDeploy</p>
+                    </div>
                 </div>
             </td>
         </tr>
