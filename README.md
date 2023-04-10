@@ -7,7 +7,7 @@
 ## 프로젝트
 
 ### 개발자 소개
-<table>
+<table style="margin: 0 auto">
     <th>
         <a href="https://github.com/Jwhyee">가준영</a>
     </th>
