@@ -38,7 +38,7 @@
     <tbody style="text-align: center">
         <tr>
             <th>FRONT END</th>
-            <td>
+            <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 <div style="margin: 0 auto;">
                     <div>
                         <img src="https://user-images.githubusercontent.com/82663161/229258328-93c4b37c-f1b8-4c4a-a591-ca17cdb0e2e5.png" alt="" height="50"/>
@@ -57,7 +57,7 @@
         </tr>
         <tr>
             <th>BACK END</th>
-            <td>
+            <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 <div style="display: inline">
                     <img src="https://user-images.githubusercontent.com/82663161/229259604-a1a46934-64fe-4433-a728-a823509306ee.png" alt="" height="50"/>
                     <p>JAVA</p>
@@ -82,7 +82,7 @@
         </tr>
         <tr>
             <th>DevOps</th>
-            <td>
+            <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 <div style="margin: 0 auto;">
                     <div>
                         <img src="https://user-images.githubusercontent.com/82663161/229258788-6dbb9e25-05dc-4f60-856d-4fb7d8ac206a.png" alt="" height="50"/>
