@@ -55,24 +55,24 @@
         </tr>
         <tr>
             <th>BACK END</th>
-            <td style="padding: 1rem 1rem 0 1rem">
-                <div style="display: inline; margin-right: 1rem;">
+            <td style="padding: 1rem 1rem 0 1rem; width: auto">
+                <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229259604-a1a46934-64fe-4433-a728-a823509306ee.png" alt="" height="50"/>
                     <p>JAVA</p>
                 </div>
-                <div style="display: inline; margin-right: 1rem;">
+                <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229259272-b3112639-0e93-4a86-a190-cdd67fecf044.png" alt="" height="50"/>
                     <p>Spring Boot</p>
                 </div>
-                <div style="display: inline; margin-right: 1rem;">
+                <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258479-38163607-939a-4999-826c-7c27fcc38373.png" alt="" height="50"/>
                     <p>MySQL</p>
                 </div>
-                <div style="display: inline; margin-right: 1rem;">
+                <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258574-c646c37a-590c-40e7-bdce-cdb11aa6db04.png" alt="" height="50"/>
                     <p>Spring Data JPA</p>
                 </div>
-                <div style="display: inline;">
+                <div style="display: inline-block;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258612-01da892d-be28-477b-9eb0-a579d3d3a38b.png" alt="" height="50"/>
                     <p>MyBatis</p>
                 </div>
@@ -80,20 +80,20 @@
         </tr>
         <tr>
             <th>DevOps</th>
-            <td style="padding: 1rem 1rem 0 1rem">
-                <div style="display: inline; margin-right: 1rem;">
+            <td style="padding: 1rem 1rem 0 1rem; width: auto">
+                <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258788-6dbb9e25-05dc-4f60-856d-4fb7d8ac206a.png" alt="" height="50"/>
                     <p>Github Actions</p>
                 </div>
-                <div style="display: inline; margin-right: 1rem;">
+                <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258716-b06d6d99-bb61-416b-acd0-6352371b2db5.png" alt="" height="50"/>
                     <p>AWS EC2</p>
                 </div>
-                <div style="display: inline; margin-right: 1rem;">
+                <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258738-472f58ef-cbe8-469b-8540-d2e05effe551.png" alt="" height="50"/>
                     <p>AWS S3</p>
                 </div>
-                <div style="display: inline;">
+                <div style="display: inline-block;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258752-1c47b4fd-e03a-4572-b269-9799c367d020.png" alt="" height="50"/>
                     <p>AWS CodeDeploy</p>
                 </div>
