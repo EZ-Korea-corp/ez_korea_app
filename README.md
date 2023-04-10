@@ -58,23 +58,23 @@
         <tr>
             <th>BACK END</th>
             <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                <div style="display: inline">
+                <div style="display: inline-block; width: 80px; height: 60px;">
                     <img src="https://user-images.githubusercontent.com/82663161/229259604-a1a46934-64fe-4433-a728-a823509306ee.png" alt="" height="50"/>
                     <p>JAVA</p>
                 </div>
-                <div style="display: inline">
+                <div style="display: inline-block; width: 120px; height: 60px;">
                     <img src="https://user-images.githubusercontent.com/82663161/229259272-b3112639-0e93-4a86-a190-cdd67fecf044.png" alt="" height="50"/>
                     <p>Spring Boot</p>
                 </div>
-                <div style="display: inline">
+                <div style="display: inline-block; width: 80px; height: 60px;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258479-38163607-939a-4999-826c-7c27fcc38373.png" alt="" height="50"/>
                     <p>MySQL</p>
                 </div>
-                <div style="display: inline">
+                <div style="display: inline-block; width: 120px; height: 60px;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258574-c646c37a-590c-40e7-bdce-cdb11aa6db04.png" alt="" height="50"/>
                     <p>Spring Data JPA</p>
                 </div>
-                <div style="display: inline">
+                <div style="display: inline-block; width: 80px; height: 60px;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258612-01da892d-be28-477b-9eb0-a579d3d3a38b.png" alt="" height="50"/>
                     <p>MyBatis</p>
                 </div>
