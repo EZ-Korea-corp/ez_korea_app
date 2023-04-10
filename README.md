@@ -38,24 +38,26 @@
     <tbody style="text-align: center">
         <tr>
             <th>FRONT END</th>
-            <td style="padding: 1rem 1rem 0 1rem;" colspan="5">
-                <div style="display: inline-block; margin-right: 1rem;">
-                    <img src="https://user-images.githubusercontent.com/82663161/229258328-93c4b37c-f1b8-4c4a-a591-ca17cdb0e2e5.png" alt="" height="50"/>
-                    <p>Thymeleaf</p>
-                </div>
-                <div style="display: inline-block; margin-right: 1rem;">
-                    <img src="https://user-images.githubusercontent.com/82663161/229259146-a9bec1a2-dbb4-4f74-bba3-56abee23db4b.png" alt="" height="50"/>
-                    <p>jQuery</p>
-                </div>
-                <div style="display: inline-block; margin-right: 1rem;">
-                    <img src="https://user-images.githubusercontent.com/82663161/229259517-8af38264-35ea-4b56-9269-e3bf32e0b7fb.png" alt="" height="50"/>
-                    <p>Kakao Maps API</p>
+            <td style="padding: 1rem 1rem 0 1rem;">
+                <div style="width:100%">
+                    <div style="display: inline-block; margin-right: 1rem;">
+                        <img src="https://user-images.githubusercontent.com/82663161/229258328-93c4b37c-f1b8-4c4a-a591-ca17cdb0e2e5.png" alt="" height="50"/>
+                        <p>Thymeleaf</p>
+                    </div>
+                    <div style="display: inline-block; margin-right: 1rem;">
+                        <img src="https://user-images.githubusercontent.com/82663161/229259146-a9bec1a2-dbb4-4f74-bba3-56abee23db4b.png" alt="" height="50"/>
+                        <p>jQuery</p>
+                    </div>
+                    <div style="display: inline-block; margin-right: 1rem;">
+                        <img src="https://user-images.githubusercontent.com/82663161/229259517-8af38264-35ea-4b56-9269-e3bf32e0b7fb.png" alt="" height="50"/>
+                        <p>Kakao Maps API</p>
+                    </div>
                 </div>
             </td>
         </tr>
         <tr>
             <th>BACK END</th>
-            <td style="padding: 1rem 1rem 0 1rem;" colspan="5">
+            <td style="padding: 1rem 1rem 0 1rem; width: 100%">
                 <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229259604-a1a46934-64fe-4433-a728-a823509306ee.png" alt="" height="50"/>
                     <p>JAVA</p>
@@ -80,7 +82,7 @@
         </tr>
         <tr>
             <th>DevOps</th>
-            <td style="padding: 1rem 1rem 0 1rem;" colspan="5">
+            <td style="padding: 1rem 1rem 0 1rem; width: 100%">
                 <div style="display: inline-block; margin-right: 1rem;">
                     <img src="https://user-images.githubusercontent.com/82663161/229258788-6dbb9e25-05dc-4f60-856d-4fb7d8ac206a.png" alt="" height="50"/>
                     <p>Github Actions</p>
