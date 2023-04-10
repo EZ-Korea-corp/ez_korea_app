@@ -30,6 +30,12 @@
 
 ### 기술 스택
 
+<style>
+    img, div {
+        margin: 0 auto;
+    }
+</style>
+
 <table style="margin: 0 auto">
     <thead>
         <th>범위</th>
