@@ -11,8 +11,22 @@
         text-decoration: none !important;
         color: inherit !important;
       }
+
+      .scroll_divisible.drop {
+        position: fixed;
+        animation: dropHeader 0.3s;
+      }
+
+      @keyframes dropHeader {
+        0% {
+          top: -5rem;
+        }
+        100% {
+          top: 0;
+        }
+      }
     </style>
-    <div class="header_wrap" th:with="member = ${#authentication.getPrincipal().getMember()}">
+    <div id="header_div" class="header_wrap" th:with="member = ${#authentication.getPrincipal().getMember()}">
       <div class="header_inner mcontainer">
         <div class="left_side">
           <!--<span class="slide_menu" uk-toggle="target: #wrapper ; cls: is-collapse is-active">
@@ -509,14 +523,24 @@
         </div>
       </div>
     </div>
-    <div class="w-full h-10 bg-gray-100">
-      <div class="grid grid-cols-5 gap-4 px-4 leading-10 text-center">
+    <div class="flex w-full h-10 bg-gray-100 scroll_divisible">
+      <div class="flex mx-auto gap-6 items-center overflow-x-scroll text-center">
         <th:block th:if="${currentPage}">
-          <a th:href="@{/}" th:classappend="${currentPage.equals('main')} ? 'text-white'" class="dark:text-gray-500">메인</a>
-          <a th:href="@{/sales}" th:classappend="${currentPage.equals('sales')} ? 'text-white'" class="dark:text-gray-500">판매</a>
-          <a th:href="@{/station/index}" th:classappend="${currentPage.equals('station')} ? 'text-white'" class="dark:text-gray-500">주유소</a>
-          <a th:href="@{/chart/view}" th:classappend="${currentPage.equals('chart')} ? 'text-white'" class="dark:text-gray-500">조직도</a>
-          <a th:href="@{/expenses/FUEL}" th:classappend="${currentPage.equals('expenses')} ? 'text-white'" class="dark:text-gray-500">경비처리</a>
+          <div class="h-10 w-12 leading-10" th:classappend="${currentPage.equals('main')} ? 'text-white border-b-2 border-white'">
+            <a th:href="@{/}" class="dark:text-gray-500">메인</a>
+          </div>
+          <div class="h-10 w-12 leading-10" th:classappend="${currentPage.equals('sales')} ? 'text-white border-b-2 border-white'">
+            <a th:href="@{/sales}" class="dark:text-gray-500">판매</a>
+          </div>
+          <div class="h-10 w-12 leading-10" th:classappend="${currentPage.equals('station')} ? 'text-white border-b-2 border-white'">
+            <a th:href="@{/station/index}" class="dark:text-gray-500">주유소</a>
+          </div>
+          <div class="h-10 w-12 leading-10" th:classappend="${currentPage.equals('chart')} ? 'text-white border-b-2 border-white'">
+            <a th:href="@{/chart/view}" class="dark:text-gray-500">조직도</a>
+          </div>
+          <div class="h-10 w-12 leading-10" th:classappend="${currentPage.equals('expenses')} ? 'text-white border-b-2 border-white'">
+            <a th:href="@{/expenses/FUEL}" class="dark:text-gray-500">경비처리</a>
+          </div>
         </th:block>
         <th:block th:if="${currentPage == null}">
           <a th:href="@{/}" class="dark:text-gray-500">메인</a>
@@ -527,6 +551,25 @@
         </th:block>
       </div>
     </div>
+    <script>
+      let header = document.querySelector(".scroll_divisible");
+      let headerHeight = header.offsetHeight;
+
+      window.onscroll = function () {
+        let windowTop = window.scrollY;
+        // 스크롤 세로값이 헤더높이보다 크거나 같으면
+        // 헤더에 클래스 'drop'을 추가한다
+        if (windowTop >= headerHeight) {
+          header.classList.add("drop");
+          $('#header_div').attr('hidden', 'true');
+        }
+        // 아니면 클래스 'drop'을 제거
+        else {
+          header.classList.remove("drop");
+          $('#header_div').removeAttr('hidden');
+        }
+      };
+    </script>
   </header>
 
 </html>
