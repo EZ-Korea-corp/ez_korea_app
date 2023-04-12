@@ -523,14 +523,24 @@
         </div>
       </div>
     </div>
-    <div class="w-full h-10 bg-gray-100 scroll_divisible">
-      <div class="grid grid-cols-5 gap-4 px-4 leading-10 text-center">
+    <div class="flex w-full h-10 bg-gray-100 scroll_divisible">
+      <div class="flex mx-auto gap-6 items-center overflow-x-scroll text-center">
         <th:block th:if="${currentPage}">
-          <a th:href="@{/}" th:classappend="${currentPage.equals('main')} ? 'text-white'" class="dark:text-gray-500">메인</a>
-          <a th:href="@{/sales}" th:classappend="${currentPage.equals('sales')} ? 'text-white'" class="dark:text-gray-500">판매</a>
-          <a th:href="@{/station/index}" th:classappend="${currentPage.equals('station')} ? 'text-white'" class="dark:text-gray-500">주유소</a>
-          <a th:href="@{/chart/view}" th:classappend="${currentPage.equals('chart')} ? 'text-white'" class="dark:text-gray-500">조직도</a>
-          <a th:href="@{/expenses/FUEL}" th:classappend="${currentPage.equals('expenses')} ? 'text-white'" class="dark:text-gray-500">경비처리</a>
+          <div class="h-10 w-12 leading-10" th:classappend="${currentPage.equals('main')} ? 'text-white border-b-2 border-white'">
+            <a th:href="@{/}" class="dark:text-gray-500">메인</a>
+          </div>
+          <div class="h-10 w-12 leading-10" th:classappend="${currentPage.equals('sales')} ? 'text-white border-b-2 border-white'">
+            <a th:href="@{/sales}" class="dark:text-gray-500">판매</a>
+          </div>
+          <div class="h-10 w-12 leading-10" th:classappend="${currentPage.equals('station')} ? 'text-white border-b-2 border-white'">
+            <a th:href="@{/station/index}" class="dark:text-gray-500">주유소</a>
+          </div>
+          <div class="h-10 w-12 leading-10" th:classappend="${currentPage.equals('chart')} ? 'text-white border-b-2 border-white'">
+            <a th:href="@{/chart/view}" class="dark:text-gray-500">조직도</a>
+          </div>
+          <div class="h-10 w-12 leading-10" th:classappend="${currentPage.equals('expenses')} ? 'text-white border-b-2 border-white'">
+            <a th:href="@{/expenses/FUEL}" class="dark:text-gray-500">경비처리</a>
+          </div>
         </th:block>
         <th:block th:if="${currentPage == null}">
           <a th:href="@{/}" class="dark:text-gray-500">메인</a>
