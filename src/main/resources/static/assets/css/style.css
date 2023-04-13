@@ -6673,7 +6673,7 @@ template {
 }
 
 header {
-  position: fixed;
+  /*position: fixed;*/
   background-color: #fff;
   z-index: 99;
   left: 0;
@@ -8277,7 +8277,7 @@ header .header_inner .right_side {
 }
 
 .main_content {
-  padding-top: 65px;
+  /*padding-top: 65px;*/
 }
 
 button.button.dark1,
@@ -9240,6 +9240,7 @@ body.story-active header .header_widgets .is_link {
   }
   .header_widgets {
     position: fixed;
+    z-index: 99;
     width: 100%;
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
@@ -9327,7 +9328,7 @@ body.story-active header .header_widgets .is_link {
     display: none;
   }
   .main_content {
-    padding-top: 65px !important;
+    /*padding-top: 65px !important;*/
     padding-bottom: 50px;
   }
   .container,
