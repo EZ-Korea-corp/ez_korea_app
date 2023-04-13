@@ -111,8 +111,8 @@
                                                     <img src="/assets/images/bg-img.jpg" uk-cover>
                                                 </th:block>
                                                 <div class="text-center uk-position-bottom py-1 px-2 backdrop-filter backdrop-blur-3xl">
-                                                    <h2 class="font-medium text-md text-zinc-900 line-clamp-1 overflow-hidden" th:text="${notice.getTitle()}"></h2>
-                                                    <p class="font-normal text-sm text-zinc-900" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일')}"></p>
+                                                    <p class="font-medium text-md text-white line-clamp-1 overflow-hidden" th:text="${notice.getTitle()}"></p>
+                                                    <p class="font-normal text-sm text-white" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일')}"></p>
                                                 </div>
                                             </li>
                                         </ul>
