@@ -14,9 +14,12 @@
                     -webkit-appearance: none;
                     margin: 0;
                 }
+                input {
+                    border : 1px solid #ccc !important;
+                }
             </style>
             <!-- Content-->
-            <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
+            <div class="lg:p-12 max-w-xl lg:my-0 mx-auto p-6 space-y-">
                 <form th:action method="post" id="signUpForm" class="lg:p-10 p-6 space-y-3 relative bg-white shadow-xl rounded-md" autocomplete="off">
 
                     <div class="uk-text-center mb-6">
@@ -32,7 +35,10 @@
                             <label for="username" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                             <div class="relative">
                                 <input type="search" name="username" id="username" class="block w-full p-4 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="아이디를 입력해주세요." required>
-                                <button type="button" id="usernameChk" class="text-white absolute right-2.5 bottom-1.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">중복 확인</button>
+                                <button type="button" id="usernameChk"
+                                        class="h-10 text-white absolute right-1 bottom-1 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    중복 확인
+                                </button>
                             </div>
                         </div>
 
