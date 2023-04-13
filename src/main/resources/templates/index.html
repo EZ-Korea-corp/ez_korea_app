@@ -9,7 +9,7 @@
 <body>
 
 <main layout:fragment="main">
-    <div id="loading-bar" class="fixed top-full bottom-0 left-0 right-0 w-full h-screen z-50 overflow-hidden bg-black flex flex-col items-center justify-center">
+    <!--<div id="loading-bar" class="fixed top-full bottom-0 left-0 right-0 w-full h-screen z-50 overflow-hidden bg-black flex flex-col items-center justify-center">
         <img src="/assets/images/keyimage.png" alt="">
     </div>
     <script>
@@ -21,7 +21,12 @@
                 top:'-100%'
             }, 300, 'linear').fadeOut(0, 'swing');
         }, 1000);
-    </script>
+    </script>-->
+    <style>
+        .commute-border{
+            border : 1px solid #ccc !important;
+        }
+    </style>
 
     <div class="lg:space-x-12">
         <div class="" id="body_div">
@@ -29,22 +34,24 @@
                 <form th:action="@{/commute}" method="post" id="commuteForm">
                     <input type="hidden" id="location" name="location" value=""/>
                     <div th:if="${!isOnTime}">
-                        <a class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 환영합니다.</a>
+                        <h1 class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 환영합니다.</h1>
                         <p class="my-2 text-sm">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요</p>
                         <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('ON_TIME').getKey()}"/>
-                        <button type="button" id="onTimeBtn" class="mt-2 text-white bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">출근 체크</button>
+                        <button type="button" id="onTimeBtn" class="mt-2 text-black bg-white font-bold rounded-lg text-sm px-5 py-2.5 w-full commute-border">출근 체크</button>
                     </div>
                     <div th:if="${isOnTime}">
                         <th:block th:if="${commute.getStatus().equals('onTime')}">
-                            <a class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 오늘도 힘내세요.</a>
+                        <h1 class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 오늘도 힘내세요.</h1>
                             <p class="my-2">출근 시간 : <span th:text="${#temporals.format(commute.getOnTime(), 'HH시 mm분')}"></span></p>
                             <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('OFF_TIME').getKey()}"/>
-                            <button type="button" id="offTimeBtn" class="mt-2 text-white bg-yellow-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">퇴근 체크</button>
+                            <button style="border : 1px solid #ccc;"
+                                    type="button" id="offTimeBtn" class="mt-2 text-black bg-white font-bold rounded-lg text-sm px-5 py-2.5 w-full commute-border">퇴근 체크</button>
                         </th:block>
                         <th:block th:if="${commute.getStatus().equals('offTime')}">
-                            <a class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 오늘도 수고하셨습니다.</a>
+                            <h1 class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 오늘도 수고하셨습니다.</h1>
                             <p class="my-2">퇴근 시간 : <span th:text="${#temporals.format(commute.getOffTime(), 'HH시 mm분')}"></span></p>
-                            <button type="button" disabled class="mt-2 text-white bg-gray-600 font-medium rounded-lg text-sm px-5 py-2.5 w-full">퇴근 완료</button>
+                            <button style="border : 1px solid #ccc;"
+                                    type="button" disabled class="mt-2 text-black bg-white font-bold rounded-lg text-sm px-5 py-2.5 w-full commute-border">퇴근 완료</button>
                         </th:block>
                     </div>
                 </form>
@@ -55,7 +62,7 @@
             <div class="card py-6 px-4">
                 <div class="flex justify-between mb-4">
                     <h2 class="text-xl font-semibold mb-2"> 공지사항 </h2>
-                    <p><a class="text-blue-500" th:href="@{/notice}">더보기️ </a></p>
+                    <p><a class="text-black" th:href="@{/notice}">더보기️ </a></p>
                 </div>
                 <div class="grid grid-cols-3 text-center mb-4">
                     <div class="border-r">
@@ -94,6 +101,34 @@
                         <ul class="uk-slider-items uk-grid-small uk-grid">
                             <li th:each="notice : ${noticeList}">
                                 <a class="uk-link-reset hover:text-black" th:href="@{/notice/{id}(id = ${notice.getId()})}">
+                                    <div class="w-56 h-32 rounded-lg uk-position-relative uk-visible-toggle" tabindex="-1" uk-slideshow="animation: push">
+                                        <ul class="uk-slideshow-items">
+                                            <li class="rounded-lg">
+                                                <th:block th:if="${notice.getImageList().size() != 0}">
+                                                    <img th:src="${notice.getImageList().get(0).getFilePath()}" uk-cover>
+                                                </th:block>
+                                                <th:block th:if="${notice.getImageList().size() == 0}">
+                                                    <img src="/assets/images/bg-img.jpg" uk-cover>
+                                                </th:block>
+                                                <div class="text-center uk-position-bottom py-1 px-2 backdrop-filter backdrop-blur-3xl">
+                                                    <h2 class="font-medium text-md text-zinc-900 line-clamp-1 overflow-hidden" th:text="${notice.getTitle()}"></h2>
+                                                    <p class="font-normal text-sm text-zinc-900" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일')}"></p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <a class="uk-position-center-left uk-position-small uk-hidden-hover text-white p-4" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                                        <a class="uk-position-center-right uk-position-small uk-hidden-hover text-white p-4" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                                    </div>
+                                </a>
+                                <!--<div>
+                                    <th:block th:if="${notice.getImageList().size() != 0}">
+                                        <img th:src="${notice.getImageList().get(0).getFilePath()}">
+                                    </th:block>
+                                    <th:block th:if="${notice.getImageList().size() == 0}">
+
+                                    </th:block>
+                                </div>-->
+                                <!--<a class="uk-link-reset hover:text-black" th:href="@{/notice/{id}(id = ${notice.getId()})}">
                                     <div class="card w-56 h-32">
                                         <div class="flex-cols p-4">
                                             <div class="h-20">
@@ -102,7 +137,7 @@
                                             <div class="border-t pt-0.5 pb-1 border-black font-medium text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일')}">2023년 3월 15일</div>
                                         </div>
                                     </div>
-                                </a>
+                                </a>-->
                             </li>
                         </ul>
                     </div>
@@ -181,7 +216,7 @@
             <div class="card py-6">
                 <div class="flex justify-between mb-4 px-4">
                     <h2 class="text-xl font-semibold mb-2"> MVP </h2>
-                    <p><a class="text-blue-500" th:href="@{/stat/main}">더보기️ </a></p>
+                    <p><a class="text-black" th:href="@{/stat/main}">더보기️ </a></p>
                 </div>
                 <div>
                     <div id="chartdiv" class="h-72"></div>
