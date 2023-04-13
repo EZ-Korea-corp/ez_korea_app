@@ -28,13 +28,10 @@ public class AuthenticationAspect {
     /*@Pointcut("@annotation(org.springframework.stereotype.Controller))")
     public void getController() {}*/
 
-    @Pointcut("!execution(* com.ezkorea.hybrid_app.web.controller.mapping.MemberController.showLoginPage())")
-    public void excludeLoginPage() {}
+    @Pointcut("!execution(* com.ezkorea.hybrid_app.web.controller.mapping.AuthController.*(..))")
+    public void excludeAuthPage() {}
 
-    @Pointcut("!execution(* com.ezkorea.hybrid_app.web.controller.mapping.MemberController.showSignUpPage())")
-    public void excludeSignUpPage() {}
-
-    @Around("getMapping() && excludeLoginPage() && excludeSignUpPage()")
+    @Around("getMapping() && excludeAuthPage()")
     public Object authenticationReset(ProceedingJoinPoint joinPoint) throws Throwable {
         // 메소드 실행 전 처리할 내용
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

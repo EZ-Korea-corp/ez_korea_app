@@ -10,15 +10,12 @@
 
         <main layout:fragment="login">
             <style>
-                #signUp{
-                    background-color: #2563EB;
-                }
-                #passwordFind{
-                    background-color: #9333EA;
+                .submit-btn-border{
+                    border : 1px solid #ccc !important;
                 }
             </style>
 
-            <div class="lg:p-12 max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
+            <div class="lg:p-12 max-w-xl mx-auto p-6 space-y-">
 
                 <form th:action method="post" class="lg:p-10 p-6 space-y-3 relative bg-white shadow-xl rounded-md">
 
@@ -41,11 +38,11 @@
 
                     <div>
                         <label class="mb-0"> 아이디 </label>
-                        <input type="text" name="username" placeholder="Username" class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full">
+                        <input type="text" name="username" placeholder="Username" class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full submit-btn-border">
                     </div>
                     <div>
                         <label class="mb-0"> 비밀번호 </label>
-                        <input type="password" name="password" placeholder="******" class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full">
+                        <input type="password" name="password" placeholder="******" class="bg-gray-100 h-12 mt-2 px-3 rounded-md w-full submit-btn-border">
                     </div>
 
                     <div class="checkbox">
@@ -54,15 +51,21 @@
                         </label>
                     </div>
 
+                    <hr class="my-4">
+
                     <div>
-                        <button type="submit" class="bg-blue-600 font-semibold p-2 rounded-md text-center text-white w-full">
+                        <button type="submit" class="bg-white text-black font-semibold p-2 rounded-lg text-sm text-center w-full submit-btn-border hover:bg-gray-50">
                             로그인</button>
                     </div>
                     <div>
-                        <a id="signUp" th:href="@{/signup}" class="button w-full px-6 py-3 rounded-md shadow text-white hover:text-white">회원가입</a>
+                        <button type="button" id="signUp" class="bg-white text-black font-semibold p-2 text-sm rounded-lg text-center w-full submit-btn-border hover:bg-gray-50">
+                            <a th:href="@{/signup}" class="w-full hover:text-black">회원가입</a>
+                        </button>
                     </div>
                     <div>
-                        <a id="passwordFind" th:href="@{/findPassword}" class="button w-full px-6 py-3 rounded-md shadow text-white hover:text-white">비밀번호 찾기</a>
+                        <button type="button" id="passwordFind" class="bg-white text-black font-semibold text-sm p-2 rounded-lg text-center w-full submit-btn-border hover:bg-gray-50">
+                            <a th:href="@{/findPassword}" class="w-full hover:text-black">비밀번호 찾기</a>
+                        </button>
                     </div>
                 </form>
 
