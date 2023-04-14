@@ -32,6 +32,10 @@
     </tr>
 </table>
 
+### 프로젝트 설계 과정
+
+### ERD 구상 과정
+
 ### 기술 스택
 <!--
 <table style="margin: 0 auto;">
@@ -125,3 +129,23 @@
 ### 배포 구성
 
 <img src="https://user-images.githubusercontent.com/82663161/219400565-595097ea-3d05-408a-be21-b9fcb6b7af3e.png">
+
+<!--
+## 트러블 슈팅
+
+### S3 이미지 관련
+
+
+```java
+@PutMapping("/image/upload")
+public ResponseEntity<Object> upload(@RequestParam(value = "files", required = false) List<MultipartFile> multipartFile,
+                                     @RequestParam Map<String, Object> params) {
+
+    S3ImageDto dto = modelMapper.map(params, S3ImageDto.class);
+
+    awsService.saveImageInCurrentEntity(dto, multipartFile);
+
+    return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+}
+```
+-->
