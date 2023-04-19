@@ -34,6 +34,9 @@
             #check div a{
                 color: #FFFFFF;
             }
+            .btn-outline {
+                border: 1px black solid !important;
+            }
         </style>
         <div class="lg:space-x-12">
 
@@ -96,9 +99,36 @@
                                         </tr>
                                     </thead>
                                     <tbody id="sellList" class="uk-text-center">
+                                        <tr>
+                                            <th></th>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </form>
+                            <table class="w-full text-sm text-left whitespace-nowrap text-center">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-2 py-3">종류</th>
+                                    <th scope="col" class="px-2 py-3">개수</th>
+                                    <th scope="col" class="px-2 py-3">비고</th>
+                                </tr>
+                                </thead>
+                                <tbody id="list" class="uk-text-center">
+                                <tr class="my-2">
+                                    <th>일반</th>
+                                    <td>
+                                        <div class="px-4 flex mx-auto text-center">
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline">-</button>
+                                            <input type="number" class="mx-4 w-8 border-2 border-black" placeholder="0" disabled/>
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline">+</button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full  block rounded hover:text-white">취소</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
