@@ -25,9 +25,6 @@ public class AuthenticationAspect {
     @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
     public void getMapping() {}
 
-    /*@Pointcut("@annotation(org.springframework.stereotype.Controller))")
-    public void getController() {}*/
-
     @Pointcut("!execution(* com.ezkorea.hybrid_app.web.controller.mapping.AuthController.*(..))")
     public void excludeAuthPage() {}
 
