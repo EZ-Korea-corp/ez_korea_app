@@ -105,6 +105,12 @@
                                     </tbody>
                                 </table>
                             </form>
+                        </div>
+                    </div>
+
+                    <div class="card py-4 px-5 mb-4">
+                        <h1 class="block text-md font-bold"> 판매 리스트 수정본 </h1>
+                        <div class="relative overflow-x-auto">
                             <table class="w-full text-sm text-left whitespace-nowrap text-center">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
@@ -113,22 +119,94 @@
                                     <th scope="col" class="px-2 py-3">비고</th>
                                 </tr>
                                 </thead>
-                                <tbody id="list" class="uk-text-center">
+                                <tbody id="list" class="text-center">
                                 <tr class="my-2">
                                     <th>일반</th>
                                     <td>
                                         <div class="px-4 flex mx-auto text-center">
-                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline">-</button>
-                                            <input type="number" class="mx-4 w-8 border-2 border-black" placeholder="0" disabled/>
-                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline">+</button>
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline minus-btn"> - </button>
+                                            <input type="number" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline plus-btn"> + </button>
                                         </div>
                                     </td>
                                     <td>
-                                        <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full  block rounded hover:text-white">취소</button>
+                                        <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full block rounded hover:text-white reset-btn">취소</button>
+                                    </td>
+                                </tr>
+                                <tr class="my-2">
+                                    <th>하브</th>
+                                    <td>
+                                        <div class="px-4 flex mx-auto text-center">
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline minus-btn"> - </button>
+                                            <input type="number" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline plus-btn"> + </button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full block rounded hover:text-white reset-btn">취소</button>
+                                    </td>
+                                </tr>
+                                <tr class="my-2">
+                                    <th>MW</th>
+                                    <td>
+                                        <div class="px-4 flex mx-auto text-center">
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline minus-btn"> - </button>
+                                            <input type="number" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline plus-btn"> + </button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full block rounded hover:text-white reset-btn">취소</button>
+                                    </td>
+                                </tr>
+                                <tr class="my-2">
+                                    <th>S클</th>
+                                    <td>
+                                        <div class="px-4 flex mx-auto text-center">
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline minus-btn"> - </button>
+                                            <input type="number" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline plus-btn"> + </button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full block rounded hover:text-white reset-btn">취소</button>
+                                    </td>
+                                </tr>
+                                <tr class="my-2">
+                                    <th>700</th>
+                                    <td>
+                                        <div class="px-4 flex mx-auto text-center">
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline minus-btn"> - </button>
+                                            <input type="number" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
+                                            <button type="button" class="flex-none w-11 rounded-lg btn-outline plus-btn"> + </button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full block rounded hover:text-white reset-btn">취소</button>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
+                            <script>
+                                $(".minus-btn").on("click", function() {
+                                    const inputEl = $(this).siblings("input[type='number']");
+                                    let value = parseFloat(inputEl.val());
+                                    value = Math.max(value - 0.5, 0);
+
+                                    inputEl.val(value.toFixed(1));
+                                });
+
+                                $(".plus-btn").on("click", function() {
+                                    const inputEl = $(this).siblings("input[type='number']");
+                                    let value = parseFloat(inputEl.val());
+                                    value = value + 0.5;
+                                    inputEl.val(value.toFixed(1));
+                                });
+
+                                $(".reset-btn").click(function() {
+                                    $(this).parent().siblings().find("input[type='number']").val(0);
+                                });
+                            </script>
                         </div>
                     </div>
                 </div>
