@@ -6,46 +6,40 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.http.HttpStatus;
 
 public class ResponseData {
-
-    public static <T> ApiResult<T> success(T response) {
-        return new ApiResult<>(true, response, null);
+    public static <T> ApiResult<T> success(T response, String message) {
+        return new ApiResult<>(true, message, response, null);
     }
 
-    public static ApiResult<?> error(Throwable throwable, HttpStatus status) {
-        return new ApiResult<>(false, null, new ResponseData.ApiError(throwable, status));
+    public static ApiResult<?> error(Throwable throwable, String message, HttpStatus status) {
+        return new ApiResult<>(false, message, null, new ResponseData.ApiError(throwable, status));
     }
 
     public static ApiResult<?> error(String message, HttpStatus status) {
-        return new ApiResult<>(false, null, new ResponseData.ApiError(message, status));
+        return new ApiResult<>(false, null, null, new ResponseData.ApiError(message, status));
     }
 
     public static class ApiResult<T> {
+        @Getter
         private final boolean success;
+        @Getter
+        private final String message;
+        @Getter
         private final T response;
+        @Getter
         private final ResponseData.ApiError error;
 
-        private ApiResult(boolean success, T response, ResponseData.ApiError error) {
+        private ApiResult(boolean success, String message, T response, ResponseData.ApiError error) {
             this.success = success;
+            this.message = message;
             this.response = response;
             this.error = error;
-        }
-
-        public boolean isSuccess() {
-            return success;
-        }
-
-        public ResponseData.ApiError getError() {
-            return error;
-        }
-
-        public T getResponse() {
-            return response;
         }
 
         @Override
         public String toString() {
             return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                     .append("success", success)
+                    .append("message", message)
                     .append("response", response)
                     .append("error", error)
                     .toString();
