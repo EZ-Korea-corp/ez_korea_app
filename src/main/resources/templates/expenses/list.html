@@ -9,30 +9,34 @@
 <body>
 
     <main layout:fragment="main">
+        <style>
+            .btn-custom{
+                background-color: white !important;
+                color: black !important;
+                border : 1px solid #ccc !important;
+            }
+
+            .save-custom{
+                background-color: black !important;
+                color: white !important;
+                border : 1px solid white !important;
+            }
+        </style>
         <div class="lg:space-x-12">
-            <div class="lg:w-full card">
+            <div class="lg:w-full">
 
-                <div class="p-10 pt-4">
-
-                    <div class="md:py-8 py-3">
-                        <div class="flex justify-between">
-                            <h2 class="text-xl font-bold">경비 관리</h2>
-                            <a th:href="@{/expenses/create}"
-                               class="button rounded-lg px-4 hover:text-white">경비 추가</a>
-                        </div>
+                <div class="card p-4 mb-4">
+                    <h2 class="text-xl font-bold mb-4">경비 관리</h2>
+                    <div class="grid grid-cols-4 gap-4" th:with="uri = ${#strings.replace(#httpServletRequest.getRequestURI(), '/expenses/', '')}">
+                        <button onclick="window.location.href='/expenses/FUEL'" th:classappend="${uri.equals('FUEL') ? 'font-bold' : ''}" class="w-full py-1 rounded-lg btn-custom">주유비</button>
+                        <button onclick="window.location.href='/expenses/FOOD'" th:classappend="${uri.equals('FOOD') ? 'font-bold' : ''}" class="w-full py-1 rounded-lg btn-custom">식비</button>
+                        <button onclick="window.location.href='/expenses/ETC'" th:classappend="${uri.equals('ETC') ? 'font-bold' : ''}" class="w-full py-1 rounded-lg btn-custom">기타</button>
+                        <button onclick="window.location.href='/expenses/create'" th:classappend="${uri.equals('ETC') ? 'font-bold' : ''}" class="w-full py-1 rounded-lg save-custom">등록</button>
                     </div>
+                </div>
 
-                    <hr class="mb-8">
-
-                    <div class="grid grid-cols-2 gap-4 mb-8">
-                        <button onclick="window.location.href='/expenses/FUEL'" class="w-full bg-blue-600 py-1 text-white rounded-lg">주유비</button>
-                        <button onclick="window.location.href='/expenses/FOOD'" class="w-full bg-blue-600 py-1 text-white rounded-lg">식비</button>
-                    </div>
-
-                    <hr>
-
+                <div class="card p-4">
                     <div class="md:py-8 py-3">
-
                         <div class="relative overflow-x-auto shadow-md" id="select-div">
 
                             <table class="w-full text-sm text-left text-gray-500 live-search-table">
@@ -84,19 +88,25 @@
                                         <a th:text="${expenses.getCheckStatus().viewName}"></a>
                                     </td>
                                     <td class="px-2 py-4 whitespace-nowrap">
-                                        <button class="button gray" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|">영수증 확인</button>
+                                        <button class="button btn-custom" type="button" th:uk-toggle="|target: #modal${expenses.getId()}|">영수증 확인</button>
 
                                         <!-- This is the modal with the default close button -->
                                         <div th:id="|modal${expenses.getId()}|" uk-modal>
                                             <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
                                                 <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
                                                 <h2 class="mb-2 uk-modal-title">영수증</h2>
-                                                <img th:src="${expenses.getS3Image().getFilePath()}">
+                                                <div uk-lightbox="animation: slide" class="uk-slider-items">
+                                                    <div class="text-center mx-auto">
+                                                        <a th:href="${expenses.getS3Image().getFilePath()}" data-fancybox="gallery">
+                                                            <img class="rounded" style="width: 200px; height: 150px;" th:src="${expenses.getS3Image().getFilePath()}"/>
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-2 py-4 whitespace-nowrap">
-                                        <button class="button" th:onclick="|removeTask(${expenses.getId()})|" type="button">삭제</button>
+                                        <button class="button btn-custom" th:onclick="|removeTask(${expenses.getId()})|" type="button">삭제</button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -104,36 +114,37 @@
 
                         </div>
                     </div>
+
+                    <div class="px-10 mt-4 mx-auto">
+                        <nav th:if="${!expensesList.isEmpty()}">
+                            <div class="flex justify-center">
+                                <ul class="inline-flex items-center -space-x-px">
+                                    <li>
+                                        <a th:href="@{|?page=${expensesList.number - 1}|}" th:classappend="${!expensesList.hasPrevious} ? 'hidden'"
+                                           class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" >
+                                            <span class="sr-only">Previous</span>
+                                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                        </a>
+                                    </li>
+                                    <li th:each="page : ${#numbers.sequence(0, expensesList.totalPages - 1)}"
+                                        th:if="${page >= expensesList.number - 2 and page <= expensesList.number + 2}">
+                                        <a th:text="${page + 1}" th:href="@{|?page=${page}|}"
+                                           th:classappend="${page == expensesList.number} ? 'save-custom'"
+                                           th:aria-current="${page == expensesList.number} ? 'page' : ''"
+                                           class="px-3 py-2 rounded-lg leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700">1</a>
+                                    </li>
+                                    <li th:classappend="${!expensesList.hasNext} ? 'hidden'">
+                                        <a th:href="@{|?page=${expensesList.number+1}|}" class="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                            <span class="sr-only">Next</span>
+                                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
                 </div>
 
-                <div class="px-10 pb-10 mx-auto">
-                    <nav th:if="${!expensesList.isEmpty()}">
-                        <div class="flex justify-center">
-                            <ul class="inline-flex items-center -space-x-px">
-                                <li>
-                                    <a th:href="@{|?page=${expensesList.number - 1}|}" th:classappend="${!expensesList.hasPrevious} ? 'hidden'"
-                                       class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" >
-                                        <span class="sr-only">Previous</span>
-                                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                                    </a>
-                                </li>
-                                <li th:each="page : ${#numbers.sequence(0, expensesList.totalPages - 1)}"
-                                    th:if="${page >= expensesList.number - 2 and page <= expensesList.number + 2}">
-                                    <a th:text="${page + 1}" th:href="@{|?page=${page}|}"
-                                       th:classappend="${page == expensesList.number} ? 'bg-blue-500 z-10 text-white'"
-                                       th:aria-current="${page == expensesList.number} ? 'page' : ''"
-                                       class="px-3 py-2 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700">1</a>
-                                </li>
-                                <li th:classappend="${!expensesList.hasNext} ? 'hidden'">
-                                    <a th:href="@{|?page=${expensesList.number+1}|}" class="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                        <span class="sr-only">Next</span>
-                                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
             </div>
         </div>
         <script th:inline="javascript">
