@@ -37,8 +37,6 @@ public class NoticeRestController {
         Notice savedNotice = noticeService.saveNewNotice(currentMember, dto);
         NoticeDto mappedDto = mapper.map(savedNotice, NoticeDto.class);
 
-        log.info("result = {}", ResponseData.success(mappedDto, "삭제되었습니다."));
-
         return ResponseData.success(mappedDto, "저장되었습니다.");
     }
 
@@ -48,8 +46,6 @@ public class NoticeRestController {
 
         Notice savedNotice = noticeService.updateNotice(dto, securityUser.getMember());
         NoticeDto mappedDto = mapper.map(savedNotice, NoticeDto.class);
-
-        log.info("result = {}", ResponseData.success(mappedDto, "수정되었습니다."));
 
         return ResponseData.success(mappedDto, "수정되었습니다.");
     }
@@ -62,8 +58,6 @@ public class NoticeRestController {
         if (securityUser.getMember().getSubAuth().isPostAuth()) {
             noticeService.deleteNotice(currentNotice);
         }
-
-        log.info("result = {}", ResponseData.success(null, "삭제되었습니다."));
 
         return ResponseData.success(null, "삭제되었습니다.");
     }
