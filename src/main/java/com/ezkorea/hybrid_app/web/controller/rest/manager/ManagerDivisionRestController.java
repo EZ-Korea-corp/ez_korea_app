@@ -1,13 +1,11 @@
 package com.ezkorea.hybrid_app.web.controller.rest.manager;
 
-import com.ezkorea.hybrid_app.domain.user.member.Member;
-import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
+import com.ezkorea.hybrid_app.app.util.ResponseData;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import com.ezkorea.hybrid_app.web.dto.DivisionDto;
-import com.ezkorea.hybrid_app.web.dto.MemberUpdateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -23,14 +21,12 @@ import java.util.Map;
 @Slf4j
 public class ManagerDivisionRestController {
 
-    private final TeamService tService;
-    private final MemberService mService;
     private final DivisionService dService;
     private final SaleService saleService;
     private final ModelMapper mapper;
 
     @PostMapping("/division")
-    public ResponseEntity<Object> createNewDivision(@RequestBody Map<String, Object> datum) {
+    public ResponseData.ApiResult<?> createNewDivision(@RequestBody Map<String, Object> datum) {
         log.info("datum={}", datum.toString());
 
         String teamName = (String) datum.get("teamName");
@@ -40,25 +36,25 @@ public class ManagerDivisionRestController {
 
         dService.saveNewDivision(dto);
 
-        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+        return ResponseData.success(null, "반영되었습니다.");
     }
 
     @PutMapping("/division/{id}")
-    public ResponseEntity<Object> updateDivision(@RequestBody Map<String, Object> datum, @PathVariable Long id) {
+    public ResponseData.ApiResult<?> updateDivision(@RequestBody Map<String, Object> datum, @PathVariable Long id) {
 
         String teamName = (String) datum.get("teamName");
         String teamGm = (String) datum.get("teamGM");
         dService.updateDivision(id, teamName, teamGm);
 
-        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+        return ResponseData.success(null, "반영되었습니다.");
     }
 
     @DeleteMapping("/division/{id}")
-    public ResponseEntity<Object> deleteTeam(@PathVariable Long id) {
+    public ResponseData.ApiResult<?> deleteTeam(@PathVariable Long id) {
 
         dService.removeDivision(id);
 
-        return new ResponseEntity<>(Map.of("message", "반영되었습니다"), HttpStatus.OK);
+        return ResponseData.success(null, "반영되었습니다.");
     }
 
 }

@@ -90,7 +90,7 @@
             $("#submit").on("click", function (){
                 if ($('#teamName').val().length !== 0) {
                     const url = '/manager/division/'.concat(id);
-                    fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), url, 'PUT', successHref);
+                    fnResponseDataAjax($('#createTeamForm').serializeObject(), url, 'PUT', successHref);
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -116,7 +116,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         const url = '/manager/division/'.concat(id);
-                        fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), url, 'DELETE', deleteHref);
+                        fnResponseDataAjax($('#createTeamForm').serializeObject(), url, 'DELETE', deleteHref);
                     }
                 })
             });

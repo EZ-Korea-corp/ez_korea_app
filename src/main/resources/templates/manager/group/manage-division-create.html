@@ -73,8 +73,7 @@
 
             $("#submit").on("click", function (){
                 if ($('#teamName').val().length !== 0) {
-                    console.log($('#createTeamForm').serializeObject());
-                    fnResponseCrudJsonAjax($('#createTeamForm').serializeObject(), '/manager/division', 'POST', successHref);
+                    fnResponseDataAjax($('#createTeamForm').serializeObject(), '/manager/division', 'POST', successHref);
                 } else {
                     Swal.fire({
                         icon: 'error',
