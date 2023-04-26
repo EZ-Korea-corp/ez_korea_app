@@ -178,7 +178,16 @@
                                     <tr th:if="${map.sellList.size() > 0}" th:each="sell : ${map.sellList}" class="whitespace-nowrap border-b border-gray-200 text-center">
                                         <th scope="row" th:text="${sell.name}" class="px-3 py-4 font-medium whitespace-nowrap bg-gray-50">
                                         </th>
-                                        <td th:text="|${sell.count * 0.5}개|"></td>
+                                        <!-- 소수점 자리가 0일 경우 2로 표현하는 예시 -->
+                                        <th:block th:with="cnt = ${sell.count * 0.5}">
+                                            <th:block th:if="${cnt % 1 == 0}">
+                                                <td th:text="${#numbers.formatInteger(cnt, 0)} + '개'"></td>
+                                            </th:block>
+                                            <th:block th:if="${cnt % 1 != 0}">
+                                                <td th:text="${cnt} + '개'"></td>
+                                            </th:block>
+                                        </th:block>
+<!--                                        <td th:text="${sell.count * 0.5} + '개'"></td>-->
                                         <td th:text="${sell.payment}"></td>
                                         <td th:if="${sell.name != '총계'}">
                                             <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
