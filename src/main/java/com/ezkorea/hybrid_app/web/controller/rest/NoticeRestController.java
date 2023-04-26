@@ -8,13 +8,9 @@ import com.ezkorea.hybrid_app.service.notiece.NoticeService;
 import com.ezkorea.hybrid_app.web.dto.NoticeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +18,6 @@ import java.util.Map;
 public class NoticeRestController {
 
     private final NoticeService noticeService;
-    private final ModelMapper mapper;
 
     @PostMapping("/notice")
     public ResponseData.ApiResult<?> createNewNotice(@RequestBody NoticeDto dto,
@@ -34,8 +29,7 @@ public class NoticeRestController {
             return ResponseData.error("글쓰기 권한이 없습니다.", HttpStatus.BAD_REQUEST);
         }
 
-        Notice savedNotice = noticeService.saveNewNotice(currentMember, dto);
-        NoticeDto mappedDto = mapper.map(savedNotice, NoticeDto.class);
+        NoticeDto mappedDto = noticeService.saveNewNotice(currentMember, dto).of();
 
         return ResponseData.success(mappedDto, "저장되었습니다.");
     }
@@ -44,8 +38,7 @@ public class NoticeRestController {
     public ResponseData.ApiResult<?> updateNotice(@RequestBody NoticeDto dto, @PathVariable Long id,
                                                @AuthenticationPrincipal SecurityUser securityUser) {
 
-        Notice savedNotice = noticeService.updateNotice(dto, securityUser.getMember());
-        NoticeDto mappedDto = mapper.map(savedNotice, NoticeDto.class);
+        NoticeDto mappedDto = noticeService.updateNotice(dto, securityUser.getMember()).of();
 
         return ResponseData.success(mappedDto, "수정되었습니다.");
     }

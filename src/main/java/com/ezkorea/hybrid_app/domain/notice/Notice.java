@@ -39,4 +39,12 @@ public class Notice extends BaseEntity {
         this.writer = member;
     }
 
+    public NoticeDto of() {
+        return NoticeDto.builder()
+                .id(getId())
+                .title(title)
+                .content(content)
+                .build();
+    }
+
 }
