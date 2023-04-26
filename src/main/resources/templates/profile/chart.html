@@ -14,7 +14,7 @@
             transform-origin: center center;
         }
     </style>
-    <section class="text-gray-700 body-font">
+    <!--<section class="text-gray-700 body-font">
         <div class="container px-5 py-24 mx-auto">
             <div class="-m-4 text-center">
                 <div class="p-4 w-full">
@@ -30,55 +30,62 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section>-->
 
     <!-- component -->
-    <input type="text" class="table-live-search-box" placeholder="사원이름을 입력해주세요."/>
+    <div class="card mb-4">
+        <div class="relative">
+            <input type="text" class="table-live-search-box" placeholder="사원이름을 입력해주세요."/>
+            <i class="uil-search-alt h-10 w-10 text-black absolute right-3 bottom-1.5 font-medium rounded-lg text-xl px-4 py-2"></i>
+        </div>
+    </div>
 
-    <div class="relative overflow-x-auto shadow-md" id="select-div">
-        <div class="m-4">
-            <table class="w-full text-sm text-left text-gray-500 live-search-table">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
-                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                        사진
-                    </th>
-                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                        사원명
-                    </th>
-                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                        직급
-                    </th>
-                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                        지점
-                    </th>
-                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                        팀
-                    </th>
-                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                        핸드폰 번호
-                    </th>
-                </tr>
-                </thead>
-                <tbody class="uk-text-center" th:each="profile : ${profileList}" id="profile">
-                <tr class="bg-white border-b">
-                    <td class="px-2 py-4 whitespace-nowrap">
-                        <div uk-lightbox class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                            <a th:href="${profile['FILE_PATH']}">
-                                <img th:src="${profile['FILE_PATH']}" th:data-value="${profile['FILE_PATH']}" class="absolute w-full h-full inset-0 rounded-full" >
-                            </a>
-                        </div>
-                    </td>
-                    <td class="px-2 py-4 whitespace-nowrap">
-                        <h3 th:text="${profile['NAME']}"></h3>
-                    </td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['ROLE_NM']}"></td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['DIVISION_NAME']}"></td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['TEAM_NAME']}">></td>
-                    <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['PHONE']}"></td>
-                </tr>
-                </tbody>
-            </table>
+    <div class="card">
+        <div class="relative overflow-x-auto shadow-md" id="select-div">
+            <div>
+                <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                            사진
+                        </th>
+                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                            사원명
+                        </th>
+                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                            직급
+                        </th>
+                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                            지점
+                        </th>
+                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                            팀
+                        </th>
+                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                            핸드폰 번호
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="uk-text-center" th:each="profile : ${profileList}" id="profile">
+                    <tr class="bg-white border-b">
+                        <td class="px-2 py-4 whitespace-nowrap">
+                            <div uk-lightbox class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
+                                <a th:href="${profile['FILE_PATH']}">
+                                    <img th:src="${profile['FILE_PATH']}" th:data-value="${profile['FILE_PATH']}" class="absolute w-full h-full inset-0 rounded-full" >
+                                </a>
+                            </div>
+                        </td>
+                        <td class="px-2 py-4 whitespace-nowrap">
+                            <h3 th:text="${profile['NAME']}"></h3>
+                        </td>
+                        <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['ROLE_NM']}"></td>
+                        <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['DIVISION_NAME']}"></td>
+                        <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['TEAM_NAME']}">></td>
+                        <td class="px-2 py-4 whitespace-nowrap" th:text="${profile['PHONE']}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <script>

@@ -32,10 +32,6 @@
     </tr>
 </table>
 
-### 프로젝트 설계 과정
-
-### ERD 구상 과정
-
 ### 기술 스택
 <!--
 <table style="margin: 0 auto;">

@@ -53,35 +53,37 @@
                         <h2 class="text-lg font-bold mb-2">주유소 목록</h2>
                         <div class="grid grid-cols-2 gap-4 text-center">
                             <div th:if="${isAll == null}">
-                                <button type="button" th:onclick="|location.href='/station/indexAll';|" class="bg-blue-600 h-9 px-4 w-full rounded-lg font-semibold"> 전체 검색 </button>
+                                <button type="button" th:onclick="|location.href='/station/indexAll';|" class="btn-custom h-9 px-4 w-full rounded-lg font-semibold"> 전체 검색 </button>
                             </div>
                             <div th:if="${isAll != null}">
-                                <button type="button" th:onclick="|location.href='/station/index';|" class="bg-blue-600 h-9 px-4 w-full rounded-lg font-semibold"> 영업중 검색 </button>
+                                <button type="button" th:onclick="|location.href='/station/index';|" class="btn-custom h-9 px-4 w-full rounded-lg font-semibold"> 영업중 검색 </button>
                             </div>
                             <th:block sec:authorize="hasAnyAuthority('ROLE_MASTER', 'ROLE_DIRECTOR', 'ROLE_MANAGER')">
-                                <button type="button" th:onclick="|location.href='/station/save';|" class="bg-blue-600 h-9 px-4 w-full rounded-lg font-semibold"> 등록 </button>
+                                <button type="button" th:onclick="|location.href='/station/save';|" class="btn-custom h-9 px-4 w-full rounded-lg font-semibold"> 등록 </button>
                             </th:block>
                         </div>
                     </div>
 
                     <div class="card py-4 px-5 mb-4">
                         <div id="select-div" class="items-center space-x-3">
-                            <div class="flex-1">
-                                <input type="text" class="live-search-box col-span-2" placeholder="주유소 이름을 입력해주세요."/>
+                            <div class="flex-1 my-2">
+                                <div class="relative">
+                                    <input type="text" class="live-search-box form-control" placeholder="주유소 이름을 입력해주세요." autocomplete="off" aria-expanded="false">
+                                    <i class="uil-search-alt h-10 w-10 text-black absolute right-3 bottom-1.5 font-medium rounded-lg text-xl px-4 py-2"></i>
+                                </div>
 
                                 <ul id="search-result" class="live-search-list">
                                     <li style="display: none">
                                         <form></form>
                                     </li>
                                     <li th:each="station : ${stationList}">
-                                        <div class="card p-4 flex items-center space-x-4 hover:bg-gray-100 border-gray-500 rounded-md -mx-2 p-2">
+                                        <div class="card p-4 mb-4 flex items-center space-x-4 hover:bg-gray-100 border-gray-500 rounded-md -mx-2 p-2">
                                             <div class="flex-1">
                                                 <h3 class="text-base font-semibold capitalize mb-2" th:text="|${station.getStationName()}|"> 주유소이름 </h3>
                                                 <h2 class="text-sm capitalize" th:text="|${station.getStationLocation()}|"> 주소 </h2>
                                             </div>
-                                            <button type="button" th:onclick="|location.href='/station/detail/${station.getId()}';|" class="flex items-center bg-blue-600 justify-center h-9 px-4 rounded-md border font-semibold"> 이동 </button>
+                                            <button type="button" th:onclick="|location.href='/station/detail/${station.getId()}';|" class="flex items-center justify-center h-9 px-4 rounded-md btn-custom font-semibold"> 이동 </button>
                                         </div>
-                                        <hr>
                                     </li>
                                 </ul>
                             </div>
