@@ -56,8 +56,7 @@ public class NoticeController {
                                        @AuthenticationPrincipal SecurityUser securityUser) {
         Notice currentNotice = noticeService.findNoticeById(id);
         mprService.saveReadInfo(currentNotice, securityUser.getMember());
-        model.addAttribute("notice", currentNotice);
-        model.addAttribute("readList", mprService.findReadMemberList(currentNotice));
+        model.addAttribute("notice", currentNotice.of());
         model.addAttribute("notReadList", mprService.findNotReadMemberList(currentNotice));
         return "notice/detail";
     }

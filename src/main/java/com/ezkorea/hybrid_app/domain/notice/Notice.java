@@ -44,6 +44,8 @@ public class Notice extends BaseEntity {
                 .id(getId())
                 .title(title)
                 .content(content)
+                .imageList(imageList)
+                .createDate(getCreateDate())
                 .build();
     }
 

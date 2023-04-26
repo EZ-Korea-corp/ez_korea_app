@@ -15,17 +15,17 @@
             }
         </style>
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
-        <div class="lg:flex lg:space-x-10">
+        <div class="lg:space-x-10">
 
-            <div class="lg:w-3/4 space-y-5">
+            <div class="space-y-5">
 
                 <div class="card">
                     <div class="p-7">
 
                         <div class="mb-4 pb-4 border-b border-gray-100">
-                            <h1 class="lg:text-2xl text-xl font-semibold mb-2" th:text="${notice.getTitle()}"> 제목 </h1>
+                            <h1 class="lg:text-2xl text-xl font-semibold mb-2" th:text="${notice.title}"> 제목 </h1>
                         </div>
-                        <div class="space-y-3" id="content" th:utext="${notice.getContent()}"></div>
+                        <div class="space-y-3" id="content" th:utext="${notice.content}"></div>
                     </div>
                 </div>
 
@@ -95,14 +95,14 @@
                                         <tr class="bg-white border-b" th:each="user : ${notReadList}">
                                             <td>
                                                 <div class="w-10 h-10 flex-shrink-0 rounded-md relative mx-auto">
-                                                    <img th:src="${user.getS3Image().getFilePath()}" class="absolute w-full h-full inset-0 rounded-full" >
+                                                    <img th:src="${user.profileImgUrl}" class="absolute w-full h-full inset-0 rounded-full" >
                                                 </div>
                                             </td>
                                             <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
                                                 <h3 th:text="${user.getName()}"></h3>
                                             </th>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${user.getPhone()}"></td>
-                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${user.getRole().getViewName()}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${user.phone}"></td>
+                                            <td class="px-2 py-4 whitespace-nowrap" th:text="${user.role}"></td>
                                         </tr>
                                         </tbody>
                                     </table>
