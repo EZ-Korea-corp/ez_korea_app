@@ -7,6 +7,7 @@ import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
+import com.ezkorea.hybrid_app.web.dto.MemberDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -92,5 +93,18 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Expenses> expensesList = new ArrayList<>();
+
+    public MemberDto of() {
+        return MemberDto.builder()
+                .id(getId())
+                .username(username)
+                .name(name)
+                .phone(phone)
+                .role(role.getViewName())
+                .division(division != null ? division.getDivisionName() : "")
+                .team(team != null ? team.getTeamName() : "")
+                .profileImgUrl(s3Image.getFilePath())
+                .build();
+    }
 
 }
