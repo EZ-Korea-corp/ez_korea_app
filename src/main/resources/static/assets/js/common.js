@@ -8,7 +8,6 @@ jQuery.fn.serializeObject = function() {
     try {
         if (this[0].tagName && this[0].tagName.toUpperCase() === "FORM") {
             let formData = this.serializeArray();
-            console.log(formData);
             if (formData) {
                 obj = {};
                 jQuery.each(formData, function() {
@@ -102,6 +101,43 @@ function fnOnlyCrudJsonAjax(data, url, method, fnCallBack) {
                 icon: 'error',
                 text: errorMsg,
             });
+        }
+    });
+}
+
+function fnResponseDataAjax(data, url, method, fnCallBack) {
+
+    $.ajax({
+        type: method,
+        url: url,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: data !== null ? JSON.stringify(data) : null,
+        beforeSend: function(jqXHR, settings) {
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var token = $("meta[name='_csrf']").attr("content");
+            jqXHR.setRequestHeader(header, token);
+        },
+        success: function(data, textStatus, xhr) {
+            Swal.fire({
+                icon: 'success',
+                text: data.message,
+            }).then(() => {
+                if(fnCallBack) fnCallBack(data, xhr);
+            })
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status === 400 || status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    text: data.message,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    text: '에러가 발생했습니다.',
+                });
+            }
         }
     });
 }

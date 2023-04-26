@@ -148,13 +148,7 @@
                         cancelButtonText: '취소'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            Swal.fire(
-                                '삭제되었습니다.',
-                                '',
-                                'success'
-                            ).then(() => {
-                                fnOnlyCrudJsonAjax($('#noticeForm').serializeObject(), url, 'DELETE', successHref);
-                            })
+                            fnResponseDataAjax(null, url, 'DELETE', successHref);
                         }
                     })
                 });
