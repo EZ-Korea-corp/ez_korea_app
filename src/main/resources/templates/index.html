@@ -9,19 +9,6 @@
 <body>
 
 <main layout:fragment="main">
-    <!--<div id="loading-bar" class="fixed top-full bottom-0 left-0 right-0 w-full h-screen z-50 overflow-hidden bg-black flex flex-col items-center justify-center">
-        <img src="/assets/images/keyimage.png" alt="">
-    </div>
-    <script>
-        $('#loading-bar').animate({
-            top:'0%'
-        }, 300, 'linear');
-        setTimeout(function (){
-            $('#loading-bar').animate({
-                top:'-100%'
-            }, 300, 'linear').fadeOut(0, 'swing');
-        }, 1000);
-    </script>-->
     <style>
         .commute-border{
             border : 1px solid #ccc !important;
@@ -120,24 +107,6 @@
                                         <a class="uk-position-center-right uk-position-small uk-hidden-hover text-white p-4" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
                                     </div>
                                 </a>
-                                <!--<div>
-                                    <th:block th:if="${notice.getImageList().size() != 0}">
-                                        <img th:src="${notice.getImageList().get(0).getFilePath()}">
-                                    </th:block>
-                                    <th:block th:if="${notice.getImageList().size() == 0}">
-
-                                    </th:block>
-                                </div>-->
-                                <!--<a class="uk-link-reset hover:text-black" th:href="@{/notice/{id}(id = ${notice.getId()})}">
-                                    <div class="card w-56 h-32">
-                                        <div class="flex-cols p-4">
-                                            <div class="h-20">
-                                                <h1 class="text-md font-semibold" th:text="${notice.getTitle()}">공지 제목</h1>
-                                            </div>
-                                            <div class="border-t pt-0.5 pb-1 border-black font-medium text-sm" th:text="${#temporals.format(notice.getCreateDate(), 'yyyy년 MM월 dd일')}">2023년 3월 15일</div>
-                                        </div>
-                                    </div>
-                                </a>-->
                             </li>
                         </ul>
                     </div>
