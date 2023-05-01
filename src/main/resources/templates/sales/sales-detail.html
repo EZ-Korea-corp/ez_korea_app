@@ -135,12 +135,12 @@
                 <div class="card py-4 px-5 mb-4">
                     <div>
                         <h1 class="block text-lg font-semibold mb-4"> 판매 금액  </h1>
-                        <div class="grid grid-cols-3 gap-4 text-center">
-                            <div>
+                        <div class="grid grid-cols-3 mx-auto text-center">
+                            <div class="border-r">
                                 <p class="font-semibold">카드</p>
                                 <span th:text="|${#numbers.formatInteger(map.card, 0, 'COMMA')}원|"></span>
                             </div>
-                            <div>
+                            <div class="border-r">
                                 <p class="font-semibold">현금</p>
                                 <span th:text="|${#numbers.formatInteger(map.cash, 0, 'COMMA')}원|"></span>
                             </div>
@@ -155,36 +155,34 @@
                 <div class="card py-4 px-5">
                     <div>
                         <h1 class="block text-lg font-semibold"> 판매 현황  </h1>
-                        <nav class="responsive-nav md:m-0 -mx-4 nav-small mb-4">
-                            <ul uk-switcher="connect: #salesList ;animation: uk-animation-fade ; toggle: > * ">
-                                <li><a href="#" class="lg:px-2">카드</a></li>
-                                <li><a href="#" class="lg:px-2">현금</a></li>
-                            </ul>
-                        </nav>
+                        <div class="mx-auto">
+                            <nav class="responsive-nav md:m-0 -mx-4 mb-4">
+                                <ul uk-switcher="connect: #salesList ;animation: uk-animation-fade ; toggle: > * ">
+                                    <li><a href="#" class="lg:px-2">카드</a></li>
+                                    <li><a href="#" class="lg:px-2">현금</a></li>
+                                </ul>
+                            </nav>
+                        </div>
                         <div id="salesList" class="relative overflow-x-auto shadow-md uk-switcher">
                             <div>
                                 <table class="w-full text-sm text-left text-gray-500 live-search-table">
                                     <thead class="whitespace-nowrap uk-text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-3 py-3">
-                                            종류
-                                        </th>
-                                        <th scope="col" class="px-3 py-3">
-                                            개수
-                                        </th>
-                                        <th scope="col" class="px-3 py-3">
-                                            결제
-                                        </th>
-                                        <th scope="col" class="px-3 py-3">
-                                            비고
-                                        </th>
-                                    </tr>
+                                        <tr>
+                                            <th scope="col" class="px-3 py-3">
+                                                종류
+                                            </th>
+                                            <th scope="col" class="px-12 py-3">
+                                                개수
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                비고
+                                            </th>
+                                        </tr>
                                     </thead>
-                                    <tbody th:with="total = 0">
+                                    <tbody>
                                         <th:block th:each="sell, iter : ${map.sellList}">
-                                            <tr th:if="${map.sellList.size() > 0 && sell.payment.equals('카드')}"
+                                            <tr th:if="${map.sellList.size() > 0 && sell.payment eq '카드'}"
                                                 class="whitespace-nowrap border-b border-gray-200 text-center">
-                                                <th:block th:with="total = ${total + (sell.count * 0.5)}"></th:block>
                                                 <th scope="row" th:text="${sell.name}" class="px-3 py-4 font-medium whitespace-nowrap bg-gray-50"></th>
                                                 <th:block th:with="cnt = ${sell.count * 0.5}">
                                                     <th:block th:if="${cnt % 1 == 0}">
@@ -194,15 +192,14 @@
                                                         <td th:text="${cnt} + '개'"></td>
                                                     </th:block>
                                                 </th:block>
-                                                <td th:text="${sell.payment}"></td>
                                                 <td th:if="${sell.name != '총계'}">
                                                     <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
                                                 </td>
                                             </tr>
-                                            <!--<tr th:if="${iter.last}">
+                                            <tr th:if="${iter.last}">
                                                 <th scope="row" class="px-3 py-4 text-center font-medium whitespace-nowrap bg-gray-50">총계</th>
-                                                <td colspan="3" th:text="${total}" class="text-center">100개</td>
-                                            </tr>-->
+                                                <td colspan="2" class="text-center" id="cardCnt"></td>
+                                            </tr>
                                         </th:block>
                                     </tbody>
                                 </table>
@@ -211,48 +208,52 @@
                             <div>
                                 <table class="w-full text-sm text-left text-gray-500 live-search-table">
                                     <thead class="whitespace-nowrap uk-text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
+                                        <tr>
                                         <th scope="col" class="px-3 py-3">
                                             종류
                                         </th>
-                                        <th scope="col" class="px-3 py-3">
+                                        <th scope="col" class="px-12 py-3">
                                             개수
                                         </th>
-                                        <th scope="col" class="px-3 py-3">
-                                            결제
-                                        </th>
-                                        <th scope="col" class="px-3 py-3">
+                                        <th scope="col" class="px-6 py-3">
                                             비고
                                         </th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:if="${map.sellList.size() > 0 && sell.payment.equals('현금')}" th:each="sell : ${map.sellList}" class="whitespace-nowrap border-b border-gray-200 text-center">
-                                        <th scope="row" th:text="${sell.name}" class="px-3 py-4 font-medium whitespace-nowrap bg-gray-50">
-                                        </th>
-                                        <th:block th:with="cnt = ${sell.count * 0.5}">
-                                            <th:block th:if="${cnt % 1 == 0}">
-                                                <td th:text="${#numbers.formatInteger(cnt, 0)} + '개'"></td>
+                                    <th:block th:each="sell, iter : ${map.sellList}">
+                                        <tr th:if="${map.sellList.size() > 0 && sell.payment eq '현금'}"
+                                            class="whitespace-nowrap border-b border-gray-200 text-center">
+                                            <th scope="row" th:text="${sell.name}" class="px-3 py-4 font-medium whitespace-nowrap bg-gray-50"></th>
+                                            <th:block th:with="cnt = ${sell.count * 0.5}">
+                                                <th:block th:if="${cnt % 1 == 0}">
+                                                    <td th:text="${#numbers.formatInteger(cnt, 0)} + '개'"></td>
+                                                </th:block>
+                                                <th:block th:if="${cnt % 1 != 0}">
+                                                    <td th:text="${cnt} + '개'"></td>
+                                                </th:block>
                                             </th:block>
-                                            <th:block th:if="${cnt % 1 != 0}">
-                                                <td th:text="${cnt} + '개'"></td>
-                                            </th:block>
-                                        </th:block>
-                                        <td th:text="${sell.payment}"></td>
-                                        <td th:if="${sell.name != '총계'}">
-                                            <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
-                                        </td>
-                                    </tr>
+                                            <td th:if="${sell.name != '총계'}">
+                                                <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
+                                            </td>
+                                        </tr>
+                                        <tr th:if="${iter.last}">
+                                            <th scope="row" class="px-3 py-4 text-center font-medium whitespace-nowrap bg-gray-50">총계</th>
+                                            <td colspan="3" class="text-center" id="cashCnt"></td>
+                                        </tr>
+                                    </th:block>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <th:block th:if="${map.fixList.size() > 0}">
-                        <h1 class="block text-lg font-bold my-4"> 불량 현황  </h1>
+                <div class="card py-4 px-5 mt-4" th:if="${map.fixList.size() > 0}">
+                    <th:block>
+                        <h1 class="block text-lg font-bold my-4"> 불량 현황 </h1>
                         <div class="flex items-center space-x-3">
-                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
@@ -283,8 +284,25 @@
 
             </div>
         </div>
-        <script>
+        <script th:inline="javascript">
+
+            function getSellCountByPayment(list, keyword) {
+                return list.filter(sell => sell.payment === keyword)
+                    .reduce((acc, sell) => acc + (sell.count * 0.5), 0);
+            }
+
+
             jQuery(document).ready(function($){
+                const paymentCard = '카드';
+                const paymentCash = '현금';
+                let sellList = [[${map.sellList}]];
+                if (sellList.length !== 0) {
+                    let cardSellCnt = getSellCountByPayment(sellList, paymentCard);
+                    $('#cardCnt').html(cardSellCnt + '개');
+
+                    let cashSellCnt = getSellCountByPayment(sellList, paymentCash);
+                    $('#cashCnt').html(cashSellCnt + '개');
+                }
 
                 let content = $('#content').text();
                 let html = content.replace(/\n/g, '<br>');
