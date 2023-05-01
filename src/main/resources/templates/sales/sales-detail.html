@@ -31,9 +31,9 @@
                     <p class="font-medium mt-1.5 text-base" th:text="|[${T(com.ezkorea.hybrid_app.domain.timetable.PartTime).of(map.table.getPart())}] ${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}|"></p>
 
                     <div class="grid grid-cols-3 gap-4 mt-4">
-                        <a th:href="@{|/sales/sell/${map.tTid}|}" class="bg-blue-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg hover:text-white"> 판매하기 </a>
-                        <a th:href="@{|/sales/close/${map.tTid}|}" class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg hover:text-white"> 마감하기 </a>
-                        <button class="bg-purple-600 text-white py-2.5 text-center font-semibold w-full block rounded-lg" type="button" uk-toggle="target: #modal">계좌 정보</button>
+                        <a th:href="@{|/sales/sell/${map.tTid}|}" class="btn-custom py-2 text-center font-semibold w-full block rounded-lg hover:text-white"> 판매하기 </a>
+                        <a th:href="@{|/sales/close/${map.tTid}|}" class="btn-custom py-2 text-center font-semibold w-full block rounded-lg hover:text-white"> 마감하기 </a>
+                        <button class="btn-custom py-2 text-center font-semibold w-full block rounded-lg" type="button" uk-toggle="target: #modal">계좌 정보</button>
                         <div id="modal" uk-modal>
                             <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
                                 <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
@@ -154,28 +154,80 @@
 
                 <div class="card py-4 px-5">
                     <div>
-                        <h1 class="block text-lg font-semibold mb-4"> 판매 현황  </h1>
-                        <div class="relative overflow-x-auto shadow-md">
+                        <h1 class="block text-lg font-semibold"> 판매 현황  </h1>
+                        <nav class="responsive-nav md:m-0 -mx-4 nav-small mb-4">
+                            <ul uk-switcher="connect: #salesList ;animation: uk-animation-fade ; toggle: > * ">
+                                <li><a href="#" class="lg:px-2">카드</a></li>
+                                <li><a href="#" class="lg:px-2">현금</a></li>
+                            </ul>
+                        </nav>
+                        <div id="salesList" class="relative overflow-x-auto shadow-md uk-switcher">
+                            <div>
+                                <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                                    <thead class="whitespace-nowrap uk-text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-3 py-3">
+                                            종류
+                                        </th>
+                                        <th scope="col" class="px-3 py-3">
+                                            개수
+                                        </th>
+                                        <th scope="col" class="px-3 py-3">
+                                            결제
+                                        </th>
+                                        <th scope="col" class="px-3 py-3">
+                                            비고
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody th:with="total = 0">
+                                        <th:block th:each="sell, iter : ${map.sellList}">
+                                            <tr th:if="${map.sellList.size() > 0 && sell.payment.equals('카드')}"
+                                                class="whitespace-nowrap border-b border-gray-200 text-center">
+                                                <th:block th:with="total = ${total + (sell.count * 0.5)}"></th:block>
+                                                <th scope="row" th:text="${sell.name}" class="px-3 py-4 font-medium whitespace-nowrap bg-gray-50"></th>
+                                                <th:block th:with="cnt = ${sell.count * 0.5}">
+                                                    <th:block th:if="${cnt % 1 == 0}">
+                                                        <td th:text="${#numbers.formatInteger(cnt, 0)} + '개'"></td>
+                                                    </th:block>
+                                                    <th:block th:if="${cnt % 1 != 0}">
+                                                        <td th:text="${cnt} + '개'"></td>
+                                                    </th:block>
+                                                </th:block>
+                                                <td th:text="${sell.payment}"></td>
+                                                <td th:if="${sell.name != '총계'}">
+                                                    <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
+                                                </td>
+                                            </tr>
+                                            <!--<tr th:if="${iter.last}">
+                                                <th scope="row" class="px-3 py-4 text-center font-medium whitespace-nowrap bg-gray-50">총계</th>
+                                                <td colspan="3" th:text="${total}" class="text-center">100개</td>
+                                            </tr>-->
+                                        </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
 
-                            <table class="w-full text-sm text-left text-gray-500 live-search-table">
-                                <thead class="whitespace-nowrap uk-text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-3 py-3">
-                                        종류
-                                    </th>
-                                    <th scope="col" class="px-3 py-3">
-                                        개수
-                                    </th>
-                                    <th scope="col" class="px-3 py-3">
-                                        결제
-                                    </th>
-                                    <th scope="col" class="px-3 py-3">
-                                        비고
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:if="${map.sellList.size() > 0}" th:each="sell : ${map.sellList}" class="whitespace-nowrap border-b border-gray-200 text-center">
+                            <div>
+                                <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                                    <thead class="whitespace-nowrap uk-text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-3 py-3">
+                                            종류
+                                        </th>
+                                        <th scope="col" class="px-3 py-3">
+                                            개수
+                                        </th>
+                                        <th scope="col" class="px-3 py-3">
+                                            결제
+                                        </th>
+                                        <th scope="col" class="px-3 py-3">
+                                            비고
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:if="${map.sellList.size() > 0 && sell.payment.equals('현금')}" th:each="sell : ${map.sellList}" class="whitespace-nowrap border-b border-gray-200 text-center">
                                         <th scope="row" th:text="${sell.name}" class="px-3 py-4 font-medium whitespace-nowrap bg-gray-50">
                                         </th>
                                         <th:block th:with="cnt = ${sell.count * 0.5}">
@@ -188,11 +240,12 @@
                                         </th:block>
                                         <td th:text="${sell.payment}"></td>
                                         <td th:if="${sell.name != '총계'}">
-                                            <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
+                                            <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
@@ -219,7 +272,7 @@
                                     </th>
                                     <td class="px-6 py-4" th:text="|${fix.memo}|"></td>
                                     <td>
-                                        <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${fix.id}" class="bg-blue-600 justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
+                                        <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${fix.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
                                     </td>
                                 </tr>
                                 </tbody>
