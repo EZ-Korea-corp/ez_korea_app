@@ -36,6 +36,22 @@
             .btn-outline {
                 border: 1px black solid !important;
             }
+            /* Chrome, Safari, Edge, Opera */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none !important;
+                margin: 0 !important;
+            }
+
+            /* Firefox  */
+            input[type='number'] {
+                -moz-appearance: textfield !important;
+            }
+
+            table {
+                border-collapse: separate !important;
+                border-spacing: 0 10px !important;
+            }
         </style>
         <div class="lg:space-x-12">
 
@@ -48,10 +64,10 @@
 
                     <div class="grid grid-cols-2 gap-4" id="check">
                         <div name="out" class="text-sm font-medium">
-                            <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
+                            <a class="btn-custom py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 판매 </a>
                         </div>
                         <div name="fix" class="text-sm font-medium">
-                            <a class="bg-gray-600 text-white py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 불량 </a>
+                            <a class="btn-custom py-2.5 text-center font-semibold w-full mt-4 block rounded-lg"> 불량 </a>
                         </div>
                     </div>
                 </div>
@@ -86,68 +102,68 @@
                                 </thead>
                                 <tbody id="sellBody" class="text-center">
                                     <tr class="my-2">
-                                        <th>일반</th>
+                                        <th class="px-4 py-2">일반</th>
                                         <td>
                                             <div class="px-4 flex mx-auto text-center">
-                                                <button type="button" class="flex-none w-11 rounded-lg btn-outline minus-btn"> - </button>
+                                                <button type="button" class="flex-none py-2 px-4 rounded-lg btn-outline minus-btn"> - </button>
                                                 <input type="number" data-sort="normal" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
-                                                <button type="button" class="flex-none w-11 rounded-lg btn-outline plus-btn"> + </button>
+                                                <button type="button" class="flex-none py-2 px-4 rounded-lg btn-outline plus-btn"> + </button>
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full block rounded hover:text-white reset-btn">취소</button>
+                                            <button class="btn-custom py-2 px-2 text-center font-semibold w-full block rounded-lg reset-btn">초기화</button>
                                         </td>
                                     </tr>
                                     <tr class="my-2">
                                         <th>하브</th>
                                         <td>
                                             <div class="px-4 flex mx-auto text-center">
-                                                <button type="button" class="flex-none w-11 rounded-lg btn-outline minus-btn"> - </button>
-                                                <input type="number" data-sort="hybrid" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
-                                                <button type="button" class="flex-none w-11 rounded-lg btn-outline plus-btn"> + </button>
+                                                <button type="button" class="flex-none py-2 px-4 rounded-lg btn-outline minus-btn"> - </button>
+                                                <input type="number" data-sort="normal" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
+                                                <button type="button" class="flex-none py-2 px-4 rounded-lg btn-outline plus-btn"> + </button>
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full block rounded hover:text-white reset-btn">취소</button>
+                                            <button class="btn-custom py-2 px-2 text-center font-semibold w-full block rounded-lg reset-btn">초기화</button>
                                         </td>
                                     </tr>
                                     <tr class="my-2">
                                         <th>MW</th>
                                         <td>
                                             <div class="px-4 flex mx-auto text-center">
-                                                <button type="button" class="flex-none w-11 rounded-lg btn-outline minus-btn"> - </button>
+                                                <button type="button" class="flex-none py-2 px-4 rounded-lg btn-outline minus-btn"> - </button>
                                                 <input type="number" data-sort="mw" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
-                                                <button type="button" class="flex-none w-11 rounded-lg btn-outline plus-btn"> + </button>
+                                                <button type="button" class="flex-none py-2 px-4 rounded-lg btn-outline plus-btn"> + </button>
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full block rounded hover:text-white reset-btn">취소</button>
+                                            <button class="btn-custom py-2 px-2 text-center font-semibold w-full block rounded-lg reset-btn">초기화</button>
                                         </td>
                                     </tr>
                                     <tr class="my-2">
                                         <th>S클</th>
                                         <td>
                                             <div class="px-4 flex mx-auto text-center">
-                                                <button type="button" class="flex-none w-11 rounded-lg btn-outline minus-btn"> - </button>
+                                                <button type="button" class="flex-none py-2 px-4 rounded-lg btn-outline minus-btn"> - </button>
                                                 <input type="number" data-sort="s_class" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
-                                                <button type="button" class="flex-none w-11 rounded-lg btn-outline plus-btn"> + </button>
+                                                <button type="button" class="flex-none py-2 px-4 rounded-lg btn-outline plus-btn"> + </button>
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full block rounded hover:text-white reset-btn">취소</button>
+                                            <button class="btn-custom py-2 px-2 text-center font-semibold w-full block rounded-lg reset-btn">초기화</button>
                                         </td>
                                     </tr>
                                     <tr class="my-2">
                                         <th>700</th>
                                         <td>
                                             <div class="px-4 flex mx-auto text-center">
-                                                <button type="button" class="flex-none w-11 rounded-lg btn-outline minus-btn"> - </button>
+                                                <button type="button" class="flex-none py-2 px-4 rounded-lg btn-outline minus-btn"> - </button>
                                                 <input type="number" data-sort="size_700" value="0" class="mx-4 w-8 border-2 border-black" placeholder="0"/>
-                                                <button type="button" class="flex-none w-11 rounded-lg btn-outline plus-btn"> + </button>
+                                                <button type="button" class="flex-none py-2 px-4 rounded-lg btn-outline plus-btn"> + </button>
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="bg-blue-600 text-white py-2 text-center font-semibold w-full block rounded hover:text-white reset-btn">취소</button>
+                                            <button class="btn-custom py-2 px-2 text-center font-semibold w-full block rounded-lg reset-btn">초기화</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -208,11 +224,11 @@
 
                     $("#check div").each(function() {
                         if($(this).attr("name") == _status) {
-                            $(this).find("a").removeClass("bg-gray-600")
-                                .addClass("bg-blue-600");
+                            $(this).find("a").removeClass("btn-custom")
+                                .addClass("btn-active");
                         } else {
-                            $(this).find("a").removeClass("bg-blue-600")
-                                .addClass("bg-gray-600");
+                            $(this).find("a").removeClass("btn-active")
+                                .addClass("btn-custom");
                         }
                     });
 
@@ -251,7 +267,7 @@
 
                         }),
                         $("<td>").append(
-                            $("<button>", {text:"취소", class:"bg-blue-600 text-white py-2 text-center font-semibold w-full  block rounded hover:text-white"}).on("click", function() {
+                            $("<button>", {text:"초기화", class:"bg-blue-600 text-white py-2 text-center font-semibold w-full  block rounded hover:text-white"}).on("click", function() {
                                 $(this).parents("tr").remove();
                             })
                         ),
