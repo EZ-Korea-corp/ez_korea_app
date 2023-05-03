@@ -117,16 +117,16 @@
 
                 if (flag === true) {
                     let url = '/notice/'.concat(id);
-                    fnResponseCrudJsonAjax($('#updateNoticeForm').serializeObject(), url, 'PUT', successHref);
+                    fnResponseDataAjax($('#updateNoticeForm').serializeObject(), url, 'PUT', successHref);
                 }
             });
 
             function successHref(data, xhr) {
-                let savedId = xhr.id;
+                let savedId = data.response.id;
                 imageUpload('notice', savedId, '/image/upload', 'PUT');
                 let time = showLoadingSpinner("이미지를 저장하고 있습니다.");
                 setTimeout(function() {
-                    $(location).attr("href", "/notice/".concat(xhr.id));
+                    $(location).attr("href", "/notice/".concat(savedId));
                 }, time);
             }
         </script>

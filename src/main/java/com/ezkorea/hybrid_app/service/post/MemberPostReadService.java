@@ -8,12 +8,16 @@ import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.service.notiece.NoticeService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
+import com.ezkorea.hybrid_app.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -42,15 +46,20 @@ public class MemberPostReadService {
     }
 
     @Transactional(readOnly = true)
-    public List<Member> findNotReadMemberList(Notice curerntNotice) {
+    public List<MemberDto> findNotReadMemberList(Notice curerntNotice) {
         List<Member> memberList = memberService.findAllMemberByStatus(MemberStatus.FULL_TIME);
         List<MemberPostRead> allByNotice = mprRepository.findAllByNotice(curerntNotice);
 
-        for (MemberPostRead mpr : allByNotice) {
-            memberList.remove(mpr.getMember());
-        }
-        memberList.remove(memberService.findByUsername("dev"));
-        return memberList;
+        Set<Member> readMember = allByNotice.stream()
+                .map(MemberPostRead::getMember)
+                .collect(Collectors.toSet());
+
+        memberList.removeAll(readMember);
+        memberList.removeIf(member -> member.getUsername().equals("dev"));
+
+        return memberList.stream()
+                .map(Member::of)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

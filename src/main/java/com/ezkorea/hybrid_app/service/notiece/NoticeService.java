@@ -69,9 +69,13 @@ public class NoticeService {
         return noticeRepository.findAll().size();
     }
 
-    public Page<Notice> findAllNotReadNotice(int page, Member member) {
+    public Page<NoticeDto> findAllNotReadNotice(int page, Member member) {
         Pageable pageable = PageRequest.of(page, 10);
-        List<Notice> notReadList = mprService.findNotReadListByMember(member);
+
+        List<NoticeDto> notReadList = mprService.findNotReadListByMember(member).stream()
+                .map(Notice::of)
+                .toList();
+
         return new PageImpl<>(notReadList, pageable, notReadList.size());
     }
 }

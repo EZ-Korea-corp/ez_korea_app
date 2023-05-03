@@ -83,14 +83,15 @@
                     flag = false;
                 }
                 if (flag === true) {
-                    fnResponseCrudJsonAjax($('#createNoticeForm').serializeObject(), '/notice', 'POST', successHref);
+                    fnResponseDataAjax($('#createNoticeForm').serializeObject(), '/notice', 'POST', successHref);
                 }
             });
 
             function successHref(data, xhr) {
-                let savedId = xhr.id;
+                let savedId = data.response.id;
+
                 let fnCallBck = function () {
-                    $(location).attr("href", "/notice/".concat(xhr.id));
+                    $(location).attr("href", "/notice/".concat(savedId));
                 }
 
                 if (fileCount !== 0) {

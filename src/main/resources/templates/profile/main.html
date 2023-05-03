@@ -19,7 +19,7 @@
 
             <div class="profile_avatar">
                 <div class="profile_avatar_holder">
-                    <img th:src="${user.getS3Image().getFilePath()}" alt="">
+                    <img th:src="${user.profileImgUrl}" alt="">
                 </div>
                 <div class="icon_change_photo" th:if="${user.getId() eq member.getId()}">
                     <a th:href="@{/settings/profile}">
@@ -29,12 +29,12 @@
             </div>
 
             <div class="profile_info uk-text-center">
-                <h1 th:text="${user.getName()}"> 이름 </h1>
-                <th:block th:if="${user.getUsername().equals('dev')}">
+                <h1 th:text="${user.name}"> 이름 </h1>
+                <th:block th:if="${user.name.equals('dev')}">
                     <p>개발팀</p>
                 </th:block>
-                <th:block th:if="${!user.getUsername().equals('dev')}">
-                    <p th:text="${user.getRole().viewName}"></p>
+                <th:block th:if="${!user.name.equals('dev')}">
+                    <p th:text="${user.role}"></p>
                 </th:block>
             </div>
 
@@ -53,7 +53,7 @@
                     <ul class="text-gray-600 space-y-3 mt-3">
                         <li class="flex items-center space-x-2">
                             <ion-icon name="call-outline" class="rounded-full bg-gray-200 text-xl p-1 mr-3"></ion-icon>
-                            전화. <strong> <a th:href="|tel:${user.getPhone()}|" th:text="${user.getPhone()}">010-1234-1234</a></strong>
+                            전화. <strong> <a th:href="|tel:${user.phone}|" th:text="${user.phone}">010-1234-1234</a></strong>
                         </li>
                         <li class="flex items-center space-x-2">
                             <ion-icon name="globe" class="rounded-full bg-gray-200 text-xl p-1 mr-3"></ion-icon>
