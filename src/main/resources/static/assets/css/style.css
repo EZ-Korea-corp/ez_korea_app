@@ -9,6 +9,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
  
 /* ---------------------------------- */
+/* Swal2
+------------------------------------- */
+
+.my-swal-container {
+  z-index: 15000 !important;
+}
+
+.my-swal-popup {
+  z-index: 15000 !important;
+}
+
+/* ---------------------------------- */
 /* Buttons
 ------------------------------------- */
 button {
