@@ -65,7 +65,7 @@ public class SaleController {
         return "sales/sales-detail";
     }
 
-    @GetMapping("/sales/index/{id}/test")
+//    @GetMapping("/sales/index/{id}/test")
     public String showSellIndexTestPage(@PathVariable Long id, Model model) {
         Map<String, Object> returnMap = saleService.findTimeTable(id);
         returnMap.put("tTid", id);

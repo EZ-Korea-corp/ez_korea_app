@@ -8,97 +8,63 @@
 
 <body>
 
-    <main layout:fragment="main">
-        <style>
-            .icon {
-                display: inline-block;
-                vertical-align: middle;
-            }
-            button{
-                color: #FFFFFF;
-            }
-            .check-hidden {
-                display: none !important;
-            }
-            #accountInfo {
-                transform: rotate(90deg);
-                transform-origin: center center;
-            }
-            /* Chrome, Safari, Edge, Opera */
-            input::-webkit-outer-spin-button,
-            input::-webkit-inner-spin-button {
-                -webkit-appearance: none !important;
-                margin: 0 !important;
-            }
+<main layout:fragment="main">
+    <style>
+        .icon {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        button{
+            color: #FFFFFF;
+        }
+        #accountInfo {
+            transform: rotate(90deg);
+            transform-origin: center center;
+        }
+    </style>
+    <div class="lg:space-x-12">
 
-            /* Firefox  */
-            input[type='number'] {
-                background-color: inherit !important;
-                color: white;
-                -moz-appearance: textfield !important;
-            }
+        <div class="lg:w-full" id="select-div">
 
-            input[type='number']::placeholder {
-                color: white !important;
-            }
+            <div class="card py-6 px-5 mb-4">
+                <h2 class="text-lg font-bold"> <span th:text="${map.table.getMember().getName()}"></span>님의 일일 판매 현황</h2>
+                <p class="font-medium mt-1.5 text-base" th:text="|[${T(com.ezkorea.hybrid_app.domain.timetable.PartTime).of(map.table.getPart())}] ${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}|"></p>
 
-            .btn-circle-custom {
-                font-weight: bolder !important;
-                border: 2px solid white !important;
-                border-radius: 100% !important;
-                color: white !important;
-            }
-            .bg-orange-500 {
-                background-color: rgb(249 115 22) !important;
-            }
-            .text-orange-500 {
-                color: rgb(249 115 22) !important;
-            }
-        </style>
-        <div class="lg:space-x-12">
+                <div class="grid grid-cols-3 gap-4 mt-4">
+                    <a th:href="@{|/sales/sell/${map.tTid}|}" class="btn-custom py-2 text-center font-semibold w-full block rounded-lg hover:text-white"> 판매하기 </a>
+                    <a th:href="@{|/sales/close/${map.tTid}|}" class="btn-custom py-2 text-center font-semibold w-full block rounded-lg hover:text-white"> 마감하기 </a>
+                    <button class="btn-custom py-2 text-center font-semibold w-full block rounded-lg" type="button" uk-toggle="target: #modal">계좌 정보</button>
+                    <div id="modal" uk-modal>
+                        <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
+                            <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
+                            <!-- component -->
+                            <div class="min-h-screen flex justify-center items-center">
+                                <div id="accountInfo" class="space-y-16">
+                                    <div class="w-96 h-48 m-auto bg-red-100 rounded-xl relative text-white shadow-2xl transition-transform transform hover:scale-110">
 
-            <div class="lg:w-full" id="select-div">
+                                        <img class="relative object-cover w-full h-full rounded-xl" src="https://i.imgur.com/Zi6v09P.png">
+                                        <!-- 파란 배경
+                                        <img class="relative object-cover w-full h-full rounded-xl" src="https://i.imgur.com/kGkSg1v.png">
+                                        -->
 
-                <div class="card py-6 px-5 mb-4">
-                    <h2 class="text-lg font-bold"> <span th:text="${map.table.getMember().getName()}"></span>님의 일일 판매 현황</h2>
-                    <p class="font-medium mt-1.5 text-base" th:text="|[${T(com.ezkorea.hybrid_app.domain.timetable.PartTime).of(map.table.getPart())}] ${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}|"></p>
-
-                    <div class="grid grid-cols-2 gap-4 mt-4">
-<!--                        <a th:href="@{|/sales/sell/${map.tTid}|}" class="btn-custom py-2 text-center font-semibold w-full block rounded-lg hover:text-white"> 판매하기 </a>-->
-                        <a th:href="@{|/sales/close/${map.tTid}|}" class="btn-custom py-2 text-center font-semibold w-full block rounded-lg hover:text-white"> 마감하기 </a>
-                        <button class="btn-custom py-2 text-center font-semibold w-full block rounded-lg" type="button" uk-toggle="target: #modal">계좌 정보</button>
-                        <div id="modal" uk-modal>
-                            <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
-                                <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
-                                <!-- component -->
-                                <div class="min-h-screen flex justify-center items-center">
-                                    <div id="accountInfo" class="space-y-16">
-                                        <div class="w-96 h-48 m-auto bg-red-100 rounded-xl relative text-white shadow-2xl transition-transform transform hover:scale-110">
-
-                                            <img class="relative object-cover w-full h-full rounded-xl" src="https://i.imgur.com/Zi6v09P.png">
-                                            <!-- 파란 배경
-                                            <img class="relative object-cover w-full h-full rounded-xl" src="https://i.imgur.com/kGkSg1v.png">
-                                            -->
-
-                                            <div class="w-full px-8 absolute top-8">
-                                                <div class="flex justify-between">
-                                                    <div class="">
-                                                        <p class="font-light">
-                                                            계좌명
-                                                        <p class="text-xl tracking-widest">
-                                                            남명원
-                                                        </p>
-                                                    </div>
-                                                    <img class="w-14 h-14" src="https://ifh.cc/g/RSfW66.png"/>
-                                                </div>
-                                                <div class="pt-2">
+                                        <div class="w-full px-8 absolute top-8">
+                                            <div class="flex justify-between">
+                                                <div class="">
                                                     <p class="font-light">
-                                                        계좌 번호
-                                                        </h1>
-                                                    <p class="text-xl tracking-more-wider">
-                                                        010<a class="mx-4">-</a>8181<a class="mx-4">-</a>5587
+                                                        계좌명
+                                                    <p class="text-xl tracking-widest">
+                                                        남명원
                                                     </p>
                                                 </div>
+                                                <img class="w-14 h-14" src="https://ifh.cc/g/RSfW66.png"/>
+                                            </div>
+                                            <div class="pt-2">
+                                                <p class="font-light">
+                                                    계좌 번호
+                                                    </h1>
+                                                <p class="text-xl tracking-more-wider">
+                                                    010<a class="mx-4">-</a>8181<a class="mx-4">-</a>5587
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -107,480 +73,107 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <hr class="my-4 px-4">
+
+            <div class="card py-4 px-5 mb-4">
+                <div>
+                    <div>
+                        <h1 class="text-lg font-semibold" th:text="${map.table.getGasStation().getStationName()}"> 주유소 이름 </h1>
+                    </div>
+                    <p th:text="${map.table.getGasStation().getStationLocation()}"></p>
+                </div>
                 <hr class="my-4 px-4">
-
-                <div class="card py-4 px-5 mb-4">
-                    <div>
-                        <div>
-                            <h1 class="text-lg font-semibold" th:text="${map.table.getGasStation().getStationName()}"> 주유소 이름 </h1>
-                        </div>
-                        <p th:text="${map.table.getGasStation().getStationLocation()}"></p>
-                    </div>
-                    <hr class="my-4 px-4">
-                    <div>
-                        <div class="flex justify-content-between">
-                            <h1 class="block text-lg font-semibold mb-4"> 공지사항  </h1>
-                            <th:block th:if="${map.table.getGasStation().getImageList().size() != 0}">
-                                <p uk-toggle="target: #imgModal" class="text-blue-500 hover:underline">사진 확인</p>
-                                <!-- This is the modal with the default close button -->
-                                <div id="imgModal" uk-modal>
-                                    <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
-                                        <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
-                                        <h2 class="mb-2 uk-modal-title">공지 사진</h2>
-                                        <div id="imageRefreshForm" class="imageRefreshForm mb-4">
-                                            <div class="uk-container mt-4" uk-slider>
-                                                <div class="uk-position-relative uk-visible-toggle uk-light">
-                                                    <div uk-lightbox="animation: slide" class="uk-slider-items uk-child-width-1-2 uk-child-width-1-3@s uk-child-width-1-4@m">
-                                                        <div th:each="image : ${map.table.getGasStation().getImageList()}">
-                                                            <a th:href="${image.getFilePath()}" data-fancybox="gallery">
-                                                                <img class="rounded" style="width: 200px; height: 150px;"
-                                                                     th:src="${image.getFilePath()}"/>
-                                                            </a>
-                                                        </div>
+                <div>
+                    <div class="flex justify-content-between">
+                        <h1 class="block text-lg font-semibold mb-4"> 공지사항  </h1>
+                        <th:block th:if="${map.table.getGasStation().getImageList().size() != 0}">
+                            <p uk-toggle="target: #imgModal" class="text-blue-500 hover:underline">사진 확인</p>
+                            <!-- This is the modal with the default close button -->
+                            <div id="imgModal" uk-modal>
+                                <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
+                                    <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
+                                    <h2 class="mb-2 uk-modal-title">공지 사진</h2>
+                                    <div id="imageRefreshForm" class="imageRefreshForm mb-4">
+                                        <div class="uk-container mt-4" uk-slider>
+                                            <div class="uk-position-relative uk-visible-toggle uk-light">
+                                                <div uk-lightbox="animation: slide" class="uk-slider-items uk-child-width-1-2 uk-child-width-1-3@s uk-child-width-1-4@m">
+                                                    <div th:each="image : ${map.table.getGasStation().getImageList()}">
+                                                        <a th:href="${image.getFilePath()}" data-fancybox="gallery">
+                                                            <img class="rounded" style="width: 200px; height: 150px;"
+                                                                 th:src="${image.getFilePath()}"/>
+                                                        </a>
                                                     </div>
-                                                    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slider-item="previous"></a>
-                                                    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slider-item="next"></a>
                                                 </div>
+                                                <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slider-item="previous"></a>
+                                                <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slider-item="next"></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </th:block>
-                        </div>
-                        <div class="md:w-2/3 space-y-4 -mt-2">
-                            <div class="md:flex">
-                                <div class="items-center space-x-3">
-                                    <div>
-                                        <th:block th:if="${#strings.toString(map.table.getGasStation().getMemo()).length() != 0}">
-                                            <div id="content" th:text="${map.table.getGasStation().getMemo()}"></div>
-                                        </th:block>
-                                        <th:block th:if="${#strings.toString(map.table.getGasStation().getMemo()).length() == 0}">
-                                            <div>주유소 공지사항이 없습니다.</div>
-                                        </th:block>
-                                    </div>
-                                </div>
                             </div>
-                        </div>
+                        </th:block>
                     </div>
-                </div>
-
-                <div class="card py-4 px-5 mb-4">
-                    <div>
-                        <h1 class="block text-lg font-semibold mb-4"> 판매 금액  </h1>
-                        <div class="grid grid-cols-3 mx-auto text-center">
-                            <div class="border-r">
-                                <p class="font-semibold">카드</p>
-                                <span th:text="|${#numbers.formatInteger(map.card, 0, 'COMMA')}원|"></span>
-                            </div>
-                            <div class="border-r">
-                                <p class="font-semibold">현금</p>
-                                <span th:text="|${#numbers.formatInteger(map.cash, 0, 'COMMA')}원|"></span>
-                            </div>
-                            <div>
-                                <p class="font-semibold">총계</p>
-                                <span th:text="|${#numbers.formatInteger(map.card + map.cash, 0, 'COMMA')}원|"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card py-4 px-5">
-                    <div>
-                        <div class="flex justify-between">
-                            <div>
-                                <h1 class="block text-lg font-semibold"> 판매 현황  </h1>
-                            </div>
-                            <div class="flex">
-                                <div class="mx-2">
-                                    <button class="btn-custom px-2 text-center font-semibold w-full block rounded-lg" type="button" uk-toggle="target: #sell">등록</button>
-                                    <div id="sell" uk-modal>
-                                        <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
-                                            <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" id="modal-close-btn" type="button" uk-close></button>
-                                            <!-- component -->
-                                            <div>
-                                                <div class="w-full text-center bg-blue-500 text-white py-2 px-4">
-                                                    <h1 class="block text-lg font-semibold text-white mb-2"> NORMAL  </h1>
-                                                    <div class="flex justify-around">
-                                                        <div class="w-14 h-14">
-                                                            <button type="button" class="w-10 h-10 btn-circle-custom minus-btn"> - </button>
-                                                        </div>
-                                                        <div>
-                                                            <input type="number" data-sort="normal" value="0" class="bg-blue-500 text-white text-center w-12" placeholder="0"/>
-                                                        </div>
-                                                        <div class="w-14 h-14">
-                                                            <button type="button" class="w-10 h-10 btn-circle-custom plus-btn"> + </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex justify-around">
-                                                        <div>
-                                                            <input id="normalCheck" type="checkbox" class="check-hidden">
-                                                            <label for="normalCheck" class="bg-gray-300 rounded-lg text-blue-500 px-4">0.5</label>
-                                                        </div>
-                                                        <div>
-                                                            <input id="normalCashCheck" type="checkbox" class="check-hidden">
-                                                            <label for="normalCashCheck" class="bg-gray-300 rounded-lg text-blue-500 px-4">현금</label>
-                                                        </div>
-                                                        <div>
-                                                            <button type="button" class="bg-white rounded-lg text-blue-500 px-4 submit">등록</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="w-full text-center bg-orange-500 text-white py-2 px-4">
-                                                    <h1 class="block text-lg font-semibold text-white mb-2 uppercase"> hybrid  </h1>
-                                                    <div class="flex justify-around">
-                                                        <div class="w-14 h-14">
-                                                            <button type="button" class="w-10 h-10 btn-circle-custom minus-btn"> - </button>
-                                                        </div>
-                                                        <div>
-                                                            <input type="number" data-sort="hybrid" value="0" class="bg-orange-500 text-white text-center w-12" placeholder="0"/>
-                                                        </div>
-                                                        <div class="w-14 h-14">
-                                                            <button type="button" class="w-10 h-10 btn-circle-custom plus-btn"> + </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex justify-around">
-                                                        <div>
-                                                            <input id="hybridCheck" type="checkbox" class="check-hidden">
-                                                            <label for="hybridCheck" class="bg-gray-300 text-orange-500 rounded-lg px-4">0.5</label>
-                                                        </div>
-                                                        <div>
-                                                            <input id="hybridCashCheck" type="checkbox" class="check-hidden">
-                                                            <label for="hybridCashCheck" class="bg-gray-300 rounded-lg text-orange-500 px-4">현금</label>
-                                                        </div>
-                                                        <div>
-                                                            <button type="button" class="bg-white text-orange-500 rounded-lg px-4 submit">등록</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="w-full text-center bg-green-500 text-white py-2 px-4">
-                                                    <h1 class="block text-lg font-semibold text-white mb-2 uppercase"> mw  </h1>
-                                                    <div class="flex justify-around">
-                                                        <div class="w-14 h-14">
-                                                            <button type="button" class="w-10 h-10 btn-circle-custom minus-btn"> - </button>
-                                                        </div>
-                                                        <div>
-                                                            <input type="number" data-sort="mw" value="0" class="bg-orange-500 text-white text-center w-12" placeholder="0"/>
-                                                        </div>
-                                                        <div class="w-14 h-14">
-                                                            <button type="button" class="w-10 h-10 btn-circle-custom plus-btn"> + </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex justify-around">
-                                                        <div>
-                                                            <input id="mwCheck" type="checkbox" class="check-hidden">
-                                                            <label for="mwCheck" class="bg-gray-300 text-green-500 rounded-lg px-4">0.5</label>
-                                                        </div>
-                                                        <div>
-                                                            <input id="mwCashCheck" type="checkbox" class="check-hidden">
-                                                            <label for="mwCashCheck" class="bg-gray-300 rounded-lg text-green-500 px-4">현금</label>
-                                                        </div>
-                                                        <div>
-                                                            <button type="button" class="bg-white text-green-500 rounded-lg px-4 submit">등록</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="w-full text-center bg-purple-500 text-white py-2 px-4">
-                                                    <h1 class="block text-lg font-semibold text-white mb-2 uppercase"> sclass  </h1>
-                                                    <div class="flex justify-around">
-                                                        <div class="w-14 h-14">
-                                                            <button type="button" class="w-10 h-10 btn-circle-custom minus-btn"> - </button>
-                                                        </div>
-                                                        <div>
-                                                            <input type="number" data-sort="s_class" value="0" class="bg-orange-500 text-white text-center w-12" placeholder="0"/>
-                                                        </div>
-                                                        <div class="w-14 h-14">
-                                                            <button type="button" class="w-10 h-10 btn-circle-custom plus-btn"> + </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex justify-around">
-                                                        <div>
-                                                            <input id="sclassCheck" type="checkbox" class="check-hidden">
-                                                            <label for="sclassCheck" class="bg-gray-300 text-purple-500 rounded-lg px-4">0.5</label>
-                                                        </div>
-                                                        <div>
-                                                            <input id="s_classCashCheck" type="checkbox" class="check-hidden">
-                                                            <label for="s_classCashCheck" class="bg-gray-300 rounded-lg text-purple-500 px-4">현금</label>
-                                                        </div>
-                                                        <div>
-                                                            <button type="button" class="bg-white text-purple-500 rounded-lg px-4 submit">등록</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="w-full text-center bg-pink-500 text-white py-2 px-4">
-                                                    <h1 class="block text-lg font-semibold text-white mb-2 uppercase"> 700  </h1>
-                                                    <div class="flex justify-around">
-                                                        <div class="w-14 h-14">
-                                                            <button type="button" class="w-10 h-10 btn-circle-custom minus-btn"> - </button>
-                                                        </div>
-                                                        <div>
-                                                            <input type="number" data-sort="size_700" value="0" class="bg-orange-500 text-white text-center w-12" placeholder="0"/>
-                                                        </div>
-                                                        <div class="w-14 h-14">
-                                                            <button type="button" class="w-10 h-10 btn-circle-custom plus-btn"> + </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex justify-around">
-                                                        <div>
-                                                            <input id="size_700Check" type="checkbox" class="check-hidden">
-                                                            <label for="size_700Check" class="bg-gray-300 text-pink-500 rounded-lg px-4">0.5</label>
-                                                        </div>
-                                                        <div>
-                                                            <input id="size_700CashCheck" type="checkbox" class="check-hidden">
-                                                            <label for="size_700CashCheck" class="bg-gray-300 rounded-lg text-pink-500 px-4">현금</label>
-                                                        </div>
-                                                        <div>
-                                                            <button type="button" class="bg-white text-pink-500 rounded-lg px-4 submit">등록</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <script>
-                                                    $(document).ready(function() {
-
-                                                        $(".plus-btn").click(function() {
-                                                            let inputEl = $(this).parent().prev().children("input");
-                                                            let value = parseFloat(inputEl.val());
-
-                                                            const inputChk = $(this).parent().parent().next().children("div").children("input[type='checkbox']");
-                                                            const isChecked = inputChk.prop("checked");
-
-                                                            if (isChecked) {
-                                                                inputEl.val((value + 0.5).toFixed(1));
-                                                            } else {
-                                                                inputEl.val(value + 1);
-                                                            }
-                                                        });
-
-                                                        $(".minus-btn").click(function() {
-                                                            let inputEl = $(this).parent().next().children("input");
-                                                            let value = parseFloat(inputEl.val());
-                                                            if (value > 0) {
-
-                                                                const inputChk = $(this).parent().parent().next().children("div").children("input[type='checkbox']");
-                                                                const isChecked = inputChk.prop("checked");
-
-                                                                if (isChecked) {
-                                                                    inputEl.val((value - 0.5).toFixed(1));
-                                                                } else {
-                                                                    inputEl.val(value - 1);
-                                                                }
-                                                            }
-                                                        });
-
-                                                        // 체크박스 상태 변화를 감지하여 처리
-                                                        $("input[type='checkbox']").change(function() {
-                                                            const isChecked = $(this).prop("checked");
-                                                            const labelEl = $(this).siblings("label");
-                                                            if (isChecked) {
-                                                                labelEl.addClass("bg-white");
-                                                                labelEl.removeClass("bg-gray-300");
-                                                            } else {
-                                                                labelEl.removeClass("bg-white");
-                                                                labelEl.addClass("bg-gray-300");
-                                                            }
-                                                        });
-
-                                                        $(".submit").click(function() {
-                                                            let list = [];
-                                                            let inputEl = $(this).parent().parent().prev().children("div").children("input");
-                                                            let sort = inputEl.attr('data-sort');
-                                                            let count = inputEl.val();
-                                                            const cashEl = $(this).parent().prev().children(`#${sort}CashCheck`);
-                                                            const isCash = cashEl.prop("checked");
-                                                            let payment = isCash ? 'cash' : 'card';
-
-                                                            let data = {
-                                                                status  : "out",
-                                                                payment : payment,
-                                                                sort    : sort,
-                                                                count   : count * 2
-                                                            }
-                                                            list.push(data);
-                                                            fnSave(list);
-
-                                                            // 데이터 전송 후 진행
-                                                            inputEl.val(0);
-                                                        });
-
-                                                        $(".out-submit").click(function() {
-                                                            let list = [{
-                                                                sort : $("#wiperSort").val(),
-                                                                status : "fix",
-                                                                count : 1,
-                                                                memo : $("#memo").val()
-                                                            }];
-
-                                                            fnSave(list);
-                                                            location.reload();
-                                                        });
-
-                                                        $("#modal-close-btn").click(function() {
-                                                            location.reload();
-                                                        });
-                                                    });
-                                                    function fnSave(list) {
-                                                        const path = window.location.pathname;
-                                                        const parts = path.split('/');
-                                                        const tid = parts[parts.length - 2];
-
-                                                        const url = "/sales/sell";
-                                                        const fnload = function() {location.href= "/sales/index/" + tid;}
-                                                        const data = {
-                                                            "id" : tid,
-                                                            "sellDtoList" : list
-                                                        }
-
-                                                        fnOnlyAjax(data, url, "post");
-                                                    }
-                                                </script>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="md:w-2/3 space-y-4 -mt-2">
+                        <div class="md:flex">
+                            <div class="items-center space-x-3">
                                 <div>
-                                    <button class="btn-custom px-2 text-center font-semibold w-full block rounded-lg" type="button" uk-toggle="target: #fix">불량</button>
-                                    <div id="fix" uk-modal>
-                                        <div class="uk-modal-dialog uk-modal-body rounded-md shadow-2xl">
-                                            <button class="uk-modal-close-default bg-gray-300 p-2 rounded-full m-3" type="button" uk-close></button>
-                                            <!-- component -->
-                                            <div class="card py-4 px-5 mb-4">
-                                                <div>
-                                                    <h1 class="block text-md font-bold mb-2"> 와이퍼 종류 </h1>
-                                                    <select id="wiperSort" name="wiperSort" class="shadow-none with-border px-2">
-                                                        <option th:each="sort : ${T(com.ezkorea.hybrid_app.domain.wiper.WiperSort).values()}"
-                                                                th:value="${sort.getName()}" th:text="|${sort.getViewName()}|"></option>
-                                                    </select>
-                                                </div>
-                                                <div class="mt-4">
-                                                    <h1 class="block text-md font-bold mb-2"> 메모 입력 </h1>
-                                                    <input type="input" id="memo" class="px-2 border" placeholder="메모사항을 입력해주세요">
-                                                </div>
-                                            </div>
-                                            <hr class="my-4">
-                                            <div class="flex justify-between align-items-center">
-                                                <div>
-
-                                                </div>
-                                                <div>
-                                                    <button class="btn-custom rounded-lg px-8 py-1 uk-modal-close out-submit">저장</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr class="mt-2">
-                        <div class="mx-auto">
-                            <nav class="responsive-nav md:mb-4 md:mx-0 -mx-4 mb-4">
-                                <ul uk-switcher="connect: #salesList ;animation: uk-animation-fade ; toggle: > * ">
-                                    <li><a href="#" class="lg:px-2">카드</a></li>
-                                    <li><a href="#" class="lg:px-2">현금</a></li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <div id="salesList" class="relative overflow-x-auto uk-switcher">
-                            <div>
-                                <table class="w-full text-sm text-gray-500">
-                                    <thead class="whitespace-nowrap uk-text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                            <th scope="col" class="py-3">
-                                                종류
-                                            </th>
-                                            <th scope="col" class="px-8 py-3">
-                                                현황
-                                            </th>
-                                            <th scope="col" class="px-2 py-3">
-                                                비고
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <th:block th:each="sell, iter : ${map.sellList}">
-                                            <tr th:if="${map.sellList.size() > 0 && sell.payment eq '카드'}"
-                                                class="whitespace-nowrap border-b border-gray-200 text-center">
-                                                <th scope="row" th:text="${sell.name}" class="py-4">일반</th>
-                                                <td class="px-4">
-                                                    <th:block th:with="cnt = ${sell.count * 0.5}">
-                                                        <th:block th:if="${cnt % 1 == 0}">
-                                                            <span th:text="${#numbers.formatInteger(cnt, 0)} + '개'"></span>
-                                                        </th:block>
-                                                        <th:block th:if="${cnt % 1 != 0}">
-                                                            <span th:text="${cnt} + '개'"></span>
-                                                        </th:block>
-                                                    </th:block>
-                                                </td>
-                                                <td th:if="${sell.name != '총계'}">
-                                                    <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 취소 </button>
-                                                </td>
-                                            </tr>
-                                            <tr th:if="${iter.last}">
-                                                <th scope="row" class="px-3 py-4 text-center font-medium whitespace-nowrap bg-gray-50">총계</th>
-                                                <td colspan="3" class="text-center" id="cardCnt"></td>
-                                            </tr>
-                                        </th:block>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div>
-                                <table class="w-full text-sm text-gray-500">
-                                    <thead class="whitespace-nowrap uk-text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                            <th scope="col" class="py-3">
-                                                종류
-                                            </th>
-                                            <th scope="col" class="px-8 py-3">
-                                                현황
-                                            </th>
-                                            <th scope="col" class="px-2 py-3">
-                                                비고
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    <th:block th:each="sell, iter : ${map.sellList}">
-                                        <tr th:if="${map.sellList.size() > 0 && sell.payment eq '현금'}"
-                                            class="whitespace-nowrap border-b border-gray-200 text-center">
-                                            <th scope="row" th:text="${sell.name}" class="py-4">일반</th>
-                                            <td class="px-4">
-                                                <th:block th:with="cnt = ${sell.count * 0.5}">
-                                                    <th:block th:if="${cnt % 1 == 0}">
-                                                        <span th:text="${#numbers.formatInteger(cnt, 0)} + '개'"></span>
-                                                    </th:block>
-                                                    <th:block th:if="${cnt % 1 != 0}">
-                                                        <span th:text="${cnt} + '개'"></span>
-                                                    </th:block>
-                                                </th:block>
-                                            </td>
-                                            <td th:if="${sell.name != '총계'}">
-                                                <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 취소 </button>
-                                            </td>
-                                        </tr>
-                                        <tr th:if="${iter.last}">
-                                            <th scope="row" class="px-3 py-4 text-center font-medium whitespace-nowrap bg-gray-50">총계</th>
-                                            <td colspan="3" class="text-center" id="cashCnt"></td>
-                                        </tr>
+                                    <th:block th:if="${#strings.toString(map.table.getGasStation().getMemo()).length() != 0}">
+                                        <div id="content" th:text="${map.table.getGasStation().getMemo()}"></div>
                                     </th:block>
-                                    </tbody>
-                                </table>
+                                    <th:block th:if="${#strings.toString(map.table.getGasStation().getMemo()).length() == 0}">
+                                        <div>주유소 공지사항이 없습니다.</div>
+                                    </th:block>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="card py-4 px-5 mt-4" th:if="${map.fixList.size() > 0}">
-                    <th:block>
-                        <h1 class="block text-lg font-bold my-4"> 불량 현황 </h1>
-                        <div class="flex items-center space-x-3">
-                            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <div class="card py-4 px-5 mb-4">
+                <div>
+                    <h1 class="block text-lg font-semibold mb-4"> 판매 금액  </h1>
+                    <div class="grid grid-cols-3 mx-auto text-center">
+                        <div class="border-r">
+                            <p class="font-semibold">카드</p>
+                            <span th:text="|${#numbers.formatInteger(map.card, 0, 'COMMA')}원|"></span>
+                        </div>
+                        <div class="border-r">
+                            <p class="font-semibold">현금</p>
+                            <span th:text="|${#numbers.formatInteger(map.cash, 0, 'COMMA')}원|"></span>
+                        </div>
+                        <div>
+                            <p class="font-semibold">총계</p>
+                            <span th:text="|${#numbers.formatInteger(map.card + map.cash, 0, 'COMMA')}원|"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card py-4 px-5">
+                <div>
+                    <h1 class="block text-lg font-semibold"> 판매 현황  </h1>
+                    <hr class="mt-2">
+                    <div class="mx-auto">
+                        <nav class="responsive-nav md:mb-4 md:mx-0 -mx-4 mb-4">
+                            <ul uk-switcher="connect: #salesList ;animation: uk-animation-fade ; toggle: > * ">
+                                <li><a href="#" class="lg:px-2">카드</a></li>
+                                <li><a href="#" class="lg:px-2">현금</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div id="salesList" class="relative overflow-x-auto shadow-md uk-switcher">
+                        <div>
+                            <table class="w-full text-sm text-gray-500">
+                                <thead class="whitespace-nowrap uk-text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="px-3 py-3">
                                         종류
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        메모
+                                    <th scope="col" class="px-12 py-3">
+                                        개수
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         비고
@@ -588,61 +181,149 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="fix : ${map.fixList}" class="border-b border-gray-200 dark:border-gray-700">
-                                    <th scope="row" th:text="${fix.name}" class="px-6 py-4 font-medium whitespace-nowrap">
-                                    </th>
-                                    <td class="px-6 py-4" th:text="|${fix.memo}|"></td>
-                                    <td>
-                                        <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${fix.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
-                                    </td>
-                                </tr>
+                                <th:block th:each="sell, iter : ${map.sellList}">
+                                    <tr th:if="${map.sellList.size() > 0 && sell.payment eq '카드'}"
+                                        class="whitespace-nowrap border-b border-gray-200 text-center">
+                                        <th scope="row" th:text="${sell.name}" class="px-3 py-4 font-medium whitespace-nowrap bg-gray-50"></th>
+                                        <th:block th:with="cnt = ${sell.count * 0.5}">
+                                            <th:block th:if="${cnt % 1 == 0}">
+                                                <td th:text="${#numbers.formatInteger(cnt, 0)} + '개'"></td>
+                                            </th:block>
+                                            <th:block th:if="${cnt % 1 != 0}">
+                                                <td th:text="${cnt} + '개'"></td>
+                                            </th:block>
+                                        </th:block>
+                                        <td th:if="${sell.name != '총계'}">
+                                            <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${iter.last}">
+                                        <th scope="row" class="px-3 py-4 text-center font-medium whitespace-nowrap bg-gray-50">총계</th>
+                                        <td colspan="2" class="text-center" id="cardCnt"></td>
+                                    </tr>
+                                </th:block>
                                 </tbody>
                             </table>
                         </div>
-                    </th:block>
+
+                        <div>
+                            <table class="w-full text-sm text-gray-500">
+                                <thead class="whitespace-nowrap uk-text-center text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-3 py-3">
+                                        종류
+                                    </th>
+                                    <th scope="col" class="px-12 py-3">
+                                        개수
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        비고
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:block th:each="sell, iter : ${map.sellList}">
+                                    <tr th:if="${map.sellList.size() > 0 && sell.payment eq '현금'}"
+                                        class="whitespace-nowrap border-b border-gray-200 text-center">
+                                        <th scope="row" th:text="${sell.name}" class="px-3 py-4 font-medium whitespace-nowrap bg-gray-50"></th>
+                                        <th:block th:with="cnt = ${sell.count * 0.5}">
+                                            <th:block th:if="${cnt % 1 == 0}">
+                                                <td th:text="${#numbers.formatInteger(cnt, 0)} + '개'"></td>
+                                            </th:block>
+                                            <th:block th:if="${cnt % 1 != 0}">
+                                                <td th:text="${cnt} + '개'"></td>
+                                            </th:block>
+                                        </th:block>
+                                        <td th:if="${sell.name != '총계'}">
+                                            <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${sell.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${iter.last}">
+                                        <th scope="row" class="px-3 py-4 text-center font-medium whitespace-nowrap bg-gray-50">총계</th>
+                                        <td colspan="3" class="text-center" id="cashCnt"></td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-
             </div>
+
+            <div class="card py-4 px-5 mt-4" th:if="${map.fixList.size() > 0}">
+                <th:block>
+                    <h1 class="block text-lg font-bold my-4"> 불량 현황 </h1>
+                    <div class="flex items-center space-x-3">
+                        <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    종류
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    메모
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    비고
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="fix : ${map.fixList}" class="border-b border-gray-200 dark:border-gray-700">
+                                <th scope="row" th:text="${fix.name}" class="px-6 py-4 font-medium whitespace-nowrap">
+                                </th>
+                                <td class="px-6 py-4" th:text="|${fix.memo}|"></td>
+                                <td>
+                                    <button type="button" th:onclick="fnDeleteSale(this.getAttribute('id'))" th:id="${fix.id}" class="btn-custom justify-center h-9 px-2 rounded-md border font-semibold"> 삭제 </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </th:block>
+            </div>
+
         </div>
-        <script th:inline="javascript">
+    </div>
+    <script th:inline="javascript">
 
-            function getSellCountByPayment(list, keyword) {
-                return list.filter(sell => sell.payment === keyword)
-                    .reduce((acc, sell) => acc + (sell.count * 0.5), 0);
+        function getSellCountByPayment(list, keyword) {
+            return list.filter(sell => sell.payment === keyword)
+                .reduce((acc, sell) => acc + (sell.count * 0.5), 0);
+        }
+
+
+        jQuery(document).ready(function($){
+            const paymentCard = '카드';
+            const paymentCash = '현금';
+            let sellList = [[${map.sellList}]];
+            if (sellList.length !== 0) {
+                let cardSellCnt = getSellCountByPayment(sellList, paymentCard);
+                $('#cardCnt').html(cardSellCnt + '개');
+
+                let cashSellCnt = getSellCountByPayment(sellList, paymentCash);
+                $('#cashCnt').html(cashSellCnt + '개');
             }
 
+            let content = $('#content').text();
+            let html = content.replace(/\n/g, '<br>');
+            $('#content').html(html);
 
-            jQuery(document).ready(function($){
-                const paymentCard = '카드';
-                const paymentCash = '현금';
-                let sellList = [[${map.sellList}]];
-                if (sellList.length !== 0) {
-                    let cardSellCnt = getSellCountByPayment(sellList, paymentCard);
-                    $('#cardCnt').html(cardSellCnt + '개');
-
-                    let cashSellCnt = getSellCountByPayment(sellList, paymentCash);
-                    $('#cashCnt').html(cashSellCnt + '개');
+        });
+        function fnDeleteSale(id) {
+            Swal.fire({
+                html: '삭제하시겠습니까?',
+                showDenyButton: true,
+                confirmButtonText: '삭제',
+                denyButtonText: `취소`,
+            }).then((result) => {
+                if(result.isConfirmed){
+                    fnCrudRefreshAjax({"id" : id}, '/sales/delete', 'select-div', 'DELETE');
                 }
-
-                let content = $('#content').text();
-                let html = content.replace(/\n/g, '<br>');
-                $('#content').html(html);
-
-            });
-            function fnDeleteSale(id) {
-                Swal.fire({
-                    html: '삭제하시겠습니까?',
-                    showDenyButton: true,
-                    confirmButtonText: '삭제',
-                    denyButtonText: `취소`,
-                }).then((result) => {
-                    if(result.isConfirmed){
-                        fnCrudRefreshAjax({"id" : id}, '/sales/delete', 'select-div', 'DELETE');
-                    }
-                })
-            }
-        </script>
-    </main>
+            })
+        }
+    </script>
+</main>
 
 </body>
 
