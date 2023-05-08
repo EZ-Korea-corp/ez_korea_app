@@ -76,6 +76,50 @@ function fnCrudJsonAjax(data, url, fnCallBack, method, successMsg, errorMsg) {
     });
 }
 
+function fnOnlyAjax(data, url, method) {
+
+    $.ajax({
+        type: method,
+        url: url,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        beforeSend: function(jqXHR, settings) {
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var token = $("meta[name='_csrf']").attr("content");
+            jqXHR.setRequestHeader(header, token);
+        },
+        success: function(data) {
+            Swal.fire({
+                icon: 'success',
+                text: '적용되었습니다.',
+                customClass: {
+                    container: 'my-swal-container',
+                    popup: 'my-swal-popup'
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status === 400 || status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr.responseText,
+                });
+            } else if(xhr.status === 404 || status === 404) {
+                Swal.fire({
+                    icon: 'error',
+                    text: errorMsg,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    text: '에러가 발생했습니다.',
+                });
+            }
+        }
+    });
+}
+
 function fnOnlyCrudJsonAjax(data, url, method, fnCallBack) {
 
     $.ajax({
