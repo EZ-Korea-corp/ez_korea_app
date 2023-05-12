@@ -72,12 +72,13 @@
                     flag = false;
                 }
                 if (flag === true) {
-                    fnResponseCrudJsonAjax($('#createNoticeForm').serializeObject(), '/note', 'POST', successHref);
+                    fnResponseDataAjax($('#createNoticeForm').serializeObject(), '/note', 'POST', successHref);
                 }
             });
 
             function successHref(data, xhr) {
-                $(location).attr("href", "/note/".concat(xhr.id));
+                let savedId = data.response.id;
+                $(location).attr("href", "/note/".concat(savedId));
             }
         </script>
     </main>
