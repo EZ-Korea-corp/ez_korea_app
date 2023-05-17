@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+<main layout:fragment="main">
+    <style>
+        #adjDate {
+            padding: 0 2.5rem !important;
+        }
+        .table {
+            text-align: center;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .cell {
+            width: 10rem;
+            flex: 1;
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+    <div class="relative my-4">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+            </svg>
+        </div>
+        <div>
+            <form method="get" th:action id="searchForm">
+                <input type="text" name="adjDate" id="adjDate" readonly required class="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="날짜를 선택해주세요.">
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="table">
+            <div class="row" th:each="division : ${divisionList}">
+                <div class="cell" th:text="${division.getDivisionName()}">
+                    <a th:href="@{|/adj/division/${division.getId()}|}" th:text="${division.getDivisionName()}">지점이름</a>
+                </div>
+                <div class="cell" th:each="team : ${division.getTeamList()}">
+                    <a th:href="@{|/adj/team/${team.getId()}|}" th:text="${team.getTeamName()}">팀이름</a>
+                </div>
+            </div>
+        </div>
+        <!--<div class="relative overflow-x-auto shadow-md" id="select-div">
+            <div>
+                <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap" th:each="division : ${divisionDtoList}">
+                                <p th:text="${division.teamName}">이름</p>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="uk-text-center" id="profile">
+                        <tr class="bg-white border-b" th:each="division : ${divisionList}">
+                            <td class="px-2 py-4 whitespace-nowrap"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>-->
+    </div>
+    <script>
+        $(document).ready(function() {
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchDate = urlParams.get('adjDate');
+            if (searchDate !== '') {
+                $('#adjDate').val(searchDate);
+            }
+
+            fnCalenderMaker($('#adjDate'), searchDate);
+
+            $('#adjDate').on("change", function() {
+                let selectedDate = $(this).val();
+                console.log(selectedDate);
+                $('#searchForm').submit();
+            });
+
+        });
+    </script>
+</main>
+
+</body>
+
+</html>
