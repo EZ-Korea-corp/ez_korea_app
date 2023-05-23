@@ -13,6 +13,17 @@
         textarea {
             resize: none;
         }
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+        }
+
+        /* Firefox  */
+        input[type='number'] {
+            -moz-appearance: textfield !important;
+        }
     </style>
     <div class="card p-4">
         <div class="text-black">
@@ -50,71 +61,68 @@
 
     <hr class="my-4">
 
-    <div class="card text-black">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 live-search-table">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                            구분
-                        </th>
-                        <th scope="col" colspan="999" class="px-2 py-3 uk-text-center whitespace-nowrap">
-                            금액(원)
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="uk-text-center">
-                    <tr class="bg-white border-b">
-                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                            <a>이체 매출</a>
-                        </th>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a>0</a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b">
-                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                            <a>현금 매출</a>
-                        </th>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a>325,000</a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b">
-                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                            <a>카드 매출</a>
-                        </th>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a>3,255,000</a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b">
-                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                            <a>팀 평균</a>
-                        </th>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a>511,428</a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b">
-                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                            <a>전체 매출</a>
-                        </th>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a>3,580,000</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <hr class="my-4">
-
     <div class="card p-4 text-black">
-        <form>
-            <textarea placeholder="메모"></textarea>
-        </form>
+        <h3 class="text-lg font-medium">팀 정산</h3>
+        <div class="mt-2">
+            <form>
+                <div class="overflow-x-auto rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                구분
+                            </th>
+                            <th scope="col" colspan="999" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                금액(원)
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="uk-text-center">
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                <a>현금 매출</a>
+                            </th>
+                            <td class="px-2 py-4 whitespace-nowrap">
+                                <input type="number" value="325000" name="cashAdj">
+                            </td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                <a>카드 매출</a>
+                            </th>
+                            <td class="px-2 py-4 whitespace-nowrap">
+                                <input type="number" value="3255000" name="cardAdj">
+                            </td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                <a>팀 평균</a>
+                            </th>
+                            <td class="px-2 py-4 whitespace-nowrap">
+                                <input type="number" value="511428" name="teamAvg">
+                            </td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                <a>전체 매출</a>
+                            </th>
+                            <td class="px-2 py-4 whitespace-nowrap">
+                                <input type="number" value="3580000" name="totalAdj">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <p class="my-2">이체 매출</p>
+                    <input type="number" name="accountAdj" placeholder="0">
+                </div>
+                <div>
+                    <p class="my-2">정산 내용</p>
+                    <textarea class="bg-gray-100 p-2" name="contentAdj" placeholder="메모"></textarea>
+                </div>
+            </form>
+        </div>
     </div>
 </main>
 
