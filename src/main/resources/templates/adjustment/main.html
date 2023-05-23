@@ -44,7 +44,8 @@
                 <th:block th:each="division : ${divisionList}">
                     <tr class="bg-white border-b">
                         <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
-                            <a th:href="@{/adj/division/{divisionId}(adjDate=${param.adjDate}, divisionId=${division.getId()})}" th:text="${division.getDivisionName()}"></a>
+<!--                            <a th:href="@{/adj/division/{divisionId}(adjDate=${param.adjDate}, divisionId=${division.getId()})}" th:text="${division.getDivisionName()}"></a>-->
+                            <a th:text="${division.getDivisionName()}"></a>
                         </th>
                         <td class="px-2 py-4 whitespace-nowrap" th:each="team : ${division.getTeamList()}">
                             <a th:href="@{/adj/team/{teamId}(adjDate=${param.adjDate}, teamId=${team.getId()})}" th:text="${team.getTeamName()}"></a>

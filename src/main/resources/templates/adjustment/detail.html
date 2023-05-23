@@ -32,14 +32,6 @@
         </div>
         <hr class="my-4">
         <div>
-            <h3 class="text-md">근무 주유소</h3>
-            <!-- a 태그를 th:each 돌려서 주유소를 누르면 주유소 상세 페이지로 갈 수 있도록 -->
-            <a th:href="@{/station/index}" class="text-sm">삼선</a>
-            <a th:href="@{/station/index}" class="text-sm">서평택</a>
-            <a th:href="@{/station/index}" class="text-sm">남촌도림</a>
-        </div>
-        <hr class="my-4">
-        <div>
             <div>
                 <!--매출 저조자 기준 : 오전 20만 오후 30만 풀타임50만원-->
                 <h3>매출 저조자</h3>
@@ -96,6 +88,14 @@
                         </tr>
                         <tr class="bg-white border-b">
                             <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                <a>이체 매출</a>
+                            </th>
+                            <td class="px-2 py-4 whitespace-nowrap">
+                                <input type="number" value="0" placeholder="0" name="accountAdj">
+                            </td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
                                 <a>팀 평균</a>
                             </th>
                             <td class="px-2 py-4 whitespace-nowrap">
@@ -112,10 +112,6 @@
                         </tr>
                         </tbody>
                     </table>
-                </div>
-                <div>
-                    <p class="my-2">이체 매출</p>
-                    <input type="number" name="accountAdj" placeholder="0">
                 </div>
                 <div>
                     <p class="my-2">정산 내용</p>
