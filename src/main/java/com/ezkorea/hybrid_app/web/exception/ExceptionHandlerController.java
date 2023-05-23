@@ -8,10 +8,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
 @Slf4j
 public class ExceptionHandlerController {
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public String handleNotFoundError(NoHandlerFoundException e) {
+        log.error("NoHandlerFoundException={}", e);
+        return Script.href("/", "존재하지 않는 페이지입니다.");
+    }
+
     @ExceptionHandler(value = UsernameNotFoundException.class)
     public @ResponseBody String notExistId(UsernameNotFoundException e) {
         log.error("UsernameNotFoundException={}", e);
