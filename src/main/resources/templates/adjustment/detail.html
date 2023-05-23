@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+<main layout:fragment="main">
+    <style>
+        textarea {
+            resize: none;
+        }
+    </style>
+    <div class="card p-4">
+        <div class="text-black">
+            <span class="text-xl" th:text="|${viewName} 매출|"></span>
+            <span class="text-sm" th:text="|(${#temporals.format(currentDate, 'yyyy년 MM월 dd일')})|"></span>
+        </div>
+        <hr class="my-4">
+        <div>
+            <h3 class="text-md">근무 주유소</h3>
+            <!-- a 태그를 th:each 돌려서 주유소를 누르면 주유소 상세 페이지로 갈 수 있도록 -->
+            <a th:href="@{/station/index}" class="text-sm">삼선</a>
+            <a th:href="@{/station/index}" class="text-sm">서평택</a>
+            <a th:href="@{/station/index}" class="text-sm">남촌도림</a>
+        </div>
+        <hr class="my-4">
+        <div>
+            <div>
+                <!--매출 저조자 기준 : 오전 20만 오후 30만 풀타임50만원-->
+                <h3>매출 저조자</h3>
+                <span class="text-sm">
+                    <a>오후</a>
+                    <a>박준교</a>
+                    <a>150,000원</a>
+                </span>
+            </div>
+            <div class="mt-2">
+                <h3>휴무자</h3>
+                <span class="text-sm">
+                    <a>한정대</a>
+                    <a>강민규</a>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="card text-black">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                            구분
+                        </th>
+                        <th scope="col" colspan="999" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                            금액(원)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="uk-text-center">
+                    <tr class="bg-white border-b">
+                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                            <a>이체 매출</a>
+                        </th>
+                        <td class="px-2 py-4 whitespace-nowrap">
+                            <a>0</a>
+                        </td>
+                    </tr>
+                    <tr class="bg-white border-b">
+                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                            <a>현금 매출</a>
+                        </th>
+                        <td class="px-2 py-4 whitespace-nowrap">
+                            <a>325,000</a>
+                        </td>
+                    </tr>
+                    <tr class="bg-white border-b">
+                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                            <a>카드 매출</a>
+                        </th>
+                        <td class="px-2 py-4 whitespace-nowrap">
+                            <a>3,255,000</a>
+                        </td>
+                    </tr>
+                    <tr class="bg-white border-b">
+                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                            <a>팀 평균</a>
+                        </th>
+                        <td class="px-2 py-4 whitespace-nowrap">
+                            <a>511,428</a>
+                        </td>
+                    </tr>
+                    <tr class="bg-white border-b">
+                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                            <a>전체 매출</a>
+                        </th>
+                        <td class="px-2 py-4 whitespace-nowrap">
+                            <a>3,580,000</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="card p-4 text-black">
+        <form>
+            <textarea placeholder="메모"></textarea>
+        </form>
+    </div>
+</main>
+
+</body>
+
+</html>

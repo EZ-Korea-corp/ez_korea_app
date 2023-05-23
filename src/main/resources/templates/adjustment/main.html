@@ -13,23 +13,6 @@
         #adjDate {
             padding: 0 2.5rem !important;
         }
-        .table {
-            text-align: center;
-            padding: 1.25rem;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .row {
-            display: flex;
-        }
-
-        .cell {
-            width: 10rem;
-            flex: 1;
-            border: 1px solid black;
-            padding: 8px;
-        }
     </style>
     <div class="relative my-4">
         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -45,34 +28,32 @@
     </div>
 
     <div class="card">
-        <div class="table">
-            <div class="row" th:each="division : ${divisionList}">
-                <div class="cell" th:text="${division.getDivisionName()}">
-                    <a th:href="@{|/adj/division/${division.getId()}|}" th:text="${division.getDivisionName()}">지점이름</a>
-                </div>
-                <div class="cell" th:each="team : ${division.getTeamList()}">
-                    <a th:href="@{|/adj/team/${team.getId()}|}" th:text="${team.getTeamName()}">팀이름</a>
-                </div>
-            </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                        지점
+                    </th>
+                    <th scope="col" colspan="999" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                        소속팀
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="uk-text-center">
+                <th:block th:each="division : ${divisionList}">
+                    <tr class="bg-white border-b">
+                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                            <a th:href="@{/adj/division/{divisionId}(adjDate=${param.adjDate}, divisionId=${division.getId()})}" th:text="${division.getDivisionName()}"></a>
+                        </th>
+                        <td class="px-2 py-4 whitespace-nowrap" th:each="team : ${division.getTeamList()}">
+                            <a th:href="@{/adj/team/{teamId}(adjDate=${param.adjDate}, teamId=${team.getId()})}" th:text="${team.getTeamName()}"></a>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
         </div>
-        <!--<div class="relative overflow-x-auto shadow-md" id="select-div">
-            <div>
-                <table class="w-full text-sm text-left text-gray-500 live-search-table">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap" th:each="division : ${divisionDtoList}">
-                                <p th:text="${division.teamName}">이름</p>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="uk-text-center" id="profile">
-                        <tr class="bg-white border-b" th:each="division : ${divisionList}">
-                            <td class="px-2 py-4 whitespace-nowrap"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>-->
     </div>
     <script>
         $(document).ready(function() {
