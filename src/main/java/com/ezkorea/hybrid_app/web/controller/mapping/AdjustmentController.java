@@ -2,6 +2,7 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
+import com.ezkorea.hybrid_app.service.adjustment.AdjustMentService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -23,6 +25,8 @@ import java.time.LocalDate;
 public class AdjustmentController {
     private final DivisionService divisionService;
     private final TeamService teamService;
+    private final AdjustMentService adjustMentService;
+
     private final String STATUS_DIV = "division";
     private final String STATUS_TEAM = "team";
 
@@ -53,8 +57,19 @@ public class AdjustmentController {
             adjDate = LocalDate.now();
         }
 
+        Map<String, String> saleStat = null;
+        Map<String, String> memberStat = null;
+
+        if(saleStat == null) {
+            // 매출 저조자, 휴무자 저장
+            memberStat = null;
+            saleStat = adjustMentService.findTeamAdjustMentDefault(id);
+
+        }
+
         model.addAttribute("viewName", currentTeam.getTeamName());
         model.addAttribute("currentDate", adjDate);
+        model.addAttribute("defaultMap", saleStat);
         return "adjustment/detail";
     }
 }

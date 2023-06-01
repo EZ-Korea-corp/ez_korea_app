@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezkorea.hybrid_app.domain.myBatis.AdjustMentMbRepository">
+
+    <select id="findTeamAdjustMentDefault" parameterType="Map" resultType="Map">
+        SELECT    A.DIVISION_ID
+                , A.TEAM_ID
+                , TRUNCATE(SUM(B.TOTAL) / 10000, 1) AS TOTAL
+                , TRUNCATE(AVG(B.TOTAL) / 10000, 1) AS TOTAL_AVG
+                , TRUNCATE(SUM(B.CARD)  / 10000, 1) AS CARD
+                , TRUNCATE(SUM(B.CASH)  / 10000, 1) AS CASH
+        FROM
+        (
+            SELECT    A.ID
+                    , A.NAME
+                    , A.DIVISION_ID
+                    , A.TEAM_ID
+            FROM    MEMBER A
+            WHERE   A.TEAM_ID IS NOT NULL
+            AND     A.MEMBER_STATUS = 'FULL_TIME'
+            UNION ALL
+            SELECT    B.ID
+                    , B.NAME
+                    , A.ID AS DIVISION_ID
+                    , 0 AS TEAM_ID
+            FROM    DIVISION A INNER JOIN MEMBER B
+            ON      A.LEADER_ID = B.ID
+            WHERE   B.MEMBER_STATUS = 'FULL_TIME'
+        ) A INNER JOIN
+        (
+            SELECT    A.MEMBER_ID
+                    , IFNULL(SUM(A.PRICE), 0) AS TOTAL
+                    , IFNULL(SUM(CASE WHEN A.PAYMENT = 'card' THEN A.PRICE END), 0) AS CARD
+                    , IFNULL(SUM(CASE WHEN A.PAYMENT = 'cash' THEN A.PRICE END), 0) AS CASH
+            FROM
+            (
+                SELECT A.MEMBER_ID
+                     , A.PAYMENT
+                     , SUM(A.COUNT * B.PRICE) AS PRICE
+                FROM
+                (
+                    SELECT    A.MEMBER_ID
+                            , B.SORT
+                            , B.PAYMENT
+                            , SUM(B.COUNT) AS COUNT
+                    FROM    TIME_TABLE A INNER JOIN SELL_PRODUCT B
+                    ON 		A.ID = B.TIME_TABLE_ID
+                    WHERE   A.TASK_DATE = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 0 DAY), '%Y-%m-%d')
+                    AND		B.STATUS = 'out'
+                    AND		B.COUNT <![CDATA[>]]> 0
+                    GROUP BY A.MEMBER_ID, B.SORT, B.PAYMENT
+                ) A INNER JOIN
+                (
+                    SELECT    A.WIPER_SORT AS SORT
+                            , MAX(A.WIPER_PRICE) AS PRICE
+                    FROM    WIPER A
+                    GROUP BY A.WIPER_SORT
+                ) B
+                ON A.SORT = B.SORT
+                GROUP BY A.MEMBER_ID, A.PAYMENT
+            ) A
+            GROUP BY A.MEMBER_ID
+        ) B
+        ON      A.ID = B.MEMBER_ID
+        WHERE   A.TEAM_ID       = #{teamId}
+        GROUP BY A.DIVISION_ID, A.TEAM_ID
+    </select>
+
+
+
+</mapper>
