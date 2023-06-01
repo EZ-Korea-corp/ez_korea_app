@@ -42,6 +42,15 @@
                         </th:block>
                     </div>
                 </form>
+
+                <form id="mealChkForm">
+                    <th:block th:if="${mealChk}">
+                        <button type="button" class="mt-2 text-black bg-white font-bold rounded-lg text-sm px-5 py-2.5 w-full commute-border">식사 체크 완료</button>
+                    </th:block>
+                    <th:block th:if="${!mealChk}">
+                        <button type="button" id="mealChk" class="mt-2 text-black bg-white font-bold rounded-lg text-sm px-5 py-2.5 w-full commute-border">식사 체크</button>
+                    </th:block>
+                </form>
             </div>
 
             <hr class="my-5">
@@ -254,6 +263,21 @@
                 }
             })
         });
+
+        $("#mealChk").on("click", function (){
+            Swal.fire({
+                html: '식사 체크 하시겠습니까?',
+                showDenyButton: true,
+                confirmButtonText: '체크하기',
+                denyButtonText: `닫기`,
+            }).then((result) => {
+                fnResponseDataAjax($('#mealChkForm').serializeObject(), '/meal', 'POST', successHref);
+            })
+        });
+
+        function successHref(data, xhr) {
+            $(location).attr("href", "/");
+        }
     </script>
     <script>
         am4core.ready(function() {
