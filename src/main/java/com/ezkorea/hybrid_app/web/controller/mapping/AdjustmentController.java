@@ -57,19 +57,23 @@ public class AdjustmentController {
             adjDate = LocalDate.now();
         }
 
-        Map<String, String> saleStat = null;
-        Map<String, String> memberStat = null;
+        // 해당팀의 adjustment조회 (param:teamId)
+        Map<String, String> adjustmentStat = null;
 
-        if(saleStat == null) {
-            // 매출 저조자, 휴무자 저장
-            memberStat = null;
-            saleStat = adjustMentService.findTeamAdjustMentDefault(id);
-
+        // 등록된 adjustment가 없을시
+        if(adjustmentStat == null) {
+            // 프로시저 실행(jpa로 P_STAT_SALE_D(param:teamId))
+            // 해당 프로시저로 ADJUSTMENT, DAY_OFF_MEMBER, LOW_PERFORMER 자동 할당
+            // adjustmentStat 재조회후 초기화
         }
+
+        // DAY_OFF_MEMBER 조회
+        // LOW_PERFORMER 조회
+        // model.addAttribute("defaultMap", saleStat);
+
 
         model.addAttribute("viewName", currentTeam.getTeamName());
         model.addAttribute("currentDate", adjDate);
-        model.addAttribute("defaultMap", saleStat);
         return "adjustment/detail";
     }
 }
