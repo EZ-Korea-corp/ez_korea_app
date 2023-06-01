@@ -49,7 +49,13 @@
             <h2 class="text-xl font-semibold my-4"> 현황 조회 </h2>
 
             <div class="card divide-y divide-gray-100 sm:m-0">
-
+                <div class="items-start p-7 sm:space-x-6">
+                    <div class="sm:order-2">
+                        <a th:href="@{/manager/meal}">
+                            <h3 class="text-xl font-medium"> 식사 체크 현황 </h3>
+                        </a>
+                    </div>
+                </div>
                 <div class="items-start p-7 sm:space-x-6">
                     <div class="sm:order-2">
                         <a th:href="@{/manager/commute}">

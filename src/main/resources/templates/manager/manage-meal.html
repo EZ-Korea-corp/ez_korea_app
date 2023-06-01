@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+    <main layout:fragment="main">
+        <style>
+            .live-search-list {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                padding: 1em;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                font-family: 'Lato', sans-serif;
+                color: #fff;
+            }
+
+            .live-search-box {
+                width: 100%;
+                display: block;
+                padding: 1em;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                border: 1px solid #3498db;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+            }
+
+            .live-search-list li {
+                color: #fff;
+                list-style: none;
+                padding: 0;
+                margin: 5px 0;
+            }
+            .move{
+                color: #FFFFFF;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+        <div class="lg:space-x-12">
+            <form id="selectForm" onsubmit="return false;">
+                <div class="lg:w-full card">
+
+                    <div class="p-4">
+
+                        <div class="mb-4">
+                            <h2 class="text-xl font-bold">식사 체크 현황</h2>
+                        </div>
+
+                        <div class="flex text-center justify-around my-4">
+                            <div>
+                                <p th:text="${mealList.size()}"></p>
+                                <p class="font-semibold text-md">식사 체크 인원</p>
+                            </div>
+                            <div>
+                                <p th:text="${memberSize}"></p>
+                                <p class="font-semibold text-md">전체 인원</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <input type="text" id="datepicker" name="datepicker" readonly>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr class="my-4">
+
+                <div class="lg:w-full card">
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table class="w-full uk-text-center text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-md whitespace-nowrap">
+                                    사원명
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-md whitespace-nowrap">
+                                    전화번호
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-md whitespace-nowrap">
+                                    체크 시간
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="bg-white border-b" th:each="meal : ${mealList}">
+                                <th scope="row" class="px-4 py-4 font-medium" th:text="${meal.getName()}">
+                                    사원명
+                                </th>
+                                <td class="px-4 py-4 font-medium" th:text="${meal.getPhone()}">
+                                    전화번호
+                                </td>
+                                <td class="px-4 py-4 font-medium" th:text="${#temporals.format(meal.getCheckTime(), 'HH시 mm분')}">
+                                    체크 시간
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script th:inline="javascript">
+            jQuery(document).ready(function($){
+                let url = new URL(window.location.href);
+                let date = url.searchParams.get("date");
+
+                fnCalenderMaker($('#datepicker'), date);
+
+                $('#datepicker').on("change", function() {
+                    location.href= "/manager/meal?date=" + $(this).val();
+                });
+
+                $('.live-search-list li').each(function(){
+                    $(this).attr('data-search-term', $(this).contents().find( "h3" ).text().toLowerCase());
+                });
+
+                $('.live-search-box').on('keyup', function(){
+
+                    let searchTerm = $(this).val().toLowerCase();
+
+                    $('.live-search-list li').each(function(){
+
+                        if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+
+                    });
+
+                });
+
+            });
+
+            let inviteBtn = {
+                doInvite: function (idx) {
+                    fnCrudRefreshAjax($(`#updateMember${idx}`).serializeObject(), '/manager/member', 'select-div', 'PUT');
+                }
+            }
+        </script>
+    </main>
+
+</body>
+
+</html>

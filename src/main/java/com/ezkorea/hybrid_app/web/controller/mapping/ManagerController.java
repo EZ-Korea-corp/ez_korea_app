@@ -1,6 +1,7 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
+import com.ezkorea.hybrid_app.domain.meal.Meal;
 import com.ezkorea.hybrid_app.domain.timetable.PartTime;
 import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
@@ -9,6 +10,7 @@ import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.expenses.ExpensesService;
+import com.ezkorea.hybrid_app.service.meal.MealService;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
@@ -45,6 +47,7 @@ public class ManagerController {
     private final ExpensesService eService;
     private final DivisionService dService;
     private final SaleService saleService;
+    private final MealService mealService;
 
     @GetMapping("/home")
     public String showManagerPage() {
@@ -202,6 +205,20 @@ public class ManagerController {
         model.addAttribute("statList", saleService.findDayStatList(paramMap));
 
         return "manager/stat/manage-dayStat";
+    }
+
+    @GetMapping("/meal")
+    public String showMealChkStat(@RequestParam(value="date", defaultValue="", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+                                  Model model) {
+        if (date == null) {
+            date = LocalDate.now();
+        }
+        model.addAttribute("memberSize", mService.findAllMemberByStatus(MemberStatus.FULL_TIME).size() - 1);
+        model.addAttribute("mealList", mealService.findAllByCheckDate(date)
+                .stream()
+                .map(Meal::of)
+                .toList());
+        return "manager/manage-meal";
     }
 
 }
