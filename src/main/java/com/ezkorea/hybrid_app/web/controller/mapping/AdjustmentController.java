@@ -2,7 +2,7 @@ package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
-import com.ezkorea.hybrid_app.service.adjustment.AdjustMentService;
+import com.ezkorea.hybrid_app.service.adjustment.AdjustmentService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class AdjustmentController {
     private final DivisionService divisionService;
     private final TeamService teamService;
-    private final AdjustMentService adjustMentService;
+    private final AdjustmentService adjustMentService;
 
     private final String STATUS_DIV = "division";
     private final String STATUS_TEAM = "team";
