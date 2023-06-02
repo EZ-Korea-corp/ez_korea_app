@@ -36,16 +36,13 @@
                 <!--매출 저조자 기준 : 오전 20만 오후 30만 풀타임50만원-->
                 <h3>매출 저조자</h3>
                 <span class="text-sm">
-                    <a>오후</a>
-                    <a>박준교</a>
-                    <a>150,000원</a>
+                    <input type="text" value="3255000" name="cardAdj" th:value="${adjStat.lowFormAdj}">
                 </span>
             </div>
             <div class="mt-2">
                 <h3>휴무자</h3>
                 <span class="text-sm">
-                    <a>한정대</a>
-                    <a>강민규</a>
+                    <input type="text" value="3255000" name="cardAdj" th:value="${adjStat.dayOffAdj}">
                 </span>
             </div>
         </div>
@@ -75,7 +72,7 @@
                                 <a>현금 매출</a>
                             </th>
                             <td class="px-2 py-4 whitespace-nowrap">
-                                <input type="number" value="325000" name="cashAdj">
+                                <input type="number" value="325000" name="cashAdj" th:value="${adjStat.cashAdj}">
                             </td>
                         </tr>
                         <tr class="bg-white border-b">
@@ -83,7 +80,7 @@
                                 <a>카드 매출</a>
                             </th>
                             <td class="px-2 py-4 whitespace-nowrap">
-                                <input type="number" value="3255000" name="cardAdj">
+                                <input type="number" value="3255000" name="cardAdj" th:value="${adjStat.cardAdj}">
                             </td>
                         </tr>
                         <tr class="bg-white border-b">
@@ -91,7 +88,7 @@
                                 <a>이체 매출</a>
                             </th>
                             <td class="px-2 py-4 whitespace-nowrap">
-                                <input type="number" value="0" placeholder="0" name="accountAdj">
+                                <input type="number" value="0" placeholder="0" name="accountAdj" th:value="${adjStat.accountAdj}">
                             </td>
                         </tr>
                         <tr class="bg-white border-b">
@@ -99,7 +96,7 @@
                                 <a>팀 평균</a>
                             </th>
                             <td class="px-2 py-4 whitespace-nowrap">
-                                <input type="number" value="511428" name="teamAvg">
+                                <input type="number" value="511428" name="teamAvg" th:value="${adjStat.teamAvg}">
                             </td>
                         </tr>
                         <tr class="bg-white border-b">
@@ -107,7 +104,7 @@
                                 <a>전체 매출</a>
                             </th>
                             <td class="px-2 py-4 whitespace-nowrap">
-                                <input type="number" value="3580000" name="totalAdj">
+                                <input type="number" value="3580000" name="totalAdj" th:value="${adjStat.totalAdj}">
                             </td>
                         </tr>
                         </tbody>
@@ -115,7 +112,7 @@
                 </div>
                 <div>
                     <p class="my-2">정산 내용</p>
-                    <textarea class="bg-gray-100 p-2" name="contentAdj" placeholder="메모"></textarea>
+                    <textarea class="bg-gray-100 p-2" name="contentAdj" placeholder="메모" th:value="${adjStat.contentAdj}"></textarea>
                 </div>
             </form>
         </div>
