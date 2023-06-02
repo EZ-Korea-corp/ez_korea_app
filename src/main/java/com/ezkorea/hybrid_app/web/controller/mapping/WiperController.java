@@ -10,8 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class WiperController {
 
-    @GetMapping("/index")
-    public String showWiperListPage() {
-        return "wiper/main";
+    @GetMapping("/domestic")
+    public String showDomesticWiperListPage() {
+        return "wiper/domestic";
+    }
+
+    @GetMapping("/foreign")
+    public String showForeignWiperListPage() {
+        return "wiper/foreign";
     }
 }
