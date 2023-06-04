@@ -253,13 +253,13 @@ public class ManagerController {
         }
 
         // 해당팀의 adjustment조회
-        Adjustment adjustmentStat = adjustMentService.findAdjustmentByTeamNoAndAdjDate(id, adjDate);
+        /*Adjustment adjustmentStat = adjustMentService.findByTeamNoAndAdjDate(id, adjDate);*/
 
         // 등록된 adjustment가 없을시 등록후 재조회
-        if(adjustmentStat == null && adjDate.isEqual(LocalDate.now())) {
+        /*if(adjustmentStat == null && adjDate.isEqual(LocalDate.now())) {
             adjustMentService.adjustmentMbRepository(id);
-            adjustmentStat = adjustMentService.findAdjustmentByTeamNoAndAdjDate(id, adjDate);
-        }
+            adjustmentStat = adjustMentService.findByTeamNoAndAdjDate(id, adjDate);
+        }*/
 
         /*if(adjustmentStat == null) {
             adjDto = adjustmentStat.of2();

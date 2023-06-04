@@ -51,10 +51,6 @@ public class AdjustmentService {
         return adjustmentRepository.existsByTeamNoAndAdjDate(teamNo, date);
     }
 
-    public Adjustment findAdjustmentByTeamNoAndAdjDate(Long id, LocalDate adjDate) {
-        return adjustmentRepository.findAdjustmentByTeamNoAndAdjDate(id, adjDate);
-    }
-
     public void adjustmentMbRepository(Long teamId) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("teamId", teamId);
