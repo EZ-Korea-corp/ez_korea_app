@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.domain.user.member;
 import com.ezkorea.hybrid_app.domain.aws.S3Image;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.expenses.Expenses;
+import com.ezkorea.hybrid_app.domain.meal.Meal;
 import com.ezkorea.hybrid_app.domain.notice.Notice;
 import com.ezkorea.hybrid_app.domain.user.commute.CommuteTime;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
@@ -86,6 +87,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Notice> noticeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Meal> mealList = new ArrayList<>();
 
     @ManyToOne
     @Setter

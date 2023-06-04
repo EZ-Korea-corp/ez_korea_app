@@ -1,6 +1,8 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
+import com.ezkorea.hybrid_app.app.util.ResponseData;
 import com.ezkorea.hybrid_app.domain.note.PatchNote;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.service.notiece.PatchNoteService;
 import com.ezkorea.hybrid_app.web.dto.NoticeDto;
@@ -21,16 +23,16 @@ public class PatchNoteRestController {
     private final PatchNoteService pnService;
 
     @PostMapping("/note")
-    public ResponseEntity<Object> createNewNote(@RequestBody NoticeDto dto,
-                                                  @AuthenticationPrincipal SecurityUser securityUser) {
+    public ResponseData.ApiResult<?> createNewNote(@RequestBody NoticeDto dto,
+                                                   @AuthenticationPrincipal SecurityUser securityUser) {
 
         if (!securityUser.getMember().getUsername().equals("dev")) {
-            return new ResponseEntity<>(Map.of("message", "글쓰기 권한이 없습니다."), HttpStatus.BAD_REQUEST);
+            return ResponseData.error("글쓰기 권한이 없습니다.", HttpStatus.BAD_REQUEST);
         }
 
         PatchNote savedNote = pnService.saveNewNote(dto);
 
-        return new ResponseEntity<>(Map.of("message", "반영되었습니다", "id", savedNote.getId()), HttpStatus.OK);
+        return ResponseData.success(savedNote, "저장되었습니다.");
     }
 
     @PutMapping("/note/{id}")

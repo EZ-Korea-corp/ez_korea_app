@@ -1,19 +1,23 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
+import com.ezkorea.hybrid_app.domain.adjustment.Adjustment;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
+import com.ezkorea.hybrid_app.domain.meal.Meal;
 import com.ezkorea.hybrid_app.domain.timetable.PartTime;
 import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
-import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
+import com.ezkorea.hybrid_app.service.adjustment.AdjustmentService;
 import com.ezkorea.hybrid_app.service.expenses.ExpensesService;
+import com.ezkorea.hybrid_app.service.meal.MealService;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.member.MemberService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
+import com.ezkorea.hybrid_app.web.dto.AdjustmentDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,6 +49,8 @@ public class ManagerController {
     private final ExpensesService eService;
     private final DivisionService dService;
     private final SaleService saleService;
+    private final MealService mealService;
+    private final AdjustmentService adjustMentService;
 
     @GetMapping("/home")
     public String showManagerPage() {
@@ -202,6 +208,74 @@ public class ManagerController {
         model.addAttribute("statList", saleService.findDayStatList(paramMap));
 
         return "manager/stat/manage-dayStat";
+    }
+
+    @GetMapping("/meal")
+    public String showMealChkStat(@RequestParam(value="date", defaultValue="", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+                                  Model model) {
+        if (date == null) {
+            date = LocalDate.now();
+        }
+        model.addAttribute("memberSize", mService.findAllMemberByStatus(MemberStatus.FULL_TIME).size() - 1);
+        model.addAttribute("mealList", mealService.findAllByCheckDate(date)
+                .stream()
+                .map(Meal::of)
+                .toList());
+        return "manager/manage-meal";
+    }
+
+    @GetMapping("/adj")
+    public String showAdjustmentStat(Model model,
+                                     @RequestParam(value= "adjDate", defaultValue="", required = false)
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
+        if (adjDate == null) {
+            adjDate = LocalDate.now();
+        }
+
+        log.info("payDate={}", adjDate);
+        model.addAttribute("divisionDtoList",
+                dService.findAllDivision().stream().map(Division::of).toList()
+        );
+        model.addAttribute("divisionList", dService.findAllDivision());
+        return "manager/adjustment/manage-main";
+    }
+
+    @GetMapping("/adj/team/{id}")
+    public String showAdjustmentDetailPage(Model model, @PathVariable Long id,
+                                           @RequestParam(value = "adjDate", defaultValue = "", required = false)
+                                           @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
+
+        AdjustmentDto adjDto = null;
+        Team currentTeam = tService.findById(id);
+
+        if (adjDate == null) {
+            adjDate = LocalDate.now();
+        }
+
+        // 해당팀의 adjustment조회
+        Adjustment adjustmentStat = adjustMentService.findAdjustmentByTeamNoAndAdjDate(id, adjDate);
+
+        // 등록된 adjustment가 없을시 등록후 재조회
+        if(adjustmentStat == null && adjDate.isEqual(LocalDate.now())) {
+            adjustMentService.adjustmentMbRepository(id);
+            adjustmentStat = adjustMentService.findAdjustmentByTeamNoAndAdjDate(id, adjDate);
+        }
+
+        /*if(adjustmentStat == null) {
+            adjDto = adjustmentStat.of2();
+        } else {
+            adjDto = adjustmentStat.of();
+        }*/
+
+        if (adjustMentService.existsByTeamNoAndAdjDate(id, adjDate)) {
+            adjDto = adjustMentService.findByTeamNoAndAdjDate(id, adjDate).of();
+            model.addAttribute("flag", true);
+        }
+
+        model.addAttribute("adjStat", adjDto);
+        model.addAttribute("viewName", currentTeam.getTeamName());
+        model.addAttribute("currentDate", adjDate);
+        return "manager/adjustment/manage-detail";
     }
 
 }

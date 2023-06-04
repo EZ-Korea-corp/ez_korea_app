@@ -27,6 +27,11 @@ button {
   vertical-align: middle;
 }
 
+.btn-outline-black {
+  background-color: white !important;
+  border: 1px black solid !important;
+}
+
 a.button, span.button, button.button {
   background-color: #2a41e8;
   height: 38px;

@@ -1,6 +1,8 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
+import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
+import com.ezkorea.hybrid_app.service.meal.MealService;
 import com.ezkorea.hybrid_app.service.notiece.NoticeService;
 import com.ezkorea.hybrid_app.service.post.MemberPostReadService;
 import com.ezkorea.hybrid_app.service.user.commute.CommuteService;
@@ -22,18 +24,21 @@ public class BasicController {
     private final CommuteService commuteService;
     private final NoticeService noticeService;
     private final MemberPostReadService mprService;
+    private final MealService mealService;
 
     @GetMapping("/")
     public String showMainPage(Model model,
                                @AuthenticationPrincipal SecurityUser securityUser) {
+        Member currentMember = securityUser.getMember();
         boolean isOnTime = memberService.isOnTime(securityUser.getMember());
         model.addAttribute("noticeList", noticeService.findTop5NoticeOrderByUploadTime());
         model.addAttribute("noticeCount", noticeService.countAllNotice());
-        model.addAttribute("noticeNotReadCount", mprService.findNotReadListByMember(securityUser.getMember()).size());
+        model.addAttribute("noticeNotReadCount", mprService.findNotReadListByMember(currentMember).size());
         model.addAttribute("currentPage", "main");
         model.addAttribute("isOnTime", isOnTime);
+        model.addAttribute("mealChk", mealService.existsMealChk(currentMember));
         if (isOnTime) {
-            model.addAttribute("commute", commuteService.findCommuteTimeByMember(securityUser.getMember()));
+            model.addAttribute("commute", commuteService.findCommuteTimeByMember(currentMember));
         }
 
         return "index";

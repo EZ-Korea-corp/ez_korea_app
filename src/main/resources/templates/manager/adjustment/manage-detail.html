@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko"
+      class="no-js"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+<main layout:fragment="main">
+    <style>
+        textarea {
+            resize: none;
+        }
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+        }
+
+        /* Firefox  */
+        input[type='number'] {
+            -moz-appearance: textfield !important;
+        }
+    </style>
+    <div class="card p-4">
+        <div class="text-black">
+            <span class="text-xl" th:text="|${viewName} 매출|"></span>
+            <span class="text-sm" th:text="|(${#temporals.format(currentDate, 'yyyy년 MM월 dd일')})|"></span>
+        </div>
+        <th:block th:if="${flag}">
+            <hr class="my-4">
+            <div class="text-sm">
+                정산을 완료한 팀입니다.
+            </div>
+        </th:block>
+        <!--매출 저조자 기준 : 오전 20만 오후 30만 풀타임50만원-->
+        <!--<hr class="my-4">
+        <div>
+            <div>
+                <h3>매출 저조자</h3>
+                <span class="text-sm">
+                    <a>오후</a>
+                    <a>박준교</a>
+                    <a>150,000원</a>
+                </span>
+            </div>
+            <div class="mt-2">
+                <h3>휴무자</h3>
+                <span class="text-sm">
+                    <a>한정대</a>
+                    <a>강민규</a>
+                </span>
+            </div>
+        </div>-->
+    </div>
+
+    <hr class="my-4">
+
+    <div class="card p-4 text-black">
+        <h3 class="text-lg font-medium">팀 정산</h3>
+        <div class="mt-2">
+            <th:block th:if="${adjStat != null}">
+                <form id="createAdjustmentForm">
+                    <input type="date" name="adjDate" class="hidden" th:value="${#temporals.format(currentDate, 'yyyy-MM-dd')}">
+                    <input type="text" name="teamNo" hidden th:value="${teamId}">
+                    <div class="overflow-x-auto rounded-lg">
+                        <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                    구분
+                                </th>
+                                <th scope="col" colspan="999" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                    금액(원)
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="uk-text-center">
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                    <a>현금 매출</a>
+                                </th>
+                                <td class="px-2 py-4 whitespace-nowrap">
+                                    <input type="text" th:value="${#numbers.formatDecimal(adjStat.getCashAdj(), 3, 'COMMA', 0, 'POINT')}" disabled name="cashAdj">
+                                </td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                    <a>카드 매출</a>
+                                </th>
+                                <td class="px-2 py-4 whitespace-nowrap">
+                                    <input type="text" th:value="${#numbers.formatDecimal(adjStat.getCardAdj(), 3, 'COMMA', 0, 'POINT')}" disabled name="cardAdj">
+                                </td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                    <a>이체 매출</a>
+                                </th>
+                                <td class="px-2 py-4 whitespace-nowrap">
+                                    <input type="text" th:value="${#numbers.formatDecimal(adjStat.getAccountAdj(), 3, 'COMMA', 0, 'POINT')}" disabled name="accountAdj">
+                                </td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                    <a>팀 평균</a>
+                                </th>
+                                <td class="px-2 py-4 whitespace-nowrap">
+                                    <input type="text" th:value="${#numbers.formatDecimal(adjStat.getTeamAvg(), 3, 'COMMA', 0, 'POINT')}" disabled name="teamAvg">
+                                </td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                    <a>전체 매출</a>
+                                </th>
+                                <td class="px-2 py-4 whitespace-nowrap">
+                                    <input type="text" th:value="${#numbers.formatDecimal(adjStat.getTotalAdj(), 3, 'COMMA', 0, 'POINT')}" disabled name="totalAdj">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <p class="my-2">정산 내용</p>
+                        <textarea class="bg-gray-100 p-4 h-72" disabled name="contentAdj" placeholder="메모" th:text="${adjStat.getContentAdj()}"></textarea>
+                    </div>
+                </form>
+            </th:block>
+            <th:block th:if="${adjStat == null}">
+                정산 내역이 없습니다.
+            </th:block>
+        </div>
+    </div>
+    <script>
+
+        $("#submit").on("click", function (){
+            fnResponseDataAjax($('#createAdjustmentForm').serializeObject(), '/adj/save', 'POST', successHref);
+        });
+
+        $("#update").on("click", function (){
+            fnResponseDataAjax($('#createAdjustmentForm').serializeObject(), '/adj/update', 'PUT', successHref);
+        });
+
+        function successHref(data, xhr) {
+            // let savedId = data.response.id;
+
+            let fnCallBck = function () {
+                $(location).attr("href", "/adj/main");
+            }
+            fnCallBck();
+        }
+    </script>
+</main>
+
+</body>
+
+</html>

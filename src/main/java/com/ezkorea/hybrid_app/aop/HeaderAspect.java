@@ -81,4 +81,19 @@ public class HeaderAspect {
         return result;
     }
 
+    @Around("execution(* com.ezkorea.hybrid_app.web.controller.mapping.AdjustmentController.*(..))")
+    public Object teamAttribute(ProceedingJoinPoint joinPoint) throws Throwable {
+        // 메소드 실행 전 처리할 내용
+        Object[] args = joinPoint.getArgs();
+        for (Object arg : args) {
+            if (arg instanceof Model model) {
+                model.addAttribute("currentPage", "adjustment");
+            }
+        }
+
+        Object result = joinPoint.proceed();
+
+        return result;
+    }
+
 }

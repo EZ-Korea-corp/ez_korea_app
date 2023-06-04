@@ -163,25 +163,28 @@ function fnResponseDataAjax(data, url, method, fnCallBack) {
             jqXHR.setRequestHeader(header, token);
         },
         success: function(data, textStatus, xhr) {
-            Swal.fire({
-                icon: 'success',
-                text: data.message,
-            }).then(() => {
-                if(fnCallBack) fnCallBack(data, xhr);
-            })
+            if(data.success){
+                Swal.fire({
+                    icon: 'success',
+                    text: data.message,
+                }).then(() => {
+                    if(fnCallBack) fnCallBack(data, xhr);
+                })
+            }
+            if(!data.success){
+                Swal.fire({
+                    icon: 'error',
+                    text: data.error.message,
+                }).then(() => {
+                    $(location).attr("href", "/adj/main");
+                })
+            }
         },
         error: function(xhr, status, error) {
-            if (xhr.status === 400 || status === 400) {
-                Swal.fire({
-                    icon: 'error',
-                    text: data.message,
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    text: '에러가 발생했습니다.',
-                });
-            }
+            Swal.fire({
+                icon: 'error',
+                text: '데이터 전송에 실패했습니다.',
+            });
         }
     });
 }

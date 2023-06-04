@@ -23,7 +23,7 @@
 
                         <div>
                             <label for="teamGM" class="font-semibold text-base"> 지점 선택 </label>
-                            <select id="teamGM" name="teamGM"  class="shadow-none selectpicker with-border">
+                            <select id="teamGM" name="teamGM" data-none-selected-text="" class="shadow-none selectpicker with-border">
                                 <option th:each="division : ${divisionList}"
                                         th:value="${division.getDivisionName()}">
                                     <th:block th:if="${division.getLeader() != null}">

@@ -3,6 +3,7 @@ package com.ezkorea.hybrid_app.domain.user.division;
 import com.ezkorea.hybrid_app.domain.base.BaseEntity;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
+import com.ezkorea.hybrid_app.web.dto.DivisionDto;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -33,5 +34,11 @@ public class Division extends BaseEntity {
 
     public void makeTeamListInitialization() {
         teamList = new ArrayList<>();
+    }
+
+    public DivisionDto of() {
+        return DivisionDto.builder()
+                .teamName(divisionName)
+                .build();
     }
 }
