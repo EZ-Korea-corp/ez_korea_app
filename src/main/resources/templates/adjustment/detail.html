@@ -58,6 +58,7 @@
         <div class="mt-2">
             <form id="createAdjustmentForm">
                 <input type="date" name="adjDate" class="hidden" th:value="${#temporals.format(currentDate, 'yyyy-MM-dd')}">
+                <input type="text" name="teamNo" hidden th:value="${teamId}">
                 <div class="overflow-x-auto rounded-lg">
                     <table class="w-full text-sm text-left text-gray-500 live-search-table">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -131,10 +132,10 @@
         });
 
         function successHref(data, xhr) {
-            let savedId = data.response.id;
+            // let savedId = data.response.id;
 
             let fnCallBck = function () {
-                $(location).attr("href", "/adj/team/".concat(savedId));
+                $(location).attr("href", "/adj/main");
             }
             fnCallBck();
         }

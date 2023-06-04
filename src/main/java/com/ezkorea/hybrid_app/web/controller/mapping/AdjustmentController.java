@@ -71,7 +71,7 @@ public class AdjustmentController {
         // LOW_PERFORMER 조회
         // model.addAttribute("defaultMap", saleStat);
 
-
+        model.addAttribute("teamId", id);
         model.addAttribute("viewName", currentTeam.getTeamName());
         model.addAttribute("currentDate", adjDate);
         return "adjustment/detail";
