@@ -93,7 +93,7 @@ public class AdjustmentController {
 
         // 해당팀의 adjustment조회
         adjustMentService.adjustmentMbRepository(id);
-        Adjustment adjustmentStat = adjustMentService.findAdjustmentByTeamNoAndAdjDate(id, adjDate);
+        Adjustment adjustmentStat = adjustMentService.findByTeamNoAndAdjDate(id, adjDate);
 
         model.addAttribute("adjStat", adjustmentStat.of());
         model.addAttribute("viewName", currentTeam.getTeamName());
