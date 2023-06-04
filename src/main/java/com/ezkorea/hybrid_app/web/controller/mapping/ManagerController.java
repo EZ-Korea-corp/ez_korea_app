@@ -240,7 +240,7 @@ public class ManagerController {
         return "manager/adjustment/manage-main";
     }
 
-    @GetMapping("/team/{id}")
+    @GetMapping("/adj/team/{id}")
     public String showAdjustmentDetailPage(Model model, @PathVariable Long id,
                                            @RequestParam(value = "adjDate", defaultValue = "", required = false)
                                            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
@@ -261,10 +261,15 @@ public class ManagerController {
             adjustmentStat = adjustMentService.findAdjustmentByTeamNoAndAdjDate(id, adjDate);
         }
 
-        if(adjustmentStat == null) {
+        /*if(adjustmentStat == null) {
             adjDto = adjustmentStat.of2();
         } else {
             adjDto = adjustmentStat.of();
+        }*/
+
+        if (adjustMentService.existsByTeamNoAndAdjDate(id, adjDate)) {
+            adjDto = adjustMentService.findByTeamNoAndAdjDate(id, adjDate).of();
+            model.addAttribute("flag", true);
         }
 
         model.addAttribute("adjStat", adjDto);
