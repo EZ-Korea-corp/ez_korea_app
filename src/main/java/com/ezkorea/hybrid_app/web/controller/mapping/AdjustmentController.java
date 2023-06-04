@@ -1,9 +1,7 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
+import com.ezkorea.hybrid_app.app.util.Script;
 import com.ezkorea.hybrid_app.domain.adjustment.Adjustment;
-import com.ezkorea.hybrid_app.domain.adjustment.LowPerformer;
-import com.ezkorea.hybrid_app.domain.timetable.PartTime;
-import com.ezkorea.hybrid_app.domain.user.division.Division;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
@@ -25,9 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @Slf4j
@@ -48,6 +43,7 @@ public class AdjustmentController {
                                      RedirectAttributes redirectAttributes) {
         Member currentMember = securityUser.getMember();
         if (currentMember.getTeam() == null) {
+            redirectAttributes.addFlashAttribute("warningMsg", Script.href("/", "팀 등록 후 사용해주세요."));
             return "redirect:/";
         }
         redirectAttributes.addAttribute("id", currentMember.getTeam().getId());
