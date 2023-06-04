@@ -1,6 +1,8 @@
 package com.ezkorea.hybrid_app.domain.user.member;
 
 import com.ezkorea.hybrid_app.domain.aws.S3Image;
+import com.ezkorea.hybrid_app.domain.user.division.Division;
+import com.ezkorea.hybrid_app.domain.user.team.Team;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +27,8 @@ public class SecurityUser extends User implements UserDetails {
     private final LocalDateTime createDate;
     private final SubAuth subAuth;
     private final S3Image s3Image;
+    private final Team team;
+    private final Division division;
 
     public SecurityUser(Member member, List<GrantedAuthority> authorities) {
         super(member.getUsername(), member.getPassword(), authorities);
@@ -40,6 +44,8 @@ public class SecurityUser extends User implements UserDetails {
         this.createDate = member.getCreateDate();
         this.subAuth = member.getSubAuth();
         this.s3Image = member.getS3Image();
+        this.team = member.getTeam();
+        this.division = member.getDivision();
     }
 
     public Member getMember() {
@@ -56,6 +62,8 @@ public class SecurityUser extends User implements UserDetails {
                 .createDate(createDate)
                 .subAuth(subAuth)
                 .s3Image(s3Image)
+                .team(team)
+                .division(division)
                 .build();
     }
 

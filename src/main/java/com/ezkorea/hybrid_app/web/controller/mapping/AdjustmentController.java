@@ -1,19 +1,24 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
 import com.ezkorea.hybrid_app.domain.user.division.Division;
+import com.ezkorea.hybrid_app.domain.user.member.Member;
+import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.adjustment.AdjustmentService;
 import com.ezkorea.hybrid_app.service.user.division.DivisionService;
 import com.ezkorea.hybrid_app.service.user.team.TeamService;
+import com.ezkorea.hybrid_app.web.dto.AdjustmentDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -32,18 +37,14 @@ public class AdjustmentController {
 
     @GetMapping("/main")
     public String showAdjustmentPage(Model model,
-                                     @RequestParam(value= "adjDate", defaultValue="", required = false)
-                                     @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
-        if (adjDate == null) {
-            adjDate = LocalDate.now();
+                                     @AuthenticationPrincipal SecurityUser securityUser,
+                                     RedirectAttributes redirectAttributes) {
+        Member currentMember = securityUser.getMember();
+        if (currentMember.getTeam() == null) {
+            return "redirect:/";
         }
-
-        log.info("payDate={}", adjDate);
-        model.addAttribute("divisionDtoList",
-                divisionService.findAllDivision().stream().map(Division::of).toList()
-        );
-        model.addAttribute("divisionList", divisionService.findAllDivision());
-        return "adjustment/main";
+        redirectAttributes.addAttribute("id", currentMember.getTeam().getId());
+        return "redirect:/adj/team/{id}";
     }
 
     @GetMapping("/team/{id}")
@@ -57,23 +58,18 @@ public class AdjustmentController {
             adjDate = LocalDate.now();
         }
 
-        // 해당팀의 adjustment조회 (param:teamId)
-        Map<String, String> adjustmentStat = null;
+        AdjustmentDto dto = null;
 
-        // 등록된 adjustment가 없을시
-        if(adjustmentStat == null) {
-            // 프로시저 실행(jpa로 P_STAT_SALE_D(param:teamId))
-            // 해당 프로시저로 ADJUSTMENT, DAY_OFF_MEMBER, LOW_PERFORMER 자동 할당
-            // adjustmentStat 재조회후 초기화
+        if (adjustMentService.existsByTeamNoAndAdjDate(id, adjDate)) {
+            dto = adjustMentService.findByTeamNoAndAdjDate(id, adjDate).of();
+            model.addAttribute("flag", true);
         }
 
-        // DAY_OFF_MEMBER 조회
-        // LOW_PERFORMER 조회
-        // model.addAttribute("defaultMap", saleStat);
-
+        model.addAttribute("dto", dto);
         model.addAttribute("teamId", id);
         model.addAttribute("viewName", currentTeam.getTeamName());
         model.addAttribute("currentDate", adjDate);
-        return "adjustment/detail";
+
+        return "adjustment/create";
     }
 }

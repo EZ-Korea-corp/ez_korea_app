@@ -5,7 +5,6 @@ import com.ezkorea.hybrid_app.domain.meal.Meal;
 import com.ezkorea.hybrid_app.domain.timetable.PartTime;
 import com.ezkorea.hybrid_app.domain.timetable.TimeTable;
 import com.ezkorea.hybrid_app.domain.user.division.Division;
-import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.MemberStatus;
 import com.ezkorea.hybrid_app.domain.user.member.Role;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
@@ -219,6 +218,53 @@ public class ManagerController {
                 .map(Meal::of)
                 .toList());
         return "manager/manage-meal";
+    }
+
+    @GetMapping("/adj")
+    public String showAdjustmentStat(Model model,
+                                     @RequestParam(value= "adjDate", defaultValue="", required = false)
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
+        if (adjDate == null) {
+            adjDate = LocalDate.now();
+        }
+
+        log.info("payDate={}", adjDate);
+        model.addAttribute("divisionDtoList",
+                dService.findAllDivision().stream().map(Division::of).toList()
+        );
+        model.addAttribute("divisionList", dService.findAllDivision());
+        return "manager/adjustment/manage-main";
+    }
+
+    @GetMapping("/team/{id}")
+    public String showAdjustmentDetailPage(Model model, @PathVariable Long id,
+                                           @RequestParam(value = "adjDate", defaultValue = "", required = false)
+                                           @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
+
+        Team currentTeam = tService.findById(id);
+
+        if (adjDate == null) {
+            adjDate = LocalDate.now();
+        }
+
+        // 해당팀의 adjustment조회 (param:teamId)
+        Map<String, String> adjustmentStat = null;
+
+        // 등록된 adjustment가 없을시
+        if(adjustmentStat == null) {
+            // 프로시저 실행(jpa로 P_STAT_SALE_D(param:teamId))
+            // 해당 프로시저로 ADJUSTMENT, DAY_OFF_MEMBER, LOW_PERFORMER 자동 할당
+            // adjustmentStat 재조회후 초기화
+        }
+
+        // DAY_OFF_MEMBER 조회
+        // LOW_PERFORMER 조회
+        // model.addAttribute("defaultMap", saleStat);
+
+        model.addAttribute("teamId", id);
+        model.addAttribute("viewName", currentTeam.getTeamName());
+        model.addAttribute("currentDate", adjDate);
+        return "manager/adjustment/manage-detail";
     }
 
 }
