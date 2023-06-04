@@ -56,7 +56,8 @@
     <div class="card p-4 text-black">
         <h3 class="text-lg font-medium">팀 정산</h3>
         <div class="mt-2">
-            <form>
+            <form id="createAdjustmentForm">
+                <input type="date" name="adjDate" class="hidden" th:value="${#temporals.format(currentDate, 'yyyy-MM-dd')}">
                 <div class="overflow-x-auto rounded-lg">
                     <table class="w-full text-sm text-left text-gray-500 live-search-table">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -117,9 +118,27 @@
                     <p class="my-2">정산 내용</p>
                     <textarea class="bg-gray-100 p-2" name="contentAdj" placeholder="메모"></textarea>
                 </div>
+                <div class="mt-4">
+                    <button type="button" id="submit" class="btn-outline-black rounded-lg bg-white w-full py-2 px-4">저장</button>
+                </div>
             </form>
         </div>
     </div>
+    <script>
+
+        $("#submit").on("click", function (){
+            fnResponseDataAjax($('#createAdjustmentForm').serializeObject(), '/adj/save', 'POST', successHref);
+        });
+
+        function successHref(data, xhr) {
+            let savedId = data.response.id;
+
+            let fnCallBck = function () {
+                $(location).attr("href", "/adj/team/".concat(savedId));
+            }
+            fnCallBck();
+        }
+    </script>
 </main>
 
 </body>
