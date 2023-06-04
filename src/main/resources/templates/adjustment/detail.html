@@ -30,10 +30,10 @@
             <span class="text-xl" th:text="|${viewName} 매출|"></span>
             <span class="text-sm" th:text="|(${#temporals.format(currentDate, 'yyyy년 MM월 dd일')})|"></span>
         </div>
-        <hr class="my-4">
+        <!--매출 저조자 기준 : 오전 20만 오후 30만 풀타임50만원-->
+        <!--<hr class="my-4">
         <div>
             <div>
-                <!--매출 저조자 기준 : 오전 20만 오후 30만 풀타임50만원-->
                 <h3>매출 저조자</h3>
                 <span class="text-sm">
                     <a>오후</a>
@@ -48,7 +48,7 @@
                     <a>강민규</a>
                 </span>
             </div>
-        </div>
+        </div>-->
     </div>
 
     <hr class="my-4">
@@ -76,7 +76,7 @@
                                 <a>현금 매출</a>
                             </th>
                             <td class="px-2 py-4 whitespace-nowrap">
-                                <input type="number" value="325000" name="cashAdj">
+                                <input type="number" value="0" name="cashAdj">
                             </td>
                         </tr>
                         <tr class="bg-white border-b">
@@ -84,7 +84,7 @@
                                 <a>카드 매출</a>
                             </th>
                             <td class="px-2 py-4 whitespace-nowrap">
-                                <input type="number" value="3255000" name="cardAdj">
+                                <input type="number" value="0" name="cardAdj">
                             </td>
                         </tr>
                         <tr class="bg-white border-b">
@@ -100,7 +100,7 @@
                                 <a>팀 평균</a>
                             </th>
                             <td class="px-2 py-4 whitespace-nowrap">
-                                <input type="number" value="511428" name="teamAvg">
+                                <input type="number" value="0" name="teamAvg">
                             </td>
                         </tr>
                         <tr class="bg-white border-b">
@@ -108,7 +108,7 @@
                                 <a>전체 매출</a>
                             </th>
                             <td class="px-2 py-4 whitespace-nowrap">
-                                <input type="number" value="3580000" name="totalAdj">
+                                <input type="number" value="0" name="totalAdj">
                             </td>
                         </tr>
                         </tbody>
@@ -116,7 +116,7 @@
                 </div>
                 <div>
                     <p class="my-2">정산 내용</p>
-                    <textarea class="bg-gray-100 p-2" name="contentAdj" placeholder="메모"></textarea>
+                    <textarea class="bg-gray-100 p-4" name="contentAdj" placeholder="메모"></textarea>
                 </div>
                 <div class="mt-4">
                     <button type="button" id="submit" class="btn-outline-black rounded-lg bg-white w-full py-2 px-4">저장</button>
