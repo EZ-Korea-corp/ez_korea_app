@@ -50,6 +50,14 @@ public class Adjustment extends BaseEntity {
     // 이체 매출
     private int accountAdj;
 
+    // 저조자
+    @Column(length = 1000)
+    private String lowFormAdj;
+
+    // 휴무자
+    @Column(length = 1000)
+    private String dayOffAdj;
+
     // 정산 내용
     @Column(length = 10000)
     private String contentAdj;
@@ -67,6 +75,8 @@ public class Adjustment extends BaseEntity {
                 .totalAdj(totalAdj)
                 .accountAdj(accountAdj)
                 .contentAdj(contentAdj)
+                .dayOffAdj(dayOffAdj)
+                .lowFormAdj(lowFormAdj)
                 .build();
     }
 

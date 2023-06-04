@@ -7,8 +7,10 @@ import java.util.Optional;
 
 public interface AdjustmentRepository extends JpaRepository<Adjustment, Long> {
     Adjustment findAdjustmentById(Long id);
+    Adjustment findAdjustmentByTeamNoAndAdjDate(Long id, LocalDate date);
 
     Optional<Adjustment> findByTeamNoAndAdjDate(Long teamId, LocalDate date);
 
     boolean existsByTeamNoAndAdjDate(Long teamId, LocalDate date);
+
 }

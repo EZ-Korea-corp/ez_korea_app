@@ -28,6 +28,10 @@ public class AdjustmentDto {
     private int accountAdj;
     // 정산 내용
     private String contentAdj;
+    // 휴무자
+    private String dayOffAdj;
+    // 저조자
+    private String lowFormAdj;
 
     // 정산 날짜
     private LocalDate adjDate;
