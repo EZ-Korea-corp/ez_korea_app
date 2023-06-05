@@ -24,9 +24,11 @@ import java.util.List;
 public class Adjustment extends BaseEntity {
 
     @OneToMany(mappedBy = "adjustment", cascade = CascadeType.ALL)
+    @Setter
     private List<LowPerformer> lowPerformerList = new ArrayList<>();
 
     @OneToMany(mappedBy = "adjustment", cascade = CascadeType.ALL)
+    @Setter
     private List<DayOffMember> dayOffMemberList = new ArrayList<>();
 
     // 팀 번호
