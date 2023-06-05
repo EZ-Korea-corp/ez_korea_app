@@ -54,10 +54,12 @@ public class Adjustment extends BaseEntity {
 
     // 저조자
     @Column(length = 1000)
+    @Setter
     private String lowFormAdj;
 
     // 휴무자
     @Column(length = 1000)
+    @Setter
     private String dayOffAdj;
 
     // 정산 내용

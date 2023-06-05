@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
+import com.ezkorea.hybrid_app.domain.adjustment.Adjustment;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
 import com.ezkorea.hybrid_app.domain.meal.Meal;
 import com.ezkorea.hybrid_app.domain.timetable.PartTime;
@@ -49,7 +50,7 @@ public class ManagerController {
     private final DivisionService dService;
     private final SaleService saleService;
     private final MealService mealService;
-    private final AdjustmentService adjustMentService;
+    private final AdjustmentService adjustmentService;
 
     @GetMapping("/home")
     public String showManagerPage() {
@@ -271,8 +272,10 @@ public class ManagerController {
             adjDto = adjustmentStat.of();
         }*/
 
-        if (adjustMentService.existsByTeamNoAndAdjDate(id, adjDate)) {
-            adjDto = adjustMentService.findByTeamNoAndAdjDate(id, adjDate).of();
+        if (adjustmentService.existsByTeamNoAndAdjDate(id, adjDate)) {
+            // Adjustment currentAdj = adjustmentService.findByTeamNoAndAdjDate(id, adjDate);
+            // adjDto = adjustmentService.addInfoLowPerformerAndDayOffMember(currentAdj);
+            adjDto = adjustmentService.findByTeamNoAndAdjDate(id, adjDate).of();
             model.addAttribute("flag", true);
         }
 

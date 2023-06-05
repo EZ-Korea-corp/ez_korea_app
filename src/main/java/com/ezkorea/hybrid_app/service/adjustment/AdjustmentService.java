@@ -28,6 +28,7 @@ public class AdjustmentService {
     private final TeamRepository teamRepository;
 
     private final String LOW_PERFORM = "LOW_PERFORM";
+    private final String DAY_OFF_MEMBER = "DAY_OFF_MEMBER";
 
     public void saveAdjustment(AdjustmentDto dto) {
         adjustmentRepository.save(Adjustment.builder()
@@ -52,6 +53,29 @@ public class AdjustmentService {
     public Adjustment findByTeamNoAndAdjDate(Long teamNo, LocalDate date) {
         return adjustmentRepository.findByTeamNoAndAdjDate(teamNo, date)
                 .orElseThrow(() -> new TeamNotFoundException("팀을 찾을 수 없습니다."));
+    }
+
+    public AdjustmentDto addInfoLowPerformerAndDayOffMember(Adjustment adjustment) {
+        StringBuilder sb = new StringBuilder();
+        AdjustmentDto dto = adjustment.of();
+        if (dto.getLowFormAdj() != null) {
+            for (Member member : findMemberByDto(dto, LOW_PERFORM)) {
+                sb.append(member.getName()).append("(")
+                        .append(member.getPhone())
+                        .append(")").append(",");
+            }
+            dto.setLowFormAdj(sb.deleteCharAt(sb.toString().length() - 1).toString());
+        }
+        sb = new StringBuilder();
+        if (dto.getDayOffAdj() != null) {
+            for (Member member : findMemberByDto(dto, DAY_OFF_MEMBER)) {
+                sb.append(member.getName()).append("(")
+                        .append(member.getPhone())
+                        .append(")").append(",");
+            }
+            dto.setDayOffAdj(sb.deleteCharAt(sb.toString().length() - 1).toString());
+        }
+        return dto;
     }
 
     public boolean existsByTeamNoAndAdjDate(Long teamNo, LocalDate date) {
