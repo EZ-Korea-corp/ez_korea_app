@@ -102,5 +102,7 @@ public class Adjustment extends BaseEntity {
         this.totalAdj = dto.getTotalAdj();
         this.accountAdj = dto.getAccountAdj();
         this.contentAdj = dto.getContentAdj();
+        this.lowFormAdj = dto.getLowFormAdj();
+        this.dayOffAdj = dto.getDayOffAdj();
     }
 }
