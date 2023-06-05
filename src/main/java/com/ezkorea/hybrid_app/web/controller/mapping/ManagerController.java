@@ -1,6 +1,5 @@
 package com.ezkorea.hybrid_app.web.controller.mapping;
 
-import com.ezkorea.hybrid_app.domain.adjustment.Adjustment;
 import com.ezkorea.hybrid_app.domain.expenses.ExpensesStatus;
 import com.ezkorea.hybrid_app.domain.meal.Meal;
 import com.ezkorea.hybrid_app.domain.timetable.PartTime;
@@ -224,7 +223,12 @@ public class ManagerController {
         return "manager/manage-meal";
     }
 
-    @GetMapping("/adj")
+    @GetMapping("/adj/stat")
+    public String showAdjustmentStatCategories(Model model) {
+        return "manager/adjustment/manage-categories";
+    }
+
+    @GetMapping("/adj/team")
     public String showAdjustmentStat(Model model,
                                      @RequestParam(value= "adjDate", defaultValue="", required = false)
                                      @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
@@ -237,7 +241,7 @@ public class ManagerController {
                 dService.findAllDivision().stream().map(Division::of).toList()
         );
         model.addAttribute("divisionList", dService.findAllDivision());
-        return "manager/adjustment/manage-main";
+        return "manager/adjustment/manage-team-main";
     }
 
     @GetMapping("/adj/team/{id}")
@@ -276,6 +280,22 @@ public class ManagerController {
         model.addAttribute("viewName", currentTeam.getTeamName());
         model.addAttribute("currentDate", adjDate);
         return "manager/adjustment/manage-detail";
+    }
+
+    @GetMapping("/adj/div")
+    public String showAdjustmentDivStat(Model model,
+                                     @RequestParam(value= "adjDate", defaultValue="", required = false)
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
+        if (adjDate == null) {
+            adjDate = LocalDate.now();
+        }
+
+        log.info("payDate={}", adjDate);
+        model.addAttribute("divisionDtoList",
+                dService.findAllDivision().stream().map(Division::of).toList()
+        );
+        model.addAttribute("divisionList", dService.findAllDivision());
+        return "manager/adjustment/manage-div-main";
     }
 
 }
