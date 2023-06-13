@@ -29,6 +29,9 @@ public class Division extends BaseEntity {
     @Setter
     private Member leader;
 
+    @Setter
+    private String mainDivision;
+
     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL)
     private List<Team> teamList;
 

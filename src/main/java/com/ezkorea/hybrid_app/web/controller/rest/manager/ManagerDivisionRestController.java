@@ -31,8 +31,9 @@ public class ManagerDivisionRestController {
 
         String teamName = (String) datum.get("teamName");
         String teamGm = (String) datum.get("teamGM");
+        String mainDivision = (String) datum.get("mainDivision");
 
-        DivisionDto dto = dService.createDivisionDto(teamName, teamGm);
+        DivisionDto dto = dService.createDivisionDto(teamName, teamGm, mainDivision);
 
         dService.saveNewDivision(dto);
 
@@ -44,7 +45,8 @@ public class ManagerDivisionRestController {
 
         String teamName = (String) datum.get("teamName");
         String teamGm = (String) datum.get("teamGM");
-        dService.updateDivision(id, teamName, teamGm);
+        String mainDivision = (String) datum.get("mainDivision");
+        dService.updateDivision(id, teamName, teamGm, mainDivision);
 
         return ResponseData.success(null, "반영되었습니다.");
     }

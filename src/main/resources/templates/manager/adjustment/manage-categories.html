@@ -18,15 +18,15 @@
             <div class="card divide-y divide-gray-100 sm:m-0">
                 <div class="items-start p-7 sm:space-x-6">
                     <div class="sm:order-2">
-                        <a th:href="@{|/manager/dayStatList?date=${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}|}">
-                            <h3 class="text-xl font-medium"> <span class="mr-2"></span> 일일 판매통계 </h3>
+                        <a th:href="@{/manager/adj/team}">
+                            <h3 class="text-xl font-medium"> <span class="mr-2"></span> 팀 정산 조회 </h3>
                         </a>
                     </div>
                 </div>
-                <div class="items-start p-7 sm:space-x-6" sec:authorize="hasAuthority('ROLE_MASTER')">
+                <div class="items-start p-7 sm:space-x-6">
                     <div class="sm:order-2">
-                        <a th:href="@{/manager/totalStat}">
-                            <h3 class="text-xl font-medium"> <span class="mr-2"></span> 전체 매출통계 </h3>
+                        <a th:href="@{/manager/adj/div}">
+                            <h3 class="text-xl font-medium"> <span class="mr-2"></span> 지점 정산 조회 </h3>
                         </a>
                     </div>
                 </div>

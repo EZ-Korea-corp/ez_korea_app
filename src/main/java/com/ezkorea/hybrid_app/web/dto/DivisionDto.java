@@ -12,4 +12,5 @@ import lombok.Setter;
 public class DivisionDto {
     private String teamName;
     private Member teamGm;
+    private String mainDivision;
 }

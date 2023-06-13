@@ -36,34 +36,75 @@
                 정산을 완료한 팀입니다.
             </div>
         </th:block>
-        <!--매출 저조자 기준 : 오전 20만 오후 30만 풀타임50만원-->
-        <!--<hr class="my-4">
-        <div>
-            <div>
-                <h3>매출 저조자</h3>
-                <span class="text-sm">
-                    <a>오후</a>
-                    <a>박준교</a>
-                    <a>150,000원</a>
-                </span>
-            </div>
-            <div class="mt-2">
-                <h3>휴무자</h3>
-                <span class="text-sm">
-                    <a>한정대</a>
-                    <a>강민규</a>
-                </span>
-            </div>
-        </div>-->
     </div>
 
     <hr class="my-4">
 
-    <div class="card p-4 text-black">
-        <h3 class="text-lg font-medium">팀 정산</h3>
-        <div class="mt-2">
-            <th:block th:if="${adjStat != null}">
-                <form id="createAdjustmentForm">
+    <form id="createAdjustmentForm">
+        <div class="card p-4 text-black">
+            <h3 class="text-lg font-medium">팀원 관련</h3>
+            <div class="mt-2">
+                <div class="overflow-x-auto rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-500 live-search-table">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                구분
+                            </th>
+                            <th scope="col" colspan="999" class="px-2 py-3 uk-text-center whitespace-nowrap">
+                                입력
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="uk-text-center">
+                        <th:block th:if="${adjStat != null}">
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                    <a>저조자</a>
+                                </th>
+                                <td class="px-2 py-4 whitespace-nowrap">
+                                    <input type="text" th:value="${adjStat.getLowFormAdj()}" readonly disabled placeholder="홍길동, 김철수" name="lowFormAdj">
+                                </td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                    <a>휴무자</a>
+                                </th>
+                                <td class="px-2 py-4 whitespace-nowrap">
+                                    <input type="text" th:value="${adjStat.getDayOffAdj()}" readonly disabled placeholder="홍길동, 김철수" name="dayOffAdj">
+                                </td>
+                            </tr>
+                        </th:block>
+                        <th:block th:if="${adjStat == null}">
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                    <a>저조자</a>
+                                </th>
+                                <td class="px-2 py-4 whitespace-nowrap">
+                                    <input type="text" placeholder="이름을 입력해주세요." name="lowFormAdj">
+                                </td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
+                                    <a>휴무자</a>
+                                </th>
+                                <td class="px-2 py-4 whitespace-nowrap">
+                                    <input type="text" placeholder="이름을 입력해주세요." name="dayOffAdj">
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="card p-4 text-black">
+            <h3 class="text-lg font-medium">팀 정산</h3>
+            <div class="mt-2">
+                <th:block th:if="${adjStat != null}">
                     <input type="date" name="adjDate" class="hidden" th:value="${#temporals.format(currentDate, 'yyyy-MM-dd')}">
                     <input type="text" name="teamNo" hidden th:value="${teamId}">
                     <div class="overflow-x-auto rounded-lg">
@@ -126,28 +167,25 @@
                         <p class="my-2">정산 내용</p>
                         <textarea class="bg-gray-100 p-4 h-72" disabled name="contentAdj" placeholder="메모" th:text="${adjStat.getContentAdj()}"></textarea>
                     </div>
-                </form>
-            </th:block>
-            <th:block th:if="${adjStat == null}">
-                정산 내역이 없습니다.
-            </th:block>
+                </th:block>
+                <th:block th:if="${adjStat == null}">
+                    정산 내역이 없습니다.
+                </th:block>
+            </div>
         </div>
-    </div>
+    </form>
+
     <script>
 
-        $("#submit").on("click", function (){
-            fnResponseDataAjax($('#createAdjustmentForm').serializeObject(), '/adj/save', 'POST', successHref);
-        });
-
         $("#update").on("click", function (){
-            fnResponseDataAjax($('#createAdjustmentForm').serializeObject(), '/adj/update', 'PUT', successHref);
+            fnResponseDataAjax($('#createAdjustmentForm').serializeObject(), 'manager/adj/team/update', 'PUT', successHref);
         });
 
         function successHref(data, xhr) {
             // let savedId = data.response.id;
 
-            let fnCallBck = function () {
-                $(location).attr("href", "/adj/main");
+            let fnCallBck = function (data) {
+                $(location).attr("href", "/manager/adj/team/".concat(data.id));
             }
             fnCallBck();
         }

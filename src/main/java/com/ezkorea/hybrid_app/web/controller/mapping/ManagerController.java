@@ -50,7 +50,7 @@ public class ManagerController {
     private final DivisionService dService;
     private final SaleService saleService;
     private final MealService mealService;
-    private final AdjustmentService adjustMentService;
+    private final AdjustmentService adjustmentService;
 
     @GetMapping("/home")
     public String showManagerPage() {
@@ -224,7 +224,12 @@ public class ManagerController {
         return "manager/manage-meal";
     }
 
-    @GetMapping("/adj")
+    @GetMapping("/adj/stat")
+    public String showAdjustmentStatCategories(Model model) {
+        return "manager/adjustment/manage-categories";
+    }
+
+    @GetMapping("/adj/team")
     public String showAdjustmentStat(Model model,
                                      @RequestParam(value= "adjDate", defaultValue="", required = false)
                                      @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
@@ -237,7 +242,7 @@ public class ManagerController {
                 dService.findAllDivision().stream().map(Division::of).toList()
         );
         model.addAttribute("divisionList", dService.findAllDivision());
-        return "manager/adjustment/manage-main";
+        return "manager/adjustment/manage-team-main";
     }
 
     @GetMapping("/adj/team/{id}")
@@ -252,30 +257,39 @@ public class ManagerController {
             adjDate = LocalDate.now();
         }
 
-        // 해당팀의 adjustment조회
-        /*Adjustment adjustmentStat = adjustMentService.findByTeamNoAndAdjDate(id, adjDate);*/
-
-        // 등록된 adjustment가 없을시 등록후 재조회
-        /*if(adjustmentStat == null && adjDate.isEqual(LocalDate.now())) {
-            adjustMentService.adjustmentMbRepository(id);
-            adjustmentStat = adjustMentService.findByTeamNoAndAdjDate(id, adjDate);
-        }*/
-
-        /*if(adjustmentStat == null) {
-            adjDto = adjustmentStat.of2();
-        } else {
-            adjDto = adjustmentStat.of();
-        }*/
-
-        if (adjustMentService.existsByTeamNoAndAdjDate(id, adjDate)) {
-            adjDto = adjustMentService.findByTeamNoAndAdjDate(id, adjDate).of();
+        if (adjustmentService.existsByTeamNoAndAdjDate(id, adjDate)) {
+            // Adjustment currentAdj = adjustmentService.findByTeamNoAndAdjDate(id, adjDate);
+            // adjDto = adjustmentService.addInfoLowPerformerAndDayOffMember(currentAdj);
+            adjDto = adjustmentService.findByTeamNoAndAdjDate(id, adjDate).of();
             model.addAttribute("flag", true);
         }
 
         model.addAttribute("adjStat", adjDto);
         model.addAttribute("viewName", currentTeam.getTeamName());
         model.addAttribute("currentDate", adjDate);
+        model.addAttribute("teamId", id);
         return "manager/adjustment/manage-detail";
+    }
+
+    @GetMapping("/adj/div")
+    public String showAdjustmentDivStat(Model model,
+                                     @RequestParam(value= "adjDate", defaultValue="", required = false)
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
+        if (adjDate == null) {
+            adjDate = LocalDate.now();
+        }
+
+        Map map = new HashMap<>();
+        map.put("date", adjDate);
+
+        log.info("payDate={}", adjDate);
+        model.addAttribute("divisionDtoList",
+                dService.findAllDivision().stream().map(Division::of).toList()
+        );
+        model.addAttribute("divisionList", dService.findAllDivision());
+        model.addAttribute("adjList", adjustmentService.findAdjStat(map));
+
+        return "manager/adjustment/manage-div-main";
     }
 
 }

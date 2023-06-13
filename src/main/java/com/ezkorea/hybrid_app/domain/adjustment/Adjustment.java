@@ -24,9 +24,11 @@ import java.util.List;
 public class Adjustment extends BaseEntity {
 
     @OneToMany(mappedBy = "adjustment", cascade = CascadeType.ALL)
+    @Setter
     private List<LowPerformer> lowPerformerList = new ArrayList<>();
 
     @OneToMany(mappedBy = "adjustment", cascade = CascadeType.ALL)
+    @Setter
     private List<DayOffMember> dayOffMemberList = new ArrayList<>();
 
     // 팀 번호
@@ -52,10 +54,12 @@ public class Adjustment extends BaseEntity {
 
     // 저조자
     @Column(length = 1000)
+    @Setter
     private String lowFormAdj;
 
     // 휴무자
     @Column(length = 1000)
+    @Setter
     private String dayOffAdj;
 
     // 정산 내용
@@ -80,21 +84,6 @@ public class Adjustment extends BaseEntity {
                 .build();
     }
 
-    public AdjustmentDto of2() {
-        return AdjustmentDto.builder()
-                .teamNo(0)
-                .divisionNo(0)
-                .cashAdj(0)
-                .cardAdj(0)
-                .teamAvg(0)
-                .totalAdj(0)
-                .accountAdj(0)
-                .contentAdj("")
-                .dayOffAdj("")
-                .lowFormAdj("")
-                .build();
-    }
-
     public void updateAdj(AdjustmentDto dto) {
         this.cashAdj = dto.getCashAdj();
         this.cardAdj = dto.getCardAdj();
@@ -102,5 +91,7 @@ public class Adjustment extends BaseEntity {
         this.totalAdj = dto.getTotalAdj();
         this.accountAdj = dto.getAccountAdj();
         this.contentAdj = dto.getContentAdj();
+        this.lowFormAdj = dto.getLowFormAdj();
+        this.dayOffAdj = dto.getDayOffAdj();
     }
 }

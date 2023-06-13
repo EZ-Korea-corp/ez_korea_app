@@ -3,12 +3,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ezkorea.hybrid_app.domain.myBatis.AdjustmentMbRepository">
 
-    <update id="updateAdjustment" statementType="CALLABLE" parameterType="map">
-        call P_STAT_SALE_D
-        (
-            #{teamId, mode=IN, jdbcType=VARCHAR, javaType=long}
-        )
-    </update>
-
+    <select id="findAdjStat" parameterType="map" resultType="Map">
+        SELECT    B.MAIN_DIVISION
+                , SUM(A.CARD_ADJ)    AS CARD_ADJ
+                , SUM(A.CASH_ADJ)    AS CASH_ADJ
+                , SUM(A.ACCOUNT_ADJ) AS ACCOUNT_ADJ
+                , SUM(A.CARD_ADJ) + SUM(A.CASH_ADJ) + SUM(A.ACCOUNT_ADJ) AS TOTAL_ADJ
+        FROM    ADJUSTMENT A INNER JOIN DIVISION B
+        ON      A.DIVISION_NO = B.ID
+        WHERE   A.ADJ_DATE    = #{date}
+        GROUP BY B.MAIN_DIVISION
+    </select>
 
 </mapper>

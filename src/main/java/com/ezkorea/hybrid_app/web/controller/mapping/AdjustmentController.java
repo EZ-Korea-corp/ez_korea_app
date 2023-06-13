@@ -76,25 +76,4 @@ public class AdjustmentController {
         return "adjustment/create";
     }
 
-    @GetMapping("/default/{id}")
-    public String showAdjustmentDefault(Model model, @PathVariable Long id,
-                                           @RequestParam(value = "adjDate", defaultValue = "", required = false)
-                                           @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate adjDate) {
-
-        Team currentTeam = teamService.findById(id);
-
-        if (adjDate == null) {
-            adjDate = LocalDate.now();
-        }
-
-        // 해당팀의 adjustment조회
-        adjustMentService.adjustmentMbRepository(id);
-        Adjustment adjustmentStat = adjustMentService.findByTeamNoAndAdjDate(id, adjDate);
-
-        model.addAttribute("adjStat", adjustmentStat.of());
-        model.addAttribute("viewName", currentTeam.getTeamName());
-        model.addAttribute("currentDate", adjDate);
-
-        return "adjustment/detail";
-    }
 }

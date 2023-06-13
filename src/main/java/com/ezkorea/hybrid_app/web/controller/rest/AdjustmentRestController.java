@@ -4,6 +4,7 @@ import com.ezkorea.hybrid_app.app.util.ResponseData;
 import com.ezkorea.hybrid_app.domain.adjustment.Adjustment;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.member.SecurityUser;
+import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.service.adjustment.AdjustmentService;
 import com.ezkorea.hybrid_app.web.dto.AdjustmentDto;
 import lombok.RequiredArgsConstructor;

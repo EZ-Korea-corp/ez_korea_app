@@ -58,13 +58,6 @@
                 </div>
                 <div class="items-start p-7 sm:space-x-6">
                     <div class="sm:order-2">
-                        <a th:href="@{/manager/adj}">
-                            <h3 class="text-xl font-medium"> 팀 정산 현황 </h3>
-                        </a>
-                    </div>
-                </div>
-                <div class="items-start p-7 sm:space-x-6">
-                    <div class="sm:order-2">
                         <a th:href="@{/manager/commute}">
                             <h3 class="text-xl font-medium"> 출석 현황 </h3>
                         </a>
@@ -73,7 +66,18 @@
                 <div class="items-start p-7 sm:space-x-6">
                     <div class="sm:order-2">
                         <a th:href="@{/manager/expenses/FUEL}">
-                            <h3 class="text-xl font-medium"> 전체 경비 내역 조회 </h3>
+                            <h3 class="text-xl font-medium"> 경비 신청 현황 </h3>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-semibold my-4"> 정산 관리 </h2>
+            <div class="card divide-y divide-gray-100 sm:m-0">
+                <div class="items-start p-7 sm:space-x-6">
+                    <div class="sm:order-2">
+                        <a th:href="@{/manager/adj/stat}">
+                            <h3 class="text-xl font-medium"> 정산 조회 </h3>
                         </a>
                     </div>
                 </div>
