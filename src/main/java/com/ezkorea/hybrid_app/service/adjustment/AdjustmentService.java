@@ -1,11 +1,13 @@
 package com.ezkorea.hybrid_app.service.adjustment;
 
 import com.ezkorea.hybrid_app.domain.adjustment.*;
+import com.ezkorea.hybrid_app.domain.adjustment.mainDivision.MainDivision;
 import com.ezkorea.hybrid_app.domain.myBatis.AdjustmentMbRepository;
 import com.ezkorea.hybrid_app.domain.timetable.TimeTableRepository;
 import com.ezkorea.hybrid_app.domain.user.member.Member;
 import com.ezkorea.hybrid_app.domain.user.team.Team;
 import com.ezkorea.hybrid_app.domain.user.team.TeamRepository;
+import com.ezkorea.hybrid_app.service.user.team.TeamService;
 import com.ezkorea.hybrid_app.web.dto.AdjustmentDto;
 import com.ezkorea.hybrid_app.web.exception.TeamNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +25,22 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AdjustmentService {
 
-    private final AdjustmentRepository adjustmentRepository;
     private final AdjustmentMbRepository adjustmentMbRepository;
-    private final TeamRepository teamRepository;
+    private final AdjustmentRepository adjustmentRepository;
+    private final TeamService teamService;
 
     private final String LOW_PERFORM = "LOW_PERFORM";
     private final String DAY_OFF_MEMBER = "DAY_OFF_MEMBER";
 
     public void saveAdjustment(AdjustmentDto dto) {
+        Team team = teamService.findById(dto.getTeamNo());
+        dto.setDivisionNo(team.getDivision().getId());
+
         adjustmentRepository.save(Adjustment.builder()
                 .teamNo(dto.getTeamNo())
                 .divisionNo(dto.getDivisionNo())
+                .dayOffAdj(dto.getDayOffAdj())
+                .lowFormAdj(dto.getLowFormAdj())
                 .cashAdj(dto.getCashAdj())
                 .cardAdj(dto.getCardAdj())
                 .teamAvg(dto.getTeamAvg())
@@ -55,38 +62,8 @@ public class AdjustmentService {
                 .orElseThrow(() -> new TeamNotFoundException("팀을 찾을 수 없습니다."));
     }
 
-    public AdjustmentDto addInfoLowPerformerAndDayOffMember(Adjustment adjustment) {
-        StringBuilder sb = new StringBuilder();
-        AdjustmentDto dto = adjustment.of();
-        if (dto.getLowFormAdj() != null) {
-            for (Member member : findMemberByDto(dto, LOW_PERFORM)) {
-                sb.append(member.getName()).append("(")
-                        .append(member.getPhone())
-                        .append(")").append(",");
-            }
-            dto.setLowFormAdj(sb.deleteCharAt(sb.toString().length() - 1).toString());
-        }
-        sb = new StringBuilder();
-        if (dto.getDayOffAdj() != null) {
-            for (Member member : findMemberByDto(dto, DAY_OFF_MEMBER)) {
-                sb.append(member.getName()).append("(")
-                        .append(member.getPhone())
-                        .append(")").append(",");
-            }
-            dto.setDayOffAdj(sb.deleteCharAt(sb.toString().length() - 1).toString());
-        }
-        return dto;
-    }
-
     public boolean existsByTeamNoAndAdjDate(Long teamNo, LocalDate date) {
         return adjustmentRepository.existsByTeamNoAndAdjDate(teamNo, date);
-    }
-
-    public void adjustmentMbRepository(Long teamId) {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("teamId", teamId);
-
-        adjustmentMbRepository.updateAdjustment(paramMap);
     }
 
     /**
@@ -102,8 +79,8 @@ public class AdjustmentService {
         } else {
             nameArr = dto.getDayOffAdj().split(",");
         }
-        Team currentTeam = teamRepository.findById(dto.getTeamNo())
-                .orElseThrow(() -> new TeamNotFoundException("팀을 찾을 수 없습니다."));
+
+        Team currentTeam = teamService.findById(dto.getTeamNo());
 
         Map<String, Member> memberMap = currentTeam.getMemberList().stream()
                 .collect(Collectors.toMap(Member::getName, Function.identity()));
@@ -113,6 +90,15 @@ public class AdjustmentService {
                 .map(memberMap::get)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    public List<Map<String, String>> findAdjStat(Map map) {
+        List<Map<String, String>> list = adjustmentMbRepository.findAdjStat(map);
+        for (Map<String, String> item : list) {
+            item.put("title", MainDivision.of(item.get("MAIN_DIVISION")));
+        }
+
+        return list;
     }
 
 }

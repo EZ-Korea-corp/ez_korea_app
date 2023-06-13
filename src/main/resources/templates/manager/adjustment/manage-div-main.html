@@ -55,91 +55,32 @@
                 </tr>
                 </thead>
                 <tbody class="uk-text-center">
-                    <tr class="bg-white border-b">
+                <th:block th:if="${adjList != null}">
+                    <tr class="bg-white border-b" th:each="adj : ${adjList}">
                         <th scope="row" class="px-4 py-4 font-medium whitespace-nowrap">
-                            <a>본사</a>
+                            <a th:text="${adj['title']}"></a>
                         </th>
                         <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
+                            <a th:text="${#numbers.formatDecimal(adj['CASH_ADJ'], 3, 'COMMA', 0, 'POINT')}"></a>
                         </td>
                         <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
+                            <a th:text="${#numbers.formatDecimal(adj['CARD_ADJ'], 3, 'COMMA', 0, 'POINT')}"></a>
                         </td>
                         <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
+                            <a th:text="${#numbers.formatDecimal(adj['ACCOUNT_ADJ'], 3, 'COMMA', 0, 'POINT')}"></a>
                         </td>
                         <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(417052500, 3, 'COMMA', 0, 'POINT')}"></a>
+                            <a th:text="${#numbers.formatDecimal(adj['TOTAL_ADJ'], 3, 'COMMA', 0, 'POINT')}"></a>
                         </td>
                     </tr>
+                </th:block>
+                <th:block th:if="${adjList.size() == 0}">
                     <tr class="bg-white border-b">
-                        <th scope="row" class="px-4 py-4 font-medium whitespace-nowrap">
-                            <a>충청도</a>
+                        <th colspan="10" scope="row" class="px-4 py-4 font-medium whitespace-nowrap">
+                            <a> 데이터가 없습니다</a>
                         </th>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(37577500, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
                     </tr>
-                    <tr class="bg-white border-b">
-                        <th scope="row" class="px-4 py-4 font-medium whitespace-nowrap">
-                            <a>전라도</a>
-                        </th>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(38562000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b">
-                        <th scope="row" class="px-4 py-4 font-medium whitespace-nowrap">
-                            <a>부산</a>
-                        </th>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(88175000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b">
-                        <th scope="row" class="px-4 py-4 font-medium whitespace-nowrap">
-                            <a>대구</a>
-                        </th>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(10000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                        <td class="px-2 py-4 whitespace-nowrap">
-                            <a th:text="${#numbers.formatDecimal(7660000, 3, 'COMMA', 0, 'POINT')}"></a>
-                        </td>
-                    </tr>
+                </th:block>
                 </tbody>
             </table>
         </div>

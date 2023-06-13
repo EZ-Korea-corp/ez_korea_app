@@ -36,6 +36,16 @@
                             </select>
                         </div>
 
+                        <div>
+                            <label for="teamGM" class="font-semibold text-base"> 소속 </label>
+                            <select name="mainDivision" id="mainDivision" class="px-4">
+                                <option th:each="mainDivision : ${T(com.ezkorea.hybrid_app.domain.adjustment.mainDivision.MainDivision).values()}"
+                                        th:value="${mainDivision.key}"
+                                        th:text="${mainDivision.value}">
+                                </option>
+                            </select>
+                        </div>
+
                     </div>
 
                     <!-- form footer -->
@@ -77,7 +87,7 @@
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        text: '팀 이름을 입력해주세요.',
+                        text: '지점 이름을 입력해주세요.',
                     });
                 }
             });

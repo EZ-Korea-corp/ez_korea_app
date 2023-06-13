@@ -1,0 +1,143 @@
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS P_STAT_SALE_D;
+CREATE PROCEDURE P_STAT_SALE_D(T_ID INT)
+BEGIN
+
+	-- 반복문 변수선언
+	DECLARE done int DEFAULT 0;
+
+	-- 변수 선언
+	DECLARE DIVISION_ID INT;
+    DECLARE TEAM_ID 		INT;
+    DECLARE TOTAL 			DOUBLE;
+    DECLARE TOTAL_AVG DOUBLE;
+    DECLARE CARD 			DOUBLE;
+    DECLARE CASH 			DOUBLE;
+    DECLARE ADJ_NO 		DOUBLE;
+    
+DECLARE CUR_DIV CURSOR FOR 
+	SELECT    A.DIVISION_ID
+                , A.TEAM_ID
+                , TRUNCATE(SUM(B.TOTAL), 1) AS TOTAL
+                , TRUNCATE(AVG(B.TOTAL), 1) AS TOTAL_AVG
+                , TRUNCATE(SUM(B.CARD), 1) AS CARD
+                , TRUNCATE(SUM(B.CASH), 1) AS CASH
+        FROM
+        (
+            SELECT      A.ID
+							, A.NAME
+							, A.DIVISION_ID
+							, A.TEAM_ID
+            FROM    MEMBER A
+            WHERE   A.TEAM_ID IS NOT NULL
+            AND     A.MEMBER_STATUS = 'FULL_TIME'
+            UNION ALL
+            SELECT      B.ID
+							, B.NAME
+							, A.ID AS DIVISION_ID
+							, 0 AS TEAM_ID
+            FROM    DIVISION A INNER JOIN MEMBER B
+            ON      A.LEADER_ID = B.ID
+            WHERE   B.MEMBER_STATUS = 'FULL_TIME'
+        ) A INNER JOIN
+        (
+            SELECT    A.MEMBER_ID
+                    , IFNULL(SUM(A.PRICE), 0) AS TOTAL
+                    , IFNULL(SUM(CASE WHEN A.PAYMENT = 'card' THEN A.PRICE END), 0) AS CARD
+                    , IFNULL(SUM(CASE WHEN A.PAYMENT = 'cash' THEN A.PRICE END), 0) AS CASH
+            FROM
+            (
+                SELECT A.MEMBER_ID
+                     , A.PAYMENT
+                     , SUM(A.COUNT * B.PRICE) AS PRICE
+                FROM
+                (
+                    SELECT    A.MEMBER_ID
+									, B.SORT
+									, B.PAYMENT
+									, SUM(B.COUNT) AS COUNT
+                    FROM    TIME_TABLE A INNER JOIN SELL_PRODUCT B
+                    ON 		    A.ID = B.TIME_TABLE_ID
+                    WHERE   A.TASK_DATE = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 0 DAY), '%Y-%m-%d')
+                    AND		B.STATUS = 'out'
+                    AND		B.COUNT > 0
+                    GROUP BY A.MEMBER_ID, B.SORT, B.PAYMENT
+                ) A INNER JOIN
+                (
+                    SELECT     A.WIPER_SORT AS SORT
+								   , MAX(A.WIPER_PRICE) AS PRICE
+                    FROM    WIPER A
+                    GROUP BY A.WIPER_SORT
+                ) B
+                ON A.SORT = B.SORT
+                GROUP BY A.MEMBER_ID, A.PAYMENT
+            ) A
+            GROUP BY A.MEMBER_ID
+        ) B
+        ON A.ID = B.MEMBER_ID
+        WHERE   A.TEAM_ID       = T_ID
+        GROUP BY A.DIVISION_ID, A.TEAM_ID;
+    
+    -- 반복문 핸들러 선언
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = true;
+    
+	 -- 트랜잭션 시작
+    START TRANSACTION;
+
+    -- 커서오픈
+    OPEN CUR_DIV;
+
+    -- 반복문 시작
+    read_loop: LOOP
+
+        -- 커서에서 데이터 가져옴
+        FETCH CUR_DIV INTO DIVISION_ID, TEAM_ID, TOTAL, TOTAL_AVG, CARD, CASH;
+
+        -- 반복문 종료 조건
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        
+		-- 키값 조회
+		SELECT    A.ID
+        INTO 		ADJ_NO
+        FROM 	ADJUSTMENT A 
+		WHERE	A.TEAM_NO = TEAM_ID
+        AND 		A.ADJ_DATE = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 0 DAY), '%Y-%m-%d');
+        
+         -- 데이터 초기화
+        IF(ADJ_NO IS NOT NULL) THEN
+			 -- DELETE FROM DAY_OFF_MEMBER A
+			 -- WHERE	A.ADJUSTMENT_ID = ADJ_NO;
+			 
+			 DELETE FROM LOW_PERFORMER A
+			 WHERE	A.ADJUSTMENT_ID = ADJ_NO;
+			 
+			DELETE FROM ADJUSTMENT A 
+			WHERE	A.TEAM_NO = TEAM_ID 
+			AND 		A.ID 			= ADJ_NO;
+        
+		END IF;
+        
+        -- 데이터 삽입
+		INSERT INTO ADJUSTMENT(DIVISION_NO, TEAM_NO, TOTAL_ADJ, TEAM_AVG, CARD_ADJ, CASH_ADJ, ACCOUNT_ADJ, CREATE_DATE, MODIFY_DATE, ADJ_DATE) 
+        VALUES(DIVISION_ID, TEAM_ID, TOTAL, TOTAL_AVG, CARD, CASH, 0, NOW(), NOW(), NOW());
+
+    -- 반복문 끝
+    END LOOP read_loop;
+
+    -- 커서해제
+    CLOSE CUR_DIV;
+
+	 CALL P_STAT_LOW_PERFORMER_D(T_ID);
+     -- CALL P_STAT_OFF_MEMBER_D(T_ID);
+
+     -- 테이블 출력
+    SELECT * FROM ADJUSTMENT;
+    
+     /* 커밋 */
+	COMMIT;
+    
+END $$
+// DELIMITER ;

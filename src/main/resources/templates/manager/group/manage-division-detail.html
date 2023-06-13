@@ -36,6 +36,11 @@
                             </th:block>
                         </div>
 
+                        <div>
+                            <label for="mainDivision" class="font-semibold text-base"> 소속 </label>
+                            <input id="mainDivision" class="with-border text-white" name="teamName" type="text" th:value="${T(com.ezkorea.hybrid_app.domain.adjustment.mainDivision.MainDivision).of(division.getMainDivision())}" autocomplete="off" readonly>
+                        </div>
+
                         <div class="overflow-x-auto">
                             <label class="font-semibold text-base"> 소속 팀 </label>
                             <table class="w-full text-sm text-left text-gray-500 live-search-table">

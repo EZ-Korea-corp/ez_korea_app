@@ -1,5 +1,6 @@
 package com.ezkorea.hybrid_app.web.controller.rest;
 
+import com.ezkorea.hybrid_app.service.adjustment.AdjustmentService;
 import com.ezkorea.hybrid_app.service.sales.SaleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class ManagerRestController {
+
     private final SaleService saleService;
+    private final AdjustmentService adjustmentService;
 
     @PostMapping("/taskList")
     public Map<String, Object> findTaskList(@RequestBody Map<String, Object> data) {

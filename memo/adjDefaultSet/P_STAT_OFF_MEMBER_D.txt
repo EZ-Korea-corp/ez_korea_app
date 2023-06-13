@@ -1,0 +1,78 @@
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS P_STAT_OFF_MEMBER_D;
+CREATE PROCEDURE P_STAT_OFF_MEMBER_D(T_ID INT)
+BEGIN
+
+	-- 반복문 변수선언
+	DECLARE done int DEFAULT 0;
+
+	-- 변수 선언
+    DECLARE ID 				DOUBLE;
+    DECLARE ADJ_NO 		DOUBLE;
+    
+DECLARE CUR_DIV CURSOR FOR 
+	SELECT A.ID
+	FROM
+	(
+		SELECT    A.ID
+		FROM    MEMBER A
+		WHERE   A.TEAM_ID IS NOT NULL
+		AND     A.MEMBER_STATUS = 'FULL_TIME'
+		AND	A.TEAM_ID = T_ID
+	) A
+	WHERE A.ID NOT IN (
+		SELECT A.MEMBER_ID
+		FROM COMMUTE_TIME A
+		WHERE A.DATE = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 0 DAY), '%Y-%m-%d')
+	);
+    
+    -- 반복문 핸들러 선언
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = true;
+    
+	 -- 트랜잭션 시작
+    START TRANSACTION;
+
+    -- 커서오픈
+    OPEN CUR_DIV;
+
+    -- 반복문 시작
+    read_loop: LOOP
+
+        -- 커서에서 데이터 가져옴
+        FETCH CUR_DIV INTO ID;
+
+        -- 반복문 종료 조건
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+         
+		-- 키값 조회
+		SELECT    A.ID
+        INTO 		ADJ_NO
+        FROM 	ADJUSTMENT A 
+		WHERE	A.TEAM_NO = T_ID 
+        AND 		A.ADJ_DATE = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 0 DAY), '%Y-%m-%d');
+        
+		 -- 데이터 초기화
+		 DELETE FROM DAY_OFF_MEMBER A
+		 WHERE	A.ADJUSTMENT_ID = ADJ_NO;
+        
+         -- 데이터 삽입
+		 INSERT INTO DAY_OFF_MEMBER(CREATE_DATE, MODIFY_DATE, MEMBER_ID, ADJUSTMENT_ID) 
+         VALUES(NOW(), NOW(), ID, ADJ_NO);
+
+    -- 반복문 끝
+    END LOOP read_loop;
+
+    -- 커서해제
+    CLOSE CUR_DIV;
+
+     -- 테이블 출력
+     -- SELECT * FROM DAY_OFF_MEMBER;
+    
+     /* 커밋 */
+	COMMIT;
+    
+END $$
+// DELIMITER ;

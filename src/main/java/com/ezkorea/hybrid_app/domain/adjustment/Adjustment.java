@@ -84,21 +84,6 @@ public class Adjustment extends BaseEntity {
                 .build();
     }
 
-    public AdjustmentDto of2() {
-        return AdjustmentDto.builder()
-                .teamNo(0)
-                .divisionNo(0)
-                .cashAdj(0)
-                .cardAdj(0)
-                .teamAvg(0)
-                .totalAdj(0)
-                .accountAdj(0)
-                .contentAdj("")
-                .dayOffAdj("")
-                .lowFormAdj("")
-                .build();
-    }
-
     public void updateAdj(AdjustmentDto dto) {
         this.cashAdj = dto.getCashAdj();
         this.cardAdj = dto.getCardAdj();
