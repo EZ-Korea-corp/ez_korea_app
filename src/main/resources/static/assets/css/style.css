@@ -28,6 +28,7 @@ button {
 }
 
 .btn-outline-black {
+  color : black !important;
   background-color: white !important;
   border: 1px black solid !important;
 }

@@ -19,11 +19,13 @@
                     </div>
 
                     <!-- form body -->
-                    <div class="p-10 space-y-7">
+                    <div class="px-8 pt-8 space-y-7">
 
                         <div>
                             <label for="teamName" class="font-semibold text-base"> 지점명 </label>
-                            <input id="teamName" class="with-border" name="teamName" type="text" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
+                            <input id="teamName" class="with-border" name="teamName" type="text"
+                                   placeholder="지점 이름을 입력해주세요."
+                                   onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="off">
                         </div>
 
                         <div>
@@ -38,7 +40,7 @@
 
                         <div>
                             <label for="teamGM" class="font-semibold text-base"> 소속 </label>
-                            <select name="mainDivision" id="mainDivision" class="px-4">
+                            <select name="mainDivision" id="mainDivision" class="shadow-none selectpicker with-border">
                                 <option th:each="mainDivision : ${T(com.ezkorea.hybrid_app.domain.adjustment.mainDivision.MainDivision).values()}"
                                         th:value="${mainDivision.key}"
                                         th:text="${mainDivision.value}">
@@ -50,8 +52,8 @@
 
                     <!-- form footer -->
                     <div class="grid grid-cols-2 gap-4 m-4 p-4">
-                        <a th:href="@{/manager/division}" class="button w-full">뒤로가기</a>
-                        <button id="submit" type="button" class="button w-full">생성하기</button>
+                        <a th:href="@{/manager/division}" class="button w-full btn-outline-black">뒤로가기</a>
+                        <button id="submit" type="button" class="button w-full btn-outline-black">생성하기</button>
                     </div>
                 </div>
             </form>
