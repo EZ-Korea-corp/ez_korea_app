@@ -47,8 +47,8 @@
                 </thead>
                 <tbody class="uk-text-center">
                 <th:block th:each="division : ${divisionList}">
-                    <tr class="bg-white">
-                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap border-b">
+                    <tr class="bg-white border-b">
+                        <th scope="row" class="px-2 py-4 font-medium whitespace-nowrap">
 <!--                            <a th:href="@{/adj/division/{divisionId}(adjDate=${param.adjDate}, divisionId=${division.getId()})}" th:text="${division.getDivisionName()}"></a>-->
                             <a th:text="${division.getDivisionName()}"></a>
                         </th>

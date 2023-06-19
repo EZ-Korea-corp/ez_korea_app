@@ -34,32 +34,34 @@
             </div>
         </div>
         <div class="relative overflow-x-auto" id="totalStat">
-            <h1 class="block text-lg font-bold mb-2"> 전체금액  </h1>
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3 text-center">
-                        결제
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-center">
-                        금액
-                    </th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <br>
+            <div class="card px-8 py-4 mb-4">
+                <h1 class="block text-lg font-bold mb-2"> 전체금액  </h1>
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            결제
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center">
+                            금액
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
 
-            <h1 class="block text-lg font-bold mb-2"> 별도금액  </h1>
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <div class="card px-8 py-4">
+                <h1 class="block text-lg font-bold mb-2"> 별도금액  </h1>
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">종류</th>
                         <th scope="col" class="px-6 py-3">갯수</th>
                         <th scope="col" class="px-6 py-3">금액</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <tr id="normal" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                         <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">일반</th>
                         <td class="px-6 py-4">0</td>
@@ -90,8 +92,9 @@
                         <td class="px-6 py-4">0</td>
                         <td class="px-6 py-4">0</td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <script>
