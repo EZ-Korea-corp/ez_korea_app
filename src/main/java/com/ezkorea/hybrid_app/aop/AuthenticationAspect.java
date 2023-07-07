@@ -28,7 +28,10 @@ public class AuthenticationAspect {
     @Pointcut("!execution(* com.ezkorea.hybrid_app.web.controller.mapping.AuthController.*(..))")
     public void excludeAuthPage() {}
 
-    @Around("getMapping() && excludeAuthPage()")
+    @Pointcut("!execution(* com.ezkorea.hybrid_app.web.controller.mapping.PolicyController.*(..))")
+    public void excludePolicyPage() {}
+
+    @Around("getMapping() && excludeAuthPage() && excludePolicyPage()")
     public Object authenticationReset(ProceedingJoinPoint joinPoint) throws Throwable {
         // 메소드 실행 전 처리할 내용
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
