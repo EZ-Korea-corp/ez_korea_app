@@ -21,30 +21,7 @@
     <div class="lg:space-x-12">
         <div class="" id="body_div">
             <div class="card py-6 px-4">
-                <form th:action="@{/commute}" method="post" id="commuteForm">
-                    <input type="hidden" id="location" name="location" value=""/>
-                    <div th:if="${!isOnTime}">
-                        <h1 class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 환영합니다.</h1>
-                        <p class="my-2 text-sm">출근 처리를 먼저한 뒤 오늘 하루를 시작해보세요</p>
-                        <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('ON_TIME').getKey()}"/>
-                        <button type="button" id="onTimeBtn" class="mt-2 text-black bg-white font-bold rounded-lg text-sm px-5 py-2.5 w-full commute-border">출근 체크</button>
-                    </div>
-                    <div th:if="${isOnTime}">
-                        <th:block th:if="${commute.getStatus().equals('onTime')}">
-                        <h1 class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 오늘도 힘내세요.</h1>
-                            <p class="my-2">출근 시간 : <span th:text="${#temporals.format(commute.getOnTime(), 'HH시 mm분')}"></span></p>
-                            <input type="hidden" name="commuteStatus" th:value="${T(com.ezkorea.hybrid_app.domain.user.commute.CommuteStatus).valueOf('OFF_TIME').getKey()}"/>
-                            <button style="border : 1px solid #ccc;"
-                                    type="button" id="offTimeBtn" class="mt-2 text-black bg-white font-bold rounded-lg text-sm px-5 py-2.5 w-full commute-border">퇴근 체크</button>
-                        </th:block>
-                        <th:block th:if="${commute.getStatus().equals('offTime')}">
-                            <h1 class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 오늘도 수고하셨습니다.</h1>
-                            <p class="my-2">퇴근 시간 : <span th:text="${#temporals.format(commute.getOffTime(), 'HH시 mm분')}"></span></p>
-                            <button style="border : 1px solid #ccc;"
-                                    type="button" disabled class="mt-2 text-black bg-white font-bold rounded-lg text-sm px-5 py-2.5 w-full commute-border">퇴근 완료</button>
-                        </th:block>
-                    </div>
-                </form>
+                <h1 class="text-lg"><span class="font-bold" th:text="${member.getName()}"></span>님 환영합니다.</h1>
 
                 <form id="mealChkForm">
                     <th:block th:if="${mealChk}">
